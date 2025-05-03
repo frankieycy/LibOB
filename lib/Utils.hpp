@@ -26,6 +26,7 @@ inline void LIB_THROW(const char* message) { throw LibException(message); }
 }
 
 namespace Consts {
+constexpr double NAN_INT = std::numeric_limits<int>::quiet_NaN();
 constexpr double NAN_DOUBLE = std::numeric_limits<double>::quiet_NaN();
 constexpr double POS_INF_DOUBLE = std::numeric_limits<double>::infinity();
 constexpr double NEG_INF_DOUBLE = -std::numeric_limits<double>::infinity();
