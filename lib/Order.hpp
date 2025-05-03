@@ -3,6 +3,7 @@
 #include "Utils.hpp"
 #include "MetaInfo.hpp"
 #include "OrderUtils.hpp"
+#include "OrderEvent.hpp"
 
 namespace Market {
 class OrderBase {
@@ -29,6 +30,7 @@ public:
     void setMetaInfo(const std::shared_ptr<OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
     virtual void init();
     virtual void cancel();
+    virtual void executeOrderEvent(const OrderEventBase& event);
     virtual const std::string getAsJason() const;
     friend std::ostream& operator<<(std::ostream& out, const OrderBase& order);
 private:
@@ -51,6 +53,7 @@ public:
     void setPrice(const double price) { myPrice = price; }
     virtual void init() override;
     virtual void cancel() override;
+    virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual const std::string getAsJason() const override;
 private:
     double myPrice;

@@ -4,6 +4,7 @@
 #include "MetaInfo.hpp"
 #include "OrderUtils.hpp"
 #include "Order.hpp"
+#include "OrderEvent.hpp"
 
 namespace Market {
 using namespace Utils;
@@ -26,6 +27,8 @@ OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side sid
     myTimestamp(timestamp),
     mySide(side),
     myQuantity(quantity),
+    myOrderType(OrderType::NULL_ORDER_TYPE),
+    myOrderState(OrderState::NULL_ORDER_STATE),
     myMetaInfo(metaInfo) {}
 
 OrderBase::OrderBase(const OrderBase& order) :
@@ -46,6 +49,24 @@ void OrderBase::cancel() {
     mySide = Side::NULL_SIDE;
     myQuantity = 0;
     myOrderState = OrderState::CANCELLED;
+}
+
+void OrderBase::executeOrderEvent(const OrderEventBase& event) {
+    switch (event.getEventType()) {
+        case OrderEventType::FILL:
+            myQuantity = 0;
+            myOrderState = OrderState::FILLED;
+            break;
+        case OrderEventType::CANCEL:
+            myQuantity = 0;
+            myOrderState = OrderState::CANCELLED;
+            break;
+        case OrderEventType::MODIFY_QUANTITY:
+            myQuantity = event.getModifiedQuantity();
+            break;
+        default:
+            Error::LIB_THROW("OrderBase::executeOrderEvent: unsupported event type.");
+    }
 }
 
 const std::string OrderBase::getAsJason() const {
@@ -90,6 +111,16 @@ void LimitOrder::init() {
 void LimitOrder::cancel() {
     OrderBase::cancel();
     myPrice = isBuy() ? 0 : Consts::POS_INF_DOUBLE;
+}
+
+void LimitOrder::executeOrderEvent(const OrderEventBase& event) {
+    switch (event.getEventType()) {
+        case OrderEventType::MODIFY_PRICE:
+            myPrice = event.getModifiedPrice();
+            break;
+        default:
+            OrderBase::executeOrderEvent(event);
+    }
 }
 
 const std::string LimitOrder::getAsJason() const {

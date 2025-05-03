@@ -34,6 +34,17 @@ std::ostream& operator<<(std::ostream& out, const OrderState& orderState) {
     return out;
 }
 
+std::ostream& operator<<(std::ostream& out, const OrderEventType& orderEventType) {
+    switch (orderEventType) {
+        case OrderEventType::FILL:            out << "Fill";           break;
+        case OrderEventType::MODIFY_PRICE:    out << "ModifyPrice";    break;
+        case OrderEventType::MODIFY_QUANTITY: out << "ModifyQuantity"; break;
+        case OrderEventType::CANCEL:          out << "Cancel";         break;
+        default:                              out << "Null";           break;
+    }
+    return out;
+}
+
 const uint64_t OrderIdHandler::generateId() {
     ++myCurrentId;
     myIdLog.push_back(myCurrentId);
