@@ -3,8 +3,8 @@
 #include "Utils.hpp"
 #include "MetaInfo.hpp"
 #include "OrderUtils.hpp"
-#include "Order.hpp"
 #include "OrderEvent.hpp"
+#include "Order.hpp"
 
 namespace Market {
 using namespace Utils;
@@ -51,24 +51,6 @@ void OrderBase::cancel() {
     myOrderState = OrderState::CANCELLED;
 }
 
-void OrderBase::executeOrderEvent(const OrderEventBase& event) {
-    switch (event.getEventType()) {
-        case OrderEventType::FILL:
-            myQuantity = 0;
-            myOrderState = OrderState::FILLED;
-            break;
-        case OrderEventType::CANCEL:
-            myQuantity = 0;
-            myOrderState = OrderState::CANCELLED;
-            break;
-        case OrderEventType::MODIFY_QUANTITY:
-            myQuantity = event.getModifiedQuantity();
-            break;
-        default:
-            Error::LIB_THROW("OrderBase::executeOrderEvent: unsupported event type.");
-    }
-}
-
 const std::string OrderBase::getAsJason() const {
     std::ostringstream oss;
     oss << "{"
@@ -102,6 +84,10 @@ LimitOrder::LimitOrder(const LimitOrder& order) :
     OrderBase(order),
     myPrice(order.myPrice) {}
 
+void LimitOrder::executeOrderEvent(const OrderEventBase& event) {
+    event.applyTo(*this);
+}
+
 void LimitOrder::init() {
     if (myPrice < 0)
         Error::LIB_THROW("LimitBase: price cannot be negative.");
@@ -111,16 +97,6 @@ void LimitOrder::init() {
 void LimitOrder::cancel() {
     OrderBase::cancel();
     myPrice = isBuy() ? 0 : Consts::POS_INF_DOUBLE;
-}
-
-void LimitOrder::executeOrderEvent(const OrderEventBase& event) {
-    switch (event.getEventType()) {
-        case OrderEventType::MODIFY_PRICE:
-            myPrice = event.getModifiedPrice();
-            break;
-        default:
-            OrderBase::executeOrderEvent(event);
-    }
 }
 
 const std::string LimitOrder::getAsJason() const {
@@ -154,6 +130,10 @@ MarketOrder::MarketOrder(const uint64_t id, const uint64_t timestamp, const Side
 MarketOrder::MarketOrder(const MarketOrder& order) :
     OrderBase(order) {
     init();
+}
+
+void MarketOrder::executeOrderEvent(const OrderEventBase& event) {
+    event.applyTo(*this);
 }
 
 void MarketOrder::init() {

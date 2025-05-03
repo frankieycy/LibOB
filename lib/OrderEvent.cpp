@@ -3,6 +3,7 @@
 #include "Utils.hpp"
 #include "OrderUtils.hpp"
 #include "OrderEvent.hpp"
+#include "Order.hpp"
 
 namespace Market {
 using namespace Utils;
@@ -30,24 +31,12 @@ OrderEventBase::OrderEventBase(const OrderEventBase& event) :
     myTimestamp(event.myTimestamp),
     myEventType(event.myEventType) {}
 
-const int OrderEventBase::getFillQuantity() const {
-    Error::LIB_THROW("No implementation for OrderEventBase::getFillQuantity.");
-    return Consts::NAN_INT;
+void OrderEventBase::applyTo(MarketOrder& order) const {
+    Error::LIB_THROW("No implementation for OrderEventBase::applyTo(MarketOrder&).");
 }
 
-const double OrderEventBase::getFillPrice() const {
-    Error::LIB_THROW("No implementation for OrderEventBase::getFillPrice.");
-    return Consts::NAN_DOUBLE;
-}
-
-const int OrderEventBase::getModifiedQuantity() const {
-    Error::LIB_THROW("No implementation for OrderEventBase::getModifiedQuantity.");
-    return Consts::NAN_INT;
-}
-
-const double OrderEventBase::getModifiedPrice() const {
-    Error::LIB_THROW("No implementation for OrderEventBase::getModifiedPrice.");
-    return Consts::NAN_DOUBLE;
+void OrderEventBase::applyTo(LimitOrder& order) const {
+    Error::LIB_THROW("No implementation for OrderEventBase::applyTo(LimitOrder&).");
 }
 
 const std::string OrderEventBase::getAsJason() const {
@@ -80,6 +69,16 @@ OrderFillEvent::OrderFillEvent(const OrderFillEvent& event) :
     myFillQuantity(event.myFillQuantity),
     myFillPrice(event.myFillPrice) {
     init();
+}
+
+void OrderFillEvent::applyTo(MarketOrder& order) const {
+    order.setQuantity(0);
+    order.setOrderState(OrderState::FILLED);
+}
+
+void OrderFillEvent::applyTo(LimitOrder& order) const {
+    order.setQuantity(0);
+    order.setOrderState(OrderState::FILLED);
 }
 
 void OrderFillEvent::init() {
@@ -121,6 +120,10 @@ OrderModifyPriceEvent::OrderModifyPriceEvent(const OrderModifyPriceEvent& event)
     init();
 }
 
+void OrderModifyPriceEvent::applyTo(LimitOrder& order) const {
+    order.setPrice(myModifiedPrice);
+}
+
 void OrderModifyPriceEvent::init() {
     if (myModifiedPrice < 0)
         Error::LIB_THROW("OrderModifyPriceEvent: price cannot be negative.");
@@ -150,6 +153,10 @@ OrderModifyQuantityEvent::OrderModifyQuantityEvent(const uint64_t eventId, const
 OrderModifyQuantityEvent::OrderModifyQuantityEvent(const OrderModifyQuantityEvent& event) :
     OrderEventBase(event),
     myModifiedQuantity(event.myModifiedQuantity) {}
+
+void OrderModifyQuantityEvent::applyTo(LimitOrder& order) const {
+    order.setQuantity(myModifiedQuantity);
+}
 
 void OrderModifyQuantityEvent::init() {
     if (myModifiedQuantity < 0)
@@ -182,6 +189,16 @@ OrderCancelEvent::OrderCancelEvent(const uint64_t eventId, const uint64_t orderI
 OrderCancelEvent::OrderCancelEvent(const OrderCancelEvent& event) :
     OrderEventBase(event) {
     init();
+}
+
+void OrderCancelEvent::applyTo(MarketOrder& order) const {
+    order.setQuantity(0);
+    order.setOrderState(OrderState::CANCELLED);
+}
+
+void OrderCancelEvent::applyTo(LimitOrder& order) const {
+    order.setQuantity(0);
+    order.setOrderState(OrderState::CANCELLED);
 }
 
 void OrderCancelEvent::init() {

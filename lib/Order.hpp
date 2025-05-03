@@ -3,9 +3,10 @@
 #include "Utils.hpp"
 #include "MetaInfo.hpp"
 #include "OrderUtils.hpp"
-#include "OrderEvent.hpp"
 
 namespace Market {
+class OrderEventBase;
+
 class OrderBase {
 public:
     OrderBase();
@@ -28,9 +29,9 @@ public:
     void setOrderType(const OrderType orderType) { myOrderType = orderType; }
     void setOrderState(const OrderState orderState) { myOrderState = orderState; }
     void setMetaInfo(const std::shared_ptr<OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
+    virtual void executeOrderEvent(const OrderEventBase& event) {};
     virtual void init();
     virtual void cancel();
-    virtual void executeOrderEvent(const OrderEventBase& event);
     virtual const std::string getAsJason() const;
     friend std::ostream& operator<<(std::ostream& out, const OrderBase& order);
 private:
@@ -51,9 +52,9 @@ public:
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     const double getPrice() const { return myPrice; }
     void setPrice(const double price) { myPrice = price; }
+    virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void init() override;
     virtual void cancel() override;
-    virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual const std::string getAsJason() const override;
 private:
     double myPrice;
@@ -65,6 +66,7 @@ public:
     MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo);
     MarketOrder(const MarketOrder& order);
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<MarketOrder>(*this); }
+    virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void init() override;
 };
 
