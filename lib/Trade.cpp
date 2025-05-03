@@ -14,6 +14,7 @@ std::ostream& operator<<(std::ostream& out, const TradeBase& trade) {
 }
 
 TradeBase::TradeBase() :
+    myId(0),
     myTimestamp(0),
     myBuyId(0),
     mySellId(0),
@@ -24,8 +25,9 @@ TradeBase::TradeBase() :
     myIsBuyInitiated(true) {}
 
 TradeBase::TradeBase(
-    const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const int quantity, const double price,
+    const uint64_t id, const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const int quantity, const double price,
     const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<TradeMetaInfo>& metaInfo) :
+    myId(id),
     myTimestamp(timestamp),
     myBuyId(buyId),
     mySellId(sellId),
@@ -38,7 +40,8 @@ TradeBase::TradeBase(
     init();
 }
 
-TradeBase::TradeBase(const uint64_t timestamp, const int quantity, const double price, const bool isBuyInitiated, const OrderBase& buyOrder, const OrderBase& sellOrder) :
+TradeBase::TradeBase(const uint64_t id, const uint64_t timestamp, const int quantity, const double price, const bool isBuyInitiated, const OrderBase& buyOrder, const OrderBase& sellOrder) :
+    myId(id),
     myTimestamp(timestamp),
     myBuyId(buyOrder.getId()),
     mySellId(sellOrder.getId()),
@@ -52,6 +55,7 @@ TradeBase::TradeBase(const uint64_t timestamp, const int quantity, const double 
 }
 
 TradeBase::TradeBase(const TradeBase& trade) :
+    myId(trade.myId),
     myTimestamp(trade.myTimestamp),
     myBuyId(trade.myBuyId),
     mySellId(trade.mySellId),
@@ -74,6 +78,7 @@ void TradeBase::init() {
 const std::string TradeBase::getAsJason() const {
     std::ostringstream oss;
     oss << "{"
+    "\"Id\":"               << getId()               << ","
     "\"Timestamp\":"        << getTimestamp()        << ","
     "\"BuyId\":"            << getBuyId()            << ","
     "\"SellId\":"           << getSellId()           << ","
