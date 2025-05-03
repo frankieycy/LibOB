@@ -1,0 +1,10 @@
+.DS_store
+.idea
+main
+obj*
+exe*
+test*
+plot*
+*.txt
+*.log
+_*

@@ -1,0 +1,48 @@
+#ifndef META_INFO_CPP
+#define META_INFO_CPP
+#include "Utils.hpp"
+#include "MetaInfo.hpp"
+
+namespace Market {
+std::ostream& operator<<(std::ostream& out, const OrderMetaInfo& metaInfo) {
+    out << metaInfo.getAsJason();
+    return out;
+}
+
+TradeMetaInfo::TradeMetaInfo(const std::string symbol, const std::string exchangeId) :
+    mySymbol(symbol),
+    myExchangeId(exchangeId) {}
+
+TradeMetaInfo::TradeMetaInfo(const TradeMetaInfo& info) :
+    mySymbol(info.mySymbol),
+    myExchangeId(info.myExchangeId) {}
+
+const std::string TradeMetaInfo::getAsJason() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"Symbol\":\""     << getSymbol()     << "\","
+    "\"ExchangeId\":\"" << getExchangeId() << "\""
+    "}";
+    return oss.str();
+}
+
+OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId) :
+    TradeMetaInfo(symbol, exchangeId),
+    myAgentId(agentId) {}
+
+OrderMetaInfo::OrderMetaInfo(const OrderMetaInfo& info) :
+    TradeMetaInfo(info),
+    myAgentId(info.myAgentId) {}
+
+const std::string OrderMetaInfo::getAsJason() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"Symbol\":\""     << getSymbol()     << "\","
+    "\"ExchangeId\":\"" << getExchangeId() << "\","
+    "\"getAgentId\":\"" << getAgentId()    << "\""
+    "}";
+    return oss.str();
+}
+}
+
+#endif
