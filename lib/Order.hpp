@@ -16,7 +16,6 @@ public:
     OrderBase();
     OrderBase(const OrderBase& order);
     OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
-    virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     const uint64_t getId() const { return myId; }
     const uint64_t getTimestamp() const { return myTimestamp; }
     const Side getSide() const { return mySide; }
@@ -33,6 +32,7 @@ public:
     void setOrderType(const OrderType orderType) { myOrderType = orderType; }
     void setOrderState(const OrderState orderState) { myOrderState = orderState; }
     void setMetaInfo(const std::shared_ptr<OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
+    virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) {};
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const {};
     virtual void init();
@@ -54,9 +54,9 @@ public:
     LimitOrder();
     LimitOrder(const LimitOrder& order);
     LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
-    virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     const double getPrice() const { return myPrice; }
     void setPrice(const double price) { myPrice = price; }
+    virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;
     virtual void init() override;
