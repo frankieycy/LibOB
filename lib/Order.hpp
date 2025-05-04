@@ -14,7 +14,7 @@ class OrderEventBase;
 class OrderBase {
 public:
     OrderBase();
-    OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo);
+    OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     OrderBase(const OrderBase& order);
     virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     const uint64_t getId() const { return myId; }
@@ -52,7 +52,7 @@ private:
 class LimitOrder : public OrderBase {
 public:
     LimitOrder();
-    LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo);
+    LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     LimitOrder(const LimitOrder& order);
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     const double getPrice() const { return myPrice; }
@@ -69,7 +69,7 @@ private:
 class MarketOrder : public OrderBase {
 public:
     MarketOrder();
-    MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo);
+    MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     MarketOrder(const MarketOrder& order);
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<MarketOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;

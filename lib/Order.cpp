@@ -44,6 +44,7 @@ OrderBase::OrderBase(const OrderBase& order) :
 void OrderBase::init() {
     if (myQuantity < 0)
         Error::LIB_THROW("OrderBase: quantity cannot be negative.");
+    setOrderState(OrderState::ACTIVE);
 }
 
 void OrderBase::cancel() {
@@ -96,6 +97,7 @@ void LimitOrder::submit(Exchange::MatchingEngineBase& matchingEngine) const {
 void LimitOrder::init() {
     if (myPrice < 0)
         Error::LIB_THROW("LimitBase: price cannot be negative.");
+    setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::LIMIT);
 }
 
@@ -146,6 +148,7 @@ void MarketOrder::submit(Exchange::MatchingEngineBase& matchingEngine) const {
 }
 
 void MarketOrder::init() {
+    setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::MARKET);
 }
 }
