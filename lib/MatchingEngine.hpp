@@ -56,6 +56,9 @@ public:
     const int getBidSize(const PriceLevel& priceLevel) const;
     const int getAskSize(const PriceLevel& priceLevel) const;
     const int getLastTradeSize() const;
+    const int getNumberOfBidPriceLevels() const;
+    const int getNumberOfAskPriceLevels() const;
+    const int getNumberOfTrades() const;
     const std::shared_ptr<Market::TradeBase>& getLastTrade() const;
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
     virtual void process(const std::shared_ptr<Market::OrderBase>& order);

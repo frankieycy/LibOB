@@ -9,6 +9,11 @@
 namespace Exchange {
 using namespace Utils;
 
+std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine) {
+    out << matchingEngine.getAsJason();
+    return out;
+}
+
 const std::pair<const PriceLevel, int> IMatchingEngine::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         throw Error::LibException("IMatchingEngine: bid book is empty.");
@@ -91,7 +96,21 @@ const int IMatchingEngine::getLastTradeSize() const {
     return getLastTrade()->getQuantity();
 }
 
+const int IMatchingEngine::getNumberOfBidPriceLevels() const {
+    return myBidBook.size();
+}
+
+const int IMatchingEngine::getNumberOfAskPriceLevels() const {
+    return myAskBook.size();
+}
+
+const int IMatchingEngine::getNumberOfTrades() const {
+    return myTradeLog.size();
+}
+
 const std::shared_ptr<Market::TradeBase>& IMatchingEngine::getLastTrade() const {
+    if (myTradeLog.empty())
+        throw Error::LibException("IMatchingEngine: trade log is empty.");
     return myTradeLog.back();
 }
 
