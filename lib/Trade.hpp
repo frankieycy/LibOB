@@ -2,9 +2,10 @@
 #define TRADE_HPP
 #include "Utils.hpp"
 #include "MetaInfo.hpp"
-#include "Order.hpp"
 
 namespace Market {
+class OrderBase;
+
 class TradeBase {
 public:
     TradeBase();

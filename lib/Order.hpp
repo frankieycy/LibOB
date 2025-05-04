@@ -1,15 +1,15 @@
 #ifndef ORDER_HPP
 #define ORDER_HPP
 #include "Utils.hpp"
-#include "MetaInfo.hpp"
 #include "OrderUtils.hpp"
 
 namespace Exchange {
-    class IMatchingEngine;
+class IMatchingEngine;
 }
 
 namespace Market {
 class OrderEventBase;
+class OrderMetaInfo;
 
 class OrderBase {
 public:
