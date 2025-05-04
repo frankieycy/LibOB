@@ -28,12 +28,12 @@ const std::pair<const PriceLevel, int> IMatchingEngine::getBestAskPriceAndSize()
 
 const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestBidTopOrder() const {
     // TODO
-    return std::pair<PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
+    return std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
 }
 
 const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestAskTopOrder() const {
     // TODO
-    return std::pair<PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
+    return std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
 }
 
 const double IMatchingEngine::getBestBidPrice() const {
@@ -115,11 +115,17 @@ const std::shared_ptr<Market::TradeBase>& IMatchingEngine::getLastTrade() const 
 }
 
 void IMatchingEngine::process(const std::shared_ptr<Market::OrderBase>& order) {
+    if (!order)
+        throw Error::LibException("IMatchingEngine::process: order is null.");
     order->submit(*this);
 }
 
 void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& event) {
-    // TODO
+    if (!event)
+        throw Error::LibException("IMatchingEngine::process: order event is null.");
+    const auto& it = myLimitOrderLookup.find(event->getOrderId());
+    if (it != myLimitOrderLookup.end()) 
+        it->second->executeOrderEvent(*event);
 }
 
 std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
@@ -132,7 +138,15 @@ void IMatchingEngine::init() {
 }
 
 void IMatchingEngine::reset() {
-    // TODO
+    mySymbol.clear();
+    myExchangeId.clear();
+    myBidBook.clear();
+    myAskBook.clear();
+    myBidBookSize.clear();
+    myAskBookSize.clear();
+    myMarketQueue.clear();
+    myTradeLog.clear();
+    myLimitOrderLookup.clear();
 }
 
 const std::string IMatchingEngine::getAsJason() const {
