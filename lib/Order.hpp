@@ -4,6 +4,10 @@
 #include "MetaInfo.hpp"
 #include "OrderUtils.hpp"
 
+namespace Exchange {
+    class MatchingEngineBase;
+}
+
 namespace Market {
 class OrderEventBase;
 
@@ -30,6 +34,7 @@ public:
     void setOrderState(const OrderState orderState) { myOrderState = orderState; }
     void setMetaInfo(const std::shared_ptr<OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
     virtual void executeOrderEvent(const OrderEventBase& event) {};
+    virtual void submit(Exchange::MatchingEngineBase& matchingEngine) const {};
     virtual void init();
     virtual void cancel();
     virtual const std::string getAsJason() const;
@@ -53,6 +58,7 @@ public:
     const double getPrice() const { return myPrice; }
     void setPrice(const double price) { myPrice = price; }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
+    virtual void submit(Exchange::MatchingEngineBase& matchingEngine) const override;
     virtual void init() override;
     virtual void cancel() override;
     virtual const std::string getAsJason() const override;
@@ -67,6 +73,7 @@ public:
     MarketOrder(const MarketOrder& order);
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<MarketOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
+    virtual void submit(Exchange::MatchingEngineBase& matchingEngine) const override;
     virtual void init() override;
 };
 

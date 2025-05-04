@@ -5,6 +5,7 @@
 #include "OrderUtils.hpp"
 #include "OrderEvent.hpp"
 #include "Order.hpp"
+#include "MatchingEngine.hpp"
 
 namespace Market {
 using namespace Utils;
@@ -88,6 +89,10 @@ void LimitOrder::executeOrderEvent(const OrderEventBase& event) {
     event.applyTo(*this);
 }
 
+void LimitOrder::submit(Exchange::MatchingEngineBase& matchingEngine) const {
+    matchingEngine.addToLimitOrderBook(std::make_shared<LimitOrder>(*this));
+}
+
 void LimitOrder::init() {
     if (myPrice < 0)
         Error::LIB_THROW("LimitBase: price cannot be negative.");
@@ -134,6 +139,10 @@ MarketOrder::MarketOrder(const MarketOrder& order) :
 
 void MarketOrder::executeOrderEvent(const OrderEventBase& event) {
     event.applyTo(*this);
+}
+
+void MarketOrder::submit(Exchange::MatchingEngineBase& matchingEngine) const {
+    matchingEngine.executeMarketOrder(std::make_shared<MarketOrder>(*this));
 }
 
 void MarketOrder::init() {
