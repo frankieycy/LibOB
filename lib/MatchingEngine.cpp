@@ -7,28 +7,126 @@
 #include "MatchingEngine.hpp"
 
 namespace Exchange {
+using namespace Utils;
+
+const std::pair<const PriceLevel, int> IMatchingEngine::getBestBidPriceAndSize() const {
+    if (myBidBookSize.empty())
+        throw Error::LibException("IMatchingEngine: bid book is empty.");
+    return *myBidBookSize.begin();
+}
+
+const std::pair<const PriceLevel, int> IMatchingEngine::getBestAskPriceAndSize() const {
+    if (myAskBookSize.empty())
+        throw Error::LibException("IMatchingEngine: ask book is empty.");
+    return *myAskBookSize.begin();
+}
+
+const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestBidTopOrder() const {
+    // TODO
+    return std::pair<PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
+}
+
+const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestAskTopOrder() const {
+    // TODO
+    return std::pair<PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
+}
+
+const double IMatchingEngine::getBestBidPrice() const {
+    if (myBidBookSize.empty())
+        throw Error::LibException("IMatchingEngine: bid book is empty.");
+    return myBidBookSize.begin()->first;
+}
+
+const double IMatchingEngine::getBestAskPrice() const {
+    if (myAskBookSize.empty())
+        throw Error::LibException("IMatchingEngine: ask book is empty.");
+    return myAskBookSize.begin()->first;
+}
+
+const double IMatchingEngine::getSpread() const {
+    return getBestAskPrice() - getBestBidPrice();
+}
+
+const double IMatchingEngine::getHalfSpread() const {
+    return getSpread() / 2.0;
+}
+
+const double IMatchingEngine::getMidPrice() const {
+    return (getBestBidPrice() + getBestAskPrice()) / 2.0;
+}
+
+const double IMatchingEngine::getMicroPrice() const {
+    return (getBestBidPrice() * getBestAskSize() + getBestAskPrice() * getBestBidSize()) / (getBestBidSize() + getBestAskSize());
+}
+
+const double IMatchingEngine::getOrderImbalance() const {
+    return (getBestBidSize() - getBestAskSize()) / (getBestBidSize() + getBestAskSize());
+}
+
+const double IMatchingEngine::getLastTradePrice() const {
+    return getLastTrade()->getPrice();
+}
+
+const int IMatchingEngine::getBestBidSize() const {
+    if (myBidBookSize.empty())
+        throw Error::LibException("IMatchingEngine: bid book is empty.");
+    return myBidBookSize.begin()->second;
+}
+
+const int IMatchingEngine::getBestAskSize() const {
+    if (myAskBookSize.empty())
+        throw Error::LibException("IMatchingEngine: ask book is empty.");
+    return myAskBookSize.begin()->second;
+}
+
+const int IMatchingEngine::getBidSize(const PriceLevel& priceLevel) const {
+    return myBidBookSize.at(priceLevel);
+}
+
+const int IMatchingEngine::getAskSize(const PriceLevel& priceLevel) const {
+    return myAskBookSize.at(priceLevel);
+}
+
+const int IMatchingEngine::getLastTradeSize() const {
+    return getLastTrade()->getQuantity();
+}
+
+const std::shared_ptr<Market::TradeBase>& IMatchingEngine::getLastTrade() const {
+    return myTradeLog.back();
+}
+
 void IMatchingEngine::process(const std::shared_ptr<Market::OrderBase>& order) {
     order->submit(*this);
 }
 
 void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& event) {
-    //
+    // TODO
 }
 
 std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
+    // TODO
     return out;
 }
 
+void IMatchingEngine::init() {
+    // TODO
+}
+
+void IMatchingEngine::reset() {
+    // TODO
+}
+
 const std::string IMatchingEngine::getAsJason() const {
+    // TODO
     return "";
 }
 
 void MatchingEngineFIFO::addToLimitOrderBook(const std::shared_ptr<Market::LimitOrder>& order) {
-    //
+    // TODO
 }
 
 void MatchingEngineFIFO::executeMarketOrder(const std::shared_ptr<Market::MarketOrder>& order) {
-    //
+    // TODO
 }
 
 void MatchingEngineFIFO::init() {
