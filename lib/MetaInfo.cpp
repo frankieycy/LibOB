@@ -9,13 +9,13 @@ std::ostream& operator<<(std::ostream& out, const OrderMetaInfo& metaInfo) {
     return out;
 }
 
-TradeMetaInfo::TradeMetaInfo(const std::string symbol, const std::string exchangeId) :
-    mySymbol(symbol),
-    myExchangeId(exchangeId) {}
-
 TradeMetaInfo::TradeMetaInfo(const TradeMetaInfo& info) :
     mySymbol(info.mySymbol),
     myExchangeId(info.myExchangeId) {}
+
+TradeMetaInfo::TradeMetaInfo(const std::string symbol, const std::string exchangeId) :
+    mySymbol(symbol),
+    myExchangeId(exchangeId) {}
 
 const std::string TradeMetaInfo::getAsJason() const {
     std::ostringstream oss;
@@ -26,13 +26,13 @@ const std::string TradeMetaInfo::getAsJason() const {
     return oss.str();
 }
 
-OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId) :
-    TradeMetaInfo(symbol, exchangeId),
-    myAgentId(agentId) {}
-
 OrderMetaInfo::OrderMetaInfo(const OrderMetaInfo& info) :
     TradeMetaInfo(info),
     myAgentId(info.myAgentId) {}
+
+OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId) :
+    TradeMetaInfo(symbol, exchangeId),
+    myAgentId(agentId) {}
 
 const std::string OrderMetaInfo::getAsJason() const {
     std::ostringstream oss;

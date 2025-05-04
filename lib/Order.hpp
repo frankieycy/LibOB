@@ -14,8 +14,8 @@ class OrderEventBase;
 class OrderBase {
 public:
     OrderBase();
-    OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     OrderBase(const OrderBase& order);
+    OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     const uint64_t getId() const { return myId; }
     const uint64_t getTimestamp() const { return myTimestamp; }
@@ -52,8 +52,8 @@ private:
 class LimitOrder : public OrderBase {
 public:
     LimitOrder();
-    LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     LimitOrder(const LimitOrder& order);
+    LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     const double getPrice() const { return myPrice; }
     void setPrice(const double price) { myPrice = price; }
@@ -69,8 +69,8 @@ private:
 class MarketOrder : public OrderBase {
 public:
     MarketOrder();
-    MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     MarketOrder(const MarketOrder& order);
+    MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<MarketOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;

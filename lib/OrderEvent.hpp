@@ -10,8 +10,8 @@ class LimitOrder;
 class OrderEventBase {
 public:
     OrderEventBase();
-    OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp);
     OrderEventBase(const OrderEventBase& event);
+    OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp);
     virtual std::shared_ptr<OrderEventBase> clone() const { return std::make_shared<OrderEventBase>(*this); }
     const uint64_t getEventId() const { return myEventId; }
     const uint64_t getOrderId() const { return myOrderId; }
@@ -36,8 +36,8 @@ private:
 class OrderFillEvent : public OrderEventBase {
 public:
     OrderFillEvent();
-    OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const int fillQuantity, const double fillPrice);
     OrderFillEvent(const OrderFillEvent& event);
+    OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const int fillQuantity, const double fillPrice);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderFillEvent>(*this); }
     const int getFillQuantity() const { return myFillQuantity; }
     const double getFillPrice() const { return myFillPrice; }
@@ -55,8 +55,8 @@ private:
 class OrderModifyPriceEvent : public OrderEventBase {
 public:
     OrderModifyPriceEvent();
-    OrderModifyPriceEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedPrice);
     OrderModifyPriceEvent(const OrderModifyPriceEvent& event);
+    OrderModifyPriceEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedPrice);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyPriceEvent>(*this); }
     const double getModifiedPrice() const { return myModifiedPrice; }
     void setModifiedPrice(const int modifiedPrice) { myModifiedPrice = modifiedPrice; }
@@ -70,8 +70,8 @@ private:
 class OrderModifyQuantityEvent : public OrderEventBase {
 public:
     OrderModifyQuantityEvent();
-    OrderModifyQuantityEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity);
     OrderModifyQuantityEvent(const OrderModifyQuantityEvent& event);
+    OrderModifyQuantityEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyQuantityEvent>(*this); }
     const int getModifiedQuantity() const { return myModifiedQuantity; }
     void setModifiedQuantity(const int modifiedQuantity) { myModifiedQuantity = modifiedQuantity; }
@@ -85,8 +85,8 @@ private:
 class OrderCancelEvent : public OrderEventBase {
 public:
     OrderCancelEvent();
-    OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity);
     OrderCancelEvent(const OrderCancelEvent& event);
+    OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderCancelEvent>(*this); }
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;

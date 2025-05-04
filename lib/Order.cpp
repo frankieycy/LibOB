@@ -23,15 +23,6 @@ OrderBase::OrderBase() :
     myOrderType(OrderType::NULL_ORDER_TYPE),
     myOrderState(OrderState::NULL_ORDER_STATE) {}
 
-OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
-    myId(id),
-    myTimestamp(timestamp),
-    mySide(side),
-    myQuantity(quantity),
-    myOrderType(OrderType::NULL_ORDER_TYPE),
-    myOrderState(OrderState::NULL_ORDER_STATE),
-    myMetaInfo(metaInfo) {}
-
 OrderBase::OrderBase(const OrderBase& order) :
     myId(order.myId),
     myTimestamp(order.myTimestamp),
@@ -40,6 +31,15 @@ OrderBase::OrderBase(const OrderBase& order) :
     myOrderType(order.myOrderType),
     myOrderState(order.myOrderState),
     myMetaInfo(order.myMetaInfo) {}
+
+OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
+    myId(id),
+    myTimestamp(timestamp),
+    mySide(side),
+    myQuantity(quantity),
+    myOrderType(OrderType::NULL_ORDER_TYPE),
+    myOrderState(OrderState::NULL_ORDER_STATE),
+    myMetaInfo(metaInfo) {}
 
 void OrderBase::init() {
     if (myQuantity < 0)
@@ -76,15 +76,15 @@ LimitOrder::LimitOrder() :
     init();
 }
 
+LimitOrder::LimitOrder(const LimitOrder& order) :
+    OrderBase(order),
+    myPrice(order.myPrice) {}
+
 LimitOrder::LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
     OrderBase(id, timestamp, side, quantity, metaInfo),
     myPrice(price) {
     init();
 }
-
-LimitOrder::LimitOrder(const LimitOrder& order) :
-    OrderBase(order),
-    myPrice(order.myPrice) {}
 
 void LimitOrder::executeOrderEvent(const OrderEventBase& event) {
     event.applyTo(*this);
@@ -129,13 +129,13 @@ MarketOrder::MarketOrder() :
     init();
 }
 
-MarketOrder::MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
-    OrderBase(id, timestamp, side, quantity, metaInfo) {
+MarketOrder::MarketOrder(const MarketOrder& order) :
+    OrderBase(order) {
     init();
 }
 
-MarketOrder::MarketOrder(const MarketOrder& order) :
-    OrderBase(order) {
+MarketOrder::MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
+    OrderBase(id, timestamp, side, quantity, metaInfo) {
     init();
 }
 

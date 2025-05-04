@@ -6,8 +6,8 @@ namespace Market {
 class TradeMetaInfo {
 public:
     TradeMetaInfo() = default;
-    TradeMetaInfo(const std::string symbol, const std::string exchangeId);
     TradeMetaInfo(const TradeMetaInfo& info);
+    TradeMetaInfo(const std::string symbol, const std::string exchangeId);
     virtual std::shared_ptr<TradeMetaInfo> clone() const { return std::make_shared<TradeMetaInfo>(*this); }
     const std::string getSymbol() const { return mySymbol; }
     const std::string getExchangeId() const { return myExchangeId; }
@@ -23,8 +23,8 @@ private:
 class OrderMetaInfo : public TradeMetaInfo {
 public:
     OrderMetaInfo() = default;
-    OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId);
     OrderMetaInfo(const OrderMetaInfo& info);
+    OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId);
     virtual std::shared_ptr<TradeMetaInfo> clone() const override { return std::make_shared<OrderMetaInfo>(*this); }
     const std::string getAgentId() const { return myAgentId; }
     void setAgentId(const std::string& agentId) { myAgentId = agentId; }

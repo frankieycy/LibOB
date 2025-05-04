@@ -19,17 +19,17 @@ OrderEventBase::OrderEventBase() :
     myTimestamp(0),
     myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE) {}
 
-OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp) :
-    myEventId(eventId),
-    myOrderId(orderId),
-    myTimestamp(timestamp),
-    myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE) {}
-
 OrderEventBase::OrderEventBase(const OrderEventBase& event) :
     myEventId(event.myEventId),
     myOrderId(event.myOrderId),
     myTimestamp(event.myTimestamp),
     myEventType(event.myEventType) {}
+
+OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp) :
+    myEventId(eventId),
+    myOrderId(orderId),
+    myTimestamp(timestamp),
+    myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE) {}
 
 void OrderEventBase::applyTo(MarketOrder& order) const {
     Error::LIB_THROW("No implementation for OrderEventBase::applyTo(MarketOrder&).");
@@ -57,17 +57,17 @@ OrderFillEvent::OrderFillEvent() :
     init();
 }
 
-OrderFillEvent::OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const int fillQuantity, const double fillPrice) :
-    OrderEventBase(eventId, orderId, timestamp),
-    myFillQuantity(0),
-    myFillPrice(0) {
-    init();
-}
-
 OrderFillEvent::OrderFillEvent(const OrderFillEvent& event) :
     OrderEventBase(event),
     myFillQuantity(event.myFillQuantity),
     myFillPrice(event.myFillPrice) {
+    init();
+}
+
+OrderFillEvent::OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const int fillQuantity, const double fillPrice) :
+    OrderEventBase(eventId, orderId, timestamp),
+    myFillQuantity(0),
+    myFillPrice(0) {
     init();
 }
 
@@ -108,15 +108,15 @@ OrderModifyPriceEvent::OrderModifyPriceEvent() :
     init();
 }
 
-OrderModifyPriceEvent::OrderModifyPriceEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedPrice) :
-    OrderEventBase(eventId, orderId, timestamp),
-    myModifiedPrice(modifiedPrice) {
-    init();
-}
-
 OrderModifyPriceEvent::OrderModifyPriceEvent(const OrderModifyPriceEvent& event) :
     OrderEventBase(event),
     myModifiedPrice(event.myModifiedPrice) {
+    init();
+}
+
+OrderModifyPriceEvent::OrderModifyPriceEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedPrice) :
+    OrderEventBase(eventId, orderId, timestamp),
+    myModifiedPrice(modifiedPrice) {
     init();
 }
 
@@ -146,13 +146,13 @@ OrderModifyQuantityEvent::OrderModifyQuantityEvent() :
     OrderEventBase(),
     myModifiedQuantity(0) {}
 
-OrderModifyQuantityEvent::OrderModifyQuantityEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity) :
-    OrderEventBase(eventId, orderId, timestamp),
-    myModifiedQuantity(modifiedQuantity) {}
-
 OrderModifyQuantityEvent::OrderModifyQuantityEvent(const OrderModifyQuantityEvent& event) :
     OrderEventBase(event),
     myModifiedQuantity(event.myModifiedQuantity) {}
+
+OrderModifyQuantityEvent::OrderModifyQuantityEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity) :
+    OrderEventBase(eventId, orderId, timestamp),
+    myModifiedQuantity(modifiedQuantity) {}
 
 void OrderModifyQuantityEvent::applyTo(LimitOrder& order) const {
     order.setQuantity(myModifiedQuantity);
@@ -181,13 +181,13 @@ OrderCancelEvent::OrderCancelEvent() :
     init();
 }
 
-OrderCancelEvent::OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity) :
-    OrderEventBase(eventId, orderId, timestamp) {
+OrderCancelEvent::OrderCancelEvent(const OrderCancelEvent& event) :
+    OrderEventBase(event) {
     init();
 }
 
-OrderCancelEvent::OrderCancelEvent(const OrderCancelEvent& event) :
-    OrderEventBase(event) {
+OrderCancelEvent::OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity) :
+    OrderEventBase(eventId, orderId, timestamp) {
     init();
 }
 
