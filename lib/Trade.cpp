@@ -24,6 +24,20 @@ TradeBase::TradeBase() :
     myIsSellLimitOrder(true),
     myIsBuyInitiated(true) {}
 
+TradeBase::TradeBase(const TradeBase& trade) :
+    myId(trade.myId),
+    myTimestamp(trade.myTimestamp),
+    myBuyId(trade.myBuyId),
+    mySellId(trade.mySellId),
+    myQuantity(trade.myQuantity),
+    myPrice(trade.myPrice),
+    myIsBuyLimitOrder(trade.myIsBuyLimitOrder),
+    myIsSellLimitOrder(trade.myIsSellLimitOrder),
+    myIsBuyInitiated(trade.myIsBuyInitiated),
+    myMetaInfo(trade.myMetaInfo) {
+    init();
+}
+
 TradeBase::TradeBase(
     const uint64_t id, const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const int quantity, const double price,
     const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<TradeMetaInfo>& metaInfo) :
@@ -51,20 +65,6 @@ TradeBase::TradeBase(const uint64_t id, const uint64_t timestamp, const int quan
     myIsSellLimitOrder(sellOrder.getOrderType() == OrderType::LIMIT),
     myIsBuyInitiated(isBuyInitiated),
     myMetaInfo(isBuyInitiated ? buyOrder.getMetaInfo() : sellOrder.getMetaInfo()) {
-    init();
-}
-
-TradeBase::TradeBase(const TradeBase& trade) :
-    myId(trade.myId),
-    myTimestamp(trade.myTimestamp),
-    myBuyId(trade.myBuyId),
-    mySellId(trade.mySellId),
-    myQuantity(trade.myQuantity),
-    myPrice(trade.myPrice),
-    myIsBuyLimitOrder(trade.myIsBuyLimitOrder),
-    myIsSellLimitOrder(trade.myIsSellLimitOrder),
-    myIsBuyInitiated(trade.myIsBuyInitiated),
-    myMetaInfo(trade.myMetaInfo) {
     init();
 }
 
