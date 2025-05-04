@@ -8,14 +8,14 @@
 
 namespace Exchange {
 using PriceLevel = double;
-using LimitQueue = std::deque<std::shared_ptr<Market::LimitOrder>>;
-using MarketQueue = std::deque<std::shared_ptr<Market::MarketOrder>>;
+using LimitQueue = std::list<std::shared_ptr<Market::LimitOrder>>;
+using MarketQueue = std::list<std::shared_ptr<Market::MarketOrder>>;
 using TradeLog = std::vector<std::shared_ptr<Market::TradeBase>>;
 using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
 using AscOrderBook = std::map<PriceLevel, LimitQueue>;
 using DescOrderBookSize = std::map<PriceLevel, int, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, int>;
-using OrderIndex = std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>>;
+using OrderIndex = std::unordered_map<uint64_t, LimitQueue::iterator>;
 
 class IMatchingEngine {
 public:

@@ -27,13 +27,17 @@ const std::pair<const PriceLevel, int> IMatchingEngine::getBestAskPriceAndSize()
 }
 
 const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestBidTopOrder() const {
-    // TODO
-    return std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
+    if (myBidBook.empty())
+        throw Error::LibException("IMatchingEngine: bid book is empty.");
+    const auto& it = myBidBook.begin();
+    return {it->first, it->second.front()};
 }
 
 const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestAskTopOrder() const {
-    // TODO
-    return std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>>();
+    if (myAskBook.empty())
+        throw Error::LibException("IMatchingEngine: ask book is empty.");
+    const auto& it = myAskBook.begin();
+    return {it->first, it->second.front()};
 }
 
 const double IMatchingEngine::getBestBidPrice() const {
@@ -85,11 +89,13 @@ const int IMatchingEngine::getBestAskSize() const {
 }
 
 const int IMatchingEngine::getBidSize(const PriceLevel& priceLevel) const {
-    return myBidBookSize.at(priceLevel);
+    const auto& it = myBidBookSize.find(priceLevel);
+    return it != myBidBookSize.end() ? it->second : 0;
 }
 
 const int IMatchingEngine::getAskSize(const PriceLevel& priceLevel) const {
-    return myAskBookSize.at(priceLevel);
+    const auto& it = myAskBookSize.find(priceLevel);
+    return it != myAskBookSize.end() ? it->second : 0;
 }
 
 const int IMatchingEngine::getLastTradeSize() const {
@@ -124,8 +130,8 @@ void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& eve
     if (!event)
         throw Error::LibException("IMatchingEngine::process: order event is null.");
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
-    if (it != myLimitOrderLookup.end()) 
-        it->second->executeOrderEvent(*event);
+    if (it != myLimitOrderLookup.end())
+        (*it->second)->executeOrderEvent(*event);
 }
 
 std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
