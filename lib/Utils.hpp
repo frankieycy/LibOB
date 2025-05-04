@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-#include <deque>
+#include <list>
 #include <algorithm>
 #include <cmath>
 #include <limits>
