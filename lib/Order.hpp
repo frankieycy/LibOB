@@ -33,8 +33,8 @@ public:
     void setOrderState(const OrderState orderState) { myOrderState = orderState; }
     void setMetaInfo(const std::shared_ptr<OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
     virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
-    virtual void executeOrderEvent(const OrderEventBase& event) {};
-    virtual void submit(Exchange::IMatchingEngine& matchingEngine) const {};
+    virtual void executeOrderEvent(const OrderEventBase& event) {}
+    virtual void submit(Exchange::IMatchingEngine& matchingEngine) const {}
     virtual void init();
     virtual void cancel();
     virtual const std::string getAsJason() const;
