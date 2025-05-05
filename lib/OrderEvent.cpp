@@ -117,8 +117,6 @@ void OrderFillEvent::applyTo(LimitOrder& order) const {
 }
 
 void OrderFillEvent::init() {
-    if (myFillQuantity < 0)
-        Error::LIB_THROW("OrderFillEvent: quantity cannot be negative.");
     if (myFillPrice < 0)
         Error::LIB_THROW("OrderFillEvent: price cannot be negative.");
     setEventType(OrderEventType::FILL);
@@ -194,8 +192,6 @@ void OrderModifyQuantityEvent::applyTo(LimitOrder& order) const {
 }
 
 void OrderModifyQuantityEvent::init() {
-    if (myModifiedQuantity < 0)
-        Error::LIB_THROW("OrderModifyQuantityEvent: Quantity cannot be negative.");
     setEventType(OrderEventType::MODIFY_QUANTITY);
 }
 

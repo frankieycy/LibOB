@@ -42,8 +42,6 @@ OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side sid
     myMetaInfo(metaInfo) {}
 
 void OrderBase::init() {
-    if (myQuantity < 0)
-        Error::LIB_THROW("OrderBase: quantity cannot be negative.");
     setOrderState(OrderState::ACTIVE);
 }
 
@@ -95,8 +93,10 @@ void LimitOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
 }
 
 void LimitOrder::init() {
+    if (getSide() == Side::NULL_SIDE)
+        Error::LIB_THROW("LimitOrder: side cannot be null.");
     if (myPrice < 0)
-        Error::LIB_THROW("LimitBase: price cannot be negative.");
+        Error::LIB_THROW("LimitOrder: price cannot be negative.");
     setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::LIMIT);
 }
@@ -148,6 +148,8 @@ void MarketOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
 }
 
 void MarketOrder::init() {
+    if (getSide() == Side::NULL_SIDE)
+        Error::LIB_THROW("MarketOrder: side cannot be null.");
     setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::MARKET);
 }

@@ -69,8 +69,6 @@ TradeBase::TradeBase(const uint64_t id, const uint64_t timestamp, const uint32_t
 }
 
 void TradeBase::init() {
-    if (myQuantity < 0)
-        Error::LIB_THROW("TradeBase: quantity cannot be negative.");
     if (myPrice < 0)
         Error::LIB_THROW("TradeBase: price cannot be negative.");
 }
