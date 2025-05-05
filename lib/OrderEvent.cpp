@@ -23,12 +23,14 @@ OrderEventBase::OrderEventBase(const OrderEventBase& event) :
     myEventId(event.myEventId),
     myOrderId(event.myOrderId),
     myTimestamp(event.myTimestamp),
-    myEventType(event.myEventType) {}
+    myEventType(event.myEventType),
+    myOrder(event.myOrder) {}
 
-OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp) :
+OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order) :
     myEventId(eventId),
     myOrderId(orderId),
     myTimestamp(timestamp),
+    myOrder(order),
     myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE) {}
 
 void OrderEventBase::applyTo(MarketOrder& order) const {
@@ -42,10 +44,43 @@ void OrderEventBase::applyTo(LimitOrder& order) const {
 const std::string OrderEventBase::getAsJason() const {
     std::ostringstream oss;
     oss << "{"
-    "\"EventId\":" << getEventId() << ","
-    "\"OrderId\":" << getOrderId() << ","
-    "\"Timestamp\":" << getTimestamp() << ","
+    "\"EventId\":"     << getEventId()   << ","
+    "\"OrderId\":"     << getOrderId()   << ","
+    "\"Timestamp\":"   << getTimestamp() << ","
     "\"EventType\":\"" << getEventType() << "\"";
+    oss << "}";
+    return oss.str();
+}
+
+OrderSubmitEvent::OrderSubmitEvent() :
+    OrderEventBase() {
+    init();
+}
+
+OrderSubmitEvent::OrderSubmitEvent(const OrderSubmitEvent& event) :
+    OrderEventBase(event) {
+    init();
+}
+
+OrderSubmitEvent::OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order) :
+    OrderEventBase(eventId, orderId, timestamp, order) {
+    init();
+}
+
+void OrderSubmitEvent::init() {
+    if (!getOrder())
+        Error::LIB_THROW("OrderSubmitEvent: order is null.");
+    setEventType(OrderEventType::SUBMIT);
+}
+
+const std::string OrderSubmitEvent::getAsJason() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"     << getEventId()   << ","
+    "\"OrderId\":"     << getOrderId()   << ","
+    "\"Timestamp\":"   << getTimestamp() << ","
+    "\"EventType\":\"" << getEventType() << "\","
+    "\"Order\":"       << getOrder()->getAsJason();
     oss << "}";
     return oss.str();
 }

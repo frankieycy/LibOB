@@ -4,6 +4,7 @@
 #include "OrderUtils.hpp"
 
 namespace Market {
+class OrderBase;
 class MarketOrder;
 class LimitOrder;
 
@@ -11,15 +12,18 @@ class OrderEventBase {
 public:
     OrderEventBase();
     OrderEventBase(const OrderEventBase& event);
-    OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp);
+    OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order = nullptr);
     const uint64_t getEventId() const { return myEventId; }
     const uint64_t getOrderId() const { return myOrderId; }
     const uint64_t getTimestamp() const { return myTimestamp; }
     const OrderEventType getEventType() const { return myEventType; }
+    const std::shared_ptr<OrderBase>& getOrder() const { return myOrder; }
+    const bool isSubmit() const { return myEventType == OrderEventType::SUBMIT; }
     void setEventId(const uint64_t eventId) { myEventId = eventId; }
     void setOrderId(const uint64_t orderId) { myOrderId = orderId; }
     void setTimestamp(const uint64_t timestamp) { myTimestamp = timestamp; }
     void setEventType(const OrderEventType eventType) { myEventType = eventType; }
+    void setOrder(const std::shared_ptr<OrderBase>& order) { myOrder = order; }
     virtual std::shared_ptr<OrderEventBase> clone() const { return std::make_shared<OrderEventBase>(*this); }
     virtual void applyTo(MarketOrder& order) const;
     virtual void applyTo(LimitOrder& order) const;
@@ -31,6 +35,17 @@ private:
     uint64_t myOrderId;
     uint64_t myTimestamp;
     OrderEventType myEventType;
+    std::shared_ptr<OrderBase> myOrder;
+};
+
+class OrderSubmitEvent : public OrderEventBase {
+public:
+    OrderSubmitEvent();
+    OrderSubmitEvent(const OrderSubmitEvent& event);
+    OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order);
+    virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderSubmitEvent>(*this); }
+    virtual void init() override;
+    virtual const std::string getAsJason() const override;
 };
 
 class OrderFillEvent : public OrderEventBase {

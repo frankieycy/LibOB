@@ -129,6 +129,8 @@ void IMatchingEngine::process(const std::shared_ptr<Market::OrderBase>& order) {
 void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& event) {
     if (!event)
         throw Error::LibException("IMatchingEngine::process: order event is null.");
+    if (event->isSubmit())
+        process(event->getOrder());
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
     if (it != myLimitOrderLookup.end())
         (*it->second)->executeOrderEvent(*event);
