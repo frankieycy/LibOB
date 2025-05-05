@@ -16,39 +16,39 @@ std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngin
 
 const std::pair<const PriceLevel, int> IMatchingEngine::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
-        throw Error::LibException("IMatchingEngine: bid book is empty.");
+        return {Consts::NAN_DOUBLE, 0};
     return *myBidBookSize.begin();
 }
 
 const std::pair<const PriceLevel, int> IMatchingEngine::getBestAskPriceAndSize() const {
     if (myAskBookSize.empty())
-        throw Error::LibException("IMatchingEngine: ask book is empty.");
+        return {Consts::NAN_DOUBLE, 0};
     return *myAskBookSize.begin();
 }
 
 const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestBidTopOrder() const {
     if (myBidBook.empty())
-        throw Error::LibException("IMatchingEngine: bid book is empty.");
+        return {Consts::NAN_DOUBLE, nullptr};
     const auto& it = myBidBook.begin();
     return {it->first, it->second.front()};
 }
 
 const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestAskTopOrder() const {
     if (myAskBook.empty())
-        throw Error::LibException("IMatchingEngine: ask book is empty.");
+        return {Consts::NAN_DOUBLE, nullptr};
     const auto& it = myAskBook.begin();
     return {it->first, it->second.front()};
 }
 
 const double IMatchingEngine::getBestBidPrice() const {
     if (myBidBookSize.empty())
-        throw Error::LibException("IMatchingEngine: bid book is empty.");
+        return Consts::NAN_DOUBLE;
     return myBidBookSize.begin()->first;
 }
 
 const double IMatchingEngine::getBestAskPrice() const {
     if (myAskBookSize.empty())
-        throw Error::LibException("IMatchingEngine: ask book is empty.");
+        return Consts::NAN_DOUBLE;
     return myAskBookSize.begin()->first;
 }
 
@@ -76,59 +76,59 @@ const double IMatchingEngine::getLastTradePrice() const {
     return getLastTrade()->getPrice();
 }
 
-const int IMatchingEngine::getBestBidSize() const {
+const uint32_t IMatchingEngine::getBestBidSize() const {
     if (myBidBookSize.empty())
-        throw Error::LibException("IMatchingEngine: bid book is empty.");
+        return 0;
     return myBidBookSize.begin()->second;
 }
 
-const int IMatchingEngine::getBestAskSize() const {
+const uint32_t IMatchingEngine::getBestAskSize() const {
     if (myAskBookSize.empty())
-        throw Error::LibException("IMatchingEngine: ask book is empty.");
+        return 0;
     return myAskBookSize.begin()->second;
 }
 
-const int IMatchingEngine::getBidSize(const PriceLevel& priceLevel) const {
+const uint32_t IMatchingEngine::getBidSize(const PriceLevel& priceLevel) const {
     const auto& it = myBidBookSize.find(priceLevel);
     return it != myBidBookSize.end() ? it->second : 0;
 }
 
-const int IMatchingEngine::getAskSize(const PriceLevel& priceLevel) const {
+const uint32_t IMatchingEngine::getAskSize(const PriceLevel& priceLevel) const {
     const auto& it = myAskBookSize.find(priceLevel);
     return it != myAskBookSize.end() ? it->second : 0;
 }
 
-const int IMatchingEngine::getLastTradeSize() const {
+const uint32_t IMatchingEngine::getLastTradeSize() const {
     return getLastTrade()->getQuantity();
 }
 
-const int IMatchingEngine::getNumberOfBidPriceLevels() const {
+const size_t IMatchingEngine::getNumberOfBidPriceLevels() const {
     return myBidBook.size();
 }
 
-const int IMatchingEngine::getNumberOfAskPriceLevels() const {
+const size_t IMatchingEngine::getNumberOfAskPriceLevels() const {
     return myAskBook.size();
 }
 
-const int IMatchingEngine::getNumberOfTrades() const {
+const size_t IMatchingEngine::getNumberOfTrades() const {
     return myTradeLog.size();
 }
 
-const std::shared_ptr<Market::TradeBase>& IMatchingEngine::getLastTrade() const {
+const std::shared_ptr<Market::TradeBase> IMatchingEngine::getLastTrade() const {
     if (myTradeLog.empty())
-        throw Error::LibException("IMatchingEngine: trade log is empty.");
+        return nullptr;
     return myTradeLog.back();
 }
 
 void IMatchingEngine::process(const std::shared_ptr<Market::OrderBase>& order) {
     if (!order)
-        throw Error::LibException("IMatchingEngine::process: order is null.");
+        Error::LIB_THROW("IMatchingEngine::process: order is null.");
     order->submit(*this);
 }
 
 void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& event) {
     if (!event)
-        throw Error::LibException("IMatchingEngine::process: order event is null.");
+        Error::LIB_THROW("IMatchingEngine::process: order event is null.");
     if (event->isSubmit())
         process(event->getOrder());
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
