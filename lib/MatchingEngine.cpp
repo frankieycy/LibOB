@@ -162,11 +162,11 @@ const std::string IMatchingEngine::getAsJason() const {
     return "";
 }
 
-void MatchingEngineFIFO::addToLimitOrderBook(const std::shared_ptr<Market::LimitOrder>& order) {
+void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) {
     // TODO
 }
 
-void MatchingEngineFIFO::executeMarketOrder(const std::shared_ptr<Market::MarketOrder>& order) {
+void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) {
     // TODO
 }
 

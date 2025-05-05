@@ -63,8 +63,8 @@ public:
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
     virtual void process(const std::shared_ptr<Market::OrderBase>& order);
     virtual void process(const std::shared_ptr<Market::OrderEventBase>& event);
-    virtual void addToLimitOrderBook(const std::shared_ptr<Market::LimitOrder>& order) = 0;
-    virtual void executeMarketOrder(const std::shared_ptr<Market::MarketOrder>& order) = 0;
+    virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
+    virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void init();
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
@@ -88,8 +88,8 @@ public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
-    virtual void addToLimitOrderBook(const std::shared_ptr<Market::LimitOrder>& order) override;
-    virtual void executeMarketOrder(const std::shared_ptr<Market::MarketOrder>& order) override;
+    virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;
+    virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) override;
     virtual void init() override;
 };
 }
