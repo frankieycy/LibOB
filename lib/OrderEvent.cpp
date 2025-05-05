@@ -99,7 +99,7 @@ OrderFillEvent::OrderFillEvent(const OrderFillEvent& event) :
     init();
 }
 
-OrderFillEvent::OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const int fillQuantity, const double fillPrice) :
+OrderFillEvent::OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint32_t fillQuantity, const double fillPrice) :
     OrderEventBase(eventId, orderId, timestamp),
     myFillQuantity(0),
     myFillPrice(0) {

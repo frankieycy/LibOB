@@ -32,7 +32,7 @@ OrderBase::OrderBase(const OrderBase& order) :
     myOrderState(order.myOrderState),
     myMetaInfo(order.myMetaInfo) {}
 
-OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
+OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
     myId(id),
     myTimestamp(timestamp),
     mySide(side),
@@ -80,7 +80,7 @@ LimitOrder::LimitOrder(const LimitOrder& order) :
     OrderBase(order),
     myPrice(order.myPrice) {}
 
-LimitOrder::LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
+LimitOrder::LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
     OrderBase(id, timestamp, side, quantity, metaInfo),
     myPrice(price) {
     init();
@@ -134,7 +134,7 @@ MarketOrder::MarketOrder(const MarketOrder& order) :
     init();
 }
 
-MarketOrder::MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const int quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
+MarketOrder::MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
     OrderBase(id, timestamp, side, quantity, metaInfo) {
     init();
 }
