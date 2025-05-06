@@ -16,9 +16,7 @@ int main() {
     const std::shared_ptr<OrderBase> m1 = std::make_shared<MarketOrder>(7, 1, Side::BUY, 5);
     const std::shared_ptr<OrderBase> m2 = std::make_shared<MarketOrder>(8, 1, Side::SELL, 15);
     const std::vector<const std::shared_ptr<OrderBase>> orders{b1, b2, b3, a1, a2, a3, m1, m2};
-    for (const auto& o : orders) {
-        std::cout << "Process order: " << *o << std::endl;
+    for (const auto& o : orders)
         e.process(o);
-    }
     return 0;
 }
