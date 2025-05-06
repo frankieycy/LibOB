@@ -12,7 +12,7 @@ public:
     TradeBase(const TradeBase& trade);
     TradeBase(
         const uint64_t id, const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const uint32_t quantity, const double price,
-        const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<TradeMetaInfo>& metaInfo);
+        const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<TradeMetaInfo>& metaInfo = nullptr);
     TradeBase(const uint64_t id, const uint64_t timestamp, const uint32_t quantity, const double price, const bool isBuyInitiated, const OrderBase& buyOrder, const OrderBase& sellOrder);
     const uint64_t getId() const { return myId; }
     const uint64_t getTimestamp() const { return myTimestamp; }
