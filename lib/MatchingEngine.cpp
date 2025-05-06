@@ -165,18 +165,19 @@ const std::string IMatchingEngine::getAsJason() const {
 void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) {
     // TODO
     std::cout << "Add to limit order book: " << *order << std::endl;
-    if (!order->isActive())
+    if (!order->isAlive())
         return;
     const Market::Side side = order->getSide();
     const PriceLevel price = order->getPrice();
+    const uint32_t originalQuantity = order->getQuantity();
     uint32_t unfilledQuantity = order->getQuantity();
     DescOrderBook& bidBook = getBidBook();
     DescOrderBookSize& bidBookSize = getBidBookSize();
     AscOrderBook& askBook = getAskBook();
     AscOrderBookSize& askBookSize = getAskBookSize();
-    OrderIndex& limitOrderLookup = getLimitOrderLookup();
     TradeLog& tradeLog = getTradeLog();
     RemovedLimitOrderLog& removedLimitOrderLog = getRemovedLimitOrderLog();
+    OrderIndex& limitOrderLookup = getLimitOrderLookup();
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty() && price >= askBook.begin()->first) {
             LimitQueue& askQueue = askBook.begin()->second;
@@ -204,7 +205,8 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
         }
         if (unfilledQuantity) {
             order->setQuantity(unfilledQuantity);
-            order->setOrderState(Market::OrderState::PARTIAL_FILLED);
+            if (unfilledQuantity < originalQuantity)
+                order->setOrderState(Market::OrderState::PARTIAL_FILLED);
             LimitQueue& bidQueue = bidBook[price];
             uint32_t& bidSizeTotal = bidBookSize[price];
             bidQueue.push_back(order);
@@ -242,7 +244,8 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
         }
         if (unfilledQuantity) {
             order->setQuantity(unfilledQuantity);
-            order->setOrderState(Market::OrderState::PARTIAL_FILLED);
+            if (unfilledQuantity < originalQuantity)
+                order->setOrderState(Market::OrderState::PARTIAL_FILLED);
             LimitQueue& askQueue = askBook[price];
             uint32_t& askSizeTotal = askBookSize[price];
             askQueue.push_back(order);
@@ -258,7 +261,7 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
 void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) {
     // TODO
     std::cout << "Execute market order: " << *order << std::endl;
-    if (!order->isActive())
+    if (!order->isAlive())
         return;
 }
 
