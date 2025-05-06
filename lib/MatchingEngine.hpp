@@ -11,10 +11,11 @@ using PriceLevel = double;
 using LimitQueue = std::list<std::shared_ptr<Market::LimitOrder>>;
 using MarketQueue = std::list<std::shared_ptr<Market::MarketOrder>>;
 using TradeLog = std::vector<std::shared_ptr<Market::TradeBase>>;
+using RemovedLimitOrderLog = std::vector<std::shared_ptr<Market::LimitOrder>>;
 using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
 using AscOrderBook = std::map<PriceLevel, LimitQueue>;
-using DescOrderBookSize = std::map<PriceLevel, int, std::greater<double>>;
-using AscOrderBookSize = std::map<PriceLevel, int>;
+using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
+using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, LimitQueue::iterator>;
 
 class IMatchingEngine {
@@ -29,6 +30,7 @@ public:
     const AscOrderBookSize& getAskBookSize() const { return myAskBookSize; }
     const MarketQueue& getMarketQueue() const { return myMarketQueue; }
     const TradeLog& getTradeLog() const { return myTradeLog; }
+    const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
     const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
     void setSymbol(const std::string& symbol) { mySymbol = symbol; }
@@ -37,10 +39,11 @@ public:
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
     void setMarketQueue(const MarketQueue& marketQueue) { myMarketQueue = marketQueue; }
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
+    void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
     void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
-    const std::pair<const PriceLevel, int> getBestBidPriceAndSize() const;
-    const std::pair<const PriceLevel, int> getBestAskPriceAndSize() const;
+    const std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const;
+    const std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const;
     const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestBidTopOrder() const;
     const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestAskTopOrder() const;
     const double getBestBidPrice() const;
@@ -70,6 +73,15 @@ public:
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
     virtual const std::string getAsJason() const;
     friend std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine);
+protected:
+    DescOrderBook& getBidBook() { return myBidBook; }
+    AscOrderBook& getAskBook() { return myAskBook; }
+    DescOrderBookSize& getBidBookSize() { return myBidBookSize; }
+    AscOrderBookSize& getAskBookSize() { return myAskBookSize; }
+    MarketQueue& getMarketQueue() { return myMarketQueue; }
+    TradeLog& getTradeLog() { return myTradeLog; }
+    RemovedLimitOrderLog& getRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
+    OrderIndex& getLimitOrderLookup() { return myLimitOrderLookup; }
 private:
     std::string mySymbol;
     std::string myExchangeId;
@@ -79,6 +91,7 @@ private:
     AscOrderBookSize myAskBookSize;
     MarketQueue myMarketQueue;
     TradeLog myTradeLog;
+    RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
     OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
 };
