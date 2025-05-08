@@ -132,8 +132,18 @@ void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& eve
     if (event->isSubmit())
         process(event->getOrder());
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
-    if (it != myLimitOrderLookup.end())
-        (*it->second)->executeOrderEvent(*event);
+    if (it != myLimitOrderLookup.end()) {
+        auto& queueOrderPair = it->second;
+        auto& queue = queueOrderPair.first;
+        auto& orderIt = queueOrderPair.second;
+        auto& order = *orderIt;
+        order->executeOrderEvent(*event);
+        if (!order->isAlive()) {
+            myRemovedLimitOrderLog.push_back(order);
+            myLimitOrderLookup.erase(it);
+            queue->erase(orderIt);
+        }
+    }
 }
 
 std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
@@ -154,6 +164,7 @@ void IMatchingEngine::reset() {
     myAskBookSize.clear();
     myMarketQueue.clear();
     myTradeLog.clear();
+    myRemovedLimitOrderLog.clear();
     myLimitOrderLookup.clear();
 }
 
@@ -212,7 +223,7 @@ void placeLimitOrderToLimitOrderBook(
             order->setOrderState(Market::OrderState::PARTIAL_FILLED);
         limitQueue.push_back(order);
         orderSizeTotal += order->getQuantity();
-        orderLookup[order->getId()] = limitQueue.end();
+        orderLookup[order->getId()] = {&limitQueue, std::prev(limitQueue.end())};
         std::cout << "DEBUG: Placed order in limit order book: " << *order << std::endl;
     } else {
         order->setQuantity(0);
