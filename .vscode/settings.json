@@ -70,6 +70,7 @@
         "functional": "cpp",
         "iterator": "cpp",
         "utility": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "iomanip": "cpp"
     }
 }
