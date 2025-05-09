@@ -1,6 +1,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 #include <stdexcept>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
