@@ -33,6 +33,7 @@ public:
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
     const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
+    const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
     void setSymbol(const std::string& symbol) { mySymbol = symbol; }
     void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
     void setBidBook(const DescOrderBook& bidBook) { myBidBook = bidBook; }
@@ -42,6 +43,7 @@ public:
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
     void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
+    void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
     const std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const;
     const std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const;
     const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestBidTopOrder() const;
@@ -94,6 +96,7 @@ private:
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
     OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
+    OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
 };
 
 class MatchingEngineFIFO : public IMatchingEngine {

@@ -10,7 +10,7 @@ namespace Exchange {
 using namespace Utils;
 
 std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine) {
-    out << matchingEngine.getAsJason();
+    matchingEngine.orderBookSnapshot(out);
     return out;
 }
 
@@ -147,7 +147,48 @@ void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& eve
 }
 
 std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
-    // TODO
+    out << "================= Order Book Snapshot ===================\n";
+    out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
+    out << "---------------------------------------------------------\n";
+
+    auto bidIt = myBidBook.begin();
+    auto askIt = myAskBook.begin();
+    uint level = 1;
+
+    if (myOrderBookDisplayConfig.isShowOrderBook()) {
+        if (myOrderBookDisplayConfig.isAggregateOrderBook()) {
+            while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
+                if (bidIt != myBidBook.end()) {
+                    uint32_t bidSize = 0;
+                    for (const auto& order : bidIt->second)
+                        bidSize += order->getQuantity();
+                    out << std::setw(9) << bidSize << "  | "
+                        << std::fixed << std::setprecision(2)
+                        << std::setw(8) << bidIt->first << "  || ";
+                    ++bidIt;
+                } else {
+                    out << "           |           || ";
+                }
+                out << std::setw(5) << level << " || ";
+                if (askIt != myAskBook.end()) {
+                    uint32_t askSize = 0;
+                    for (const auto& order : askIt->second)
+                        askSize += order->getQuantity();
+                    out << std::setw(8) << askIt->first << "  | "
+                        << std::setw(8) << askSize << "  \n";
+                    ++askIt;
+                } else {
+                    out << "          |           \n";
+                }
+                if (++level > myOrderBookDisplayConfig.getOrderBookLevels())
+                    break;
+            }
+        } else {
+            // TODO
+        }
+    }
+
+    out << "---------------------------------------------------------\n";
     return out;
 }
 
