@@ -151,11 +151,10 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
     out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
     out << "---------------------------------------------------------\n";
 
-    auto bidIt = myBidBook.begin();
-    auto askIt = myAskBook.begin();
-    uint level = 1;
-
     if (myOrderBookDisplayConfig.isShowOrderBook()) {
+        auto bidIt = myBidBook.begin();
+        auto askIt = myAskBook.begin();
+        uint level = 1;
         if (myOrderBookDisplayConfig.isAggregateOrderBook()) {
             while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
                 if (bidIt != myBidBook.end()) {
@@ -186,6 +185,36 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
         } else {
             // TODO
         }
+    }
+
+    if (myOrderBookDisplayConfig.isShowTradeLog()) {
+        out << "====================== Trade Log ========================\n";
+        out << "   Timestamp   |    Price    |   Size   | Initiated Side \n";
+        out << "---------------------------------------------------------\n";
+        auto tradeIt = myTradeLog.end();
+        uint level = 1;
+        while (tradeIt != myTradeLog.begin()) {
+            const auto& trade = *--tradeIt;
+            out << std::setw(13) << trade->getTimestamp() << "  | "
+                << std::fixed << std::setprecision(2)
+                << std::setw(10) << trade->getPrice() << "  | "
+                << std::setw(7) << trade->getQuantity() << "  | "
+                << std::setw(5) << (trade->getIsBuyInitiated() ? "BUY" : "SELL") << "          \n";
+            if (++level > myOrderBookDisplayConfig.getTradeLogLevels())
+                break;
+        }
+    }
+
+    if (myOrderBookDisplayConfig.isShowMarketQueue()) {
+        // TODO
+    }
+
+    if (myOrderBookDisplayConfig.isShowRemovedLimitOrderLog()) {
+        // TODO
+    }
+
+    if (myOrderBookDisplayConfig.isShowOrderLookup()) {
+        // TODO
     }
 
     out << "---------------------------------------------------------\n";
@@ -229,8 +258,9 @@ void fillOrderByMatchingLimitQueue(
         auto& matchOrder = *queueIt;
         std::cout << "DEBUG: Matching order: " << *matchOrder << std::endl;
         const uint32_t matchQuantity = matchOrder->getQuantity();
-        bool matchFullyFilled = false;
+        uint32_t filledQuantity = false;
         if (matchQuantity <= unfilledQuantity) {
+            filledQuantity = matchQuantity;
             unfilledQuantity -= matchQuantity;
             matchSizeTotal -= matchQuantity;
             matchOrder->setQuantity(0);
@@ -238,15 +268,15 @@ void fillOrderByMatchingLimitQueue(
             removedLimitOrderLog.push_back(matchOrder);
             limitOrderLookup.erase(matchOrder->getId());
             queueIt = matchQueue.erase(queueIt);
-            matchFullyFilled = true;
         } else {
+            filledQuantity = unfilledQuantity;
             matchOrder->setQuantity(matchQuantity - unfilledQuantity);
             unfilledQuantity = 0;
         }
         if (isIncomingOrderBuy)
-            tradeLog.push_back(std::make_shared<Market::TradeBase>(0, order->getTimestamp(), order->getId(), matchOrder->getId(), matchFullyFilled ? matchQuantity : unfilledQuantity, matchOrder->getPrice(), true, true, true));
+            tradeLog.push_back(std::make_shared<Market::TradeBase>(0, order->getTimestamp(), order->getId(), matchOrder->getId(), filledQuantity, matchOrder->getPrice(), true, true, true));
         else
-            tradeLog.push_back(std::make_shared<Market::TradeBase>(0, order->getTimestamp(), matchOrder->getId(), order->getId(), matchFullyFilled ? matchQuantity : unfilledQuantity, matchOrder->getPrice(), true, true, false));
+            tradeLog.push_back(std::make_shared<Market::TradeBase>(0, order->getTimestamp(), matchOrder->getId(), order->getId(), filledQuantity ? matchQuantity : unfilledQuantity, matchOrder->getPrice(), true, true, false));
     }
 }
 
