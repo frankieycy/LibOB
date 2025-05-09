@@ -13,6 +13,30 @@
 #include <limits>
 
 namespace Utils {
+namespace Counter {
+class IdHandlerBase {
+public:
+    IdHandlerBase() = default;
+    const uint64_t getCurrentId() const { return myCurrentId; }
+    const std::vector<uint64_t>& getIdLog() const { return myIdLog; }
+    const uint64_t generateId();
+    void reset();
+private:
+    uint64_t myCurrentId = 0;
+    std::vector<uint64_t> myIdLog;
+};
+
+class TimestampHandlerBase {
+public:
+    TimestampHandlerBase() = default;
+    const uint64_t getCurrentTimestamp() const { return myCurrentTimestamp; }
+    void tick(const uint64_t elapsedTimeUnit = 1);
+    void reset();
+private:
+    uint64_t myCurrentTimestamp = 0;
+};
+}
+
 namespace Error {
 class LibException : public std::exception {
 public:
@@ -33,6 +57,8 @@ constexpr double POS_INF_DOUBLE = std::numeric_limits<double>::infinity();
 constexpr double NEG_INF_DOUBLE = -std::numeric_limits<double>::infinity();
 inline const bool isNaN(double x) { return std::isnan(x); }
 }
+
+namespace Maths {}
 
 namespace Statistics {}
 

@@ -44,25 +44,6 @@ std::ostream& operator<<(std::ostream& out, const OrderEventType& orderEventType
     }
     return out;
 }
-
-const uint64_t OrderIdHandler::generateId() {
-    ++myCurrentId;
-    myIdLog.push_back(myCurrentId);
-    return myCurrentId;
-}
-
-void OrderIdHandler::reset() {
-    myCurrentId = 0;
-    myIdLog.clear();
-}
-
-void OrderTimestampHandler::tick(const uint64_t elapsedTimeUnit) {
-    myCurrentTimestamp += elapsedTimeUnit;
-}
-
-void OrderTimestampHandler::reset() {
-    myCurrentTimestamp = 0;
-}
 }
 
 #endif

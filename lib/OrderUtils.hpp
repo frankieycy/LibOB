@@ -12,28 +12,6 @@ std::ostream& operator<<(std::ostream& out, const Side& side);
 std::ostream& operator<<(std::ostream& out, const OrderType& orderType);
 std::ostream& operator<<(std::ostream& out, const OrderState& orderState);
 std::ostream& operator<<(std::ostream& out, const OrderEventType& orderEventType);
-
-class OrderIdHandler {
-public:
-    OrderIdHandler() = default;
-    const uint64_t getCurrentId() const { return myCurrentId; }
-    const std::vector<uint64_t>& getIdLog() const { return myIdLog; }
-    const uint64_t generateId();
-    void reset();
-private:
-    uint64_t myCurrentId = 0;
-    std::vector<uint64_t> myIdLog;
-};
-
-class OrderTimestampHandler {
-public:
-    OrderTimestampHandler() = default;
-    const uint64_t getCurrentTimestamp() const { return myCurrentTimestamp; }
-    void tick(const uint64_t elapsedTimeUnit = 1);
-    void reset();
-private:
-    uint64_t myCurrentTimestamp = 0;
-};
 }
 
 #endif
