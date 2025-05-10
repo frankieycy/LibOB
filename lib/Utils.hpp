@@ -18,12 +18,14 @@ namespace Counter {
 class IdHandlerBase {
 public:
     IdHandlerBase() = default;
+    IdHandlerBase(const bool idLogEnabled) : myIdLogEnabled(idLogEnabled) {}
     const uint64_t getCurrentId() const { return myCurrentId; }
     const std::vector<uint64_t>& getIdLog() const { return myIdLog; }
     const uint64_t generateId();
     void reset();
 private:
     uint64_t myCurrentId = 0;
+    bool myIdLogEnabled = false;
     std::vector<uint64_t> myIdLog;
 };
 

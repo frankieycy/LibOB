@@ -5,9 +5,9 @@
 namespace Utils {
 namespace Counter {
 const uint64_t IdHandlerBase::generateId() {
-    ++myCurrentId;
-    myIdLog.push_back(myCurrentId);
-    return myCurrentId;
+    if (myIdLogEnabled)
+        myIdLog.push_back(myCurrentId);
+    return myCurrentId++;
 }
 
 void IdHandlerBase::reset() {
