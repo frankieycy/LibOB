@@ -253,18 +253,38 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
         out << "   Id   |  Timestamp  |   Size   |   Side  \n";
         out << "-------------------------------------------\n";
         auto marketIt = myMarketQueue.end();
+        uint level = 1;
         while (marketIt != myMarketQueue.begin()) {
             const auto& order = *--marketIt;
             out << std::setw(6) << order->getId() << "  | "
                 << std::setw(10) << order->getTimestamp() << "  | "
                 << std::setw(7) << order->getQuantity() << "  | "
-                << std::setw(6) << (order->isBuy() ? "BUY" : "SELL") << "  \n";
+                << std::setw(6) << order->getSide() << "  \n";
+            if (++level > myOrderBookDisplayConfig.getMarketQueueLevels())
+                break;
         }
         out << "-------------------------------------------\n";
     }
 
     if (myOrderBookDisplayConfig.isShowRemovedLimitOrderLog()) {
-        // TODO
+        out << "========================= Removed Limit Orders =======================\n";
+        out << "   Id   |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
+        out << "----------------------------------------------------------------------\n";
+        auto removedIt = myRemovedLimitOrderLog.end();
+        uint level = 1;
+        while (removedIt != myRemovedLimitOrderLog.begin()) {
+            const auto& order = *--removedIt;
+            out << std::setw(6) << order->getId() << "  | "
+                << std::setw(10) << order->getTimestamp() << "  | "
+                << std::fixed << std::setprecision(2)
+                << std::setw(10) << order->getPrice() << "  | "
+                << std::setw(7) << order->getQuantity() << "  | "
+                << std::setw(7) << order->getSide() << "  | "
+                << std::setw(8) << order->getOrderState() << "  \n";
+            if (++level > myOrderBookDisplayConfig.getRemovedLimitOrderLogLevels())
+                break;
+        }
+        out << "----------------------------------------------------------------------\n";
     }
 
     if (myOrderBookDisplayConfig.isShowOrderLookup()) {
