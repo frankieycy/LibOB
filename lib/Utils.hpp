@@ -33,7 +33,7 @@ class TimestampHandlerBase {
 public:
     TimestampHandlerBase() = default;
     const uint64_t getCurrentTimestamp() const { return myCurrentTimestamp; }
-    void tick(const uint64_t elapsedTimeUnit = 1);
+    const uint64_t tick(const uint64_t elapsedTimeUnit = 1);
     void reset();
 private:
     uint64_t myCurrentTimestamp = 0;

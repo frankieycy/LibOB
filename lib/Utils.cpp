@@ -15,8 +15,9 @@ void IdHandlerBase::reset() {
     myIdLog.clear();
 }
 
-void TimestampHandlerBase::tick(const uint64_t elapsedTimeUnit) {
+const uint64_t TimestampHandlerBase::tick(const uint64_t elapsedTimeUnit) {
     myCurrentTimestamp += elapsedTimeUnit;
+    return myCurrentTimestamp;
 }
 
 void TimestampHandlerBase::reset() {
