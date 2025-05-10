@@ -18,7 +18,9 @@ OrderBookDisplayConfig::OrderBookDisplayConfig(const bool debugMode) :
     myDebugMode(debugMode) {
     if (myDebugMode) {
         myOrderBookLevels = 20;
+        myMarketQueueLevels = 20;
         myTradeLogLevels = 20;
+        myRemovedLimitOrderLogLevels = 20;
         myAggregateOrderBook = false;
         myShowOrderBook = true;
         myShowMarketQueue = true;
