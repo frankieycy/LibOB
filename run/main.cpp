@@ -2,10 +2,12 @@
 #include "OrderUtils.hpp"
 #include "Order.hpp"
 #include "MatchingEngine.hpp"
+
+namespace Tests {
+namespace MatchingEngine {
 using namespace Market;
 using namespace Exchange;
 
-namespace Tests {
 void testMatchingEngineSimpleBook() {
     uint8_t orderId = 0;
     uint8_t timestamp = 0;
@@ -33,9 +35,18 @@ void testMatchingEngineSimpleBook() {
         std::cout << e << std::endl;
     }
 }
+
+void testMatchingEngineRandomOrders() {
+    // TODO
+}
+
+void testMatchingEngineOrderEventManager() {
+    // TODO
+}
+}
 }
 
 int main() {
-    Tests::testMatchingEngineSimpleBook();
+    Tests::MatchingEngine::testMatchingEngineSimpleBook();
     return 0;
 }
