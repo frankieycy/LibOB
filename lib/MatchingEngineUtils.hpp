@@ -12,6 +12,7 @@ std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMa
 class OrderBookDisplayConfig {
 public:
     OrderBookDisplayConfig() = default;
+    OrderBookDisplayConfig(const bool debugMode);
     const uint16_t getOrderBookLevels() const { return myOrderBookLevels; }
     const uint16_t getTradeLogLevels() const { return myTradeLogLevels; }
     const bool isAggregateOrderBook() const { return myAggregateOrderBook; }
@@ -37,6 +38,7 @@ private:
     bool myShowTradeLog = true;
     bool myShowRemovedLimitOrderLog = true;
     bool myShowOrderLookup = true;
+    bool myDebugMode = false;
 };
 }
 

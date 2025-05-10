@@ -13,6 +13,20 @@ std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMa
     }
     return out;
 }
+
+OrderBookDisplayConfig::OrderBookDisplayConfig(const bool debugMode) :
+    myDebugMode(debugMode) {
+    if (myDebugMode) {
+        myOrderBookLevels = 20;
+        myTradeLogLevels = 20;
+        myAggregateOrderBook = false;
+        myShowOrderBook = true;
+        myShowMarketQueue = true;
+        myShowTradeLog = true;
+        myShowRemovedLimitOrderLog = true;
+        myShowOrderLookup = true;
+    }
+}
 }
 
 #endif
