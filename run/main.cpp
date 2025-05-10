@@ -5,18 +5,37 @@
 using namespace Market;
 using namespace Exchange;
 
-int main() {
-    MatchingEngineFIFO e;
-    const std::shared_ptr<OrderBase> b1 = std::make_shared<LimitOrder>(1, 0, Side::BUY, 10, 99.0);
-    const std::shared_ptr<OrderBase> b2 = std::make_shared<LimitOrder>(2, 0, Side::BUY, 15, 98.0);
-    const std::shared_ptr<OrderBase> b3 = std::make_shared<LimitOrder>(3, 0, Side::BUY, 20, 97.0);
-    const std::shared_ptr<OrderBase> a1 = std::make_shared<LimitOrder>(4, 0, Side::SELL, 10, 101.0);
-    const std::shared_ptr<OrderBase> a2 = std::make_shared<LimitOrder>(5, 0, Side::SELL, 15, 102.0);
-    const std::shared_ptr<OrderBase> a3 = std::make_shared<LimitOrder>(6, 0, Side::SELL, 20, 103.0);
-    const std::shared_ptr<OrderBase> m1 = std::make_shared<MarketOrder>(7, 1, Side::BUY, 5);
-    const std::shared_ptr<OrderBase> m2 = std::make_shared<MarketOrder>(8, 1, Side::SELL, 15);
-    const std::vector<const std::shared_ptr<OrderBase>> orders{b1, b2, b3, a1, a2, a3, m1, m2};
-    for (const auto& o : orders)
+namespace Tests {
+void testMatchingEngineSimpleBook() {
+    uint8_t orderId = 0;
+    uint8_t timestamp = 0;
+    MatchingEngineFIFO e{true};
+    const std::vector<const std::shared_ptr<OrderBase>> orders{
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::BUY, 15, 99.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::BUY, 5, 99.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::BUY, 10, 98.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::BUY, 5, 98.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::BUY, 10, 97.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::SELL, 10, 101.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::SELL, 10, 101.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::SELL, 15, 102.0),
+        std::make_shared<LimitOrder>(orderId++, timestamp++, Side::SELL, 10, 103.0),
+        std::make_shared<MarketOrder>(orderId++, timestamp++, Side::BUY, 5),
+        std::make_shared<MarketOrder>(orderId++, timestamp++, Side::BUY, 15),
+        std::make_shared<MarketOrder>(orderId++, timestamp++, Side::BUY, 20),
+        std::make_shared<MarketOrder>(orderId++, timestamp++, Side::BUY, 15),
+        std::make_shared<MarketOrder>(orderId++, timestamp++, Side::SELL, 15),
+        std::make_shared<MarketOrder>(orderId++, timestamp++, Side::SELL, 25),
+        std::make_shared<MarketOrder>(orderId++, timestamp++, Side::SELL, 10),
+    };
+    for (const auto& o : orders) {
         e.process(o);
+        std::cout << e << std::endl;
+    }
+}
+}
+
+int main() {
+    Tests::testMatchingEngineSimpleBook();
     return 0;
 }
