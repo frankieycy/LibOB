@@ -22,6 +22,7 @@ class IMatchingEngine {
 public:
     IMatchingEngine() = default;
     IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
+    IMatchingEngine(const bool debugMode) : myDebugMode(debugMode), myOrderBookDisplayConfig(OrderBookDisplayConfig(debugMode)) {}
     const std::string& getSymbol() const { return mySymbol; }
     const std::string& getExchangeId() const { return myExchangeId; }
     const DescOrderBook& getBidBook() const { return myBidBook; }
@@ -84,6 +85,7 @@ protected:
     TradeLog& getTradeLog() { return myTradeLog; }
     RemovedLimitOrderLog& getRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
     OrderIndex& getLimitOrderLookup() { return myLimitOrderLookup; }
+    Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
 private:
     std::string mySymbol;
     std::string myExchangeId;
@@ -97,12 +99,15 @@ private:
     OrderIndex myLimitOrderLookup;
     OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
     OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
+    Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
+    bool myDebugMode = false;
 };
 
 class MatchingEngineFIFO : public IMatchingEngine {
 public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
+    MatchingEngineFIFO(const bool debugMode) : IMatchingEngine(debugMode) {}
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) override;

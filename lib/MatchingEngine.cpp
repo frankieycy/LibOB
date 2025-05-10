@@ -14,6 +14,10 @@ std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngin
     return out;
 }
 
+IMatchingEngine::IMatchingEngine(const bool debugMode) : myDebugMode(debugMode) {
+    myOrderBookDisplayConfig = OrderBookDisplayConfig(debugMode);
+}
+
 const std::pair<const PriceLevel, uint32_t> IMatchingEngine::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};
@@ -147,15 +151,14 @@ void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& eve
 }
 
 std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
-    out << "================= Order Book Snapshot ===================\n";
-    out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
-    out << "---------------------------------------------------------\n";
-
     if (myOrderBookDisplayConfig.isShowOrderBook()) {
         auto bidIt = myBidBook.begin();
         auto askIt = myAskBook.begin();
         uint level = 1;
         if (myOrderBookDisplayConfig.isAggregateOrderBook()) {
+            out << "================= Order Book Snapshot ===================\n";
+            out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
+            out << "---------------------------------------------------------\n";
             while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
                 if (bidIt != myBidBook.end()) {
                     uint32_t bidSize = 0;
@@ -182,6 +185,7 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
                 if (++level > myOrderBookDisplayConfig.getOrderBookLevels())
                     break;
             }
+            out << "---------------------------------------------------------\n";
         } else {
             // TODO
         }
@@ -189,24 +193,37 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
 
     if (myOrderBookDisplayConfig.isShowTradeLog()) {
         out << "====================== Trade Log ========================\n";
-        out << "   Timestamp   |    Price    |   Size   | Initiated Side \n";
+        out << "   Id   |  Timestamp  |    Price    |   Size   |   Side  \n";
         out << "---------------------------------------------------------\n";
         auto tradeIt = myTradeLog.end();
         uint level = 1;
         while (tradeIt != myTradeLog.begin()) {
             const auto& trade = *--tradeIt;
-            out << std::setw(13) << trade->getTimestamp() << "  | "
+            out << std::setw(6) << trade->getId() << "  | "
+                << std::setw(10) << trade->getTimestamp() << "  | "
                 << std::fixed << std::setprecision(2)
                 << std::setw(10) << trade->getPrice() << "  | "
                 << std::setw(7) << trade->getQuantity() << "  | "
-                << std::setw(5) << (trade->getIsBuyInitiated() ? "BUY" : "SELL") << "          \n";
+                << std::setw(6) << (trade->getIsBuyInitiated() ? "BUY" : "SELL") << "  \n";
             if (++level > myOrderBookDisplayConfig.getTradeLogLevels())
                 break;
         }
+        out << "---------------------------------------------------------\n";
     }
 
     if (myOrderBookDisplayConfig.isShowMarketQueue()) {
-        // TODO
+        out << "=============== Market Queue ==============\n";
+        out << "   Id   |  Timestamp  |   Size   |   Side  \n";
+        out << "-------------------------------------------\n";
+        auto marketIt = myMarketQueue.end();
+        while (marketIt != myMarketQueue.begin()) {
+            const auto& order = *--marketIt;
+            out << std::setw(6) << order->getId() << "  | "
+                << std::setw(10) << order->getTimestamp() << "  | "
+                << std::setw(7) << order->getQuantity() << "  | "
+                << std::setw(6) << (order->isBuy() ? "BUY" : "SELL") << "  \n";
+        }
+        out << "-------------------------------------------\n";
     }
 
     if (myOrderBookDisplayConfig.isShowRemovedLimitOrderLog()) {
@@ -217,7 +234,6 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
         // TODO
     }
 
-    out << "---------------------------------------------------------\n";
     return out;
 }
 
@@ -250,7 +266,8 @@ void fillOrderByMatchingLimitQueue(
     LimitQueue& matchQueue,
     TradeLog& tradeLog,
     RemovedLimitOrderLog& removedLimitOrderLog,
-    OrderIndex& limitOrderLookup) {
+    OrderIndex& limitOrderLookup,
+    Counter::IdHandlerBase& tradeIdHandler) {
     const uint64_t orderId = order->getId();
     const bool isIncomingOrderBuy = order->isBuy();
     auto queueIt = matchQueue.begin();
@@ -274,9 +291,9 @@ void fillOrderByMatchingLimitQueue(
             unfilledQuantity = 0;
         }
         if (isIncomingOrderBuy)
-            tradeLog.push_back(std::make_shared<Market::TradeBase>(0, order->getTimestamp(), order->getId(), matchOrder->getId(), filledQuantity, matchOrder->getPrice(), true, true, true));
+            tradeLog.push_back(std::make_shared<Market::TradeBase>(tradeIdHandler.generateId(), order->getTimestamp(), order->getId(), matchOrder->getId(), filledQuantity, matchOrder->getPrice(), true, true, true));
         else
-            tradeLog.push_back(std::make_shared<Market::TradeBase>(0, order->getTimestamp(), matchOrder->getId(), order->getId(), filledQuantity ? matchQuantity : unfilledQuantity, matchOrder->getPrice(), true, true, false));
+            tradeLog.push_back(std::make_shared<Market::TradeBase>(tradeIdHandler.generateId(), order->getTimestamp(), matchOrder->getId(), order->getId(), filledQuantity ? matchQuantity : unfilledQuantity, matchOrder->getPrice(), true, true, false));
     }
 }
 
@@ -333,9 +350,10 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
     TradeLog& tradeLog = getTradeLog();
     RemovedLimitOrderLog& removedLimitOrderLog = getRemovedLimitOrderLog();
     OrderIndex& limitOrderLookup = getLimitOrderLookup();
+    Counter::IdHandlerBase& tradeIdHandler = getTradeIdHandler();
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty() && price >= askBook.begin()->first) {
-            fillOrderByMatchingLimitQueue(order, unfilledQuantity, askBookSize.begin()->second, askBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup);
+            fillOrderByMatchingLimitQueue(order, unfilledQuantity, askBookSize.begin()->second, askBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup, tradeIdHandler);
             if (askBook.begin()->second.empty()) {
                 askBook.erase(askBook.begin());
                 askBookSize.erase(askBookSize.begin());
@@ -344,7 +362,7 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
         placeLimitOrderToLimitOrderBook(order, unfilledQuantity, bidBookSize[price], bidBook[price], limitOrderLookup);
     } else if (side == Market::Side::SELL) {
         while (unfilledQuantity && !bidBook.empty() && price <= bidBook.begin()->first) {
-            fillOrderByMatchingLimitQueue(order, unfilledQuantity, bidBookSize.begin()->second, bidBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup);
+            fillOrderByMatchingLimitQueue(order, unfilledQuantity, bidBookSize.begin()->second, bidBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup, tradeIdHandler);
             if (bidBook.begin()->second.empty()) {
                 bidBook.erase(bidBook.begin());
                 bidBookSize.erase(bidBookSize.begin());
@@ -368,9 +386,10 @@ void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder>
     TradeLog& tradeLog = getTradeLog();
     RemovedLimitOrderLog& removedLimitOrderLog = getRemovedLimitOrderLog();
     OrderIndex& limitOrderLookup = getLimitOrderLookup();
+    Counter::IdHandlerBase& tradeIdHandler = getTradeIdHandler();
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty()) {
-            fillOrderByMatchingLimitQueue(order, unfilledQuantity, askBookSize.begin()->second, askBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup);
+            fillOrderByMatchingLimitQueue(order, unfilledQuantity, askBookSize.begin()->second, askBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup, tradeIdHandler);
             if (askBook.begin()->second.empty()) {
                 askBook.erase(askBook.begin());
                 askBookSize.erase(askBookSize.begin());
@@ -379,7 +398,7 @@ void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder>
         placeMarketOrderToMarketOrderQueue(order, unfilledQuantity, marketQueue);
     } else if (side == Market::Side::SELL) {
         while (unfilledQuantity && !bidBook.empty()) {
-            fillOrderByMatchingLimitQueue(order, unfilledQuantity, bidBookSize.begin()->second, bidBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup);
+            fillOrderByMatchingLimitQueue(order, unfilledQuantity, bidBookSize.begin()->second, bidBook.begin()->second, tradeLog, removedLimitOrderLog, limitOrderLookup, tradeIdHandler);
             if (bidBook.begin()->second.empty()) {
                 bidBook.erase(bidBook.begin());
                 bidBookSize.erase(bidBookSize.begin());
