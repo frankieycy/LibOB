@@ -14,10 +14,6 @@ std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngin
     return out;
 }
 
-IMatchingEngine::IMatchingEngine(const bool debugMode) : myDebugMode(debugMode) {
-    myOrderBookDisplayConfig = OrderBookDisplayConfig(debugMode);
-}
-
 const std::pair<const PriceLevel, uint32_t> IMatchingEngine::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};
@@ -154,8 +150,8 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
     if (myOrderBookDisplayConfig.isShowOrderBook()) {
         auto bidIt = myBidBook.begin();
         auto askIt = myAskBook.begin();
-        uint level = 1;
         if (myOrderBookDisplayConfig.isAggregateOrderBook()) {
+            uint level = 1;
             out << "================= Order Book Snapshot ===================\n";
             out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
             out << "---------------------------------------------------------\n";
@@ -187,7 +183,48 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
             }
             out << "---------------------------------------------------------\n";
         } else {
-            // TODO
+            uint level = 1;
+            out << "================= Bid Book Snapshot ===================\n";
+            out << " Level || BID Price | BID Size | BID Order (Time, Size)\n";
+            out << "-------------------------------------------------------\n";
+            while (bidIt != myBidBook.end()) {
+                out << std::setw(6) << level << " || "
+                    << std::fixed << std::setprecision(2)
+                    << std::setw(9) << bidIt->first << " | ";
+                uint32_t bidSize = 0;
+                for (const auto& order : bidIt->second)
+                    bidSize += order->getQuantity();
+                out << std::setw(8) << bidSize << " | ";
+                for (const auto& order : bidIt->second) {
+                    out << "(" << order->getTimestamp() << ", " << order->getQuantity() << ") ";
+                }
+                out << "\n";
+                ++bidIt;
+                if (++level > myOrderBookDisplayConfig.getOrderBookLevels())
+                    break;
+            }
+            out << "-------------------------------------------------------\n";
+            level = 1;
+            out << "================= Ask Book Snapshot ===================\n";
+            out << " Level || ASK Price | ASK Size | ASK Order (Time, Size)\n";
+            out << "-------------------------------------------------------\n";
+            while (askIt != myAskBook.end()) {
+                out << std::setw(6) << level << " || "
+                    << std::fixed << std::setprecision(2)
+                    << std::setw(9) << askIt->first << " | ";
+                uint32_t askSize = 0;
+                for (const auto& order : askIt->second)
+                    askSize += order->getQuantity();
+                out << std::setw(8) << askSize << " | ";
+                for (const auto& order : askIt->second) {
+                    out << "(" << order->getTimestamp() << ", " << order->getQuantity() << ") ";
+                }
+                out << "\n";
+                ++askIt;
+                if (++level > myOrderBookDisplayConfig.getOrderBookLevels())
+                    break;
+            }
+            out << "-------------------------------------------------------\n";
         }
     }
 
