@@ -355,7 +355,7 @@ void fillOrderByMatchingLimitQueue(
         if (isIncomingOrderBuy)
             tradeLog.push_back(std::make_shared<Market::TradeBase>(tradeIdHandler.generateId(), order->getTimestamp(), order->getId(), matchOrder->getId(), filledQuantity, matchOrder->getPrice(), true, true, true));
         else
-            tradeLog.push_back(std::make_shared<Market::TradeBase>(tradeIdHandler.generateId(), order->getTimestamp(), matchOrder->getId(), order->getId(), filledQuantity ? matchQuantity : unfilledQuantity, matchOrder->getPrice(), true, true, false));
+            tradeLog.push_back(std::make_shared<Market::TradeBase>(tradeIdHandler.generateId(), order->getTimestamp(), matchOrder->getId(), order->getId(), filledQuantity, matchOrder->getPrice(), true, true, false));
     }
 }
 
@@ -471,6 +471,7 @@ void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder>
 }
 
 void MatchingEngineFIFO::init() {
+    MatchingEngineBase::init();
     setOrderMatchingStrategy(OrderMatchingStrategy::FIFO);
 }
 }
