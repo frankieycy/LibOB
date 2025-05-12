@@ -23,6 +23,14 @@ public:
     IMatchingEngine() = default;
     IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
     IMatchingEngine(const bool debugMode) : myDebugMode(debugMode), myOrderBookDisplayConfig(OrderBookDisplayConfig(debugMode)) {}
+    const std::string& getSymbol() const { return mySymbol; }
+    const std::string& getExchangeId() const { return myExchangeId; }
+    const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
+    const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
+    void setSymbol(const std::string& symbol) { mySymbol = symbol; }
+    void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
+    void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
+    void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
     virtual const double getBestBidPrice() const = 0;
     virtual const double getBestAskPrice() const = 0;
     virtual const double getSpread() const = 0;
@@ -40,15 +48,15 @@ public:
     virtual const size_t getNumberOfAskPriceLevels() const = 0;
     virtual const size_t getNumberOfTrades() const = 0;
     virtual const std::shared_ptr<Market::TradeBase> getLastTrade() const = 0;
-    const std::string& getSymbol() const { return mySymbol; }
-    const std::string& getExchangeId() const { return myExchangeId; }
-    const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
-    const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
-    void setSymbol(const std::string& symbol) { mySymbol = symbol; }
-    void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
-    void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
-    void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
+    virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
+    virtual void process(const std::shared_ptr<Market::OrderBase>& order) = 0;
+    virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) = 0;
+    virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
+    virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
+    virtual void init() = 0;
     virtual void reset();
+    virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
+    virtual const std::string getAsJson() const = 0;
 protected:
     Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
 private:
@@ -100,11 +108,8 @@ public:
     const size_t getNumberOfAskPriceLevels() const;
     const size_t getNumberOfTrades() const;
     const std::shared_ptr<Market::TradeBase> getLastTrade() const;
-    virtual std::shared_ptr<MatchingEngineBase> clone() const = 0;
     virtual void process(const std::shared_ptr<Market::OrderBase>& order);
     virtual void process(const std::shared_ptr<Market::OrderEventBase>& event);
-    virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
-    virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void init();
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
@@ -135,7 +140,7 @@ public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
     MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
-    virtual std::shared_ptr<MatchingEngineBase> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
+    virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) override;
     virtual void init() override;
