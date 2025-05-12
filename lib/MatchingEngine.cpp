@@ -9,126 +9,126 @@
 namespace Exchange {
 using namespace Utils;
 
-std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine) {
+std::ostream& operator<<(std::ostream& out, const MatchingEngineBase& matchingEngine) {
     matchingEngine.orderBookSnapshot(out);
     return out;
 }
 
-const std::pair<const PriceLevel, uint32_t> IMatchingEngine::getBestBidPriceAndSize() const {
+const std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};
     return *myBidBookSize.begin();
 }
 
-const std::pair<const PriceLevel, uint32_t> IMatchingEngine::getBestAskPriceAndSize() const {
+const std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestAskPriceAndSize() const {
     if (myAskBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};
     return *myAskBookSize.begin();
 }
 
-const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestBidTopOrder() const {
+const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> MatchingEngineBase::getBestBidTopOrder() const {
     if (myBidBook.empty())
         return {Consts::NAN_DOUBLE, nullptr};
     const auto& it = myBidBook.begin();
     return {it->first, it->second.front()};
 }
 
-const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> IMatchingEngine::getBestAskTopOrder() const {
+const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> MatchingEngineBase::getBestAskTopOrder() const {
     if (myAskBook.empty())
         return {Consts::NAN_DOUBLE, nullptr};
     const auto& it = myAskBook.begin();
     return {it->first, it->second.front()};
 }
 
-const double IMatchingEngine::getBestBidPrice() const {
+const double MatchingEngineBase::getBestBidPrice() const {
     if (myBidBookSize.empty())
         return Consts::NAN_DOUBLE;
     return myBidBookSize.begin()->first;
 }
 
-const double IMatchingEngine::getBestAskPrice() const {
+const double MatchingEngineBase::getBestAskPrice() const {
     if (myAskBookSize.empty())
         return Consts::NAN_DOUBLE;
     return myAskBookSize.begin()->first;
 }
 
-const double IMatchingEngine::getSpread() const {
+const double MatchingEngineBase::getSpread() const {
     return getBestAskPrice() - getBestBidPrice();
 }
 
-const double IMatchingEngine::getHalfSpread() const {
+const double MatchingEngineBase::getHalfSpread() const {
     return getSpread() / 2.0;
 }
 
-const double IMatchingEngine::getMidPrice() const {
+const double MatchingEngineBase::getMidPrice() const {
     return (getBestBidPrice() + getBestAskPrice()) / 2.0;
 }
 
-const double IMatchingEngine::getMicroPrice() const {
+const double MatchingEngineBase::getMicroPrice() const {
     return (getBestBidPrice() * getBestAskSize() + getBestAskPrice() * getBestBidSize()) / (getBestBidSize() + getBestAskSize());
 }
 
-const double IMatchingEngine::getOrderImbalance() const {
+const double MatchingEngineBase::getOrderImbalance() const {
     return (getBestBidSize() - getBestAskSize()) / (getBestBidSize() + getBestAskSize());
 }
 
-const double IMatchingEngine::getLastTradePrice() const {
+const double MatchingEngineBase::getLastTradePrice() const {
     return getLastTrade()->getPrice();
 }
 
-const uint32_t IMatchingEngine::getBestBidSize() const {
+const uint32_t MatchingEngineBase::getBestBidSize() const {
     if (myBidBookSize.empty())
         return 0;
     return myBidBookSize.begin()->second;
 }
 
-const uint32_t IMatchingEngine::getBestAskSize() const {
+const uint32_t MatchingEngineBase::getBestAskSize() const {
     if (myAskBookSize.empty())
         return 0;
     return myAskBookSize.begin()->second;
 }
 
-const uint32_t IMatchingEngine::getBidSize(const PriceLevel& priceLevel) const {
+const uint32_t MatchingEngineBase::getBidSize(const PriceLevel& priceLevel) const {
     const auto& it = myBidBookSize.find(priceLevel);
     return it != myBidBookSize.end() ? it->second : 0;
 }
 
-const uint32_t IMatchingEngine::getAskSize(const PriceLevel& priceLevel) const {
+const uint32_t MatchingEngineBase::getAskSize(const PriceLevel& priceLevel) const {
     const auto& it = myAskBookSize.find(priceLevel);
     return it != myAskBookSize.end() ? it->second : 0;
 }
 
-const uint32_t IMatchingEngine::getLastTradeSize() const {
+const uint32_t MatchingEngineBase::getLastTradeSize() const {
     return getLastTrade()->getQuantity();
 }
 
-const size_t IMatchingEngine::getNumberOfBidPriceLevels() const {
+const size_t MatchingEngineBase::getNumberOfBidPriceLevels() const {
     return myBidBook.size();
 }
 
-const size_t IMatchingEngine::getNumberOfAskPriceLevels() const {
+const size_t MatchingEngineBase::getNumberOfAskPriceLevels() const {
     return myAskBook.size();
 }
 
-const size_t IMatchingEngine::getNumberOfTrades() const {
+const size_t MatchingEngineBase::getNumberOfTrades() const {
     return myTradeLog.size();
 }
 
-const std::shared_ptr<Market::TradeBase> IMatchingEngine::getLastTrade() const {
+const std::shared_ptr<Market::TradeBase> MatchingEngineBase::getLastTrade() const {
     if (myTradeLog.empty())
         return nullptr;
     return myTradeLog.back();
 }
 
-void IMatchingEngine::process(const std::shared_ptr<Market::OrderBase>& order) {
+void MatchingEngineBase::process(const std::shared_ptr<Market::OrderBase>& order) {
     if (!order)
-        Error::LIB_THROW("IMatchingEngine::process: order is null.");
+        Error::LIB_THROW("MatchingEngineBase::process: order is null.");
     order->submit(*this);
 }
 
-void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& event) {
+void MatchingEngineBase::process(const std::shared_ptr<Market::OrderEventBase>& event) {
     if (!event)
-        Error::LIB_THROW("IMatchingEngine::process: order event is null.");
+        Error::LIB_THROW("MatchingEngineBase::process: order event is null.");
     if (event->isSubmit())
         process(event->getOrder());
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
@@ -146,7 +146,7 @@ void IMatchingEngine::process(const std::shared_ptr<Market::OrderEventBase>& eve
     }
 }
 
-std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
+std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     if (myOrderBookDisplayConfig.isShowOrderBook()) {
         auto bidIt = myBidBook.begin();
         auto askIt = myAskBook.begin();
@@ -294,11 +294,11 @@ std::ostream& IMatchingEngine::orderBookSnapshot(std::ostream& out) const {
     return out;
 }
 
-void IMatchingEngine::init() {
+void MatchingEngineBase::init() {
     // TODO
 }
 
-void IMatchingEngine::reset() {
+void MatchingEngineBase::reset() {
     mySymbol.clear();
     myExchangeId.clear();
     myBidBook.clear();
@@ -311,7 +311,7 @@ void IMatchingEngine::reset() {
     myLimitOrderLookup.clear();
 }
 
-const std::string IMatchingEngine::getAsJson() const {
+const std::string MatchingEngineBase::getAsJson() const {
     // TODO
     return "";
 }

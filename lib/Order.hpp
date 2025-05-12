@@ -4,7 +4,7 @@
 #include "OrderUtils.hpp"
 
 namespace Exchange {
-class IMatchingEngine;
+class MatchingEngineBase;
 }
 
 namespace Market {
@@ -34,7 +34,7 @@ public:
     void setMetaInfo(const std::shared_ptr<OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
     virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) {}
-    virtual void submit(Exchange::IMatchingEngine& matchingEngine) const {}
+    virtual void submit(Exchange::MatchingEngineBase& matchingEngine) const {}
     virtual void init();
     virtual void cancel();
     virtual const std::string getAsJson() const;
@@ -58,7 +58,7 @@ public:
     void setPrice(const double price) { myPrice = price; }
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
-    virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;
+    virtual void submit(Exchange::MatchingEngineBase& matchingEngine) const override;
     virtual void init() override;
     virtual void cancel() override;
     virtual const std::string getAsJson() const override;
@@ -73,7 +73,7 @@ public:
     MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<MarketOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
-    virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;
+    virtual void submit(Exchange::MatchingEngineBase& matchingEngine) const override;
     virtual void init() override;
 };
 

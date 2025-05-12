@@ -88,7 +88,7 @@ void LimitOrder::executeOrderEvent(const OrderEventBase& event) {
     event.applyTo(*this);
 }
 
-void LimitOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
+void LimitOrder::submit(Exchange::MatchingEngineBase& matchingEngine) const {
     matchingEngine.addToLimitOrderBook(std::make_shared<LimitOrder>(*this));
 }
 
@@ -143,7 +143,7 @@ void MarketOrder::executeOrderEvent(const OrderEventBase& event) {
     event.applyTo(*this);
 }
 
-void MarketOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
+void MarketOrder::submit(Exchange::MatchingEngineBase& matchingEngine) const {
     matchingEngine.executeMarketOrder(std::make_shared<MarketOrder>(*this));
 }
 

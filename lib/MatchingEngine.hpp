@@ -18,11 +18,11 @@ using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>;
 
-class IMatchingEngine {
+class MatchingEngineBase {
 public:
-    IMatchingEngine() = default;
-    IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
-    IMatchingEngine(const bool debugMode) : myDebugMode(debugMode), myOrderBookDisplayConfig(OrderBookDisplayConfig(debugMode)) {}
+    MatchingEngineBase() = default;
+    MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
+    MatchingEngineBase(const bool debugMode) : myDebugMode(debugMode), myOrderBookDisplayConfig(OrderBookDisplayConfig(debugMode)) {}
     const std::string& getSymbol() const { return mySymbol; }
     const std::string& getExchangeId() const { return myExchangeId; }
     const DescOrderBook& getBidBook() const { return myBidBook; }
@@ -66,7 +66,7 @@ public:
     const size_t getNumberOfAskPriceLevels() const;
     const size_t getNumberOfTrades() const;
     const std::shared_ptr<Market::TradeBase> getLastTrade() const;
-    virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
+    virtual std::shared_ptr<MatchingEngineBase> clone() const = 0;
     virtual void process(const std::shared_ptr<Market::OrderBase>& order);
     virtual void process(const std::shared_ptr<Market::OrderEventBase>& event);
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
@@ -75,7 +75,7 @@ public:
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
     virtual const std::string getAsJson() const;
-    friend std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine);
+    friend std::ostream& operator<<(std::ostream& out, const MatchingEngineBase& matchingEngine);
 protected:
     DescOrderBook& getBidBook() { return myBidBook; }
     AscOrderBook& getAskBook() { return myAskBook; }
@@ -103,12 +103,12 @@ private:
     bool myDebugMode = false;
 };
 
-class MatchingEngineFIFO : public IMatchingEngine {
+class MatchingEngineFIFO : public MatchingEngineBase {
 public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
-    MatchingEngineFIFO(const bool debugMode) : IMatchingEngine(debugMode) {}
-    virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
+    MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
+    virtual std::shared_ptr<MatchingEngineBase> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) override;
     virtual void init() override;
