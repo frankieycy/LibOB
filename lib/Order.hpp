@@ -38,7 +38,6 @@ public:
     virtual void init();
     virtual void cancel();
     virtual const std::string getAsJson() const;
-    friend std::ostream& operator<<(std::ostream& out, const OrderBase& order);
 private:
     uint64_t myId;
     uint64_t myTimestamp;
@@ -81,6 +80,8 @@ class HiddenOrder : public OrderBase {
 public:
 private:
 };
+
+std::ostream& operator<<(std::ostream& out, const OrderBase& order);
 }
 
 #endif

@@ -4,7 +4,7 @@
 #include "MetaInfo.hpp"
 
 namespace Market {
-std::ostream& operator<<(std::ostream& out, const OrderMetaInfo& metaInfo) {
+std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& metaInfo) {
     out << metaInfo.getAsJson();
     return out;
 }

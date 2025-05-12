@@ -14,7 +14,6 @@ public:
     void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
     virtual std::shared_ptr<TradeMetaInfo> clone() const { return std::make_shared<TradeMetaInfo>(*this); }
     virtual const std::string getAsJson() const;
-    friend std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& order);
 private:
     std::string mySymbol;
     std::string myExchangeId;
@@ -29,10 +28,11 @@ public:
     void setAgentId(const std::string& agentId) { myAgentId = agentId; }
     virtual std::shared_ptr<TradeMetaInfo> clone() const override { return std::make_shared<OrderMetaInfo>(*this); }
     virtual const std::string getAsJson() const override;
-    friend std::ostream& operator<<(std::ostream& out, const OrderMetaInfo& order);
 private:
     std::string myAgentId;
 };
+
+std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& order);
 }
 
 #endif

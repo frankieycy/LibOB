@@ -37,7 +37,6 @@ public:
     virtual std::shared_ptr<TradeBase> clone() const { return std::make_shared<TradeBase>(*this); }
     virtual void init();
     virtual const std::string getAsJson() const;
-    friend std::ostream& operator<<(std::ostream& out, const TradeBase& trade);
 private:
     uint64_t myId;
     uint64_t myTimestamp;
@@ -50,6 +49,8 @@ private:
     bool myIsBuyInitiated;
     std::shared_ptr<TradeMetaInfo> myMetaInfo;
 };
+
+std::ostream& operator<<(std::ostream& out, const TradeBase& trade);
 }
 
 #endif

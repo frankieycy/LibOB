@@ -29,7 +29,6 @@ public:
     virtual void applyTo(LimitOrder& order) const;
     virtual void init() {};
     virtual const std::string getAsJson() const;
-    friend std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);
 private:
     uint64_t myEventId;
     uint64_t myOrderId;
@@ -107,6 +106,8 @@ public:
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
 };
+
+std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);
 }
 
 #endif
