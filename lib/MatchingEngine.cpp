@@ -14,6 +14,11 @@ std::ostream& operator<<(std::ostream& out, const MatchingEngineBase& matchingEn
     return out;
 }
 
+void IMatchingEngine::reset() {
+    mySymbol.clear();
+    myExchangeId.clear();
+}
+
 const std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};
@@ -147,10 +152,11 @@ void MatchingEngineBase::process(const std::shared_ptr<Market::OrderEventBase>& 
 }
 
 std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
-    if (myOrderBookDisplayConfig.isShowOrderBook()) {
+    const OrderBookDisplayConfig& config = getOrderBookDisplayConfig();
+    if (config.isShowOrderBook()) {
         auto bidIt = myBidBook.begin();
         auto askIt = myAskBook.begin();
-        if (myOrderBookDisplayConfig.isAggregateOrderBook()) {
+        if (config.isAggregateOrderBook()) {
             uint level = 1;
             out << "================= Order Book Snapshot ===================\n";
             out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
@@ -178,7 +184,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 } else {
                     out << "          |           \n";
                 }
-                if (++level > myOrderBookDisplayConfig.getOrderBookLevels())
+                if (++level > config.getOrderBookLevels())
                     break;
             }
             out << "---------------------------------------------------------\n";
@@ -200,7 +206,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 }
                 out << "\n";
                 ++bidIt;
-                if (++level > myOrderBookDisplayConfig.getOrderBookLevels())
+                if (++level > config.getOrderBookLevels())
                     break;
             }
             out << "-------------------------------------------------------\n";
@@ -221,14 +227,14 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 }
                 out << "\n";
                 ++askIt;
-                if (++level > myOrderBookDisplayConfig.getOrderBookLevels())
+                if (++level > config.getOrderBookLevels())
                     break;
             }
             out << "-------------------------------------------------------\n";
         }
     }
 
-    if (myOrderBookDisplayConfig.isShowTradeLog()) {
+    if (config.isShowTradeLog()) {
         out << "====================== Trade Log ========================\n";
         out << "   Id   |  Timestamp  |    Price    |   Size   |   Side  \n";
         out << "---------------------------------------------------------\n";
@@ -242,13 +248,13 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 << std::setw(10) << trade->getPrice() << "  | "
                 << std::setw(7) << trade->getQuantity() << "  | "
                 << std::setw(6) << (trade->getIsBuyInitiated() ? "BUY" : "SELL") << "  \n";
-            if (++level > myOrderBookDisplayConfig.getTradeLogLevels())
+            if (++level > config.getTradeLogLevels())
                 break;
         }
         out << "---------------------------------------------------------\n";
     }
 
-    if (myOrderBookDisplayConfig.isShowMarketQueue()) {
+    if (config.isShowMarketQueue()) {
         out << "=============== Market Queue ==============\n";
         out << "   Id   |  Timestamp  |   Size   |   Side  \n";
         out << "-------------------------------------------\n";
@@ -260,13 +266,13 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 << std::setw(10) << order->getTimestamp() << "  | "
                 << std::setw(7) << order->getQuantity() << "  | "
                 << std::setw(6) << order->getSide() << "  \n";
-            if (++level > myOrderBookDisplayConfig.getMarketQueueLevels())
+            if (++level > config.getMarketQueueLevels())
                 break;
         }
         out << "-------------------------------------------\n";
     }
 
-    if (myOrderBookDisplayConfig.isShowRemovedLimitOrderLog()) {
+    if (config.isShowRemovedLimitOrderLog()) {
         out << "========================= Removed Limit Orders =======================\n";
         out << "   Id   |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
         out << "----------------------------------------------------------------------\n";
@@ -281,13 +287,13 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 << std::setw(7) << order->getQuantity() << "  | "
                 << std::setw(7) << order->getSide() << "  | "
                 << std::setw(8) << order->getOrderState() << "  \n";
-            if (++level > myOrderBookDisplayConfig.getRemovedLimitOrderLogLevels())
+            if (++level > config.getRemovedLimitOrderLogLevels())
                 break;
         }
         out << "----------------------------------------------------------------------\n";
     }
 
-    if (myOrderBookDisplayConfig.isShowOrderLookup()) {
+    if (config.isShowOrderLookup()) {
         // TODO
     }
 
@@ -299,8 +305,6 @@ void MatchingEngineBase::init() {
 }
 
 void MatchingEngineBase::reset() {
-    mySymbol.clear();
-    myExchangeId.clear();
     myBidBook.clear();
     myAskBook.clear();
     myBidBookSize.clear();
@@ -309,6 +313,7 @@ void MatchingEngineBase::reset() {
     myTradeLog.clear();
     myRemovedLimitOrderLog.clear();
     myLimitOrderLookup.clear();
+    IMatchingEngine::reset();
 }
 
 const std::string MatchingEngineBase::getAsJson() const {

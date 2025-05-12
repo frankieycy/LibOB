@@ -18,13 +18,53 @@ using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>;
 
-class MatchingEngineBase {
+class IMatchingEngine {
+public:
+    IMatchingEngine() = default;
+    IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
+    IMatchingEngine(const bool debugMode) : myDebugMode(debugMode), myOrderBookDisplayConfig(OrderBookDisplayConfig(debugMode)) {}
+    virtual const double getBestBidPrice() const = 0;
+    virtual const double getBestAskPrice() const = 0;
+    virtual const double getSpread() const = 0;
+    virtual const double getHalfSpread() const = 0;
+    virtual const double getMidPrice() const = 0;
+    virtual const double getMicroPrice() const = 0;
+    virtual const double getOrderImbalance() const = 0;
+    virtual const double getLastTradePrice() const = 0;
+    virtual const uint32_t getBestBidSize() const = 0;
+    virtual const uint32_t getBestAskSize() const = 0;
+    virtual const uint32_t getBidSize(const PriceLevel& priceLevel) const = 0;
+    virtual const uint32_t getAskSize(const PriceLevel& priceLevel) const = 0;
+    virtual const uint32_t getLastTradeSize() const = 0;
+    virtual const size_t getNumberOfBidPriceLevels() const = 0;
+    virtual const size_t getNumberOfAskPriceLevels() const = 0;
+    virtual const size_t getNumberOfTrades() const = 0;
+    virtual const std::shared_ptr<Market::TradeBase> getLastTrade() const = 0;
+    const std::string& getSymbol() const { return mySymbol; }
+    const std::string& getExchangeId() const { return myExchangeId; }
+    const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
+    const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
+    void setSymbol(const std::string& symbol) { mySymbol = symbol; }
+    void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
+    void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
+    void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
+    virtual void reset();
+protected:
+    Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
+private:
+    std::string mySymbol;
+    std::string myExchangeId;
+    OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
+    OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
+    Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
+    bool myDebugMode = false;
+};
+
+class MatchingEngineBase : public IMatchingEngine {
 public:
     MatchingEngineBase() = default;
     MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
-    MatchingEngineBase(const bool debugMode) : myDebugMode(debugMode), myOrderBookDisplayConfig(OrderBookDisplayConfig(debugMode)) {}
-    const std::string& getSymbol() const { return mySymbol; }
-    const std::string& getExchangeId() const { return myExchangeId; }
+    MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
     const DescOrderBook& getBidBook() const { return myBidBook; }
     const AscOrderBook& getAskBook() const { return myAskBook; }
     const DescOrderBookSize& getBidBookSize() const { return myBidBookSize; }
@@ -33,18 +73,12 @@ public:
     const TradeLog& getTradeLog() const { return myTradeLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
-    const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
-    const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
-    void setSymbol(const std::string& symbol) { mySymbol = symbol; }
-    void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
     void setBidBook(const DescOrderBook& bidBook) { myBidBook = bidBook; }
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
     void setMarketQueue(const MarketQueue& marketQueue) { myMarketQueue = marketQueue; }
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
-    void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
-    void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
     const std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const;
     const std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const;
     const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestBidTopOrder() const;
@@ -85,10 +119,7 @@ protected:
     TradeLog& getTradeLog() { return myTradeLog; }
     RemovedLimitOrderLog& getRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
     OrderIndex& getLimitOrderLookup() { return myLimitOrderLookup; }
-    Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
 private:
-    std::string mySymbol;
-    std::string myExchangeId;
     DescOrderBook myBidBook;
     AscOrderBook myAskBook;
     DescOrderBookSize myBidBookSize;
@@ -97,10 +128,6 @@ private:
     TradeLog myTradeLog;
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
-    OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
-    OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
-    Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
-    bool myDebugMode = false;
 };
 
 class MatchingEngineFIFO : public MatchingEngineBase {
