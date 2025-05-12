@@ -14,6 +14,11 @@ std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngin
     return out;
 }
 
+IMatchingEngine::IMatchingEngine(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock) :
+    myDebugMode(debugMode),
+    myOrderBookDisplayConfig(debugMode),
+    myWorldClock(worldClock ? worldClock : std::make_shared<Utils::Counter::TimestampHandlerBase>()) {}
+
 void IMatchingEngine::reset() {
     mySymbol.clear();
     myExchangeId.clear();

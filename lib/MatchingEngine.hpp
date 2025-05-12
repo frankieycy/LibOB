@@ -22,7 +22,7 @@ class IMatchingEngine {
 public:
     IMatchingEngine() = default;
     IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
-    IMatchingEngine(const bool debugMode) : myDebugMode(debugMode), myOrderBookDisplayConfig(OrderBookDisplayConfig(debugMode)) {}
+    IMatchingEngine(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock = nullptr);
     const std::string& getSymbol() const { return mySymbol; }
     const std::string& getExchangeId() const { return myExchangeId; }
     const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
