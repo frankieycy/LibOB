@@ -9,7 +9,7 @@
 namespace Exchange {
 using namespace Utils;
 
-std::ostream& operator<<(std::ostream& out, const MatchingEngineBase& matchingEngine) {
+std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine) {
     matchingEngine.orderBookSnapshot(out);
     return out;
 }

@@ -57,6 +57,7 @@ public:
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
     virtual const std::string getAsJson() const = 0;
+    friend std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine);
 protected:
     Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
 private:
@@ -114,7 +115,6 @@ public:
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
     virtual const std::string getAsJson() const;
-    friend std::ostream& operator<<(std::ostream& out, const MatchingEngineBase& matchingEngine);
 protected:
     DescOrderBook& getBidBook() { return myBidBook; }
     AscOrderBook& getAskBook() { return myAskBook; }
