@@ -36,7 +36,7 @@ public:
     void setIsBuyInitiated(const bool isBuyInitiated) { myIsBuyInitiated = isBuyInitiated; }
     virtual std::shared_ptr<TradeBase> clone() const { return std::make_shared<TradeBase>(*this); }
     virtual void init();
-    virtual const std::string getAsJason() const;
+    virtual const std::string getAsJson() const;
     friend std::ostream& operator<<(std::ostream& out, const TradeBase& trade);
 private:
     uint64_t myId;

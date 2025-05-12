@@ -28,7 +28,7 @@ public:
     virtual void applyTo(MarketOrder& order) const;
     virtual void applyTo(LimitOrder& order) const;
     virtual void init() {};
-    virtual const std::string getAsJason() const;
+    virtual const std::string getAsJson() const;
     friend std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);
 private:
     uint64_t myEventId;
@@ -45,7 +45,7 @@ public:
     OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderSubmitEvent>(*this); }
     virtual void init() override;
-    virtual const std::string getAsJason() const override;
+    virtual const std::string getAsJson() const override;
 };
 
 class OrderFillEvent : public OrderEventBase {
@@ -61,7 +61,7 @@ public:
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
-    virtual const std::string getAsJason() const override;
+    virtual const std::string getAsJson() const override;
 private:
     uint32_t myFillQuantity;
     double myFillPrice;
@@ -77,7 +77,7 @@ public:
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyPriceEvent>(*this); }
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
-    virtual const std::string getAsJason() const override;
+    virtual const std::string getAsJson() const override;
 private:
     double myModifiedPrice;
 };
@@ -92,7 +92,7 @@ public:
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyQuantityEvent>(*this); }
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
-    virtual const std::string getAsJason() const override;
+    virtual const std::string getAsJson() const override;
 private:
     uint32_t myModifiedQuantity;
 };

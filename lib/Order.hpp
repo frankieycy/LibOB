@@ -37,7 +37,7 @@ public:
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const {}
     virtual void init();
     virtual void cancel();
-    virtual const std::string getAsJason() const;
+    virtual const std::string getAsJson() const;
     friend std::ostream& operator<<(std::ostream& out, const OrderBase& order);
 private:
     uint64_t myId;
@@ -61,7 +61,7 @@ public:
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;
     virtual void init() override;
     virtual void cancel() override;
-    virtual const std::string getAsJason() const override;
+    virtual const std::string getAsJson() const override;
 private:
     double myPrice;
 };

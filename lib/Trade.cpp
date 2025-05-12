@@ -9,7 +9,7 @@ namespace Market {
 using namespace Utils;
 
 std::ostream& operator<<(std::ostream& out, const TradeBase& trade) {
-    out << trade.getAsJason();
+    out << trade.getAsJson();
     return out;
 }
 
@@ -73,7 +73,7 @@ void TradeBase::init() {
         Error::LIB_THROW("TradeBase: price cannot be negative.");
 }
 
-const std::string TradeBase::getAsJason() const {
+const std::string TradeBase::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"Id\":"               << getId()               << ","

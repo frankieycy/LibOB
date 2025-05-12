@@ -311,7 +311,7 @@ void IMatchingEngine::reset() {
     myLimitOrderLookup.clear();
 }
 
-const std::string IMatchingEngine::getAsJason() const {
+const std::string IMatchingEngine::getAsJson() const {
     // TODO
     return "";
 }

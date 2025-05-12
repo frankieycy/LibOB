@@ -11,7 +11,7 @@ namespace Market {
 using namespace Utils;
 
 std::ostream& operator<<(std::ostream& out, const OrderBase& order) {
-    out << order.getAsJason();
+    out << order.getAsJson();
     return out;
 }
 
@@ -51,7 +51,7 @@ void OrderBase::cancel() {
     myOrderState = OrderState::CANCELLED;
 }
 
-const std::string OrderBase::getAsJason() const {
+const std::string OrderBase::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"Id\":"           << getId()         << ","
@@ -106,7 +106,7 @@ void LimitOrder::cancel() {
     myPrice = isBuy() ? 0 : Consts::POS_INF_DOUBLE;
 }
 
-const std::string LimitOrder::getAsJason() const {
+const std::string LimitOrder::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"Id\":"           << getId()         << ","

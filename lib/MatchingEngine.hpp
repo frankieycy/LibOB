@@ -74,7 +74,7 @@ public:
     virtual void init();
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
-    virtual const std::string getAsJason() const;
+    virtual const std::string getAsJson() const;
     friend std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine);
 protected:
     DescOrderBook& getBidBook() { return myBidBook; }

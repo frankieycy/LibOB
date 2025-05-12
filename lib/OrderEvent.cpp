@@ -9,7 +9,7 @@ namespace Market {
 using namespace Utils;
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event) {
-    out << event.getAsJason();
+    out << event.getAsJson();
     return out;
 }
 
@@ -41,7 +41,7 @@ void OrderEventBase::applyTo(LimitOrder& order) const {
     Error::LIB_THROW("No implementation for OrderEventBase::applyTo(LimitOrder&).");
 }
 
-const std::string OrderEventBase::getAsJason() const {
+const std::string OrderEventBase::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"EventId\":"     << getEventId()   << ","
@@ -73,14 +73,14 @@ void OrderSubmitEvent::init() {
     setEventType(OrderEventType::SUBMIT);
 }
 
-const std::string OrderSubmitEvent::getAsJason() const {
+const std::string OrderSubmitEvent::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"EventId\":"     << getEventId()   << ","
     "\"OrderId\":"     << getOrderId()   << ","
     "\"Timestamp\":"   << getTimestamp() << ","
     "\"EventType\":\"" << getEventType() << "\","
-    "\"Order\":"       << getOrder()->getAsJason();
+    "\"Order\":"       << getOrder()->getAsJson();
     oss << "}";
     return oss.str();
 }
@@ -122,7 +122,7 @@ void OrderFillEvent::init() {
     setEventType(OrderEventType::FILL);
 }
 
-const std::string OrderFillEvent::getAsJason() const {
+const std::string OrderFillEvent::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"EventId\":"      << getEventId()      << ","
@@ -163,7 +163,7 @@ void OrderModifyPriceEvent::init() {
     setEventType(OrderEventType::MODIFY_PRICE);
 }
 
-const std::string OrderModifyPriceEvent::getAsJason() const {
+const std::string OrderModifyPriceEvent::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"EventId\":"       << getEventId()      << ","
@@ -195,7 +195,7 @@ void OrderModifyQuantityEvent::init() {
     setEventType(OrderEventType::MODIFY_QUANTITY);
 }
 
-const std::string OrderModifyQuantityEvent::getAsJason() const {
+const std::string OrderModifyQuantityEvent::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"EventId\":"       << getEventId()      << ","
