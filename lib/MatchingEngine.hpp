@@ -35,6 +35,7 @@ public:
     void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
     void setWorldClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock) { myWorldClock = worldClock; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; myOrderBookDisplayConfig.setDebugMode(debugMode); }
+    const uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
     const uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     virtual const double getBestBidPrice() const = 0;
     virtual const double getBestAskPrice() const = 0;
@@ -78,7 +79,7 @@ class MatchingEngineBase : public IMatchingEngine {
 public:
     MatchingEngineBase() = default;
     MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
-    MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
+    MatchingEngineBase(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock = nullptr) : IMatchingEngine(debugMode, worldClock) {}
     const DescOrderBook& getBidBook() const { return myBidBook; }
     const AscOrderBook& getAskBook() const { return myAskBook; }
     const DescOrderBookSize& getBidBookSize() const { return myBidBookSize; }
@@ -116,6 +117,9 @@ public:
     const std::shared_ptr<Market::TradeBase> getLastTrade() const;
     virtual void process(const std::shared_ptr<Market::OrderBase>& order);
     virtual void process(const std::shared_ptr<Market::OrderEventBase>& event);
+    virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
+    virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
+    virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void init();
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
@@ -144,7 +148,7 @@ class MatchingEngineFIFO : public MatchingEngineBase {
 public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
-    MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
+    MatchingEngineFIFO(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock = nullptr) : MatchingEngineBase(debugMode, worldClock) {}
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) override;
