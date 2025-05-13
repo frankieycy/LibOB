@@ -332,7 +332,20 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     }
 
     if (config.isShowOrderLookup()) {
-        // TODO
+        out << "======================= Order Lookup Table ===========================\n";
+        out << "   Id   |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
+        out << "----------------------------------------------------------------------\n";
+        for (const auto& orderPair : myLimitOrderLookup) {
+            const auto& order = *orderPair.second.second;
+            out << std::setw(6) << order->getId() << "  | "
+                << std::setw(10) << order->getTimestamp() << "  | "
+                << std::fixed << std::setprecision(2)
+                << std::setw(10) << order->getPrice() << "  | "
+                << std::setw(7) << order->getQuantity() << "  | "
+                << std::setw(7) << order->getSide() << "  | "
+                << std::setw(8) << order->getOrderState() << "  \n";
+        }
+        out << "----------------------------------------------------------------------\n";
     }
 
     return out;
