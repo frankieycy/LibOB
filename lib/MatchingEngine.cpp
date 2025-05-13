@@ -187,9 +187,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             out << "---------------------------------------------------------\n";
             while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
                 if (bidIt != myBidBook.end()) {
-                    uint32_t bidSize = 0;
-                    for (const auto& order : bidIt->second)
-                        bidSize += order->getQuantity();
+                    uint32_t bidSize = myBidBookSize.at(bidIt->first);
                     out << std::setw(9) << bidSize << "  | "
                         << std::fixed << std::setprecision(2)
                         << std::setw(8) << bidIt->first << "  || ";
@@ -199,9 +197,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 }
                 out << std::setw(5) << level << " || ";
                 if (askIt != myAskBook.end()) {
-                    uint32_t askSize = 0;
-                    for (const auto& order : askIt->second)
-                        askSize += order->getQuantity();
+                    uint32_t askSize = myAskBookSize.at(askIt->first);
                     out << std::setw(8) << askIt->first << "  | "
                         << std::setw(8) << askSize << "  \n";
                     ++askIt;
@@ -221,9 +217,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 out << std::setw(6) << level << " || "
                     << std::fixed << std::setprecision(2)
                     << std::setw(9) << bidIt->first << " | ";
-                uint32_t bidSize = 0;
-                for (const auto& order : bidIt->second)
-                    bidSize += order->getQuantity();
+                uint32_t bidSize = myBidBookSize.at(bidIt->first);
                 out << std::setw(8) << bidSize << " | ";
                 for (const auto& order : bidIt->second) {
                     out << "(" << order->getTimestamp() << ", " << order->getQuantity() << ") ";
@@ -242,9 +236,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 out << std::setw(6) << level << " || "
                     << std::fixed << std::setprecision(2)
                     << std::setw(9) << askIt->first << " | ";
-                uint32_t askSize = 0;
-                for (const auto& order : askIt->second)
-                    askSize += order->getQuantity();
+                uint32_t askSize = myAskBookSize.at(askIt->first);
                 out << std::setw(8) << askSize << " | ";
                 for (const auto& order : askIt->second) {
                     out << "(" << order->getTimestamp() << ", " << order->getQuantity() << ") ";
@@ -271,7 +263,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 << std::fixed << std::setprecision(2)
                 << std::setw(10) << trade->getPrice() << "  | "
                 << std::setw(7) << trade->getQuantity() << "  | "
-                << std::setw(6) << (trade->getIsBuyInitiated() ? "BUY" : "SELL") << "  \n";
+                << std::setw(6) << (trade->getIsBuyInitiated() ? "Buy" : "Sell") << "  \n";
             if (++level > config.getTradeLogLevels())
                 break;
         }
@@ -361,7 +353,7 @@ void fillOrderByMatchingLimitQueue(
         auto& matchOrder = *queueIt;
         std::cout << "DEBUG: Matching order: " << *matchOrder << std::endl;
         const uint32_t matchQuantity = matchOrder->getQuantity();
-        uint32_t filledQuantity = false;
+        uint32_t filledQuantity = 0;
         if (matchQuantity <= unfilledQuantity) {
             filledQuantity = matchQuantity;
             unfilledQuantity -= matchQuantity;
@@ -373,6 +365,7 @@ void fillOrderByMatchingLimitQueue(
             queueIt = matchQueue.erase(queueIt);
         } else {
             filledQuantity = unfilledQuantity;
+            matchSizeTotal -= unfilledQuantity;
             matchOrder->setQuantity(matchQuantity - unfilledQuantity);
             unfilledQuantity = 0;
         }
