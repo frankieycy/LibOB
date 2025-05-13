@@ -13,13 +13,13 @@
     - ok, trade id handler
     - ok, separate order book data structures from interface into base class
     - ok, take in a `TimestampHandlerBase` ptr
-    - override incoming orders or order updates with the internal clock
-    - move updated orders to the back of limit queue
-    - make friend `fillOrderByMatchingLimitQueue` etc. ??
+    - ok, move updated orders to the back of limit queue
+    - ok, override incoming orders or order updates with the internal clock
+    - ok, make `fillOrderByMatchingLimitQueue` etc. as class member function
     - order matching test cases
 * `Market::OrderEventManager`
     - unified interface for order submmit, cancel, modify etc.
-    - takes in a `TimestampHandlerBase` ptr
+    - take in a `TimestampHandlerBase` ptr
     - order id handler
 
 ### Analytics
