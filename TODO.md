@@ -12,7 +12,10 @@
     - ok, display order book, trade log, market queue etc.
     - ok, trade id handler
     - ok, separate order book data structures from interface into base class
-    - takes in a `TimestampHandlerBase` ptr
+    - ok, take in a `TimestampHandlerBase` ptr
+    - override incoming orders or order updates with the internal clock
+    - move updated orders to the back of limit queue
+    - make friend `fillOrderByMatchingLimitQueue` etc. ??
     - order matching test cases
 * `Market::OrderEventManager`
     - unified interface for order submmit, cancel, modify etc.
