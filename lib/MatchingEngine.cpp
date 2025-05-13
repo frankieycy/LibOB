@@ -151,26 +151,48 @@ void MatchingEngineBase::process(const std::shared_ptr<Market::OrderEventBase>& 
         auto& orderIt = queueOrderPair.second;
         auto& order = *orderIt;
         const double oldPrice = order->getPrice();
+        const uint32_t oldQuantity = order->getQuantity();
         order->executeOrderEvent(*event);
         order->setTimestamp(clockTick());
         if (order->isAlive()) {
-            queue->erase(orderIt);
             const double newPrice = order->getPrice();
             const uint32_t newQuantity = order->getQuantity();
+            queue->erase(orderIt);
             LimitQueue& newQueue = order->isBuy() ? myBidBook[newPrice] : myAskBook[newPrice];
             newQueue.push_back(order);
             it->second = {&newQueue, std::prev(newQueue.end())};
             if (order->isBuy()) {
                 myBidBookSize[newPrice] += newQuantity;
-                myBidBookSize[oldPrice] -= newQuantity;
+                myBidBookSize[oldPrice] -= oldQuantity;
+                if (myBidBookSize[oldPrice] == 0) {
+                    myBidBookSize.erase(oldPrice);
+                    myBidBook.erase(oldPrice);
+                }
             } else {
                 myAskBookSize[newPrice] += newQuantity;
-                myAskBookSize[oldPrice] -= newQuantity;
+                myAskBookSize[oldPrice] -= oldQuantity;
+                if (myAskBookSize[oldPrice] == 0) {
+                    myAskBookSize.erase(oldPrice);
+                    myAskBook.erase(oldPrice);
+                }
             }
         } else {
             myRemovedLimitOrderLog.push_back(order);
             myLimitOrderLookup.erase(it);
             queue->erase(orderIt);
+            if (order->isBuy()) {
+                myBidBookSize[oldPrice] -= order->getQuantity();
+                if (myBidBookSize[oldPrice] == 0) {
+                    myBidBookSize.erase(oldPrice);
+                    myBidBook.erase(oldPrice);
+                }
+            } else {
+                myAskBookSize[oldPrice] -= order->getQuantity();
+                if (myAskBookSize[oldPrice] == 0) {
+                    myAskBookSize.erase(oldPrice);
+                    myAskBook.erase(oldPrice);
+                }
+            }
         }
     }
 }
