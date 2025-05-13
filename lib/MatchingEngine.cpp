@@ -134,21 +134,40 @@ void MatchingEngineBase::process(const std::shared_ptr<Market::OrderBase>& order
     if (!order)
         Error::LIB_THROW("MatchingEngineBase::process: order is null.");
     order->submit(*this);
+    order->setTimestamp(clockTick());
 }
 
 void MatchingEngineBase::process(const std::shared_ptr<Market::OrderEventBase>& event) {
     if (!event)
         Error::LIB_THROW("MatchingEngineBase::process: order event is null.");
-    if (event->isSubmit())
+    if (event->isSubmit()) {
         process(event->getOrder());
+        return;
+    }
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
     if (it != myLimitOrderLookup.end()) {
         auto& queueOrderPair = it->second;
         auto& queue = queueOrderPair.first;
         auto& orderIt = queueOrderPair.second;
         auto& order = *orderIt;
+        const double oldPrice = order->getPrice();
         order->executeOrderEvent(*event);
-        if (!order->isAlive()) {
+        order->setTimestamp(clockTick());
+        if (order->isAlive()) {
+            queue->erase(orderIt);
+            const double newPrice = order->getPrice();
+            const uint32_t newQuantity = order->getQuantity();
+            LimitQueue& newQueue = order->isBuy() ? myBidBook[newPrice] : myAskBook[newPrice];
+            newQueue.push_back(order);
+            it->second = {&newQueue, std::prev(newQueue.end())};
+            if (order->isBuy()) {
+                myBidBookSize[newPrice] += newQuantity;
+                myBidBookSize[oldPrice] -= newQuantity;
+            } else {
+                myAskBookSize[newPrice] += newQuantity;
+                myAskBookSize[oldPrice] -= newQuantity;
+            }
+        } else {
             myRemovedLimitOrderLog.push_back(order);
             myLimitOrderLookup.erase(it);
             queue->erase(orderIt);

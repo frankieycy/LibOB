@@ -28,11 +28,14 @@ public:
     const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
     const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
     const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& getWorldClock() const { return myWorldClock; }
+    const bool isDebugMode() const { return myDebugMode; }
     void setSymbol(const std::string& symbol) { mySymbol = symbol; }
     void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
     void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
     void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
     void setWorldClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock) { myWorldClock = worldClock; }
+    void setDebugMode(const bool debugMode) { myDebugMode = debugMode; myOrderBookDisplayConfig.setDebugMode(debugMode); }
+    const uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     virtual const double getBestBidPrice() const = 0;
     virtual const double getBestAskPrice() const = 0;
     virtual const double getSpread() const = 0;
