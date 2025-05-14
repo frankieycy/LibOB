@@ -382,7 +382,8 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
     auto queueIt = matchQueue.begin();
     while (unfilledQuantity && queueIt != matchQueue.end()) {
         auto& matchOrder = *queueIt;
-        std::cout << "DEBUG: Matching order: " << *matchOrder << std::endl;
+        if (isDebugMode())
+            *getLogger() << "[MatchingEngineBase] Matching order: " << *matchOrder;
         const uint32_t matchQuantity = matchOrder->getQuantity();
         uint32_t filledQuantity = 0;
         if (matchQuantity <= unfilledQuantity) {
@@ -422,7 +423,8 @@ void MatchingEngineBase::placeLimitOrderToLimitOrderBook(
         limitQueue.push_back(order);
         orderSizeTotal += order->getQuantity();
         myLimitOrderLookup[order->getId()] = {&limitQueue, std::prev(limitQueue.end())};
-        std::cout << "DEBUG: Placed order in limit order book: " << *order << std::endl;
+        if (isDebugMode())
+            *getLogger() << "[MatchingEngineBase] Placed order in limit order book: " << *order;
     } else {
         order->setQuantity(0);
         order->setTimestamp(clockTick());
@@ -441,7 +443,8 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
         if (unfilledQuantity < originalQuantity)
             order->setOrderState(Market::OrderState::PARTIAL_FILLED);
         marketQueue.push_back(order);
-        std::cout << "DEBUG: Placed order in market order queue: " << *order << std::endl;
+        if (isDebugMode())
+            *getLogger() << "[MatchingEngineBase] Placed order in market order queue: " << *order;
     } else {
         order->setQuantity(0);
         order->setTimestamp(clockTick());
@@ -450,7 +453,8 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
 }
 
 void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) {
-    std::cout << "DEBUG: Add to limit order book: " << *order << std::endl;
+    if (isDebugMode())
+        *getLogger() << "[MatchingEngineFIFO] Add to limit order book: " << *order;
     if (!order->isAlive())
         return;
     const Market::Side side = order->getSide();
@@ -482,7 +486,8 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
 }
 
 void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) {
-    std::cout << "DEBUG: Execute market order: " << *order << std::endl;
+    if (isDebugMode())
+        *getLogger() << "[MatchingEngineFIFO] Execute market order: " << *order;
     if (!order->isAlive())
         return;
     const Market::Side side = order->getSide();
