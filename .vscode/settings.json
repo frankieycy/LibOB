@@ -71,6 +71,8 @@
         "iterator": "cpp",
         "utility": "cpp",
         "list": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "fstream": "cpp",
+        "stack": "cpp"
     }
 }
