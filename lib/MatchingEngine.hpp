@@ -22,7 +22,7 @@ class IMatchingEngine {
 public:
     IMatchingEngine() = default;
     IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
-    IMatchingEngine(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock = nullptr);
+    IMatchingEngine(const bool debugMode);
     const std::string& getSymbol() const { return mySymbol; }
     const std::string& getExchangeId() const { return myExchangeId; }
     const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
@@ -71,7 +71,7 @@ private:
     OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
     OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
     Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
-    std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock;
+    std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>(); // maintains an internal clock that restamps orders upon order events (submit, cancel, etc.)
     bool myDebugMode = false;
 };
 
@@ -79,7 +79,7 @@ class MatchingEngineBase : public IMatchingEngine {
 public:
     MatchingEngineBase() = default;
     MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
-    MatchingEngineBase(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock = nullptr) : IMatchingEngine(debugMode, worldClock) {}
+    MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
     const DescOrderBook& getBidBook() const { return myBidBook; }
     const AscOrderBook& getAskBook() const { return myAskBook; }
     const DescOrderBookSize& getBidBookSize() const { return myBidBookSize; }
@@ -134,6 +134,7 @@ protected:
     RemovedLimitOrderLog& getRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
     OrderIndex& getLimitOrderLookup() { return myLimitOrderLookup; }
 private:
+    // each order processing must remember to update ALL the following data structures at once, each operation takes O(1)
     DescOrderBook myBidBook;
     AscOrderBook myAskBook;
     DescOrderBookSize myBidBookSize;
@@ -148,7 +149,7 @@ class MatchingEngineFIFO : public MatchingEngineBase {
 public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
-    MatchingEngineFIFO(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock = nullptr) : MatchingEngineBase(debugMode, worldClock) {}
+    MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) override;

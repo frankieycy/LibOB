@@ -14,10 +14,9 @@ std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngin
     return out;
 }
 
-IMatchingEngine::IMatchingEngine(const bool debugMode, const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock) :
+IMatchingEngine::IMatchingEngine(const bool debugMode) :
     myDebugMode(debugMode),
-    myOrderBookDisplayConfig(debugMode),
-    myWorldClock(worldClock ? worldClock : std::make_shared<Utils::Counter::TimestampHandlerBase>()) {}
+    myOrderBookDisplayConfig(debugMode) {}
 
 void IMatchingEngine::reset() {
     mySymbol.clear();
@@ -134,10 +133,11 @@ const std::shared_ptr<Market::TradeBase> MatchingEngineBase::getLastTrade() cons
 void MatchingEngineBase::process(const std::shared_ptr<Market::OrderBase>& order) {
     if (!order)
         Error::LIB_THROW("MatchingEngineBase::process: order is null.");
-    order->submit(*this);
+    order->submit(*this); // relegate the order processing to OrderBase since it knows about the order type
 }
 
 void MatchingEngineBase::process(const std::shared_ptr<Market::OrderEventBase>& event) {
+    // the hardcore order processing engine that interacts with external order event streams
     if (!event)
         Error::LIB_THROW("MatchingEngineBase::process: order event is null.");
     if (event->isSubmit()) {
