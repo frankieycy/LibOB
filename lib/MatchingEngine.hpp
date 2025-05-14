@@ -28,6 +28,7 @@ public:
     const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
     const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
     const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& getWorldClock() const { return myWorldClock; }
+    const std::shared_ptr<Utils::Logger::LoggerBase>& getLogger() const { return myLogger; }
     const bool isDebugMode() const { return myDebugMode; }
     void setSymbol(const std::string& symbol) { mySymbol = symbol; }
     void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
@@ -35,6 +36,7 @@ public:
     void setOrderBookDisplayConfig(const OrderBookDisplayConfig& orderBookDisplayConfig) { myOrderBookDisplayConfig = orderBookDisplayConfig; }
     void setWorldClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock) { myWorldClock = worldClock; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; myOrderBookDisplayConfig.setDebugMode(debugMode); }
+    void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     const uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
     const uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     virtual const double getBestBidPrice() const = 0;
@@ -72,6 +74,7 @@ private:
     OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
     Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>(); // maintains an internal clock that restamps orders upon order events (submit, cancel, etc.)
+    std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     bool myDebugMode = false;
 };
 
