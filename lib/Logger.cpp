@@ -22,10 +22,19 @@ LoggerBase::~LoggerBase() {
 }
 
 void LoggerBase::log(const std::string& message) {
+    std::string timestampStr = myShowLogTimestamp ? ('[' + getTimestamp() + ']') : "";
     if (myLogToConsole)
-        std::cout << message << std::endl;
+        std::cout << timestampStr << message << std::endl;
     if (myLogToFile && myLogFile.is_open())
-        myLogFile << message << std::endl;
+        myLogFile << timestampStr << message << std::endl;
+}
+
+std::string LoggerBase::getTimestamp() const {
+    std::time_t now = std::time(nullptr);
+    std::tm* localTime = std::localtime(&now);
+    char buffer[20];
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localTime);
+    return std::string(buffer);
 }
 }
 }
