@@ -4,46 +4,48 @@
 #include "OrderUtils.hpp"
 
 namespace Market {
-std::ostream& operator<<(std::ostream& out, const Side& side) {
+std::string to_string(const Side& side) {
     switch (side) {
-        case Side::BUY:  out << "Buy";  break;
-        case Side::SELL: out << "Sell"; break;
-        default:         out << "Null"; break;
+        case Side::BUY:  return "Buy";
+        case Side::SELL: return "Sell";
+        default:         return "Null";
     }
-    return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const OrderType& orderType) {
+std::string to_string(const OrderType& orderType) {
     switch (orderType) {
-        case OrderType::LIMIT:  out << "Limit";  break;
-        case OrderType::MARKET: out << "Market"; break;
-        default:                out << "Null";   break;
+        case OrderType::LIMIT:  return "Limit";
+        case OrderType::MARKET: return "Market";
+        default:                return "Null";
     }
-    return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const OrderState& orderState) {
+std::string to_string(const OrderState& orderState) {
     switch (orderState) {
-        case OrderState::ACTIVE:         out << "Active";          break;
-        case OrderState::FILLED:         out << "Filled";          break;
-        case OrderState::PARTIAL_FILLED: out << "PartiallyFilled"; break;
-        case OrderState::CANCELLED:      out << "Cancelled";       break;
-        case OrderState::INVALID:        out << "Invalid";         break;
-        default:                         out << "Null";            break;
+        case OrderState::ACTIVE:         return "Active";
+        case OrderState::FILLED:         return "Filled";
+        case OrderState::PARTIAL_FILLED: return "PartialFilled";
+        case OrderState::CANCELLED:      return "Cancelled";
+        case OrderState::INVALID:        return "Invalid";
+        default:                         return "Null";
     }
-    return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const OrderEventType& orderEventType) {
+std::string to_string(const OrderEventType& orderEventType) {
     switch (orderEventType) {
-        case OrderEventType::FILL:            out << "Fill";           break;
-        case OrderEventType::MODIFY_PRICE:    out << "ModifyPrice";    break;
-        case OrderEventType::MODIFY_QUANTITY: out << "ModifyQuantity"; break;
-        case OrderEventType::CANCEL:          out << "Cancel";         break;
-        default:                              out << "Null";           break;
+        case OrderEventType::SUBMIT:          return "Submit";
+        case OrderEventType::FILL:            return "Fill";
+        case OrderEventType::CANCEL:          return "Cancel";
+        case OrderEventType::MODIFY_PRICE:    return "ModifyPrice";
+        case OrderEventType::MODIFY_QUANTITY: return "ModifyQuantity";
+        default:                              return "Null";
     }
-    return out;
 }
+
+std::ostream& operator<<(std::ostream& out, const Side& side) { return out << to_string(side); }
+std::ostream& operator<<(std::ostream& out, const OrderType& orderType) { return out << to_string(orderType); }
+std::ostream& operator<<(std::ostream& out, const OrderState& orderState) { return out << to_string(orderState); }
+std::ostream& operator<<(std::ostream& out, const OrderEventType& orderEventType) { return out << to_string(orderEventType); }
 }
 
 #endif

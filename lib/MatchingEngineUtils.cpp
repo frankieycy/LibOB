@@ -4,15 +4,16 @@
 #include "MatchingEngineUtils.hpp"
 
 namespace Exchange {
-std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy) {
+std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy) {
     switch (orderMatchingStrategy) {
-        case OrderMatchingStrategy::FIFO:            out << "FIFO";           break;
-        case OrderMatchingStrategy::PRO_RATA:        out << "ProRata";        break;
-        case OrderMatchingStrategy::ICEBERG_SUPPORT: out << "IcebergSupport"; break;
-        default:                                     out << "Null";           break;
+        case OrderMatchingStrategy::FIFO:            return "FIFO";
+        case OrderMatchingStrategy::PRO_RATA:        return "ProRata";
+        case OrderMatchingStrategy::ICEBERG_SUPPORT: return "IcebergSupport";
+        default:                                     return "Null";
     }
-    return out;
 }
+
+std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy) { return out << to_string(orderMatchingStrategy); }
 
 OrderBookDisplayConfig::OrderBookDisplayConfig(const bool debugMode) :
     myDebugMode(debugMode) {

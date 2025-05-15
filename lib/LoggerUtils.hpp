@@ -7,18 +7,8 @@ namespace Logger {
 enum class LogLevel { INFO, WARNING, ERROR, DEBUG, TRACE, NULL_LOG_LEVEL };
 class LoggerBase;
 
-inline std::string to_string(const LogLevel& level) {
-    switch (level) {
-        case LogLevel::INFO:    return "INFO";
-        case LogLevel::WARNING: return "WARNING";
-        case LogLevel::ERROR:   return "ERROR";
-        case LogLevel::DEBUG:   return "DEBUG";
-        case LogLevel::TRACE:   return "TRACE";
-        default:                return "NULL";
-    }
-}
-
-inline std::ostream& operator<<(std::ostream& out, const LogLevel& level) { return out << to_string(level); }
+std::string to_string(const LogLevel& level);
+std::ostream& operator<<(std::ostream& out, const LogLevel& level);
 
 class LoggerStream {
 public:

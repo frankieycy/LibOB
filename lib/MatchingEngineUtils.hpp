@@ -7,6 +7,7 @@
 namespace Exchange {
 enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NULL_ORDER_MATCHING_STRATEGY };
 
+std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy);
 std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy);
 
 class OrderBookDisplayConfig {
