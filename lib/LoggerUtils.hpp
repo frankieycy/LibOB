@@ -4,11 +4,14 @@
 
 namespace Utils {
 namespace Logger {
+enum class LogLevel { INFO, WARNING, ERROR, DEBUG, TRACE };
 class LoggerBase;
+
+std::ostream& operator<<(std::ostream& out, const LogLevel& level);
 
 class LoggerStream {
 public:
-    LoggerStream(LoggerBase& logger) : myLogger(logger) {}
+    LoggerStream(LoggerBase& logger, const LogLevel& level = LogLevel::INFO) : myLogger(logger), myLevel(level) {}
     ~LoggerStream();
     LoggerStream(LoggerStream&&) = default;
     LoggerStream& operator=(LoggerStream&&) = delete;
@@ -21,6 +24,7 @@ public:
     }
 private:
     LoggerBase& myLogger;
+    LogLevel myLevel;
     std::ostringstream myStream;
 };
 }

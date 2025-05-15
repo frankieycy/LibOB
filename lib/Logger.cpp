@@ -21,12 +21,12 @@ LoggerBase::~LoggerBase() {
         myLogFile.close();
 }
 
-void LoggerBase::log(const std::string& message) {
+void LoggerBase::log(const std::string& message, const LogLevel& level) {
     std::string timestampStr = myShowLogTimestamp ? ('[' + getTimestamp() + ']') : "";
     if (myLogToConsole)
-        std::cout << timestampStr << " " << message << std::endl;
+        std::cout << timestampStr << " " << level << " " << message << std::endl;
     if (myLogToFile && myLogFile.is_open())
-        myLogFile << timestampStr << " " << message << std::endl;
+        myLogFile << timestampStr << " " << level << " " << message << std::endl;
 }
 
 std::string LoggerBase::getTimestamp() const {
