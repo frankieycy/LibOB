@@ -217,7 +217,7 @@ OrderCancelEvent::OrderCancelEvent(const OrderCancelEvent& event) :
     init();
 }
 
-OrderCancelEvent::OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity) :
+OrderCancelEvent::OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp) :
     OrderEventBase(eventId, orderId, timestamp) {
     init();
 }

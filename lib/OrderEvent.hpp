@@ -100,7 +100,7 @@ class OrderCancelEvent : public OrderEventBase {
 public:
     OrderCancelEvent();
     OrderCancelEvent(const OrderCancelEvent& event);
-    OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity);
+    OrderCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderCancelEvent>(*this); }
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;
