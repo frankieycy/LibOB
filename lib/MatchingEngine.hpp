@@ -58,7 +58,7 @@ public:
     virtual const std::shared_ptr<Market::TradeBase> getLastTrade() const = 0;
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
     virtual void process(const std::shared_ptr<Market::OrderBase>& order) = 0;
-    virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) = 0;
+    virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void init() = 0;

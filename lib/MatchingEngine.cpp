@@ -21,6 +21,7 @@ IMatchingEngine::IMatchingEngine(const bool debugMode) :
 void IMatchingEngine::reset() {
     mySymbol.clear();
     myExchangeId.clear();
+    myTradeIdHandler.reset();
     myWorldClock->reset();
 }
 
