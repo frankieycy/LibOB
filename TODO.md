@@ -3,10 +3,12 @@
 ### Infrastructure
 
 * Misc. Utils
-    - ability to cast Enum as string
+    - ok, ability to cast Enum as string, `to_string`
+    - ok, write up `Logger` class, use it for debug logging
+    - ok, add `LogLevel` to logger to enable `logger << LogLevel::INFO << ...`
 * `Utils::Counter::TimestampHandlerBase`
-    - world clock synchronized over `MatchingEngine` and `OrderEventManager`
-    - unified timestamp generation function `tick()`
+    - ok, world clock synchronized over `MatchingEngine` and `OrderEventManager`
+    - ok, unified timestamp generation function `tick()`
     - class for ticking unix timestamp
 * `Exchange::MatchingEngine`
     - ok, display order book, trade log, market queue etc.
@@ -18,9 +20,10 @@
     - ok, make `fillOrderByMatchingLimitQueue` etc. as class member function
     - order matching test cases
 * `Market::OrderEventManager`
-    - unified interface for order submmit, cancel, modify etc.
-    - take in a `TimestampHandlerBase` ptr
-    - order id handler
+    - ok, unified interface for order submmit, cancel, modify etc.
+    - ok, take in a `TimestampHandlerBase` ptr
+    - ok, order id handler
+    - sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
 
 ### Analytics
 
