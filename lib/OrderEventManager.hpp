@@ -23,6 +23,7 @@ public:
     std::shared_ptr<OrderCancelEvent> cancelOrder(const uint64_t orderId);
     std::shared_ptr<OrderModifyPriceEvent> modifyOrderPrice(const uint64_t orderId, const double modifiedPrice);
     std::shared_ptr<OrderModifyQuantityEvent> modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity);
+    virtual std::ostream& stateSnapshot(std::ostream& out) const;
 private:
     Utils::Counter::IdHandlerBase myOrderIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myEventIdHandler = Utils::Counter::IdHandlerBase();
@@ -34,6 +35,8 @@ private:
     bool myDebugMode = false;
     bool myPrintOrderBookPerOrderSubmit = false;
 };
+
+std::ostream& operator<<(std::ostream& out, const OrderEventManagerBase& manager);
 }
 
 #endif

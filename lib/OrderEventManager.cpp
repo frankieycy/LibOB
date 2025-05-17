@@ -8,6 +8,11 @@
 
 namespace Market {
 using namespace Utils;
+std::ostream& operator<<(std::ostream& out, const OrderEventManagerBase& manager) {
+    manager.stateSnapshot(out);
+    return out;
+}
+
 OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) {
     if (!matchingEngine)
         Error::LIB_THROW("OrderEventManagerBase: matching engine is null.");
@@ -20,8 +25,12 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
     myMatchingEngine->process(event);
-    if (myDebugMode && myPrintOrderBookPerOrderSubmit)
-        *myLogger << "[OrderEventManagerBase] Order book state:\n" << *myMatchingEngine;
+    if (myDebugMode) {
+        *myLogger << "[OrderEventManagerBase] Order event submitted: " << *event;
+        *myLogger << "[OrderEventManagerBase] Order event manager state:\n" << *this;
+        if (myPrintOrderBookPerOrderSubmit)
+            *myLogger << "[OrderEventManagerBase] Order book state:\n" << *myMatchingEngine;
+    }
 }
 
 void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionReport& report) {
@@ -111,6 +120,23 @@ std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrderQuan
     const auto& event = createOrderModifyQuantityEvent(orderId, modifiedQuantity);
     submitOrderEventToMatchingEngine(event);
     return event;
+}
+
+std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
+    out << "======================= Active Orders Snapshot ======================\n";
+    out << "   Id   |  Timestamp  |    Type    |   Side   |   Size   |   State   \n";
+    out << "---------------------------------------------------------------------\n";
+    for (const auto& orderPair : myActiveOrders) {
+        const auto& order = orderPair.second;
+        out << std::setw(6) << order->getId() << "  | "
+            << std::setw(10) << order->getTimestamp() << "  | "
+            << std::setw(9) << order->getOrderType() << "  | "
+            << std::setw(7) << order->getSide() << "  | "
+            << std::setw(7) << order->getQuantity() << "  | "
+            << std::setw(8) << order->getOrderState() << "  \n";
+    }
+    out << "---------------------------------------------------------------------\n";
+    return out;
 }
 }
 
