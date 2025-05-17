@@ -404,12 +404,14 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
             matchOrder->setOrderState(Market::OrderState::PARTIAL_FILLED);
             unfilledQuantity = 0;
         }
+        // internal log of executed trades
         std::shared_ptr<Market::TradeBase> trade;
         if (isIncomingOrderBuy)
             trade = std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), orderId, matchOrderId, filledQuantity, matchOrder->getPrice(), order->isLimitOrder(), true, true);
         else
             trade = std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), matchOrderId, orderId, filledQuantity, matchOrder->getPrice(), true, order->isLimitOrder(), false);
         myTradeLog.push_back(trade);
+        // external callback of executed trades
         if (myOrderExecutionCallback) {
             const OrderExecutionType takerOrderExecType = unfilledQuantity == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
             const OrderExecutionType makerOrderExecType = matchOrder->getQuantity() == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
