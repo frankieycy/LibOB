@@ -18,6 +18,8 @@ using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>;
 
+struct OrderExecutionReport;
+
 class IMatchingEngine {
 public:
     IMatchingEngine() = default;
@@ -61,6 +63,7 @@ public:
     virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
+    virtual void setOrderExecutionCallback(std::function<void(const OrderExecutionReport&)> callback) = 0;
     virtual void init() = 0;
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
@@ -123,6 +126,7 @@ public:
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
+    virtual void setOrderExecutionCallback(std::function<void(const OrderExecutionReport&)> callback) { this->myOrderExecutionCallback = callback; }
     virtual void init();
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
@@ -146,6 +150,7 @@ private:
     TradeLog myTradeLog;
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
+    std::function<void(const OrderExecutionReport&)> myOrderExecutionCallback;
 };
 
 class MatchingEngineFIFO : public MatchingEngineBase {

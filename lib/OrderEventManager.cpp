@@ -11,13 +11,18 @@ using namespace Utils;
 OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) {
     if (!matchingEngine)
         Error::LIB_THROW("OrderEventManagerBase: matching engine is null.");
+    mySyncClockWithEngine = true;
     myMatchingEngine = matchingEngine;
     myWorldClock = matchingEngine->getWorldClock();
-    mySyncClockWithEngine = true;
+    matchingEngine->setOrderExecutionCallback([this](const Exchange::OrderExecutionReport& report) { onExecutionReport(report); });
 }
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
     myMatchingEngine->process(event);
+}
+
+void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionReport& report) {
+    // TODO
 }
 
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price) {

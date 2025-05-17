@@ -11,6 +11,7 @@ public:
     OrderEventManagerBase() = default;
     OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
+    virtual void onExecutionReport(const Exchange::OrderExecutionReport& report);
     virtual std::shared_ptr<OrderSubmitEvent> createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price);
     virtual std::shared_ptr<OrderSubmitEvent> createMarketOrderSubmitEvent(const Side side, const uint32_t quantity);
     virtual std::shared_ptr<OrderCancelEvent> createOrderCancelEvent(const uint64_t orderId);
