@@ -23,8 +23,8 @@ public:
     const bool getIsBuyLimitOrder() const { return myIsBuyLimitOrder; }
     const bool getIsSellLimitOrder() const { return myIsSellLimitOrder; }
     const bool getIsBuyInitiated() const { return myIsBuyInitiated; }
-    const std::string getSymbol() const { return myMetaInfo->getSymbol(); }
-    const std::string getExchangeId() const { return myMetaInfo->getExchangeId(); }
+    const std::string getSymbol() const { return myMetaInfo ? myMetaInfo->getSymbol() : ""; }
+    const std::string getExchangeId() const { return myMetaInfo ? myMetaInfo->getExchangeId() : ""; }
     void setId(const uint64_t id) {myId = id; }
     void setTimestamp(const uint64_t timestamp) { myTimestamp = timestamp; }
     void setBuyId(const uint64_t buyId) { myBuyId = buyId; }
