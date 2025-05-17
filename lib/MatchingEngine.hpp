@@ -27,6 +27,7 @@ struct OrderExecutionReport {
     uint32_t filledQuantity;
     double filledPrice;
     bool isMakerOrder; // if the order is a resting maker order
+    Market::Side orderSide;
     OrderExecutionType orderExecutionType;
     std::optional<uint64_t> latency = std::nullopt;
     std::shared_ptr<Market::TradeBase> trade = nullptr;

@@ -413,8 +413,8 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
         if (myOrderExecutionCallback) {
             const OrderExecutionType takerOrderExecType = unfilledQuantity == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
             const OrderExecutionType makerOrderExecType = matchOrder->getQuantity() == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
-            myOrderExecutionCallback({trade->getTimestamp(), orderId, trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType}); // incoming taker order
-            myOrderExecutionCallback({trade->getTimestamp(), matchOrderId, trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType}); // resting maker order (limit order)
+            myOrderExecutionCallback({trade->getTimestamp(), orderId, trade->getId(), trade->getQuantity(), trade->getPrice(), false, order->getSide(), takerOrderExecType}); // incoming taker order
+            myOrderExecutionCallback({trade->getTimestamp(), matchOrderId, trade->getId(), trade->getQuantity(), trade->getPrice(), true, matchOrder->getSide(), makerOrderExecType}); // resting maker order (limit order)
         }
         if (isDebugMode())
             *getLogger() << "[MatchingEngineBase] Trade executed: " << *trade;
