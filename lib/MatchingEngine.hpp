@@ -18,7 +18,19 @@ using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>;
 
-struct OrderExecutionReport;
+enum class OrderExecutionType { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
+
+struct OrderExecutionReport {
+    uint64_t timestamp;
+    uint64_t orderId;
+    uint64_t tradeId;
+    uint32_t filledQuantity;
+    double filledPrice;
+    bool isMakerOrder; // if the order is a resting maker order
+    OrderExecutionType orderExecutionType;
+    std::optional<uint64_t> latency = std::nullopt;
+    std::shared_ptr<Market::TradeBase> trade = nullptr;
+};
 
 class IMatchingEngine {
 public:

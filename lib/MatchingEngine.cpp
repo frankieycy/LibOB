@@ -383,6 +383,7 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
     auto queueIt = matchQueue.begin();
     while (unfilledQuantity && queueIt != matchQueue.end()) {
         auto& matchOrder = *queueIt;
+        const uint64_t matchOrderId = matchOrder->getId();
         if (isDebugMode())
             *getLogger() << "[MatchingEngineBase] Matching order: " << *matchOrder;
         const uint32_t matchQuantity = matchOrder->getQuantity();
@@ -394,18 +395,29 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
             matchOrder->setQuantity(0);
             matchOrder->setOrderState(Market::OrderState::FILLED);
             myRemovedLimitOrderLog.push_back(matchOrder);
-            myLimitOrderLookup.erase(matchOrder->getId());
+            myLimitOrderLookup.erase(matchOrderId);
             queueIt = matchQueue.erase(queueIt);
         } else {
             filledQuantity = unfilledQuantity;
             matchSizeTotal -= unfilledQuantity;
             matchOrder->setQuantity(matchQuantity - unfilledQuantity);
+            matchOrder->setOrderState(Market::OrderState::PARTIAL_FILLED);
             unfilledQuantity = 0;
         }
+        std::shared_ptr<Market::TradeBase> trade;
         if (isIncomingOrderBuy)
-            myTradeLog.push_back(std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), order->getId(), matchOrder->getId(), filledQuantity, matchOrder->getPrice(), true, true, true));
+            trade = std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), orderId, matchOrderId, filledQuantity, matchOrder->getPrice(), order->isLimitOrder(), true, true);
         else
-            myTradeLog.push_back(std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), matchOrder->getId(), order->getId(), filledQuantity, matchOrder->getPrice(), true, true, false));
+            trade = std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), matchOrderId, orderId, filledQuantity, matchOrder->getPrice(), true, order->isLimitOrder(), false);
+        myTradeLog.push_back(trade);
+        if (myOrderExecutionCallback) {
+            const OrderExecutionType takerOrderExecType = unfilledQuantity == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
+            const OrderExecutionType makerOrderExecType = matchOrder->getQuantity() == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
+            myOrderExecutionCallback({trade->getTimestamp(), orderId, trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType}); // incoming taker order
+            myOrderExecutionCallback({trade->getTimestamp(), matchOrderId, trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType}); // resting maker order (limit order)
+        }
+        if (isDebugMode())
+            *getLogger() << "[MatchingEngineBase] Trade executed: " << *trade;
     }
 }
 
