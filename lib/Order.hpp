@@ -24,6 +24,7 @@ public:
     const OrderState getOrderState() const { return myOrderState; }
     const std::shared_ptr<OrderMetaInfo> getMetaInfo() const { return myMetaInfo; }
     const bool isBuy() const { return mySide == Side::BUY; }
+    const bool isLimitOrder() const { return myOrderType == OrderType::LIMIT; }
     const bool isAlive() const { return (myOrderState == OrderState::ACTIVE || myOrderState == OrderState::PARTIAL_FILLED) && myQuantity > 0; }
     void setId(const uint64_t id) { myId = id; }
     void setTimestamp(const uint64_t timestamp) { myTimestamp = timestamp; }
