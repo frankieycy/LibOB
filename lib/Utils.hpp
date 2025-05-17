@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <optional>
 #include "Logger.hpp"
 
 namespace Utils {
