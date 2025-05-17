@@ -14,15 +14,31 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
     mySyncClockWithEngine = true;
     myMatchingEngine = matchingEngine;
     myWorldClock = matchingEngine->getWorldClock();
+    myDebugMode = matchingEngine->isDebugMode();
     matchingEngine->setOrderExecutionCallback([this](const Exchange::OrderExecutionReport& report) { onExecutionReport(report); });
 }
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
     myMatchingEngine->process(event);
+    if (myDebugMode && myPrintOrderBookPerOrderSubmit)
+        *myLogger << "[OrderEventManagerBase] Order book state:\n" << *myMatchingEngine;
 }
 
 void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionReport& report) {
-    // TODO
+    if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
+        const auto& it = myActiveOrders.find(report.orderId);
+        if (it != myActiveOrders.end()) {
+            const auto& order = it->second;
+            const uint32_t updatedQuantity = order->getQuantity() - report.filledQuantity;
+            order->setQuantity(updatedQuantity);
+            if (updatedQuantity == 0) {
+                order->setOrderState(Market::OrderState::FILLED);
+                myActiveOrders.erase(it);
+            } else {
+                order->setOrderState(Market::OrderState::PARTIAL_FILLED);
+            }
+        }
+    }
 }
 
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price) {

@@ -10,6 +10,7 @@ class OrderEventManagerBase {
 public:
     OrderEventManagerBase() = default;
     OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
+    void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
     virtual void onExecutionReport(const Exchange::OrderExecutionReport& report);
     virtual std::shared_ptr<OrderSubmitEvent> createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price);
@@ -31,6 +32,7 @@ private:
     std::unordered_map<uint64_t, std::shared_ptr<Market::OrderBase>> myActiveOrders;
     bool mySyncClockWithEngine = false;
     bool myDebugMode = false;
+    bool myPrintOrderBookPerOrderSubmit = false;
 };
 }
 
