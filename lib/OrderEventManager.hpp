@@ -14,20 +14,21 @@ public:
     bool isDebugMode() const { return myDebugMode; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
-    void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
     virtual void onExecutionReport(const Exchange::OrderExecutionReport& report);
+    std::shared_ptr<const OrderSubmitEvent> submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price);
+    std::shared_ptr<const OrderSubmitEvent> submitMarketOrderEvent(const Side side, const uint32_t quantity);
+    std::shared_ptr<const OrderCancelEvent> cancelOrder(const uint64_t orderId);
+    std::shared_ptr<const OrderModifyPriceEvent> modifyOrderPrice(const uint64_t orderId, const double modifiedPrice);
+    std::shared_ptr<const OrderModifyQuantityEvent> modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity);
+    virtual std::ostream& stateSnapshot(std::ostream& out) const;
+private:
+    void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
     virtual std::shared_ptr<OrderSubmitEvent> createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price);
     virtual std::shared_ptr<OrderSubmitEvent> createMarketOrderSubmitEvent(const Side side, const uint32_t quantity);
     virtual std::shared_ptr<OrderCancelEvent> createOrderCancelEvent(const uint64_t orderId);
     virtual std::shared_ptr<OrderModifyPriceEvent> createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice);
     virtual std::shared_ptr<OrderModifyQuantityEvent> createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity);
-    std::shared_ptr<OrderSubmitEvent> submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price);
-    std::shared_ptr<OrderSubmitEvent> submitMarketOrderEvent(const Side side, const uint32_t quantity);
-    std::shared_ptr<OrderCancelEvent> cancelOrder(const uint64_t orderId);
-    std::shared_ptr<OrderModifyPriceEvent> modifyOrderPrice(const uint64_t orderId, const double modifiedPrice);
-    std::shared_ptr<OrderModifyQuantityEvent> modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity);
-    virtual std::ostream& stateSnapshot(std::ostream& out) const;
-private:
+
     Utils::Counter::IdHandlerBase myOrderIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myEventIdHandler = Utils::Counter::IdHandlerBase();
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>();

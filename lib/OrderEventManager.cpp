@@ -93,31 +93,31 @@ std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::createOrderModi
     return event;
 }
 
-std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price) {
+std::shared_ptr<const OrderSubmitEvent> OrderEventManagerBase::submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price) {
     const auto& event = createLimitOrderSubmitEvent(side, quantity, price);
     submitOrderEventToMatchingEngine(event);
     return event;
 }
 
-std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::submitMarketOrderEvent(const Side side, const uint32_t quantity) {
+std::shared_ptr<const OrderSubmitEvent> OrderEventManagerBase::submitMarketOrderEvent(const Side side, const uint32_t quantity) {
     const auto& event = createMarketOrderSubmitEvent(side, quantity);
     submitOrderEventToMatchingEngine(event);
     return event;
 }
 
-std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::cancelOrder(const uint64_t orderId) {
+std::shared_ptr<const OrderCancelEvent> OrderEventManagerBase::cancelOrder(const uint64_t orderId) {
     const auto& event = createOrderCancelEvent(orderId);
     submitOrderEventToMatchingEngine(event);
     return event;
 }
 
-std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::modifyOrderPrice(const uint64_t orderId, const double modifiedPrice) {
+std::shared_ptr<const OrderModifyPriceEvent> OrderEventManagerBase::modifyOrderPrice(const uint64_t orderId, const double modifiedPrice) {
     const auto& event = createOrderModifyPriceEvent(orderId, modifiedPrice);
     submitOrderEventToMatchingEngine(event);
     return event;
 }
 
-std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity) {
+std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity) {
     const auto& event = createOrderModifyQuantityEvent(orderId, modifiedQuantity);
     submitOrderEventToMatchingEngine(event);
     return event;
