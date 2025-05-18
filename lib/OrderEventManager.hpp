@@ -10,6 +10,7 @@ class OrderEventManagerBase {
 public:
     OrderEventManagerBase() = default;
     OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
+    const uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
     virtual void onExecutionReport(const Exchange::OrderExecutionReport& report);

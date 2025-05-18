@@ -24,12 +24,13 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
 }
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event submitted: " << *event;
     myMatchingEngine->process(event);
     if (myDebugMode) {
-        *myLogger << "[OrderEventManagerBase] Order event submitted: " << *event;
-        *myLogger << "[OrderEventManagerBase] Order event manager state:\n" << *this;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event manager state:\n" << *this;
         if (myPrintOrderBookPerOrderSubmit)
-            *myLogger << "[OrderEventManagerBase] Order book state:\n" << *myMatchingEngine;
+            *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order book state:\n" << *myMatchingEngine;
     }
 }
 
@@ -51,15 +52,15 @@ void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionRepo
 }
 
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price) {
-    const auto& order = std::make_shared<LimitOrder>(myOrderIdHandler.generateId(), myWorldClock->getCurrentTimestamp(), side, quantity, price);
-    const auto& event = std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), myWorldClock->getCurrentTimestamp(), order);
+    const auto& order = std::make_shared<LimitOrder>(myOrderIdHandler.generateId(), clockTick(), side, quantity, price);
+    const auto& event = std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
     myActiveOrders[order->getId()] = order;
     return event;
 }
 
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createMarketOrderSubmitEvent(const Side side, const uint32_t quantity) {
-    const auto& order = std::make_shared<MarketOrder>(myOrderIdHandler.generateId(), myWorldClock->getCurrentTimestamp(), side, quantity);
-    const auto& event = std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), myWorldClock->getCurrentTimestamp(), order);
+    const auto& order = std::make_shared<MarketOrder>(myOrderIdHandler.generateId(), clockTick(), side, quantity);
+    const auto& event = std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
     myActiveOrders[order->getId()] = order;
     return event;
 }
@@ -69,7 +70,7 @@ std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(
     if (it == myActiveOrders.end())
         Error::LIB_THROW("OrderEventManagerBase::createOrderCancelEvent: order not found.");
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), myWorldClock->getCurrentTimestamp());
+    const auto& event = std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp());
     myActiveOrders.erase(it);
     return event;
 }
@@ -79,7 +80,7 @@ std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyP
     if (it == myActiveOrders.end())
         Error::LIB_THROW("OrderEventManagerBase::createOrderModifyPriceEvent: order not found.");
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), myWorldClock->getCurrentTimestamp(), modifiedPrice);
+    const auto& event = std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), modifiedPrice);
     return event;
 }
 
@@ -88,7 +89,7 @@ std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::createOrderModi
     if (it == myActiveOrders.end())
         Error::LIB_THROW("OrderEventManagerBase::createOrderModifyQuantityEvent: order not found.");
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), myWorldClock->getCurrentTimestamp(), modifiedQuantity);
+    const auto& event = std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), modifiedQuantity);
     return event;
 }
 
@@ -123,19 +124,21 @@ std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrderQuan
 }
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
-    out << "======================= Active Orders Snapshot ======================\n";
-    out << "   Id   |  Timestamp  |    Type    |   Side   |   Size   |   State   \n";
-    out << "---------------------------------------------------------------------\n";
+    out << "============================= Active Orders Snapshot ============================\n";
+    out << "   Id   |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   \n";
+    out << "---------------------------------------------------------------------------------\n";
     for (const auto& orderPair : myActiveOrders) {
         const auto& order = orderPair.second;
         out << std::setw(6) << order->getId() << "  | "
             << std::setw(10) << order->getTimestamp() << "  | "
             << std::setw(9) << order->getOrderType() << "  | "
             << std::setw(7) << order->getSide() << "  | "
+            << std::fixed << std::setprecision(2)
+            << std::setw(8) << order->getPrice() << "  | "
             << std::setw(7) << order->getQuantity() << "  | "
             << std::setw(8) << order->getOrderState() << "  \n";
     }
-    out << "---------------------------------------------------------------------\n";
+    out << "---------------------------------------------------------------------------------\n";
     return out;
 }
 }
