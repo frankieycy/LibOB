@@ -10,16 +10,32 @@ class OrderEventManagerBase {
 public:
     OrderEventManagerBase() = default;
     OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
-    uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
+    const Utils::Counter::IdHandlerBase& getOrderIdHandler() const { return myOrderIdHandler; }
+    const Utils::Counter::IdHandlerBase& getEventIdHandler() const { return myEventIdHandler; }
+    std::shared_ptr<Utils::Counter::TimestampHandlerBase> getWorldClock() const { return myWorldClock; }
+    std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
+    std::shared_ptr<const Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
+    const std::unordered_map<uint64_t, std::shared_ptr<Market::OrderBase>>& getActiveOrders() const { return myActiveOrders; }
+    double getMinimumPriceTick() const { return myMinimumPriceTick; }
+    bool isSyncClockWithEngine() const { return mySyncClockWithEngine; }
     bool isDebugMode() const { return myDebugMode; }
+    bool isPrintOrderBookPerOrderSubmit() const { return myPrintOrderBookPerOrderSubmit; }
+    void setOrderIdHandler(const Utils::Counter::IdHandlerBase& orderIdHandler) { myOrderIdHandler = orderIdHandler; }
+    void setEventIdHandler(const Utils::Counter::IdHandlerBase& eventIdHandler) { myEventIdHandler = eventIdHandler; }
+    void setWorldClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock) { myWorldClock = worldClock; }
+    void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
+    void setMatchingEngine(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) { myMatchingEngine = matchingEngine; }
+    void setMinimumPriceTick(const double minimumPriceTick) { myMinimumPriceTick = minimumPriceTick; }
+    void setSyncClockWithEngine(const bool syncClockWithEngine) { mySyncClockWithEngine = syncClockWithEngine; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
+    uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     std::shared_ptr<const OrderSubmitEvent> submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price);
     std::shared_ptr<const OrderSubmitEvent> submitMarketOrderEvent(const Side side, const uint32_t quantity);
     std::shared_ptr<const OrderCancelEvent> cancelOrder(const uint64_t orderId);
     std::shared_ptr<const OrderModifyPriceEvent> modifyOrderPrice(const uint64_t orderId, const double modifiedPrice);
     std::shared_ptr<const OrderModifyQuantityEvent> modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity);
-    virtual void onExecutionReport(const Exchange::OrderExecutionReport& report);
+    virtual void onExecutionReport(const Exchange::OrderExecutionReport& report); // communicates with matching engine to keep ActiveOrders in sync
     virtual std::ostream& stateSnapshot(std::ostream& out) const;
 private:
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
