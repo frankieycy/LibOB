@@ -52,8 +52,8 @@ public:
     OrderFillEvent();
     OrderFillEvent(const OrderFillEvent& event);
     OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint32_t fillQuantity, const double fillPrice);
-    const uint32_t getFillQuantity() const { return myFillQuantity; }
-    const double getFillPrice() const { return myFillPrice; }
+    uint32_t getFillQuantity() const { return myFillQuantity; }
+    double getFillPrice() const { return myFillPrice; }
     void setFillQuantity(const uint32_t fillQuantity) { myFillQuantity = fillQuantity; }
     void setFillPrice(const double fillPrice) { myFillPrice = fillPrice; }
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderFillEvent>(*this); }
@@ -71,7 +71,7 @@ public:
     OrderModifyPriceEvent();
     OrderModifyPriceEvent(const OrderModifyPriceEvent& event);
     OrderModifyPriceEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedPrice);
-    const double getModifiedPrice() const { return myModifiedPrice; }
+    double getModifiedPrice() const { return myModifiedPrice; }
     void setModifiedPrice(const double modifiedPrice) { myModifiedPrice = modifiedPrice; }
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyPriceEvent>(*this); }
     virtual void applyTo(LimitOrder& order) const override;
@@ -86,7 +86,7 @@ public:
     OrderModifyQuantityEvent();
     OrderModifyQuantityEvent(const OrderModifyQuantityEvent& event);
     OrderModifyQuantityEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity);
-    const uint32_t getModifiedQuantity() const { return myModifiedQuantity; }
+    uint32_t getModifiedQuantity() const { return myModifiedQuantity; }
     void setModifiedQuantity(const uint32_t modifiedQuantity) { myModifiedQuantity = modifiedQuantity; }
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyQuantityEvent>(*this); }
     virtual void applyTo(LimitOrder& order) const override;
