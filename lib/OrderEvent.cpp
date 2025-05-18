@@ -30,14 +30,14 @@ OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, c
     myEventId(eventId),
     myOrderId(orderId),
     myTimestamp(timestamp),
-    myOrder(order),
-    myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE) {}
+    myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE),
+    myOrder(order) {}
 
-void OrderEventBase::applyTo(MarketOrder& order) const {
+void OrderEventBase::applyTo(MarketOrder& /* order */) const {
     Error::LIB_THROW("No implementation for OrderEventBase::applyTo(MarketOrder&).");
 }
 
-void OrderEventBase::applyTo(LimitOrder& order) const {
+void OrderEventBase::applyTo(LimitOrder& /* order */) const {
     Error::LIB_THROW("No implementation for OrderEventBase::applyTo(LimitOrder&).");
 }
 
@@ -101,8 +101,8 @@ OrderFillEvent::OrderFillEvent(const OrderFillEvent& event) :
 
 OrderFillEvent::OrderFillEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint32_t fillQuantity, const double fillPrice) :
     OrderEventBase(eventId, orderId, timestamp),
-    myFillQuantity(0),
-    myFillPrice(0) {
+    myFillQuantity(fillQuantity),
+    myFillPrice(fillPrice) {
     init();
 }
 

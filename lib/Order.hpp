@@ -16,6 +16,7 @@ public:
     OrderBase();
     OrderBase(const OrderBase& order);
     OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<const OrderMetaInfo>& metaInfo = nullptr);
+    virtual ~OrderBase() = default;
     uint64_t getId() const { return myId; }
     uint64_t getTimestamp() const { return myTimestamp; }
     Side getSide() const { return mySide; }
@@ -35,8 +36,8 @@ public:
     void setMetaInfo(const std::shared_ptr<const OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
     virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     virtual double getPrice() const { return Utils::Consts::NAN_DOUBLE; }
-    virtual void executeOrderEvent(const OrderEventBase& event) {}
-    virtual void submit(Exchange::IMatchingEngine& matchingEngine) const {}
+    virtual void executeOrderEvent(const OrderEventBase& /* event */) {}
+    virtual void submit(Exchange::IMatchingEngine& /* matchingEngine */) const {}
     virtual void init();
     virtual void cancel();
     virtual std::string getAsJson() const;
@@ -55,6 +56,7 @@ public:
     LimitOrder();
     LimitOrder(const LimitOrder& order);
     LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
+    virtual ~LimitOrder() = default;
     double getPrice() const override { return myPrice; }
     void setPrice(const double price) { myPrice = price; }
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
@@ -72,6 +74,7 @@ public:
     MarketOrder();
     MarketOrder(const MarketOrder& order);
     MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
+    virtual ~MarketOrder() = default;
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<MarketOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;

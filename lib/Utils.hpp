@@ -73,7 +73,7 @@ constexpr int NAN_INT = std::numeric_limits<int>::quiet_NaN();
 constexpr double NAN_DOUBLE = std::numeric_limits<double>::quiet_NaN();
 constexpr double POS_INF_DOUBLE = std::numeric_limits<double>::infinity();
 constexpr double NEG_INF_DOUBLE = -std::numeric_limits<double>::infinity();
-inline const bool isNaN(double x) { return std::isnan(x); }
+inline bool isNaN(double x) { return std::isnan(x); }
 }
 
 namespace Vector {

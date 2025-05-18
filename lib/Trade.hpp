@@ -14,6 +14,7 @@ public:
         const uint64_t id, const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const uint32_t quantity, const double price,
         const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<const TradeMetaInfo>& metaInfo = nullptr);
     TradeBase(const uint64_t id, const uint64_t timestamp, const uint32_t quantity, const double price, const bool isBuyInitiated, const OrderBase& buyOrder, const OrderBase& sellOrder);
+    virtual ~TradeBase() = default;
     uint64_t getId() const { return myId; }
     uint64_t getTimestamp() const { return myTimestamp; }
     uint64_t getBuyId() const { return myBuyId; }

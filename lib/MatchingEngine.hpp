@@ -38,6 +38,7 @@ public:
     IMatchingEngine() = default;
     IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
     IMatchingEngine(const bool debugMode);
+    virtual ~IMatchingEngine() = default;
     std::string getSymbol() const { return mySymbol; }
     std::string getExchangeId() const { return myExchangeId; }
     OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
@@ -105,6 +106,7 @@ public:
     MatchingEngineBase() = default;
     MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
     MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
+    virtual ~MatchingEngineBase() = default;
     const DescOrderBook& getBidBook() const { return myBidBook; }
     const AscOrderBook& getAskBook() const { return myAskBook; }
     const DescOrderBookSize& getBidBookSize() const { return myBidBookSize; }
@@ -177,6 +179,7 @@ public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
     MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
+    virtual ~MatchingEngineFIFO() = default;
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) override;

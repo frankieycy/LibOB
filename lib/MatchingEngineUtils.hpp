@@ -14,6 +14,7 @@ class OrderBookDisplayConfig {
 public:
     OrderBookDisplayConfig() = default;
     OrderBookDisplayConfig(const bool debugMode);
+    ~OrderBookDisplayConfig() = default;
     uint16_t getOrderBookLevels() const { return myOrderBookLevels; }
     uint16_t getMarketQueueLevels() const { return myMarketQueueLevels; }
     uint16_t getTradeLogLevels() const { return myTradeLogLevels; }

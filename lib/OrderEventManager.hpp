@@ -10,6 +10,7 @@ class OrderEventManagerBase {
 public:
     OrderEventManagerBase() = default;
     OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
+    virtual ~OrderEventManagerBase() = default;
     const Utils::Counter::IdHandlerBase& getOrderIdHandler() const { return myOrderIdHandler; }
     const Utils::Counter::IdHandlerBase& getEventIdHandler() const { return myEventIdHandler; }
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> getWorldClock() const { return myWorldClock; }

@@ -15,8 +15,8 @@ std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngin
 }
 
 IMatchingEngine::IMatchingEngine(const bool debugMode) :
-    myDebugMode(debugMode),
-    myOrderBookDisplayConfig(debugMode) {}
+    myOrderBookDisplayConfig(debugMode),
+    myDebugMode(debugMode) {}
 
 void IMatchingEngine::reset() {
     mySymbol.clear();
@@ -431,7 +431,6 @@ void MatchingEngineBase::placeLimitOrderToLimitOrderBook(
     const uint32_t unfilledQuantity,
     uint32_t& orderSizeTotal,
     LimitQueue& limitQueue) {
-    const double price = order->getPrice();
     const uint32_t originalQuantity = order->getQuantity();
     if (unfilledQuantity) {
         order->setQuantity(unfilledQuantity);
