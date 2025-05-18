@@ -37,14 +37,14 @@ std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestAskPriceAndSize
     return *myAskBookSize.begin();
 }
 
-std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> MatchingEngineBase::getBestBidTopOrder() const {
+std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> MatchingEngineBase::getBestBidTopOrder() const {
     if (myBidBook.empty())
         return {Consts::NAN_DOUBLE, nullptr};
     const auto& it = myBidBook.begin();
     return {it->first, it->second.front()};
 }
 
-std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> MatchingEngineBase::getBestAskTopOrder() const {
+std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> MatchingEngineBase::getBestAskTopOrder() const {
     if (myAskBook.empty())
         return {Consts::NAN_DOUBLE, nullptr};
     const auto& it = myAskBook.begin();

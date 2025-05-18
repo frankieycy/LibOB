@@ -54,6 +54,10 @@ public:
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
+    virtual std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const = 0;
+    virtual std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const = 0;
+    virtual std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const = 0;
+    virtual std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestAskTopOrder() const = 0;
     virtual double getBestBidPrice() const = 0;
     virtual double getBestAskPrice() const = 0;
     virtual double getSpread() const = 0;
@@ -113,10 +117,10 @@ public:
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
-    std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const;
-    std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const;
-    std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestBidTopOrder() const;
-    std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestAskTopOrder() const;
+    std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const override;
+    std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const override;
+    std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const override;
+    std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestAskTopOrder() const override;
     double getBestBidPrice() const override;
     double getBestAskPrice() const override;
     double getSpread() const override;
