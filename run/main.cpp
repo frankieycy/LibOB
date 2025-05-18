@@ -60,6 +60,56 @@ void testMatchingEngineOrderEventManager() {
 }
 
 void testMatchingEngineRandomOrders() {
+    MatchingEngineFIFO e{true};
+    OrderEventManagerBase em{std::make_shared<MatchingEngineFIFO>(e)};
+    // initial book state
+    for (int i = 0; i < 20; ++i) {
+        em.submitLimitOrderEvent(Side::BUY, std::min(5 + i, 10), 99.0 - i);
+        em.submitLimitOrderEvent(Side::SELL, std::min(5 + i, 10), 101.0 + i);
+    }
+    std::cout << e << std::endl;
+    std::cout << e.getBestBidPrice() << " " << e.getBestAskPrice() << std::endl;
+    // // random limit and market orders
+    // em.setPrintOrderBookPerOrderSubmit(true);
+    // for (int i = 0; i < 10; ++i) {
+    //     const double u0 = Utils::Statistics::getRandomUniform01(true);
+    //     const double u1 = Utils::Statistics::getRandomUniform01(true);
+    //     const uint32_t ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
+    //     if (u0 < 0.5) {
+    //         if (u1 < 0.5)
+    //             em.submitLimitOrderEvent(Side::BUY, ui, Utils::Statistics::getRandomUniform(e.getBestAskPrice() - 5.0, e.getBestAskPrice() - 1.0, true));
+    //         else
+    //             em.submitLimitOrderEvent(Side::SELL, ui, Utils::Statistics::getRandomUniform(e.getBestBidPrice() + 1.0, e.getBestBidPrice() + 5.0, true));
+    //     } else {
+    //         if (u1 < 0.5)
+    //             em.submitMarketOrderEvent(Side::BUY, ui);
+    //         else
+    //             em.submitMarketOrderEvent(Side::SELL, ui);
+    //     }
+    // }
+    // // random orders in bulk
+    // em.setDebugMode(false);
+    // for (int i = 0; i < 100; ++i) {
+    //     const double u0 = Utils::Statistics::getRandomUniform01(true);
+    //     const double u1 = Utils::Statistics::getRandomUniform01(true);
+    //     const int ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
+    //     if (u0 < 0.5) {
+    //         if (u1 < 0.5)
+    //             em.submitLimitOrderEvent(Side::BUY, ui, Utils::Statistics::getRandomUniform(e.getBestAskPrice() - 5.0, e.getBestAskPrice() - 1.0, true));
+    //         else
+    //             em.submitLimitOrderEvent(Side::SELL, ui, Utils::Statistics::getRandomUniform(e.getBestBidPrice() + 1.0, e.getBestBidPrice() + 5.0, true));
+    //     } else {
+    //         if (u1 < 0.5)
+    //             em.submitMarketOrderEvent(Side::BUY, ui);
+    //         else
+    //             em.submitMarketOrderEvent(Side::SELL, ui);
+    //     }
+    // }
+    // std::cout << e << std::endl;
+    // std::cout << em << std::endl;
+}
+
+void testMatchingEngineOrderCancelModify() {
     // TODO
 }
 
@@ -71,6 +121,7 @@ void testMatchingEngineZeroIntelligence() {
 
 int main() {
     // Tests::MatchingEngine::testMatchingEngineSimpleBook();
-    Tests::MatchingEngine::testMatchingEngineOrderEventManager();
+    // Tests::MatchingEngine::testMatchingEngineOrderEventManager();
+    Tests::MatchingEngine::testMatchingEngineRandomOrders();
     return 0;
 }
