@@ -78,7 +78,12 @@ inline const bool isNaN(double x) { return std::isnan(x); }
 
 namespace Vector {}
 
-namespace Maths {}
+namespace Maths {
+inline double roundPriceToTick(double price, double tick = 0.01) {
+    const auto ticks = std::llround(price / tick);
+    return ticks * tick;
+}
+}
 
 namespace Statistics {
 inline std::mt19937& GLOBAL_RNG() {
@@ -95,6 +100,7 @@ inline double getRandomUniform01(Engine& eng) {
     return dist(eng);
 }
 inline double getRandomUniform01(const bool deterministic = false) { return deterministic ? getRandomUniform01(RNG_42()) : getRandomUniform01(GLOBAL_RNG()); }
+inline double getRandomUniform(const double a, const double b, const bool deterministic = false) { return a + b * getRandomUniform01(deterministic); }
 template<class Engine, class Int>
 inline int getRandomUniformInt(const Int a, const Int b, Engine& eng) {
     static thread_local std::uniform_int_distribution<Int> dist(a, b);
