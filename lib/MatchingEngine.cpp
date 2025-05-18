@@ -336,6 +336,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
         out << "======================= Order Lookup Table ===========================\n";
         out << "   Id   |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
         out << "----------------------------------------------------------------------\n";
+        uint level = 1;
         for (const auto& orderPair : myLimitOrderLookup) {
             const auto& order = *orderPair.second.second;
             out << std::setw(6) << order->getId() << "  | "
@@ -345,6 +346,8 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 << std::setw(7) << order->getQuantity() << "  | "
                 << std::setw(7) << order->getSide() << "  | "
                 << std::setw(8) << order->getOrderState() << "  \n";
+            if (++level > config.getOrderLookupLevels())
+                break;
         }
         out << "----------------------------------------------------------------------\n";
     }
@@ -479,6 +482,8 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
     DescOrderBookSize& bidBookSize = getBidBookSize();
     AscOrderBook& askBook = getAskBook();
     AscOrderBookSize& askBookSize = getAskBookSize();
+    LimitQueue dummyQueue; // avoids the creation of a new queue if the entire order is filled
+    uint32_t dummySize = 0;
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty() && price >= askBook.begin()->first) {
             fillOrderByMatchingTopLimitQueue(order, unfilledQuantity, askBookSize.begin()->second, askBook.begin()->second);
@@ -487,7 +492,10 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
                 askBookSize.erase(askBookSize.begin());
             }
         }
-        placeLimitOrderToLimitOrderBook(order, unfilledQuantity, bidBookSize[price], bidBook[price]);
+        if (unfilledQuantity)
+            placeLimitOrderToLimitOrderBook(order, unfilledQuantity, bidBookSize[price], bidBook[price]);
+        else
+            placeLimitOrderToLimitOrderBook(order, 0, dummySize, dummyQueue);
     } else if (side == Market::Side::SELL) {
         while (unfilledQuantity && !bidBook.empty() && price <= bidBook.begin()->first) {
             fillOrderByMatchingTopLimitQueue(order, unfilledQuantity, bidBookSize.begin()->second, bidBook.begin()->second);
@@ -496,7 +504,10 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
                 bidBookSize.erase(bidBookSize.begin());
             }
         }
-        placeLimitOrderToLimitOrderBook(order, unfilledQuantity, askBookSize[price], askBook[price]);
+        if (unfilledQuantity)
+            placeLimitOrderToLimitOrderBook(order, unfilledQuantity, askBookSize[price], askBook[price]);
+        else
+            placeLimitOrderToLimitOrderBook(order, 0, dummySize, dummyQueue);
     }
 }
 

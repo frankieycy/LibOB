@@ -22,6 +22,7 @@ OrderBookDisplayConfig::OrderBookDisplayConfig(const bool debugMode) :
         myMarketQueueLevels = 20;
         myTradeLogLevels = 20;
         myRemovedLimitOrderLogLevels = 20;
+        myOrderLookupLevels = 20;
         myAggregateOrderBook = false;
         myShowOrderBook = true;
         myShowMarketQueue = true;

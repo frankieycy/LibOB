@@ -18,6 +18,7 @@ public:
     const uint16_t getMarketQueueLevels() const { return myMarketQueueLevels; }
     const uint16_t getTradeLogLevels() const { return myTradeLogLevels; }
     const uint16_t getRemovedLimitOrderLogLevels() const { return myRemovedLimitOrderLogLevels; }
+    const uint16_t getOrderLookupLevels() const { return myOrderLookupLevels; }
     const bool isAggregateOrderBook() const { return myAggregateOrderBook; }
     const bool isShowOrderBook() const { return myShowOrderBook; }
     const bool isShowMarketQueue() const { return myShowMarketQueue; }
@@ -29,6 +30,7 @@ public:
     void setMarketQueueLevels(const uint16_t marketQueueLevels) { myMarketQueueLevels = marketQueueLevels; }
     void setTradeLogLevels(const uint16_t tradeLogLevels) { myTradeLogLevels = tradeLogLevels; }
     void setRemovedLimitOrderLogLevels(const uint16_t removedLimitOrderLogLevels) { myRemovedLimitOrderLogLevels = removedLimitOrderLogLevels; }
+    void setOrderLookupLevels(const uint16_t orderLookupLevels) { myOrderLookupLevels = orderLookupLevels; }
     void setAggregateOrderBook(const bool aggregateOrderBook) { myAggregateOrderBook = aggregateOrderBook; }
     void setShowOrderBook(const bool showOrderBook) { myShowOrderBook = showOrderBook; }
     void setShowMarketQueue(const bool showMarketQueue) { myShowMarketQueue = showMarketQueue; }
@@ -41,6 +43,7 @@ private:
     uint16_t myMarketQueueLevels = 10;
     uint16_t myTradeLogLevels = 10;
     uint16_t myRemovedLimitOrderLogLevels = 10;
+    uint16_t myOrderLookupLevels = 10;
     bool myAggregateOrderBook = true;
     bool myShowOrderBook = true;
     bool myShowMarketQueue = true;
