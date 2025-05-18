@@ -34,23 +34,6 @@ void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_p
     }
 }
 
-void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionReport& report) {
-    if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
-        const auto& it = myActiveOrders.find(report.orderId);
-        if (it != myActiveOrders.end()) {
-            const auto& order = it->second;
-            const uint32_t updatedQuantity = order->getQuantity() - report.filledQuantity;
-            order->setQuantity(updatedQuantity);
-            if (updatedQuantity == 0) {
-                order->setOrderState(Market::OrderState::FILLED);
-                myActiveOrders.erase(it);
-            } else {
-                order->setOrderState(Market::OrderState::PARTIAL_FILLED);
-            }
-        }
-    }
-}
-
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price) {
     const auto& order = std::make_shared<LimitOrder>(myOrderIdHandler.generateId(), clockTick(), side, quantity, Maths::roundPriceToTick(price, myMinimumPriceTick));
     const auto& event = std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
@@ -121,6 +104,23 @@ std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrd
     const auto& event = createOrderModifyQuantityEvent(orderId, modifiedQuantity);
     submitOrderEventToMatchingEngine(event);
     return event;
+}
+
+void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionReport& report) {
+    if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
+        const auto& it = myActiveOrders.find(report.orderId);
+        if (it != myActiveOrders.end()) {
+            const auto& order = it->second;
+            const uint32_t updatedQuantity = order->getQuantity() - report.filledQuantity;
+            order->setQuantity(updatedQuantity);
+            if (updatedQuantity == 0) {
+                order->setOrderState(Market::OrderState::FILLED);
+                myActiveOrders.erase(it);
+            } else {
+                order->setOrderState(Market::OrderState::PARTIAL_FILLED);
+            }
+        }
+    }
 }
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {

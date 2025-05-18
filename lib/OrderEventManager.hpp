@@ -14,12 +14,12 @@ public:
     bool isDebugMode() const { return myDebugMode; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
-    virtual void onExecutionReport(const Exchange::OrderExecutionReport& report);
     std::shared_ptr<const OrderSubmitEvent> submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price);
     std::shared_ptr<const OrderSubmitEvent> submitMarketOrderEvent(const Side side, const uint32_t quantity);
     std::shared_ptr<const OrderCancelEvent> cancelOrder(const uint64_t orderId);
     std::shared_ptr<const OrderModifyPriceEvent> modifyOrderPrice(const uint64_t orderId, const double modifiedPrice);
     std::shared_ptr<const OrderModifyQuantityEvent> modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity);
+    virtual void onExecutionReport(const Exchange::OrderExecutionReport& report);
     virtual std::ostream& stateSnapshot(std::ostream& out) const;
 private:
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
