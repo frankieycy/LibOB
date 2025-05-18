@@ -11,9 +11,22 @@
 #include <list>
 #include <algorithm>
 #include <cmath>
+#include <random>
 #include <limits>
 #include <optional>
 #include "Logger.hpp"
+
+template<typename T>
+std::ostream& operator<<(std::ostream& out, std::vector<T>& vec) {
+    out << "[";
+    for (size_t i = 0; i < vec.size(); ++i) {
+        out << vec[i];
+        if (i != vec.size() - 1)
+            out << ", ";
+    }
+    out << "]";
+    return out;
+}
 
 namespace Utils {
 namespace Counter {
@@ -63,9 +76,33 @@ constexpr double NEG_INF_DOUBLE = -std::numeric_limits<double>::infinity();
 inline const bool isNaN(double x) { return std::isnan(x); }
 }
 
+namespace Vector {}
+
 namespace Maths {}
 
-namespace Statistics {}
+namespace Statistics {
+inline std::mt19937& GLOBAL_RNG() {
+    static thread_local std::mt19937 eng{ std::random_device{}() };
+    return eng;
+}
+inline std::mt19937& RNG_42() {
+    static thread_local std::mt19937 eng{ 42 };
+    return eng;
+}
+template<class Engine>
+inline double getRandomUniform01(Engine& eng) {
+    static thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
+    return dist(eng);
+}
+inline double getRandomUniform01(const bool deterministic = false) { return deterministic ? getRandomUniform01(RNG_42()) : getRandomUniform01(GLOBAL_RNG()); }
+template<class Engine, class Int>
+inline int getRandomUniformInt(const Int a, const Int b, Engine& eng) {
+    static thread_local std::uniform_int_distribution<Int> dist(a, b);
+    return dist(eng);
+}
+template<class Int>
+inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) { return deterministic ? getRandomUniformInt(a, b, RNG_42()) : getRandomUniformInt(a, b, GLOBAL_RNG()); }
+}
 
 namespace FileIO {}
 }
