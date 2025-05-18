@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Ilib -std=c++17
+CXXFLAGS = -Ilib -std=c++17 -g
 
 # Source files
 SRC_MAIN = run/main.cpp
