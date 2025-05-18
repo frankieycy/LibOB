@@ -40,7 +40,7 @@ TradeBase::TradeBase(const TradeBase& trade) :
 
 TradeBase::TradeBase(
     const uint64_t id, const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const uint32_t quantity, const double price,
-    const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<TradeMetaInfo>& metaInfo) :
+    const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<const TradeMetaInfo>& metaInfo) :
     myId(id),
     myTimestamp(timestamp),
     myBuyId(buyId),

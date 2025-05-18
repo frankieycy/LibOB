@@ -32,7 +32,7 @@ OrderBase::OrderBase(const OrderBase& order) :
     myOrderState(order.myOrderState),
     myMetaInfo(order.myMetaInfo) {}
 
-OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
+OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<const OrderMetaInfo>& metaInfo) :
     myId(id),
     myTimestamp(timestamp),
     mySide(side),

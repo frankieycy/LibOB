@@ -15,14 +15,14 @@ class OrderBase {
 public:
     OrderBase();
     OrderBase(const OrderBase& order);
-    OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
+    OrderBase(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<const OrderMetaInfo>& metaInfo = nullptr);
     uint64_t getId() const { return myId; }
     uint64_t getTimestamp() const { return myTimestamp; }
     Side getSide() const { return mySide; }
     uint32_t getQuantity() const { return myQuantity; }
     OrderType getOrderType() const { return myOrderType; }
     OrderState getOrderState() const { return myOrderState; }
-    std::shared_ptr<OrderMetaInfo> getMetaInfo() const { return myMetaInfo; }
+    std::shared_ptr<const OrderMetaInfo> getMetaInfo() const { return myMetaInfo; }
     bool isBuy() const { return mySide == Side::BUY; }
     bool isLimitOrder() const { return myOrderType == OrderType::LIMIT; }
     bool isAlive() const { return (myOrderState == OrderState::ACTIVE || myOrderState == OrderState::PARTIAL_FILLED) && myQuantity > 0; }
@@ -32,7 +32,7 @@ public:
     void setQuantity(const uint32_t quantity) { myQuantity = quantity; }
     void setOrderType(const OrderType orderType) { myOrderType = orderType; }
     void setOrderState(const OrderState orderState) { myOrderState = orderState; }
-    void setMetaInfo(const std::shared_ptr<OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
+    void setMetaInfo(const std::shared_ptr<const OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
     virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     virtual double getPrice() const { return Utils::Consts::NAN_DOUBLE; }
     virtual void executeOrderEvent(const OrderEventBase& event) {}
@@ -47,7 +47,7 @@ private:
     uint32_t myQuantity;
     OrderType myOrderType;
     OrderState myOrderState;
-    std::shared_ptr<OrderMetaInfo> myMetaInfo;
+    std::shared_ptr<const OrderMetaInfo> myMetaInfo;
 };
 
 class LimitOrder : public OrderBase {

@@ -12,7 +12,7 @@ public:
     TradeBase(const TradeBase& trade);
     TradeBase(
         const uint64_t id, const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const uint32_t quantity, const double price,
-        const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<TradeMetaInfo>& metaInfo = nullptr);
+        const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<const TradeMetaInfo>& metaInfo = nullptr);
     TradeBase(const uint64_t id, const uint64_t timestamp, const uint32_t quantity, const double price, const bool isBuyInitiated, const OrderBase& buyOrder, const OrderBase& sellOrder);
     uint64_t getId() const { return myId; }
     uint64_t getTimestamp() const { return myTimestamp; }
@@ -47,7 +47,7 @@ private:
     bool myIsBuyLimitOrder;
     bool myIsSellLimitOrder;
     bool myIsBuyInitiated;
-    std::shared_ptr<TradeMetaInfo> myMetaInfo;
+    std::shared_ptr<const TradeMetaInfo> myMetaInfo;
 };
 
 std::ostream& operator<<(std::ostream& out, const TradeBase& trade);
