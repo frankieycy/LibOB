@@ -2,6 +2,9 @@
 
 ### Infrastructure
 
+* Code Styling
+    - ok, remove const on function value return
+    - ok, return `shared_ptr` to const in class getters
 * Misc. Utils
     - ok, ability to cast Enum as string, `to_string`
     - ok, write up `Logger` class, use it for debug logging
