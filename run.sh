@@ -4,7 +4,7 @@ if [ -z "$1" ]; then
 else
 	file=$1
 fi
-g++ -std=c++17 -I lib lib/*.cpp run/${file}.cpp -o exe/${file}
+g++ -Ilib -std=c++17 -Wall -Wextra -O2 lib/*.cpp run/${file}.cpp -o exe/${file}
 if [ $? -eq 0 ]; then
 	./exe/${file} 2>&1 | tee run.log
 fi
