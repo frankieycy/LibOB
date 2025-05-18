@@ -275,7 +275,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
 
     if (config.isShowTradeLog()) {
         out << "====================== Trade Log ========================\n";
-        out << "   Id   |  Timestamp  |    Price    |   Size   |   Side  \n";
+        out << "   Id   |  Timestamp  |   Side   |    Price    |   Size  \n";
         out << "---------------------------------------------------------\n";
         auto tradeIt = myTradeLog.end();
         uint level = 1;
@@ -283,10 +283,10 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             const auto& trade = *--tradeIt;
             out << std::setw(6) << trade->getId() << "  | "
                 << std::setw(10) << trade->getTimestamp() << "  | "
+                << std::setw(7) << (trade->getIsBuyInitiated() ? "Buy" : "Sell") << "  | "
                 << std::fixed << std::setprecision(2)
                 << std::setw(10) << trade->getPrice() << "  | "
-                << std::setw(7) << trade->getQuantity() << "  | "
-                << std::setw(6) << (trade->getIsBuyInitiated() ? "Buy" : "Sell") << "  \n";
+                << std::setw(6) << trade->getQuantity() << "  \n";
             if (++level > config.getTradeLogLevels())
                 break;
         }
@@ -295,7 +295,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
 
     if (config.isShowMarketQueue()) {
         out << "=============== Market Queue ==============\n";
-        out << "   Id   |  Timestamp  |   Size   |   Side  \n";
+        out << "   Id   |  Timestamp  |   Side   |   Size  \n";
         out << "-------------------------------------------\n";
         auto marketIt = myMarketQueue.end();
         uint level = 1;
@@ -303,8 +303,8 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             const auto& order = *--marketIt;
             out << std::setw(6) << order->getId() << "  | "
                 << std::setw(10) << order->getTimestamp() << "  | "
-                << std::setw(7) << order->getQuantity() << "  | "
-                << std::setw(6) << order->getSide() << "  \n";
+                << std::setw(7) << order->getSide() << "  | "
+                << std::setw(6) << order->getQuantity() << "  \n";
             if (++level > config.getMarketQueueLevels())
                 break;
         }
@@ -313,7 +313,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
 
     if (config.isShowRemovedLimitOrderLog()) {
         out << "========================= Removed Limit Orders =======================\n";
-        out << "   Id   |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
+        out << "   Id   |  Timestamp  |   Side   |    Price    |   Size   |   State   \n";
         out << "----------------------------------------------------------------------\n";
         auto removedIt = myRemovedLimitOrderLog.end();
         uint level = 1;
@@ -321,10 +321,10 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             const auto& order = *--removedIt;
             out << std::setw(6) << order->getId() << "  | "
                 << std::setw(10) << order->getTimestamp() << "  | "
+                << std::setw(7) << order->getSide() << "  | "
                 << std::fixed << std::setprecision(2)
                 << std::setw(10) << order->getPrice() << "  | "
                 << std::setw(7) << order->getQuantity() << "  | "
-                << std::setw(7) << order->getSide() << "  | "
                 << std::setw(8) << order->getOrderState() << "  \n";
             if (++level > config.getRemovedLimitOrderLogLevels())
                 break;
@@ -385,7 +385,7 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
         auto& matchOrder = *queueIt;
         const uint64_t matchOrderId = matchOrder->getId();
         if (isDebugMode())
-            *getLogger() << "[MatchingEngineBase] Matching order: " << *matchOrder;
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Matching order: " << *matchOrder;
         const uint32_t matchQuantity = matchOrder->getQuantity();
         uint32_t filledQuantity = 0;
         if (matchQuantity <= unfilledQuantity) {
@@ -419,7 +419,7 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
             myOrderExecutionCallback({trade->getTimestamp(), matchOrderId, trade->getId(), trade->getQuantity(), trade->getPrice(), true, matchOrder->getSide(), makerOrderExecType}); // resting maker order (limit order)
         }
         if (isDebugMode())
-            *getLogger() << "[MatchingEngineBase] Trade executed: " << *trade;
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
     }
 }
 
@@ -439,7 +439,7 @@ void MatchingEngineBase::placeLimitOrderToLimitOrderBook(
         orderSizeTotal += order->getQuantity();
         myLimitOrderLookup[order->getId()] = {&limitQueue, std::prev(limitQueue.end())};
         if (isDebugMode())
-            *getLogger() << "[MatchingEngineBase] Placed order in limit order book: " << *order;
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Placed order in limit order book: " << *order;
     } else {
         order->setQuantity(0);
         order->setTimestamp(clockTick());
@@ -459,7 +459,7 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
             order->setOrderState(Market::OrderState::PARTIAL_FILLED);
         marketQueue.push_back(order);
         if (isDebugMode())
-            *getLogger() << "[MatchingEngineBase] Placed order in market order queue: " << *order;
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Placed order in market order queue: " << *order;
     } else {
         order->setQuantity(0);
         order->setTimestamp(clockTick());
@@ -469,7 +469,7 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
 
 void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) {
     if (isDebugMode())
-        *getLogger() << "[MatchingEngineFIFO] Add to limit order book: " << *order;
+        *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineFIFO] Add to limit order book: " << *order;
     if (!order->isAlive())
         return;
     const Market::Side side = order->getSide();
@@ -502,7 +502,7 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
 
 void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) {
     if (isDebugMode())
-        *getLogger() << "[MatchingEngineFIFO] Execute market order: " << *order;
+        *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineFIFO] Execute market order: " << *order;
     if (!order->isAlive())
         return;
     const Market::Side side = order->getSide();
