@@ -12,18 +12,18 @@ class OrderEventBase {
 public:
     OrderEventBase();
     OrderEventBase(const OrderEventBase& event);
-    OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order = nullptr);
+    OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<const OrderBase>& order = nullptr);
     uint64_t getEventId() const { return myEventId; }
     uint64_t getOrderId() const { return myOrderId; }
     uint64_t getTimestamp() const { return myTimestamp; }
     OrderEventType getEventType() const { return myEventType; }
-    std::shared_ptr<OrderBase> getOrder() const { return myOrder; }
+    std::shared_ptr<const OrderBase> getOrder() const { return myOrder; }
     bool isSubmit() const { return myEventType == OrderEventType::SUBMIT; }
     void setEventId(const uint64_t eventId) { myEventId = eventId; }
     void setOrderId(const uint64_t orderId) { myOrderId = orderId; }
     void setTimestamp(const uint64_t timestamp) { myTimestamp = timestamp; }
     void setEventType(const OrderEventType eventType) { myEventType = eventType; }
-    void setOrder(const std::shared_ptr<OrderBase>& order) { myOrder = order; }
+    void setOrder(const std::shared_ptr<const OrderBase>& order) { myOrder = order; }
     virtual std::shared_ptr<OrderEventBase> clone() const { return std::make_shared<OrderEventBase>(*this); }
     virtual void applyTo(MarketOrder& order) const;
     virtual void applyTo(LimitOrder& order) const;
@@ -34,14 +34,14 @@ private:
     uint64_t myOrderId;
     uint64_t myTimestamp;
     OrderEventType myEventType;
-    std::shared_ptr<OrderBase> myOrder;
+    std::shared_ptr<const OrderBase> myOrder;
 };
 
 class OrderSubmitEvent : public OrderEventBase {
 public:
     OrderSubmitEvent();
     OrderSubmitEvent(const OrderSubmitEvent& event);
-    OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order);
+    OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<const OrderBase>& order);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderSubmitEvent>(*this); }
     virtual void init() override;
     virtual std::string getAsJson() const override;

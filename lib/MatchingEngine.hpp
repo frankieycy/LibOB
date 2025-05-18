@@ -72,8 +72,8 @@ public:
     virtual size_t getNumberOfTrades() const = 0;
     virtual std::shared_ptr<Market::TradeBase> getLastTrade() const = 0;
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
-    virtual void process(const std::shared_ptr<Market::OrderBase>& order) = 0;
-    virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
+    virtual void process(const std::shared_ptr<const Market::OrderBase>& order) = 0;
+    virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void setOrderExecutionCallback(std::function<void(const OrderExecutionReport&)> callback) = 0;
@@ -134,8 +134,8 @@ public:
     size_t getNumberOfAskPriceLevels() const override;
     size_t getNumberOfTrades() const override;
     std::shared_ptr<Market::TradeBase> getLastTrade() const override;
-    virtual void process(const std::shared_ptr<Market::OrderBase>& order) override;
-    virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) override;
+    virtual void process(const std::shared_ptr<const Market::OrderBase>& order) override;
+    virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) override;
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);

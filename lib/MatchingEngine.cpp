@@ -131,13 +131,13 @@ std::shared_ptr<Market::TradeBase> MatchingEngineBase::getLastTrade() const {
     return myTradeLog.back();
 }
 
-void MatchingEngineBase::process(const std::shared_ptr<Market::OrderBase>& order) {
+void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderBase>& order) {
     if (!order)
         Error::LIB_THROW("MatchingEngineBase::process: order is null.");
     order->submit(*this); // relegate the order processing to OrderBase since it knows about the order type
 }
 
-void MatchingEngineBase::process(const std::shared_ptr<Market::OrderEventBase>& event) {
+void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventBase>& event) {
     // the hardcore order processing engine that interacts with external order event streams
     if (!event)
         Error::LIB_THROW("MatchingEngineBase::process: order event is null.");

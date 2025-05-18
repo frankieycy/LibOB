@@ -26,7 +26,7 @@ OrderEventBase::OrderEventBase(const OrderEventBase& event) :
     myEventType(event.myEventType),
     myOrder(event.myOrder) {}
 
-OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order) :
+OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<const OrderBase>& order) :
     myEventId(eventId),
     myOrderId(orderId),
     myTimestamp(timestamp),
@@ -62,7 +62,7 @@ OrderSubmitEvent::OrderSubmitEvent(const OrderSubmitEvent& event) :
     init();
 }
 
-OrderSubmitEvent::OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order) :
+OrderSubmitEvent::OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<const OrderBase>& order) :
     OrderEventBase(eventId, orderId, timestamp, order) {
     init();
 }
