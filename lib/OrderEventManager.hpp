@@ -10,8 +10,8 @@ class OrderEventManagerBase {
 public:
     OrderEventManagerBase() = default;
     OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
-    const uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
-    const bool isDebugMode() const { return myDebugMode; }
+    uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
+    bool isDebugMode() const { return myDebugMode; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);

@@ -13,12 +13,12 @@ public:
     OrderEventBase();
     OrderEventBase(const OrderEventBase& event);
     OrderEventBase(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order = nullptr);
-    const uint64_t getEventId() const { return myEventId; }
-    const uint64_t getOrderId() const { return myOrderId; }
-    const uint64_t getTimestamp() const { return myTimestamp; }
-    const OrderEventType getEventType() const { return myEventType; }
-    const std::shared_ptr<OrderBase>& getOrder() const { return myOrder; }
-    const bool isSubmit() const { return myEventType == OrderEventType::SUBMIT; }
+    uint64_t getEventId() const { return myEventId; }
+    uint64_t getOrderId() const { return myOrderId; }
+    uint64_t getTimestamp() const { return myTimestamp; }
+    OrderEventType getEventType() const { return myEventType; }
+    std::shared_ptr<OrderBase> getOrder() const { return myOrder; }
+    bool isSubmit() const { return myEventType == OrderEventType::SUBMIT; }
     void setEventId(const uint64_t eventId) { myEventId = eventId; }
     void setOrderId(const uint64_t orderId) { myOrderId = orderId; }
     void setTimestamp(const uint64_t timestamp) { myTimestamp = timestamp; }
@@ -28,7 +28,7 @@ public:
     virtual void applyTo(MarketOrder& order) const;
     virtual void applyTo(LimitOrder& order) const;
     virtual void init() {};
-    virtual const std::string getAsJson() const;
+    virtual std::string getAsJson() const;
 private:
     uint64_t myEventId;
     uint64_t myOrderId;
@@ -44,7 +44,7 @@ public:
     OrderSubmitEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const std::shared_ptr<OrderBase>& order);
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderSubmitEvent>(*this); }
     virtual void init() override;
-    virtual const std::string getAsJson() const override;
+    virtual std::string getAsJson() const override;
 };
 
 class OrderFillEvent : public OrderEventBase {
@@ -60,7 +60,7 @@ public:
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
-    virtual const std::string getAsJson() const override;
+    virtual std::string getAsJson() const override;
 private:
     uint32_t myFillQuantity;
     double myFillPrice;
@@ -76,7 +76,7 @@ public:
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyPriceEvent>(*this); }
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
-    virtual const std::string getAsJson() const override;
+    virtual std::string getAsJson() const override;
 private:
     double myModifiedPrice;
 };
@@ -91,7 +91,7 @@ public:
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderModifyQuantityEvent>(*this); }
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
-    virtual const std::string getAsJson() const override;
+    virtual std::string getAsJson() const override;
 private:
     uint32_t myModifiedQuantity;
 };

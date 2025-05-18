@@ -14,18 +14,18 @@ class OrderBookDisplayConfig {
 public:
     OrderBookDisplayConfig() = default;
     OrderBookDisplayConfig(const bool debugMode);
-    const uint16_t getOrderBookLevels() const { return myOrderBookLevels; }
-    const uint16_t getMarketQueueLevels() const { return myMarketQueueLevels; }
-    const uint16_t getTradeLogLevels() const { return myTradeLogLevels; }
-    const uint16_t getRemovedLimitOrderLogLevels() const { return myRemovedLimitOrderLogLevels; }
-    const uint16_t getOrderLookupLevels() const { return myOrderLookupLevels; }
-    const bool isAggregateOrderBook() const { return myAggregateOrderBook; }
-    const bool isShowOrderBook() const { return myShowOrderBook; }
-    const bool isShowMarketQueue() const { return myShowMarketQueue; }
-    const bool isShowTradeLog() const { return myShowTradeLog; }
-    const bool isShowRemovedLimitOrderLog() const { return myShowRemovedLimitOrderLog; }
-    const bool isShowOrderLookup() const { return myShowOrderLookup; }
-    const bool isDebugMode() const { return myDebugMode; }
+    uint16_t getOrderBookLevels() const { return myOrderBookLevels; }
+    uint16_t getMarketQueueLevels() const { return myMarketQueueLevels; }
+    uint16_t getTradeLogLevels() const { return myTradeLogLevels; }
+    uint16_t getRemovedLimitOrderLogLevels() const { return myRemovedLimitOrderLogLevels; }
+    uint16_t getOrderLookupLevels() const { return myOrderLookupLevels; }
+    bool isAggregateOrderBook() const { return myAggregateOrderBook; }
+    bool isShowOrderBook() const { return myShowOrderBook; }
+    bool isShowMarketQueue() const { return myShowMarketQueue; }
+    bool isShowTradeLog() const { return myShowTradeLog; }
+    bool isShowRemovedLimitOrderLog() const { return myShowRemovedLimitOrderLog; }
+    bool isShowOrderLookup() const { return myShowOrderLookup; }
+    bool isDebugMode() const { return myDebugMode; }
     void setOrderBookLevels(const uint16_t orderBookLevels) { myOrderBookLevels = orderBookLevels; }
     void setMarketQueueLevels(const uint16_t marketQueueLevels) { myMarketQueueLevels = marketQueueLevels; }
     void setTradeLogLevels(const uint16_t tradeLogLevels) { myTradeLogLevels = tradeLogLevels; }

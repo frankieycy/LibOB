@@ -38,13 +38,13 @@ public:
     IMatchingEngine() = default;
     IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
     IMatchingEngine(const bool debugMode);
-    const std::string& getSymbol() const { return mySymbol; }
-    const std::string& getExchangeId() const { return myExchangeId; }
-    const OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
+    std::string getSymbol() const { return mySymbol; }
+    std::string getExchangeId() const { return myExchangeId; }
+    OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
     const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
-    const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& getWorldClock() const { return myWorldClock; }
-    const std::shared_ptr<Utils::Logger::LoggerBase>& getLogger() const { return myLogger; }
-    const bool isDebugMode() const { return myDebugMode; }
+    std::shared_ptr<Utils::Counter::TimestampHandlerBase> getWorldClock() const { return myWorldClock; }
+    std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
+    bool isDebugMode() const { return myDebugMode; }
     void setSymbol(const std::string& symbol) { mySymbol = symbol; }
     void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
     void setOrderMatchingStrategy(const OrderMatchingStrategy orderMatchingStrategy) { myOrderMatchingStrategy = orderMatchingStrategy; }
@@ -52,25 +52,25 @@ public:
     void setWorldClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& worldClock) { myWorldClock = worldClock; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; myOrderBookDisplayConfig.setDebugMode(debugMode); }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
-    const uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
-    const uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
-    virtual const double getBestBidPrice() const = 0;
-    virtual const double getBestAskPrice() const = 0;
-    virtual const double getSpread() const = 0;
-    virtual const double getHalfSpread() const = 0;
-    virtual const double getMidPrice() const = 0;
-    virtual const double getMicroPrice() const = 0;
-    virtual const double getOrderImbalance() const = 0;
-    virtual const double getLastTradePrice() const = 0;
-    virtual const uint32_t getBestBidSize() const = 0;
-    virtual const uint32_t getBestAskSize() const = 0;
-    virtual const uint32_t getBidSize(const PriceLevel& priceLevel) const = 0;
-    virtual const uint32_t getAskSize(const PriceLevel& priceLevel) const = 0;
-    virtual const uint32_t getLastTradeSize() const = 0;
-    virtual const size_t getNumberOfBidPriceLevels() const = 0;
-    virtual const size_t getNumberOfAskPriceLevels() const = 0;
-    virtual const size_t getNumberOfTrades() const = 0;
-    virtual const std::shared_ptr<Market::TradeBase> getLastTrade() const = 0;
+    uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
+    uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
+    virtual double getBestBidPrice() const = 0;
+    virtual double getBestAskPrice() const = 0;
+    virtual double getSpread() const = 0;
+    virtual double getHalfSpread() const = 0;
+    virtual double getMidPrice() const = 0;
+    virtual double getMicroPrice() const = 0;
+    virtual double getOrderImbalance() const = 0;
+    virtual double getLastTradePrice() const = 0;
+    virtual uint32_t getBestBidSize() const = 0;
+    virtual uint32_t getBestAskSize() const = 0;
+    virtual uint32_t getBidSize(const PriceLevel& priceLevel) const = 0;
+    virtual uint32_t getAskSize(const PriceLevel& priceLevel) const = 0;
+    virtual uint32_t getLastTradeSize() const = 0;
+    virtual size_t getNumberOfBidPriceLevels() const = 0;
+    virtual size_t getNumberOfAskPriceLevels() const = 0;
+    virtual size_t getNumberOfTrades() const = 0;
+    virtual std::shared_ptr<Market::TradeBase> getLastTrade() const = 0;
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
     virtual void process(const std::shared_ptr<Market::OrderBase>& order) = 0;
     virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
@@ -80,7 +80,7 @@ public:
     virtual void init() = 0;
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
-    virtual const std::string getAsJson() const = 0;
+    virtual std::string getAsJson() const = 0;
 protected:
     Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
 private:
@@ -113,37 +113,37 @@ public:
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
-    const std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const;
-    const std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const;
-    const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestBidTopOrder() const;
-    const std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestAskTopOrder() const;
-    const double getBestBidPrice() const;
-    const double getBestAskPrice() const;
-    const double getSpread() const;
-    const double getHalfSpread() const;
-    const double getMidPrice() const;
-    const double getMicroPrice() const;
-    const double getOrderImbalance() const;
-    const double getLastTradePrice() const;
-    const uint32_t getBestBidSize() const;
-    const uint32_t getBestAskSize() const;
-    const uint32_t getBidSize(const PriceLevel& priceLevel) const;
-    const uint32_t getAskSize(const PriceLevel& priceLevel) const;
-    const uint32_t getLastTradeSize() const;
-    const size_t getNumberOfBidPriceLevels() const;
-    const size_t getNumberOfAskPriceLevels() const;
-    const size_t getNumberOfTrades() const;
-    const std::shared_ptr<Market::TradeBase> getLastTrade() const;
-    virtual void process(const std::shared_ptr<Market::OrderBase>& order);
-    virtual void process(const std::shared_ptr<Market::OrderEventBase>& event);
+    std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const;
+    std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const;
+    std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestBidTopOrder() const;
+    std::pair<const PriceLevel, const std::shared_ptr<Market::LimitOrder>> getBestAskTopOrder() const;
+    double getBestBidPrice() const override;
+    double getBestAskPrice() const override;
+    double getSpread() const override;
+    double getHalfSpread() const override;
+    double getMidPrice() const override;
+    double getMicroPrice() const override;
+    double getOrderImbalance() const override;
+    double getLastTradePrice() const override;
+    uint32_t getBestBidSize() const override;
+    uint32_t getBestAskSize() const override;
+    uint32_t getBidSize(const PriceLevel& priceLevel) const override;
+    uint32_t getAskSize(const PriceLevel& priceLevel) const override;
+    uint32_t getLastTradeSize() const override;
+    size_t getNumberOfBidPriceLevels() const override;
+    size_t getNumberOfAskPriceLevels() const override;
+    size_t getNumberOfTrades() const override;
+    std::shared_ptr<Market::TradeBase> getLastTrade() const override;
+    virtual void process(const std::shared_ptr<Market::OrderBase>& order) override;
+    virtual void process(const std::shared_ptr<Market::OrderEventBase>& event) override;
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
-    virtual void setOrderExecutionCallback(std::function<void(const OrderExecutionReport&)> callback) { this->myOrderExecutionCallback = callback; }
-    virtual void init();
-    virtual void reset();
-    virtual std::ostream& orderBookSnapshot(std::ostream& out) const;
-    virtual const std::string getAsJson() const;
+    virtual void setOrderExecutionCallback(std::function<void(const OrderExecutionReport&)> callback) override { this->myOrderExecutionCallback = callback; }
+    virtual void init() override;
+    virtual void reset() override;
+    virtual std::ostream& orderBookSnapshot(std::ostream& out) const override;
+    virtual std::string getAsJson() const override;
 protected:
     DescOrderBook& getBidBook() { return myBidBook; }
     AscOrderBook& getAskBook() { return myAskBook; }

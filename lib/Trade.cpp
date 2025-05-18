@@ -73,7 +73,7 @@ void TradeBase::init() {
         Error::LIB_THROW("TradeBase: price cannot be negative.");
 }
 
-const std::string TradeBase::getAsJson() const {
+std::string TradeBase::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"Id\":"               << getId()               << ","

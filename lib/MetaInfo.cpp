@@ -17,7 +17,7 @@ TradeMetaInfo::TradeMetaInfo(const std::string symbol, const std::string exchang
     mySymbol(symbol),
     myExchangeId(exchangeId) {}
 
-const std::string TradeMetaInfo::getAsJson() const {
+std::string TradeMetaInfo::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"Symbol\":\""     << getSymbol()     << "\","
@@ -34,7 +34,7 @@ OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchang
     TradeMetaInfo(symbol, exchangeId),
     myAgentId(agentId) {}
 
-const std::string OrderMetaInfo::getAsJson() const {
+std::string OrderMetaInfo::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"Symbol\":\""     << getSymbol()     << "\","

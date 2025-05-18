@@ -34,9 +34,9 @@ class IdHandlerBase {
 public:
     IdHandlerBase() = default;
     IdHandlerBase(const bool idLogEnabled) : myIdLogEnabled(idLogEnabled) {}
-    const uint64_t getCurrentId() const { return myCurrentId; }
     const std::vector<uint64_t>& getIdLog() const { return myIdLog; }
-    const uint64_t generateId();
+    uint64_t getCurrentId() const { return myCurrentId; }
+    uint64_t generateId();
     void reset();
 private:
     uint64_t myCurrentId = 0;
@@ -47,8 +47,8 @@ private:
 class TimestampHandlerBase {
 public:
     TimestampHandlerBase() = default;
-    const uint64_t getCurrentTimestamp() const { return myCurrentTimestamp; }
-    const uint64_t tick(const uint64_t elapsedTimeUnit = 1);
+    uint64_t getCurrentTimestamp() const { return myCurrentTimestamp; }
+    uint64_t tick(const uint64_t elapsedTimeUnit = 1);
     void reset();
 private:
     uint64_t myCurrentTimestamp = 0;

@@ -14,18 +14,18 @@ public:
         const uint64_t id, const uint64_t timestamp, const uint64_t buyId, const uint64_t sellId, const uint32_t quantity, const double price,
         const bool isBuyLimitOrder, const bool isSellLimitOrder, const bool isBuyInitiated, const std::shared_ptr<TradeMetaInfo>& metaInfo = nullptr);
     TradeBase(const uint64_t id, const uint64_t timestamp, const uint32_t quantity, const double price, const bool isBuyInitiated, const OrderBase& buyOrder, const OrderBase& sellOrder);
-    const uint64_t getId() const { return myId; }
-    const uint64_t getTimestamp() const { return myTimestamp; }
-    const uint64_t getBuyId() const { return myBuyId; }
-    const uint64_t getSellId() const { return mySellId; }
-    const uint32_t getQuantity() const { return myQuantity; }
-    const double getPrice() const { return myPrice; }
-    const bool getIsBuyLimitOrder() const { return myIsBuyLimitOrder; }
-    const bool getIsSellLimitOrder() const { return myIsSellLimitOrder; }
-    const bool getIsBuyInitiated() const { return myIsBuyInitiated; }
-    const std::string getSymbol() const { return myMetaInfo ? myMetaInfo->getSymbol() : ""; }
-    const std::string getExchangeId() const { return myMetaInfo ? myMetaInfo->getExchangeId() : ""; }
-    void setId(const uint64_t id) {myId = id; }
+    uint64_t getId() const { return myId; }
+    uint64_t getTimestamp() const { return myTimestamp; }
+    uint64_t getBuyId() const { return myBuyId; }
+    uint64_t getSellId() const { return mySellId; }
+    uint32_t getQuantity() const { return myQuantity; }
+    double getPrice() const { return myPrice; }
+    bool getIsBuyLimitOrder() const { return myIsBuyLimitOrder; }
+    bool getIsSellLimitOrder() const { return myIsSellLimitOrder; }
+    bool getIsBuyInitiated() const { return myIsBuyInitiated; }
+    std::string getSymbol() const { return myMetaInfo ? myMetaInfo->getSymbol() : ""; }
+    std::string getExchangeId() const { return myMetaInfo ? myMetaInfo->getExchangeId() : ""; }
+    void setId(const uint64_t id) { myId = id; }
     void setTimestamp(const uint64_t timestamp) { myTimestamp = timestamp; }
     void setBuyId(const uint64_t buyId) { myBuyId = buyId; }
     void setSellId(const uint64_t sellId) { mySellId = sellId; }
@@ -36,7 +36,7 @@ public:
     void setIsBuyInitiated(const bool isBuyInitiated) { myIsBuyInitiated = isBuyInitiated; }
     virtual std::shared_ptr<TradeBase> clone() const { return std::make_shared<TradeBase>(*this); }
     virtual void init();
-    virtual const std::string getAsJson() const;
+    virtual std::string getAsJson() const;
 private:
     uint64_t myId;
     uint64_t myTimestamp;
