@@ -2,6 +2,7 @@
 #include "OrderUtils.hpp"
 #include "Order.hpp"
 #include "MatchingEngine.hpp"
+#include "OrderEventManager.hpp"
 
 namespace Tests {
 namespace MatchingEngine {
@@ -36,17 +37,40 @@ void testMatchingEngineSimpleBook() {
     }
 }
 
+void testMatchingEngineOrderEventManager() {
+    MatchingEngineFIFO e{true};
+    OrderEventManagerBase em{std::make_shared<MatchingEngineFIFO>(e)};
+    em.setPrintOrderBookPerOrderSubmit(true);
+    em.submitLimitOrderEvent(Side::BUY, 15, 99.0);
+    em.submitLimitOrderEvent(Side::BUY, 5, 99.0);
+    em.submitLimitOrderEvent(Side::BUY, 10, 98.0);
+    em.submitLimitOrderEvent(Side::BUY, 5, 98.0);
+    em.submitLimitOrderEvent(Side::BUY, 10, 97.0);
+    em.submitLimitOrderEvent(Side::SELL, 10, 101.0);
+    em.submitLimitOrderEvent(Side::SELL, 10, 101.0);
+    em.submitLimitOrderEvent(Side::SELL, 15, 102.0);
+    em.submitLimitOrderEvent(Side::SELL, 10, 103.0);
+    em.submitMarketOrderEvent(Side::BUY, 5);
+    em.submitMarketOrderEvent(Side::BUY, 15);
+    em.submitMarketOrderEvent(Side::BUY, 20);
+    em.submitMarketOrderEvent(Side::BUY, 15);
+    em.submitMarketOrderEvent(Side::SELL, 15);
+    em.submitMarketOrderEvent(Side::SELL, 25);
+    em.submitMarketOrderEvent(Side::SELL, 10);
+}
+
 void testMatchingEngineRandomOrders() {
     // TODO
 }
 
-void testMatchingEngineOrderEventManager() {
+void testMatchingEngineZeroIntelligence() {
     // TODO
 }
 }
 }
 
 int main() {
-    Tests::MatchingEngine::testMatchingEngineSimpleBook();
+    // Tests::MatchingEngine::testMatchingEngineSimpleBook();
+    Tests::MatchingEngine::testMatchingEngineOrderEventManager();
     return 0;
 }
