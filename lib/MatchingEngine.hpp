@@ -16,7 +16,7 @@ using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
 using AscOrderBook = std::map<PriceLevel, LimitQueue>;
 using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
-using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>;
+using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>; // permits O(1) order access for cancellation and modification
 
 enum class OrderExecutionType { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
 
@@ -98,6 +98,8 @@ private:
     bool myDebugMode = false;
 };
 
+/* A simple MatchingEngine implmentation with O(1) order operations, including
+   submission, cancellation, modification, BBO fetch etc. */
 class MatchingEngineBase : public IMatchingEngine {
 public:
     MatchingEngineBase() = default;
