@@ -5,7 +5,7 @@
 namespace Market {
 enum class Side           { BUY, SELL, NULL_SIDE };
 enum class OrderType      { LIMIT, MARKET, NULL_ORDER_TYPE };
-enum class OrderState     { ACTIVE, FILLED, PARTIAL_FILLED, CANCELLED, INVALID, NULL_ORDER_STATE };
+enum class OrderState     { ACTIVE, FILLED, PARTIAL_FILLED, CANCELLED, INVALID, NULL_ORDER_STATE }; // order filling goes from ACTIVE to PARTIAL_FILLED to FILLED
 enum class OrderEventType { SUBMIT, FILL, CANCEL, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_EVENT_TYPE };
 
 std::string to_string(const Side& side);
