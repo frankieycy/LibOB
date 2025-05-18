@@ -24,6 +24,24 @@ void TimestampHandlerBase::reset() {
     myCurrentTimestamp = 0;
 }
 }
+
+namespace Vector {
+std::vector<double> getVectorRange(const double a, const double b, const double x) {
+    // TODO: assert that (a <= b && x > 0) or (a >= b && x < 0)
+    std::vector<double> vec;
+    for (double i = a; i <= b; i += x)
+        vec.push_back(i);
+    return vec;
+}
+std::vector<double> getVectorRange(const double a, const double b, const int n) {
+    // TODO: assert that n > 0
+    std::vector<double> vec;
+    const double x = (b - a) / n;
+    for (int i = 0; i <= n; ++i)
+        vec.push_back(a + i * x);
+    return vec;
+}
+}
 }
 
 #endif
