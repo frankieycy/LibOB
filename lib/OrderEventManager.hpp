@@ -34,6 +34,7 @@ private:
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     std::unordered_map<uint64_t, std::shared_ptr<Market::OrderBase>> myActiveOrders;
+    double myMinimumPriceTick = 0.01;
     bool mySyncClockWithEngine = false;
     bool myDebugMode = false;
     bool myPrintOrderBookPerOrderSubmit = false;
