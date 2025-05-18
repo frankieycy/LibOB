@@ -73,6 +73,8 @@
         "list": "cpp",
         "iomanip": "cpp",
         "fstream": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "numeric": "cpp",
+        "random": "cpp"
     }
 }
