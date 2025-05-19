@@ -101,7 +101,9 @@ void testMatchingEngineRandomOrders() {
                 em.submitMarketOrderEvent(Market::Side::SELL, ui);
         }
     }
+    Utils::IO::printDebugBanner(std::cout);
     std::cout << *e << std::endl;
+    Utils::IO::printDebugBanner(std::cout);
     std::cout << em << std::endl;
 }
 
