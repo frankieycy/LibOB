@@ -119,7 +119,30 @@ template<class Int>
 inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) { return deterministic ? getRandomUniformInt(a, b, RNG_42()) : getRandomUniformInt(a, b, GLOBAL_RNG()); }
 }
 
-namespace FileIO {}
+namespace IO {
+inline void printLineSeperator(std::ostream& out, const int lines = 1, const int length = 80, const std::string& line = "=") {
+    for (int i = 0; i < lines; ++i)
+        out << std::string(length, line[0]) << "\n";
+}
+
+inline void printDebugBanner(std::ostream& out) {
+    const char* banner = R"(
+    ==================================================================
+    ==================================================================
+    ||||   ________  _______   ________  ___  ___  ________       ||||
+    ||||  |\   ___ \|\  ___ \ |\   __  \|\  \|\  \|\   ____\      ||||
+    ||||  \ \  \_|\ \ \   __/|\ \  \|\ /\ \  \\\  \ \  \___|      ||||
+    ||||   \ \  \ \\ \ \  \_|/_\ \   __  \ \  \\\  \ \  \  ___    ||||
+    ||||    \ \  \_\\ \ \  \_|\ \ \  \|\  \ \  \\\  \ \  \|\  \   ||||
+    ||||     \ \_______\ \_______\ \_______\ \_______\ \_______\  ||||
+    ||||      \|_______|\|_______|\|_______|\|_______|\|_______|  ||||
+    ||||                                                          ||||
+    ==================================================================
+    ==================================================================
+    )";
+    out << banner << "\n";
+}
+}
 }
 
 #endif
