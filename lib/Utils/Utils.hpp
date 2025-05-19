@@ -120,13 +120,23 @@ inline int getRandomUniformInt(const Int a, const Int b, const bool deterministi
 }
 
 namespace IO {
-inline void printLineSeperator(std::ostream& out, const int lines = 1, const int length = 80, const std::string& line = "=") {
-    for (int i = 0; i < lines; ++i)
-        out << std::string(length, line[0]) << "\n";
-}
+inline constexpr char LIB_OB_BANNER[] = R"(
+    =======================================================================
+    =======================================================================
+    ||||                                                               ||||
+    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░   ||||
+    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
+    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
+    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░   ||||
+    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
+    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
+    ||||  ░▒▓████████▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░   ||||
+    ||||                                                               ||||
+    =======================================================================
+    =======================================================================
+)";
 
-inline void printDebugBanner(std::ostream& out) {
-    const char* banner = R"(
+inline constexpr char DEBUG_BANNER[] = R"(
     ==================================================================
     ==================================================================
     ||||   ________  _______   ________  ___  ___  ________       ||||
@@ -139,8 +149,15 @@ inline void printDebugBanner(std::ostream& out) {
     ||||                                                          ||||
     ==================================================================
     ==================================================================
-    )";
-    out << banner << "\n";
+)";
+
+inline void printLibOBBanner(std::ostream& out) { out << LIB_OB_BANNER << "\n"; }
+
+inline void printDebugBanner(std::ostream& out) { out << DEBUG_BANNER << "\n"; }
+
+inline void printLineSeperator(std::ostream& out, const int lines = 1, const int length = 80, const std::string& line = "=") {
+    for (int i = 0; i < lines; ++i)
+        out << std::string(length, line[0]) << "\n";
 }
 }
 }
