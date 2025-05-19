@@ -3,9 +3,8 @@
 main
 obj*
 exe*
-test*
+test/
 plot*
 *.txt
 *.log
 _*
-!lib/Tests/
