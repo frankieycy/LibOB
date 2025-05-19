@@ -1,7 +1,7 @@
 #ifndef TRADE_HPP
 #define TRADE_HPP
-#include "Utils.hpp"
-#include "MetaInfo.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/MetaInfo.hpp"
 
 namespace Market {
 class OrderBase;

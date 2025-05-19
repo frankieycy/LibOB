@@ -2,7 +2,7 @@
 #define LOGGER_HPP
 #include <string>
 #include <fstream>
-#include "LoggerUtils.hpp"
+#include "Utils/LoggerUtils.hpp"
 
 namespace Utils {
 namespace Logger {

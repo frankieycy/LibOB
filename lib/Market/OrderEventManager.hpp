@@ -1,9 +1,9 @@
 #ifndef ORDER_EVENT_MANAGER_HPP
 #define ORDER_EVENT_MANAGER_HPP
-#include "Utils.hpp"
-#include "Order.hpp"
-#include "OrderEvent.hpp"
-#include "MatchingEngine.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/Order.hpp"
+#include "Market/OrderEvent.hpp"
+#include "Exchange/MatchingEngine.hpp"
 
 namespace Market {
 class OrderEventManagerBase {

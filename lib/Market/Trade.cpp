@@ -1,9 +1,9 @@
 #ifndef TRADE_CPP
 #define TRADE_CPP
-#include "Utils.hpp"
-#include "MetaInfo.hpp"
-#include "Order.hpp"
-#include "Trade.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/MetaInfo.hpp"
+#include "Market/Order.hpp"
+#include "Market/Trade.hpp"
 
 namespace Market {
 using namespace Utils;

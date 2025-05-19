@@ -1,6 +1,6 @@
 #ifndef ORDER_UTILS_HPP
 #define ORDER_UTILS_HPP
-#include "Utils.hpp"
+#include "Utils/Utils.hpp"
 
 namespace Market {
 enum class Side           { BUY, SELL, NULL_SIDE };

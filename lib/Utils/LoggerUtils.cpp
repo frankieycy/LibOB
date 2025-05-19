@@ -1,7 +1,7 @@
 #ifndef LOGGER_UTILS_CPP
 #define LOGGER_UTILS_CPP
-#include "LoggerUtils.hpp"
-#include "Logger.hpp"
+#include "Utils/LoggerUtils.hpp"
+#include "Utils/Logger.hpp"
 
 namespace Utils {
 namespace Logger {

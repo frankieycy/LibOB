@@ -1,7 +1,7 @@
 #ifndef ORDER_UTILS_CPP
 #define ORDER_UTILS_CPP
-#include "Utils.hpp"
-#include "OrderUtils.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/OrderUtils.hpp"
 
 namespace Market {
 std::string to_string(const Side& side) {

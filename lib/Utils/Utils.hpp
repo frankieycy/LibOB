@@ -14,7 +14,7 @@
 #include <random>
 #include <limits>
 #include <optional>
-#include "Logger.hpp"
+#include "Utils/Logger.hpp"
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, std::vector<T>& vec) {

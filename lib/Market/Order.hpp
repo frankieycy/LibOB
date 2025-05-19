@@ -1,7 +1,7 @@
 #ifndef ORDER_HPP
 #define ORDER_HPP
-#include "Utils.hpp"
-#include "OrderUtils.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/OrderUtils.hpp"
 
 namespace Exchange {
 class IMatchingEngine;

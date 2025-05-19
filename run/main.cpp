@@ -1,8 +1,8 @@
-#include "Utils.hpp"
-#include "OrderUtils.hpp"
-#include "Order.hpp"
-#include "MatchingEngine.hpp"
-#include "OrderEventManager.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/OrderUtils.hpp"
+#include "Market/Order.hpp"
+#include "Market/OrderEventManager.hpp"
+#include "Exchange/MatchingEngine.hpp"
 
 namespace Tests {
 namespace MatchingEngine {

@@ -1,7 +1,7 @@
 #ifndef META_INFO_CPP
 #define META_INFO_CPP
-#include "Utils.hpp"
-#include "MetaInfo.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/MetaInfo.hpp"
 
 namespace Market {
 std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& metaInfo) {

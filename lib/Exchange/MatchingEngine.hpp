@@ -1,10 +1,10 @@
 #ifndef MATCHING_ENGINE_HPP
 #define MATCHING_ENGINE_HPP
-#include "Utils.hpp"
-#include "OrderEvent.hpp"
-#include "Order.hpp"
-#include "Trade.hpp"
-#include "MatchingEngineUtils.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/OrderEvent.hpp"
+#include "Market/Order.hpp"
+#include "Market/Trade.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 
 namespace Exchange {
 using PriceLevel = double;

@@ -1,7 +1,7 @@
 #ifndef MATCHING_ENGINE_UTILS_CPP
 #define MATCHING_ENGINE_UTILS_CPP
-#include "Utils.hpp"
-#include "MatchingEngineUtils.hpp"
+#include "Utils/Utils.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 
 namespace Exchange {
 std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy) {

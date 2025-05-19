@@ -1,9 +1,9 @@
 #ifndef ORDER_EVENT_CPP
 #define ORDER_EVENT_CPP
-#include "Utils.hpp"
-#include "OrderUtils.hpp"
-#include "OrderEvent.hpp"
-#include "Order.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/OrderUtils.hpp"
+#include "Market/OrderEvent.hpp"
+#include "Market/Order.hpp"
 
 namespace Market {
 using namespace Utils;

@@ -1,10 +1,10 @@
 #ifndef ORDER_EVENT_MANAGER_CPP
 #define ORDER_EVENT_MANAGER_CPP
-#include "Utils.hpp"
-#include "Order.hpp"
-#include "OrderEvent.hpp"
-#include "MatchingEngine.hpp"
-#include "OrderEventManager.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/Order.hpp"
+#include "Market/OrderEvent.hpp"
+#include "Market/OrderEventManager.hpp"
+#include "Exchange/MatchingEngine.hpp"
 
 namespace Market {
 using namespace Utils;

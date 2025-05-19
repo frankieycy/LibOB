@@ -1,10 +1,10 @@
 #ifndef MATCHING_ENGINE_CPP
 #define MATCHING_ENGINE_CPP
-#include "Utils.hpp"
-#include "Order.hpp"
-#include "Trade.hpp"
-#include "MatchingEngineUtils.hpp"
-#include "MatchingEngine.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/Order.hpp"
+#include "Market/Trade.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
+#include "Exchange/MatchingEngine.hpp"
 
 namespace Exchange {
 using namespace Utils;

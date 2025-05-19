@@ -1,7 +1,7 @@
 #ifndef ORDER_EVENT_HPP
 #define ORDER_EVENT_HPP
-#include "Utils.hpp"
-#include "OrderUtils.hpp"
+#include "Utils/Utils.hpp"
+#include "Market/OrderUtils.hpp"
 
 namespace Market {
 class OrderBase;
