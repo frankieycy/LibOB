@@ -1,34 +1,29 @@
 CXX      = g++
-CXXFLAGS = -Ilib -std=c++17 -Wall -Wextra -O2 -g -MMD -MP
+CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g -Ilib -MMD -MP
 
-# Source files
-SRC_MAIN = run/main.cpp
-SRC_LIB  = $(wildcard lib/*.cpp)
-SRC      = $(SRC_MAIN) $(SRC_LIB)
+# --------------------------------------------------------------------
+# Source discovery (recursive)
+SRC := $(shell find run lib -name '*.cpp')
+OBJ := $(patsubst %.cpp, obj/%.o, $(SRC))
+DEP := $(OBJ:.o=.d)
 
-# Object files
-OBJ_DIR  = obj
-OBJ      = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
-DEP      = $(OBJ:.o=.d)
+TARGET = exe/main
+# --------------------------------------------------------------------
 
-# Executable
-TARGET   = exe/main
-
-# Default target
 all: $(TARGET)
 
-# Link all object files into the executable
+# Link
 $(TARGET): $(OBJ)
-	@mkdir -p $(dir $@)
+	@mkdir -p $(@D)
 	$(CXX) $^ -o $@
 
-# Compile source files to object files
-$(OBJ_DIR)/%.o: %.cpp
-	@mkdir -p $(dir $@)
+# Compile (obj/Utils/Utils.o from lib/Utils/Utils.cpp, etc.)
+obj/%.o: %.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean up
 clean:
-	rm -rf $(OBJ_DIR) $(TARGET)
+	rm -rf obj exe
 
+# Pull in auto-generated header dependencies
 -include $(DEP)
