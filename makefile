@@ -1,31 +1,34 @@
-CXX = g++
-CXXFLAGS = -Ilib -std=c++17 -Wall -Wextra -O2 -g
+CXX      = g++
+CXXFLAGS = -Ilib -std=c++17 -Wall -Wextra -O2 -g -MMD -MP
 
 # Source files
 SRC_MAIN = run/main.cpp
-SRC_LIB = $(wildcard lib/*.cpp)
-SRC = $(SRC_MAIN) $(SRC_LIB)
+SRC_LIB  = $(wildcard lib/*.cpp)
+SRC      = $(SRC_MAIN) $(SRC_LIB)
 
 # Object files
-OBJ_DIR = obj
-OBJ = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(SRC))
+OBJ_DIR  = obj
+OBJ      = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
+DEP      = $(OBJ:.o=.d)
 
 # Executable
-TARGET = exe/main
+TARGET   = exe/main
 
 # Default target
 all: $(TARGET)
 
 # Link all object files into the executable
 $(TARGET): $(OBJ)
-	mkdir -p $(dir $@)
-	$(CXX) -o $@ $^
+	@mkdir -p $(dir $@)
+	$(CXX) $^ -o $@
 
 # Compile source files to object files
 $(OBJ_DIR)/%.o: %.cpp
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean up
 clean:
 	rm -rf $(OBJ_DIR) $(TARGET)
+
+-include $(DEP)
