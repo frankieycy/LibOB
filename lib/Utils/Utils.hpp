@@ -65,7 +65,7 @@ private:
     std::string myMessage;
 };
 
-inline void LIB_THROW(const char* message) { throw LibException(message); }
+inline void LIB_THROW(const std::string& message) { throw LibException(message); }
 }
 
 namespace Consts {
@@ -117,6 +117,22 @@ inline int getRandomUniformInt(const Int a, const Int b, Engine& eng) {
 
 template<class Int>
 inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) { return deterministic ? getRandomUniformInt(a, b, RNG_42()) : getRandomUniformInt(a, b, GLOBAL_RNG()); }
+
+template<class T>
+inline T drawRandomElement(const std::vector<T>& vec, const bool deterministic = false) {
+    if (vec.empty())
+        Error::LIB_THROW("[drawRandomElement] Empty vector.");
+    return vec[getRandomUniformInt(0, static_cast<int>(vec.size()) - 1, deterministic)];
+}
+
+template <typename Container>
+auto drawRandomIterator(Container& container, const bool deterministic = false) {
+    if (container.empty())
+        Error::LIB_THROW("[getRandomIterator] Empty container.");
+    auto it = container.begin();
+    std::advance(it, getRandomUniformInt(0, static_cast<int>(container.size()) - 1, deterministic));
+    return it;
+}
 }
 
 namespace IO {
