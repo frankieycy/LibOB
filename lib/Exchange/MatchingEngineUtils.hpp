@@ -105,7 +105,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
         const bool isMakerOrder,
         const OrderExecutionType orderExecutionType,
         const OrderProcessingStatus status,
-        const std::shared_ptr<Market::TradeBase>& trade = nullptr,
+        const std::shared_ptr<const Market::TradeBase>& trade = nullptr,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
         OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::EXECUTE, status, latency, message),
@@ -119,7 +119,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     double filledPrice;
     bool isMakerOrder; // if the order is a resting maker order
     OrderExecutionType orderExecutionType;
-    std::shared_ptr<Market::TradeBase> trade = nullptr;
+    std::shared_ptr<const Market::TradeBase> trade = nullptr;
 };
 
 struct OrderSubmitReport : public OrderProcessingReport {
@@ -128,12 +128,15 @@ struct OrderSubmitReport : public OrderProcessingReport {
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
+        const std::shared_ptr<const Market::OrderBase>& order,
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::SUBMIT, status, latency, message) {}
+        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::SUBMIT, status, latency, message),
+        order(order) {}
     virtual ~OrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    std::shared_ptr<const Market::OrderBase> order = nullptr;
 };
 
 struct OrderCancelReport : public OrderProcessingReport {

@@ -125,7 +125,7 @@ size_t MatchingEngineBase::getNumberOfTrades() const {
     return myTradeLog.size();
 }
 
-std::shared_ptr<Market::TradeBase> MatchingEngineBase::getLastTrade() const {
+std::shared_ptr<const Market::TradeBase> MatchingEngineBase::getLastTrade() const {
     if (myTradeLog.empty())
         return nullptr;
     return myTradeLog.back();
@@ -408,11 +408,11 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
             unfilledQuantity = 0;
         }
         // internal log of executed trades
-        std::shared_ptr<Market::TradeBase> trade;
+        std::shared_ptr<const Market::TradeBase> trade;
         if (isIncomingOrderBuy)
-            trade = std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), orderId, matchOrderId, filledQuantity, matchOrder->getPrice(), order->isLimitOrder(), true, true);
+            trade = std::make_shared<const Market::TradeBase>(generateTradeId(), clockTick(), orderId, matchOrderId, filledQuantity, matchOrder->getPrice(), order->isLimitOrder(), true, true);
         else
-            trade = std::make_shared<Market::TradeBase>(generateTradeId(), clockTick(), matchOrderId, orderId, filledQuantity, matchOrder->getPrice(), true, order->isLimitOrder(), false);
+            trade = std::make_shared<const Market::TradeBase>(generateTradeId(), clockTick(), matchOrderId, orderId, filledQuantity, matchOrder->getPrice(), true, order->isLimitOrder(), false);
         myTradeLog.push_back(trade);
         // external callback of executed trades
         if (myOrderProcessingCallback) {

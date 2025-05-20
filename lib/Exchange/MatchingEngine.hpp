@@ -10,7 +10,7 @@ namespace Exchange {
 using PriceLevel = double;
 using LimitQueue = std::list<std::shared_ptr<Market::LimitOrder>>;
 using MarketQueue = std::list<std::shared_ptr<Market::MarketOrder>>;
-using TradeLog = std::vector<std::shared_ptr<Market::TradeBase>>;
+using TradeLog = std::vector<std::shared_ptr<const Market::TradeBase>>;
 using RemovedLimitOrderLog = std::vector<std::shared_ptr<Market::LimitOrder>>;
 using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
 using AscOrderBook = std::map<PriceLevel, LimitQueue>;
@@ -60,7 +60,7 @@ public:
     virtual size_t getNumberOfBidPriceLevels() const = 0;
     virtual size_t getNumberOfAskPriceLevels() const = 0;
     virtual size_t getNumberOfTrades() const = 0;
-    virtual std::shared_ptr<Market::TradeBase> getLastTrade() const = 0;
+    virtual std::shared_ptr<const Market::TradeBase> getLastTrade() const = 0;
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) = 0;
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
@@ -126,7 +126,7 @@ public:
     size_t getNumberOfBidPriceLevels() const override;
     size_t getNumberOfAskPriceLevels() const override;
     size_t getNumberOfTrades() const override;
-    std::shared_ptr<Market::TradeBase> getLastTrade() const override;
+    std::shared_ptr<const Market::TradeBase> getLastTrade() const override;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) override;
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) override;
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
