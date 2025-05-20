@@ -359,6 +359,10 @@ void MatchingEngineBase::init() {
     // TODO
 }
 
+void MatchingEngineBase::build() {
+    // TODO
+}
+
 void MatchingEngineBase::reset() {
     myBidBook.clear();
     myAskBook.clear();
@@ -366,6 +370,7 @@ void MatchingEngineBase::reset() {
     myAskBookSize.clear();
     myMarketQueue.clear();
     myTradeLog.clear();
+    myOrderProcessingReportLog.clear();
     myRemovedLimitOrderLog.clear();
     myLimitOrderLookup.clear();
     IMatchingEngine::reset();

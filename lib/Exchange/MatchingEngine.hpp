@@ -11,7 +11,8 @@ using PriceLevel = double;
 using LimitQueue = std::list<std::shared_ptr<Market::LimitOrder>>;
 using MarketQueue = std::list<std::shared_ptr<Market::MarketOrder>>;
 using TradeLog = std::vector<std::shared_ptr<const Market::TradeBase>>;
-using RemovedLimitOrderLog = std::vector<std::shared_ptr<Market::LimitOrder>>;
+using OrderProcessingReportLog = std::vector<std::shared_ptr<const OrderProcessingReport>>;
+using RemovedLimitOrderLog = std::vector<std::shared_ptr<const Market::LimitOrder>>;
 using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
 using AscOrderBook = std::map<PriceLevel, LimitQueue>;
 using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
@@ -68,6 +69,7 @@ public:
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
     virtual void init() = 0;
+    virtual void build() = 0; // builds the book given some user-input order events stream
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
     virtual std::string getAsJson() const = 0;
@@ -98,12 +100,14 @@ public:
     const AscOrderBookSize& getAskBookSize() const { return myAskBookSize; }
     const MarketQueue& getMarketQueue() const { return myMarketQueue; }
     const TradeLog& getTradeLog() const { return myTradeLog; }
+    const OrderProcessingReportLog& getOrderProcessingReportLog() const { return myOrderProcessingReportLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
     void setBidBook(const DescOrderBook& bidBook) { myBidBook = bidBook; }
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
     void setMarketQueue(const MarketQueue& marketQueue) { myMarketQueue = marketQueue; }
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
+    void setOrderProcessingReportLog(const OrderProcessingReportLog& orderProcessingReportLog) { myOrderProcessingReportLog = orderProcessingReportLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
     std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const override;
@@ -134,6 +138,7 @@ public:
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
     virtual void init() override;
+    virtual void build() override;
     virtual void reset() override;
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const override;
     virtual std::string getAsJson() const override;
@@ -144,6 +149,7 @@ protected:
     AscOrderBookSize& getAskBookSize() { return myAskBookSize; }
     MarketQueue& getMarketQueue() { return myMarketQueue; }
     TradeLog& getTradeLog() { return myTradeLog; }
+    OrderProcessingReportLog& getOrderProcessingReportLog() { return myOrderProcessingReportLog; }
     RemovedLimitOrderLog& getRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
     OrderIndex& getLimitOrderLookup() { return myLimitOrderLookup; }
 private:
@@ -154,8 +160,11 @@ private:
     AscOrderBookSize myAskBookSize;
     MarketQueue myMarketQueue;
     TradeLog myTradeLog;
+    OrderProcessingReportLog myOrderProcessingReportLog;
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
+    // the order processing callback can be as complicated as it gets (e.g. the report routed to various handlers)
+    // but the exposed interface must be simple
     std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> myOrderProcessingCallback;
 };
 
