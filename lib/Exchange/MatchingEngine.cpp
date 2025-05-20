@@ -133,14 +133,14 @@ std::shared_ptr<Market::TradeBase> MatchingEngineBase::getLastTrade() const {
 
 void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderBase>& order) {
     if (!order)
-        Error::LIB_THROW("MatchingEngineBase::process: order is null.");
+        Error::LIB_THROW("[MatchingEngineBase::process] Order is null.");
     order->submit(*this); // relegate the order processing to OrderBase since it knows about the order type
 }
 
 void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventBase>& event) {
     // the hardcore order processing engine that interacts with external order event streams
     if (!event)
-        Error::LIB_THROW("MatchingEngineBase::process: order event is null.");
+        Error::LIB_THROW("[MatchingEngineBase::process] Order event is null.");
     if (event->isSubmit()) {
         process(event->getOrder());
         return;
@@ -182,13 +182,13 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             myLimitOrderLookup.erase(it);
             queue->erase(orderIt);
             if (order->isBuy()) {
-                myBidBookSize[oldPrice] -= order->getQuantity();
+                myBidBookSize[oldPrice] -= oldQuantity;
                 if (myBidBookSize[oldPrice] == 0) {
                     myBidBookSize.erase(oldPrice);
                     myBidBook.erase(oldPrice);
                 }
             } else {
-                myAskBookSize[oldPrice] -= order->getQuantity();
+                myAskBookSize[oldPrice] -= oldQuantity;
                 if (myAskBookSize[oldPrice] == 0) {
                     myAskBookSize.erase(oldPrice);
                     myAskBook.erase(oldPrice);
