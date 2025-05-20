@@ -6,6 +6,9 @@
 
 namespace Exchange {
 enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NULL_ORDER_MATCHING_STRATEGY };
+enum class OrderProcessingType   { EXECUTION, SUBMISSION, CANCEL, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
+enum class OrderProcessingStatus { SUCCESS, FAILURE, NULL_ORDER_PROCESSING_STATUS };
+enum class OrderExecutionType    { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
 
 std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy);
 std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy);
@@ -52,6 +55,96 @@ private:
     bool myShowRemovedLimitOrderLog = true;
     bool myShowOrderLookup = true;
     bool myDebugMode = false;
+};
+
+// NASDAQ ITCH-like compact order processing reports disseminated to OrderEventManager
+struct OrderProcessingReport {
+    OrderProcessingReport() = delete;
+    OrderProcessingReport(
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const OrderProcessingType orderProcessingType,
+        const OrderProcessingStatus status,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        timestamp(timestamp), orderId(orderId), orderSide(orderSide), orderProcessingType(orderProcessingType),
+        status(status), latency(latency), message(message) {}
+    uint64_t timestamp;
+    uint64_t orderId;
+    Market::Side orderSide;
+    OrderProcessingType orderProcessingType;
+    OrderProcessingStatus status;
+    std::optional<uint64_t> latency = std::nullopt;
+    std::optional<std::string> message = std::nullopt;
+};
+
+struct OrderExecutionReport : public OrderProcessingReport {
+    OrderExecutionReport() = delete;
+    OrderExecutionReport(
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const uint64_t tradeId,
+        const uint32_t filledQuantity,
+        const double filledPrice,
+        const bool isMakerOrder,
+        const OrderExecutionType orderExecutionType,
+        const OrderProcessingStatus status,
+        const std::shared_ptr<Market::TradeBase>& trade = nullptr,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::EXECUTION, status, latency, message),
+        tradeId(tradeId), filledQuantity(filledQuantity), filledPrice(filledPrice), isMakerOrder(isMakerOrder),
+        orderExecutionType(orderExecutionType), trade(trade) {}
+    uint64_t tradeId;
+    uint32_t filledQuantity;
+    double filledPrice;
+    bool isMakerOrder; // if the order is a resting maker order
+    OrderExecutionType orderExecutionType;
+    std::shared_ptr<Market::TradeBase> trade = nullptr;
+};
+
+struct OrderCancelReport : public OrderProcessingReport {
+    OrderCancelReport() = delete;
+    OrderCancelReport(
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const OrderProcessingStatus status,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message) {}
+};
+
+struct OrderModifyPriceReport : public OrderProcessingReport {
+    OrderModifyPriceReport() = delete;
+    OrderModifyPriceReport(
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const double modifiedPrice,
+        const OrderProcessingStatus status,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::MODIFY_PRICE, status, latency, message),
+        modifiedPrice(modifiedPrice) {}
+    double modifiedPrice;
+};
+
+struct OrderModifyQuantityReport : public OrderProcessingReport {
+    OrderModifyQuantityReport() = delete;
+    OrderModifyQuantityReport(
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const uint32_t modifiedQuantity,
+        const OrderProcessingStatus status = OrderProcessingStatus::NULL_ORDER_PROCESSING_STATUS,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::MODIFY_QUANTITY, status, latency, message),
+        modifiedQuantity(modifiedQuantity) {}
+    uint32_t modifiedQuantity;
 };
 }
 

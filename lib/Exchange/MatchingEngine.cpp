@@ -150,7 +150,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         auto& queueOrderPair = it->second;
         auto& queue = queueOrderPair.first;
         auto& orderIt = queueOrderPair.second;
-        auto& order = *orderIt;
+        auto order = *orderIt; // owns the order so that erasal in LimitQueue keeps the order existent
         const double oldPrice = order->getPrice();
         const uint32_t oldQuantity = order->getQuantity();
         order->executeOrderEvent(*event);
@@ -418,8 +418,8 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
         if (myOrderExecutionCallback) {
             const OrderExecutionType takerOrderExecType = unfilledQuantity == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
             const OrderExecutionType makerOrderExecType = matchOrder->getQuantity() == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
-            myOrderExecutionCallback({trade->getTimestamp(), orderId, trade->getId(), trade->getQuantity(), trade->getPrice(), false, order->getSide(), takerOrderExecType}); // incoming taker order
-            myOrderExecutionCallback({trade->getTimestamp(), matchOrderId, trade->getId(), trade->getQuantity(), trade->getPrice(), true, matchOrder->getSide(), makerOrderExecType}); // resting maker order (limit order)
+            myOrderExecutionCallback({trade->getTimestamp(), orderId, order->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType, OrderProcessingStatus::SUCCESS}); // incoming taker order
+            myOrderExecutionCallback({trade->getTimestamp(), matchOrderId, matchOrder->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType, OrderProcessingStatus::SUCCESS}); // resting maker order (limit order)
         }
         if (isDebugMode())
             *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
