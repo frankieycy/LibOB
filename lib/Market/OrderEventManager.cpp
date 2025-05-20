@@ -20,7 +20,7 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
     myMatchingEngine = matchingEngine;
     myWorldClock = matchingEngine->getWorldClock();
     myDebugMode = matchingEngine->isDebugMode();
-    matchingEngine->setOrderExecutionCallback([this](const Exchange::OrderExecutionReport& report) { onExecutionReport(report); });
+    matchingEngine->setOrderExecutionCallback([this](const Exchange::OrderExecutionReport& report) { onOrderExecutionReport(report); });
 }
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
@@ -116,7 +116,7 @@ std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrd
     return event;
 }
 
-void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionReport& report) {
+void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutionReport& report) {
     if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
         const auto& it = myActiveOrders.find(report.orderId);
         if (it != myActiveOrders.end()) {
@@ -132,6 +132,15 @@ void OrderEventManagerBase::onExecutionReport(const Exchange::OrderExecutionRepo
         }
     }
 }
+
+void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitReport& /* report */) {}
+
+void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& /* report */) {}
+
+void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& /* report */) {}
+
+void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& /* report */) {}
+
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
     out << "============================= Active Orders Snapshot ============================\n";
