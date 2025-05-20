@@ -234,7 +234,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
         } else {
             uint level = 1;
             out << "================= Bid Book Snapshot ===================\n";
-            out << " Level || BID Price | BID Size | BID Order (Time, Size)\n";
+            out << " Level || BID Price | BID Size | BID Order (Id,Time|Size)\n";
             out << "-------------------------------------------------------\n";
             while (bidIt != myBidBook.end()) {
                 out << std::setw(6) << level << " || "
@@ -243,7 +243,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 uint32_t bidSize = myBidBookSize.at(bidIt->first);
                 out << std::setw(8) << bidSize << " | ";
                 for (const auto& order : bidIt->second) {
-                    out << "(" << order->getTimestamp() << ", " << order->getQuantity() << ") ";
+                    out << "(" << order->getId() << "," << order->getTimestamp() << "|" << order->getQuantity() << ") ";
                 }
                 out << "\n";
                 ++bidIt;
@@ -253,7 +253,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             out << "-------------------------------------------------------\n";
             level = 1;
             out << "================= Ask Book Snapshot ===================\n";
-            out << " Level || ASK Price | ASK Size | ASK Order (Time, Size)\n";
+            out << " Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)\n";
             out << "-------------------------------------------------------\n";
             while (askIt != myAskBook.end()) {
                 out << std::setw(6) << level << " || "
@@ -262,7 +262,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 uint32_t askSize = myAskBookSize.at(askIt->first);
                 out << std::setw(8) << askSize << " | ";
                 for (const auto& order : askIt->second) {
-                    out << "(" << order->getTimestamp() << ", " << order->getQuantity() << ") ";
+                    out << "(" << order->getId() << "," << order->getTimestamp() << "|" << order->getQuantity() << ") ";
                 }
                 out << "\n";
                 ++askIt;
