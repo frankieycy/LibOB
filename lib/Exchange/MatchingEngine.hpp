@@ -19,7 +19,10 @@ using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>; // permits O(1) order access for cancellation and modification
 
 enum class OrderExecutionType { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
+enum class OrderOperationType { CANCEL, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_OPERATION_TYPE };
+enum class OrderOperationStatus { SUCCESS, FAILURE, NULL_ORDER_OPERATION_STATUS };
 
+// NASDAQ ITCH-like compact order reports disseminated to the OrderEventManager
 struct OrderExecutionReport {
     uint64_t timestamp;
     uint64_t orderId;
@@ -31,6 +34,19 @@ struct OrderExecutionReport {
     OrderExecutionType orderExecutionType;
     std::optional<uint64_t> latency = std::nullopt;
     std::shared_ptr<Market::TradeBase> trade = nullptr;
+};
+
+struct OrderSubmissionReport;
+
+struct OrderOperationReport {
+    uint64_t timestamp;
+    uint64_t orderId;
+    Market::Side orderSide;
+    OrderOperationType orderOperationType;
+    OrderOperationStatus status = OrderOperationStatus::SUCCESS;
+    std::optional<uint32_t> modifiedQuantity = std::nullopt;
+    std::optional<double> modifiedPrice = std::nullopt;
+    std::optional<std::string> message = std::nullopt;
 };
 
 class IMatchingEngine {
