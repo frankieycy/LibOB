@@ -1,8 +1,15 @@
+#include "Utils/Utils.hpp"
 #include "Tests/TestMatchingEngine.hpp"
 
+namespace {
+inline void printProgramOpening() { Utils::IO::printLibOBBanner(std::cout); }
+}
+
 int main() {
+    printProgramOpening();
     // Tests::MatchingEngine::testMatchingEngineSimpleBook();
     // Tests::MatchingEngine::testMatchingEngineOrderEventManager();
-    Tests::MatchingEngine::testMatchingEngineRandomOrders();
+    // Tests::MatchingEngine::testMatchingEngineRandomOrders();
+    Tests::MatchingEngine::testMatchingEngineOrderCancelModify();
     return 0;
 }
