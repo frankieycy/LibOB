@@ -69,7 +69,7 @@ OrderSubmitEvent::OrderSubmitEvent(const uint64_t eventId, const uint64_t orderI
 
 void OrderSubmitEvent::init() {
     if (!getOrder())
-        Error::LIB_THROW("OrderSubmitEvent: order is null.");
+        Error::LIB_THROW("[OrderSubmitEvent::init] Order is null.");
     setEventType(OrderEventType::SUBMIT);
 }
 
@@ -118,7 +118,7 @@ void OrderFillEvent::applyTo(LimitOrder& order) const {
 
 void OrderFillEvent::init() {
     if (myFillPrice < 0)
-        Error::LIB_THROW("OrderFillEvent: price cannot be negative.");
+        Error::LIB_THROW("[OrderFillEvent::init] Price cannot be negative.");
     setEventType(OrderEventType::FILL);
 }
 
@@ -159,7 +159,7 @@ void OrderModifyPriceEvent::applyTo(LimitOrder& order) const {
 
 void OrderModifyPriceEvent::init() {
     if (myModifiedPrice < 0)
-        Error::LIB_THROW("OrderModifyPriceEvent: price cannot be negative.");
+        Error::LIB_THROW("[OrderModifyPriceEvent::init] Price cannot be negative.");
     setEventType(OrderEventType::MODIFY_PRICE);
 }
 

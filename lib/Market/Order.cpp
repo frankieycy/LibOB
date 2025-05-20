@@ -94,9 +94,9 @@ void LimitOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
 
 void LimitOrder::init() {
     if (getSide() == Side::NULL_SIDE)
-        Error::LIB_THROW("LimitOrder: side cannot be null.");
+        Error::LIB_THROW("[LimitOrder::init] Side cannot be null.");
     if (myPrice < 0)
-        Error::LIB_THROW("LimitOrder: price cannot be negative.");
+        Error::LIB_THROW("[LimitOrder::init] Price cannot be negative.");
     setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::LIMIT);
 }
@@ -149,7 +149,7 @@ void MarketOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
 
 void MarketOrder::init() {
     if (getSide() == Side::NULL_SIDE)
-        Error::LIB_THROW("MarketOrder: side cannot be null.");
+        Error::LIB_THROW("[MarketOrder::init] Side cannot be null.");
     setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::MARKET);
 }
