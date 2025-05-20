@@ -129,6 +129,7 @@ void testMatchingEngineOrderCancelModify() {
     em.modifyOrderPrice(2, 100.0);
     em.modifyOrderPrice(4, 95.0);
     em.modifyOrderPrice(5, 102.0);
+    em.modifyOrderPrice(7, 102.0);
     em.modifyOrderPrice(7, 103.0);
     em.modifyOrderPrice(9, 100.0);
     // TODO: modify quantity
