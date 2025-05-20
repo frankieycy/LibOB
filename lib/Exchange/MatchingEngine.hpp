@@ -66,7 +66,7 @@ public:
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
-    virtual void setOrderExecutionCallback(std::function<void(const OrderExecutionReport&)> callback) = 0;
+    virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
     virtual void init() = 0;
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
@@ -132,7 +132,7 @@ public:
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
-    virtual void setOrderExecutionCallback(std::function<void(const OrderExecutionReport&)> callback) override { this->myOrderExecutionCallback = callback; }
+    virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
     virtual void init() override;
     virtual void reset() override;
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const override;
@@ -156,7 +156,7 @@ private:
     TradeLog myTradeLog;
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
-    std::function<void(const OrderExecutionReport&)> myOrderExecutionCallback;
+    std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> myOrderProcessingCallback;
 };
 
 class MatchingEngineFIFO : public MatchingEngineBase {

@@ -20,7 +20,7 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
     myMatchingEngine = matchingEngine;
     myWorldClock = matchingEngine->getWorldClock();
     myDebugMode = matchingEngine->isDebugMode();
-    matchingEngine->setOrderExecutionCallback([this](const Exchange::OrderExecutionReport& report) { onOrderExecutionReport(report); });
+    matchingEngine->setOrderProcessingCallback([this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) { report->dispatchTo(*this); });
 }
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
@@ -117,6 +117,8 @@ std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrd
 }
 
 void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutionReport& report) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order execution report received.";
     if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
         const auto& it = myActiveOrders.find(report.orderId);
         if (it != myActiveOrders.end()) {
@@ -133,13 +135,25 @@ void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutio
     }
 }
 
-void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitReport& /* report */) {}
+void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitReport& /* report */) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received.";
+}
 
-void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& /* report */) {}
+void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& /* report */) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel report received.";
+}
 
-void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& /* report */) {}
+void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& /* report */) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify price report received.";
+}
 
-void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& /* report */) {}
+void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& /* report */) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify quantity report received.";
+}
 
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
