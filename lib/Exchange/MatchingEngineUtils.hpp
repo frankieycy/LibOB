@@ -83,6 +83,7 @@ struct OrderProcessingReport {
         status(status), latency(latency), message(message) {}
     virtual ~OrderProcessingReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const = 0;
+    virtual std::string getAsJson() const = 0;
     uint64_t timestamp;
     uint64_t orderId;
     Market::Side orderSide;
@@ -112,6 +113,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
         orderExecutionType(orderExecutionType), trade(trade) {}
     virtual ~OrderExecutionReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::string getAsJson() const override;
     uint64_t tradeId;
     uint32_t filledQuantity;
     double filledPrice;
@@ -146,6 +148,7 @@ struct OrderCancelReport : public OrderProcessingReport {
         OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message) {}
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::string getAsJson() const override;
 };
 
 struct OrderModifyPriceReport : public OrderProcessingReport {
@@ -162,6 +165,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
         modifiedPrice(modifiedPrice) {}
     virtual ~OrderModifyPriceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::string getAsJson() const override;
     double modifiedPrice;
 };
 
@@ -179,8 +183,11 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
         modifiedQuantity(modifiedQuantity) {}
     virtual ~OrderModifyQuantityReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::string getAsJson() const override;
     uint32_t modifiedQuantity;
 };
+
+std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& event);
 }
 
 #endif
