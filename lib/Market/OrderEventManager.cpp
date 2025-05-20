@@ -15,7 +15,7 @@ std::ostream& operator<<(std::ostream& out, const OrderEventManagerBase& manager
 
 OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) {
     if (!matchingEngine)
-        Error::LIB_THROW("OrderEventManagerBase: matching engine is null.");
+        Error::LIB_THROW("[OrderEventManagerBase] Matching engine is null.");
     mySyncClockWithEngine = true;
     myMatchingEngine = matchingEngine;
     myWorldClock = matchingEngine->getWorldClock();
@@ -24,6 +24,10 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
 }
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
+    if (!event) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.";
+        return;
+    }
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event submitted: " << *event;
     myMatchingEngine->process(event);
@@ -50,29 +54,35 @@ std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createMarketOrderSubmit
 
 std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(const uint64_t orderId) {
     const auto& it = myActiveOrders.find(orderId);
-    if (it == myActiveOrders.end())
-        Error::LIB_THROW("OrderEventManagerBase::createOrderCancelEvent: order not found.");
+    if (it == myActiveOrders.end()) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderCancelEvent] Order not found - orderId = " << orderId << ".";
+        return nullptr;
+    }
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp());
+    const auto& event = std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick());
     myActiveOrders.erase(it);
     return event;
 }
 
 std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice) {
     const auto& it = myActiveOrders.find(orderId);
-    if (it == myActiveOrders.end())
-        Error::LIB_THROW("OrderEventManagerBase::createOrderModifyPriceEvent: order not found.");
+    if (it == myActiveOrders.end()) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyPriceEvent] Order not found - orderId = " << orderId << ".";
+        return nullptr;
+    }
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), modifiedPrice);
+    const auto& event = std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedPrice);
     return event;
 }
 
 std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity) {
     const auto& it = myActiveOrders.find(orderId);
-    if (it == myActiveOrders.end())
-        Error::LIB_THROW("OrderEventManagerBase::createOrderModifyQuantityEvent: order not found.");
+    if (it == myActiveOrders.end()) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyQuantityEvent] Order not found - orderId = " << orderId << ".";
+        return nullptr;
+    }
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), modifiedQuantity);
+    const auto& event = std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedQuantity);
     return event;
 }
 
