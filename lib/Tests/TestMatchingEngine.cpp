@@ -108,7 +108,30 @@ void testMatchingEngineRandomOrders() {
 }
 
 void testMatchingEngineOrderCancelModify() {
-    // TODO
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>(true);
+    Market::OrderEventManagerBase em{e};
+    em.setPrintOrderBookPerOrderSubmit(true);
+    em.submitLimitOrderEvent(Market::Side::BUY, 15, 99.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 5, 99.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 10, 98.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 5, 98.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 10, 97.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 10, 101.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 10, 101.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 15, 102.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 10, 103.0);
+    // cancel
+    em.cancelOrder(0);
+    em.cancelOrder(1);
+    em.cancelOrder(8);
+    em.cancelOrder(9);
+    // modify price
+    em.modifyOrderPrice(2, 100.0);
+    em.modifyOrderPrice(4, 95.0);
+    em.modifyOrderPrice(5, 102.0);
+    em.modifyOrderPrice(7, 103.0);
+    em.modifyOrderPrice(9, 100.0);
+    // TODO: modify quantity
 }
 
 void testMatchingEngineZeroIntelligence() {
