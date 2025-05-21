@@ -10,6 +10,7 @@
     - ok, ability to cast Enum as string, `to_string`
     - ok, write up `Logger` class, use it for debug logging
     - ok, add `LogLevel` to logger to enable `logger << LogLevel::INFO << ...`
+    - break Utils.hpp into smaller specific util files when the set of functions becomes big enough
 * `Utils::Counter::TimestampHandlerBase`
     - ok, world clock synchronized over `MatchingEngine` and `OrderEventManager`
     - ok, unified timestamp generation function `tick()`
@@ -22,12 +23,12 @@
     - ok, move updated orders to the back of limit queue
     - ok, override incoming orders or order updates with the internal clock
     - ok, make `fillOrderByMatchingLimitQueue` etc. as class member function
-    - order matching test cases
+    - order matching test cases - submit, matching, cancel, modify, callback etc.
 * `Market::OrderEventManager`
     - ok, unified interface for order submmit, cancel, modify etc.
     - ok, take in a `TimestampHandlerBase` ptr
     - ok, order id handler
-    - sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
+    - ok, sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
 
 ### Analytics
 
