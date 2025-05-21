@@ -40,6 +40,7 @@ public:
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; myOrderBookDisplayConfig.setDebugMode(debugMode); }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
+    uint64_t generateReportId() { return myReportIdHandler.generateId(); }
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     virtual std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const = 0;
     virtual std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const = 0;
@@ -75,12 +76,14 @@ public:
     virtual std::string getAsJson() const = 0;
 protected:
     Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
+    Utils::Counter::IdHandlerBase& getReportIdHandler() { return myReportIdHandler; }
 private:
     std::string mySymbol;
     std::string myExchangeId;
     OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
     OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
     Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
+    Utils::Counter::IdHandlerBase myReportIdHandler = Utils::Counter::IdHandlerBase();
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>(); // maintains an internal clock that restamps orders upon order events (submit, cancel, etc.)
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     bool myDebugMode = false;

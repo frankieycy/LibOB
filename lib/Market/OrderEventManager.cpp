@@ -40,16 +40,12 @@ void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_p
 
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price) {
     const auto& order = std::make_shared<LimitOrder>(myOrderIdHandler.generateId(), clockTick(), side, quantity, Maths::roundPriceToTick(price, myMinimumPriceTick));
-    const auto& event = std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
-    myActiveOrders[order->getId()] = order;
-    return event;
+    return std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
 }
 
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createMarketOrderSubmitEvent(const Side side, const uint32_t quantity) {
     const auto& order = std::make_shared<MarketOrder>(myOrderIdHandler.generateId(), clockTick(), side, quantity);
-    const auto& event = std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
-    myActiveOrders[order->getId()] = order;
-    return event;
+    return std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
 }
 
 std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(const uint64_t orderId) {
@@ -59,9 +55,7 @@ std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(
         return nullptr;
     }
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick());
-    myActiveOrders.erase(it);
-    return event;
+    return std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick());
 }
 
 std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice) {
@@ -71,8 +65,7 @@ std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyP
         return nullptr;
     }
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedPrice);
-    return event;
+    return std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedPrice);
 }
 
 std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity) {
@@ -82,8 +75,7 @@ std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::createOrderModi
         return nullptr;
     }
     const auto& order = it->second;
-    const auto& event = std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedQuantity);
-    return event;
+    return std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedQuantity);
 }
 
 std::shared_ptr<const OrderSubmitEvent> OrderEventManagerBase::submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price) {
@@ -118,7 +110,11 @@ std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrd
 
 void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutionReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order execution report received.";
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderExecutionReport] Order execution report received: " << report;
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderExecutionReport] Order execution report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
+    }
     if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
         const auto& it = myActiveOrders.find(report.orderId);
         if (it != myActiveOrders.end()) {
@@ -135,26 +131,53 @@ void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutio
     }
 }
 
-void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitReport& /* report */) {
+void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received.";
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderSubmitReport] Order submit report received: " << report;
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderSubmitReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
+    }
+    myActiveOrders[report.order->getId()] = report.order->clone();
 }
 
-void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& /* report */) {
+void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel report received.";
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::OrderCancelReport] Order cancel report received: " << report;
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::OrderCancelReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
+    }
+    const auto& it = myActiveOrders.find(report.orderId);
+    if (it != myActiveOrders.end())
+        myActiveOrders.erase(it);
+    else
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::OrderCancelReport] Order not found in active orders - orderId = " << report.orderId;
 }
 
-void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& /* report */) {
+void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify price report received.";
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderModifyPriceReport] Order modify price report received: " << report;
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyPriceReport] Order modify price report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
+    }
+    const auto& it = myActiveOrders.find(report.orderId);
+    if (it != myActiveOrders.end()) {
+        // TODO
+    } else
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyPriceReport] Order not found in active orders - orderId = " << report.orderId;
 }
 
-void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& /* report */) {
+void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify quantity report received.";
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order modify quantity report received.";
+    const auto& it = myActiveOrders.find(report.orderId);
+    if (it != myActiveOrders.end()) {
+        // TODO
+    } else
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order not found in active orders - orderId = " << report.orderId;
 }
-
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
     out << "============================= Active Orders Snapshot ============================\n";

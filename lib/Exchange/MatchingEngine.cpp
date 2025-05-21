@@ -143,6 +143,8 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         Error::LIB_THROW("[MatchingEngineBase::process] Order event is null.");
     if (event->isSubmit()) {
         process(event->getOrder());
+        if (myOrderProcessingCallback)
+            myOrderProcessingCallback(std::make_shared<OrderSubmitReport>(generateReportId(), clockTick(), event->getOrderId(), event->getOrder()->getSide(), event->getOrder(), OrderProcessingStatus::SUCCESS));
         return;
     }
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
@@ -177,6 +179,9 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                     myAskBook.erase(oldPrice);
                 }
             }
+            if (myOrderProcessingCallback) {
+                // TODO
+            }
         } else {
             myRemovedLimitOrderLog.push_back(order);
             myLimitOrderLookup.erase(it);
@@ -194,6 +199,8 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                     myAskBook.erase(oldPrice);
                 }
             }
+            if (myOrderProcessingCallback)
+                myOrderProcessingCallback(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), OrderProcessingStatus::SUCCESS));
         }
     }
 }
@@ -423,8 +430,8 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
         if (myOrderProcessingCallback) {
             const OrderExecutionType takerOrderExecType = unfilledQuantity == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
             const OrderExecutionType makerOrderExecType = matchOrder->getQuantity() == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
-            myOrderProcessingCallback(std::make_shared<OrderExecutionReport>(trade->getTimestamp(), orderId, order->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming taker order
-            myOrderProcessingCallback(std::make_shared<OrderExecutionReport>(trade->getTimestamp(), matchOrderId, matchOrder->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting maker order (limit order)
+            myOrderProcessingCallback(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), orderId, order->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming taker order
+            myOrderProcessingCallback(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), matchOrderId, matchOrder->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting maker order (limit order)
         }
         if (isDebugMode())
             *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
