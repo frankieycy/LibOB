@@ -66,6 +66,7 @@ private:
 };
 
 inline void LIB_THROW(const std::string& message) { throw LibException(message); }
+inline void LIB_ASSERT(const bool condition, const std::string& message) { if (!condition) LIB_THROW(message); }
 }
 
 namespace Consts {
