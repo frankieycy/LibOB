@@ -136,6 +136,7 @@ public:
     std::shared_ptr<const Market::TradeBase> getLastTrade() const override;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) override;
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) override;
+    virtual void executeAgainstQueuedMarketOrders(const std::shared_ptr<Market::LimitOrder>& order, uint32_t& unfilledQuantity, MarketQueue& marketQueue);
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
@@ -161,7 +162,7 @@ private:
     AscOrderBook myAskBook;
     DescOrderBookSize myBidBookSize;
     AscOrderBookSize myAskBookSize;
-    MarketQueue myMarketQueue;
+    MarketQueue myMarketQueue; // empty most of the time
     TradeLog myTradeLog;
     OrderProcessingReportLog myOrderProcessingReportLog;
     RemovedLimitOrderLog myRemovedLimitOrderLog;
