@@ -52,7 +52,7 @@ public:
     void setShowTradeLog(const bool showTradeLog) { myShowTradeLog = showTradeLog; }
     void setShowRemovedLimitOrderLog(const bool showRemovedLimitOrderLog) { myShowRemovedLimitOrderLog = showRemovedLimitOrderLog; }
     void setShowOrderLookup(const bool showOrderLookup) { myShowOrderLookup = showOrderLookup; }
-    void setDebugMode(const bool debugMode) { myDebugMode = debugMode; } // TODO: default values of config parameters
+    void setDebugMode(const bool debugMode);
 private:
     uint16_t myOrderBookLevels = 5;
     uint16_t myMarketQueueLevels = 10;

@@ -53,8 +53,12 @@ std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderPr
 
 std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType) { return out << to_string(orderExecutionType); }
 
-OrderBookDisplayConfig::OrderBookDisplayConfig(const bool debugMode) :
-    myDebugMode(debugMode) {
+OrderBookDisplayConfig::OrderBookDisplayConfig(const bool debugMode) : OrderBookDisplayConfig() {
+    setDebugMode(debugMode);
+}
+
+void OrderBookDisplayConfig::setDebugMode(const bool debugMode) {
+    myDebugMode = debugMode;
     if (myDebugMode) {
         myOrderBookLevels = 20;
         myMarketQueueLevels = 20;
