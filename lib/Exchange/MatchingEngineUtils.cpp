@@ -81,6 +81,7 @@ void OrderExecutionReport::dispatchTo(Market::OrderEventManagerBase& orderEventM
 std::string OrderExecutionReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
+        "\"ReportId\":"              << reportId             << ","
         "\"Timestamp\":"             << timestamp            << ","
         "\"OrderId\":"               << orderId              << ","
         "\"OrderSide\":\""           << orderSide            << "\","
@@ -100,9 +101,10 @@ void OrderSubmitReport::dispatchTo(Market::OrderEventManagerBase& orderEventMana
     orderEventManager.onOrderSubmitReport(*this);
 }
 
-std::string OrderCancelReport::getAsJson() const {
+std::string OrderSubmitReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
+        "\"ReportId\":"              << reportId             << ","
         "\"Timestamp\":"             << timestamp            << ","
         "\"OrderId\":"               << orderId              << ","
         "\"OrderSide\":\""           << orderSide            << "\","
@@ -117,13 +119,13 @@ void OrderCancelReport::dispatchTo(Market::OrderEventManagerBase& orderEventMana
     orderEventManager.onOrderCancelReport(*this);
 }
 
-std::string OrderModifyPriceReport::getAsJson() const {
+std::string OrderCancelReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
+        "\"ReportId\":"              << reportId             << ","
         "\"Timestamp\":"             << timestamp            << ","
         "\"OrderId\":"               << orderId              << ","
         "\"OrderSide\":\""           << orderSide            << "\","
-        "\"ModifiedPrice\":"         << modifiedPrice        << ","
         "\"Status\":\""              << status               << "\","
         "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
         "\"Message\":\""             << message.value_or("") << "\"";
@@ -135,13 +137,14 @@ void OrderModifyPriceReport::dispatchTo(Market::OrderEventManagerBase& orderEven
     orderEventManager.onOrderModifyPriceReport(*this);
 }
 
-std::string OrderModifyQuantityReport::getAsJson() const {
+std::string OrderModifyPriceReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
+        "\"ReportId\":"              << reportId             << ","
         "\"Timestamp\":"             << timestamp            << ","
         "\"OrderId\":"               << orderId              << ","
         "\"OrderSide\":\""           << orderSide            << "\","
-        "\"ModifiedQuantity\":"       << modifiedQuantity     << ","
+        "\"ModifiedPrice\":"         << modifiedPrice        << ","
         "\"Status\":\""              << status               << "\","
         "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
         "\"Message\":\""             << message.value_or("") << "\"";
@@ -153,12 +156,14 @@ void OrderModifyQuantityReport::dispatchTo(Market::OrderEventManagerBase& orderE
     orderEventManager.onOrderModifyQuantityReport(*this);
 }
 
-std::string OrderProcessingReport::getAsJson() const {
+std::string OrderModifyQuantityReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
+        "\"ReportId\":"              << reportId             << ","
         "\"Timestamp\":"             << timestamp            << ","
         "\"OrderId\":"               << orderId              << ","
         "\"OrderSide\":\""           << orderSide            << "\","
+        "\"ModifiedQuantity\":"      << modifiedQuantity     << ","
         "\"Status\":\""              << status               << "\","
         "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
         "\"Message\":\""             << message.value_or("") << "\"";

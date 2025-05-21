@@ -72,6 +72,7 @@ private:
 struct OrderProcessingReport {
     OrderProcessingReport() = delete;
     OrderProcessingReport(
+        const uint64_t reportId,
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
@@ -79,11 +80,12 @@ struct OrderProcessingReport {
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        timestamp(timestamp), orderId(orderId), orderSide(orderSide), orderProcessingType(orderProcessingType),
+        reportId(reportId), timestamp(timestamp), orderId(orderId), orderSide(orderSide), orderProcessingType(orderProcessingType),
         status(status), latency(latency), message(message) {}
     virtual ~OrderProcessingReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const = 0;
     virtual std::string getAsJson() const = 0;
+    uint64_t reportId;
     uint64_t timestamp;
     uint64_t orderId;
     Market::Side orderSide;
@@ -96,6 +98,7 @@ struct OrderProcessingReport {
 struct OrderExecutionReport : public OrderProcessingReport {
     OrderExecutionReport() = delete;
     OrderExecutionReport(
+        const uint64_t reportId,
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
@@ -108,7 +111,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
         const std::shared_ptr<const Market::TradeBase>& trade = nullptr,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::EXECUTE, status, latency, message),
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::EXECUTE, status, latency, message),
         tradeId(tradeId), filledQuantity(filledQuantity), filledPrice(filledPrice), isMakerOrder(isMakerOrder),
         orderExecutionType(orderExecutionType), trade(trade) {}
     virtual ~OrderExecutionReport() = default;
@@ -125,6 +128,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
 struct OrderSubmitReport : public OrderProcessingReport {
     OrderSubmitReport() = delete;
     OrderSubmitReport(
+        const uint64_t reportId,
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
@@ -132,23 +136,25 @@ struct OrderSubmitReport : public OrderProcessingReport {
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::SUBMIT, status, latency, message),
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::SUBMIT, status, latency, message),
         order(order) {}
     virtual ~OrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::OrderBase> order = nullptr;
 };
 
 struct OrderCancelReport : public OrderProcessingReport {
     OrderCancelReport() = delete;
     OrderCancelReport(
+        const uint64_t reportId,
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message) {}
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message) {}
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::string getAsJson() const override;
@@ -157,6 +163,7 @@ struct OrderCancelReport : public OrderProcessingReport {
 struct OrderModifyPriceReport : public OrderProcessingReport {
     OrderModifyPriceReport() = delete;
     OrderModifyPriceReport(
+        const uint64_t reportId,
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
@@ -164,7 +171,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::MODIFY_PRICE, status, latency, message),
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::MODIFY_PRICE, status, latency, message),
         modifiedPrice(modifiedPrice) {}
     virtual ~OrderModifyPriceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
@@ -175,6 +182,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
 struct OrderModifyQuantityReport : public OrderProcessingReport {
     OrderModifyQuantityReport() = delete;
     OrderModifyQuantityReport(
+        const uint64_t reportId,
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
@@ -182,7 +190,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
         const OrderProcessingStatus status = OrderProcessingStatus::NULL_ORDER_PROCESSING_STATUS,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(timestamp, orderId, orderSide, OrderProcessingType::MODIFY_QUANTITY, status, latency, message),
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::MODIFY_QUANTITY, status, latency, message),
         modifiedQuantity(modifiedQuantity) {}
     virtual ~OrderModifyQuantityReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
