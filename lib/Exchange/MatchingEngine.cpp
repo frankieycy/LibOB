@@ -394,7 +394,7 @@ void MatchingEngineBase::executeAgainstQueuedMarketOrders(
     MarketQueue& marketQueue) {
     auto queueIt = marketQueue.begin();
     while (unfilledQuantity && queueIt != marketQueue.end()) {
-        auto& marketOrder = *queueIt;
+        auto marketOrder = *queueIt; // owns the order
         // continue if the queued market order is not a match
         if (marketOrder->isBuy() == order->isBuy()) {
             ++queueIt;
@@ -445,7 +445,7 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
     const bool isIncomingOrderBuy = order->isBuy();
     auto queueIt = matchQueue.begin();
     while (unfilledQuantity && queueIt != matchQueue.end()) {
-        auto& matchOrder = *queueIt;
+        auto matchOrder = *queueIt; // owns the order
         const uint64_t matchOrderId = matchOrder->getId();
         if (isDebugMode())
             *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Matching order: " << *matchOrder;
