@@ -118,17 +118,17 @@ std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrd
     return event;
 }
 
-void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutionReport& report) {
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderExecutionReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderExecutionReport] Order execution report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order execution report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderExecutionReport] Order execution report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order execution report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
         auto order = fetchOrder(report.orderId);
         if (!order) {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderExecutionReport] Order not found in active orders - orderId = " << report.orderId;
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
             return;
         }
         const uint32_t updatedQuantity = order->getQuantity() - report.filledQuantity;
@@ -145,30 +145,48 @@ void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutio
     }
 }
 
-void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitReport& report) {
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderSubmitReport] Order submit report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderSubmitReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
-    auto order = report.order->clone(); // keep an internal clone of the order
-    if (order->isLimitOrder())
-        myActiveLimitOrders[report.orderId] = std::static_pointer_cast<LimitOrder>(order); // TODO: bad design here, how to evade the static cast?
-    else
-        myQueuedMarketOrders[report.orderId] = std::static_pointer_cast<MarketOrder>(order);
+    if (!report.order) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order is null - orderId = " << report.orderId;
+        return;
+    }
+    auto order = report.order->copy(); // keep an internal clone of the order
+    if (order->isAlive())
+        myActiveLimitOrders[order->getId()] = order;
 }
 
-void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& report) {
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderCancelReport] Order cancel report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderCancelReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
+    }
+    if (!report.order) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order is null - orderId = " << report.orderId;
+        return;
+    }
+    auto order = report.order->copy(); // keep an internal clone of the order
+    if (order->isAlive())
+        myQueuedMarketOrders[order->getId()] = order;
+}
+
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: " << report;
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     auto order = fetchOrder(report.orderId);
     if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderCancelReport] Order not found in active orders - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
         return;
     }
     order->setOrderState(Market::OrderState::CANCELLED);
@@ -178,11 +196,11 @@ void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelRepor
         myQueuedMarketOrders.erase(report.orderId);
 }
 
-void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& report) {
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderModifyPriceReport] Order modify price report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyPriceReport] Order modify price report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify price report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     const auto& it = myActiveLimitOrders.find(report.orderId);
@@ -191,15 +209,15 @@ void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModify
         order->setPrice(report.modifiedPrice);
         // TODO: order state validity check
     } else {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyPriceReport] Order not found in active orders - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
     }
 }
 
-void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& report) {
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order modify quantity report received.";
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order modify quantity report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     const auto& it = myActiveLimitOrders.find(report.orderId);
@@ -208,7 +226,7 @@ void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderMod
         order->setQuantity(report.modifiedQuantity);
         // TODO: order state validity check
     } else
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order not found in active orders - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
 }
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {

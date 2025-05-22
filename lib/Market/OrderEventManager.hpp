@@ -38,11 +38,12 @@ public:
     std::shared_ptr<const OrderModifyPriceEvent> modifyOrderPrice(const uint64_t orderId, const double modifiedPrice);
     std::shared_ptr<const OrderModifyQuantityEvent> modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity);
     // communicates with matching engine to keep ActiveOrders in sync
-    virtual void onOrderExecutionReport(const Exchange::OrderExecutionReport& report);
-    virtual void onOrderSubmitReport(const Exchange::OrderSubmitReport& report);
-    virtual void onOrderCancelReport(const Exchange::OrderCancelReport& report);
-    virtual void onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& report);
-    virtual void onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
+    virtual void onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report);
+    virtual void onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderCancelReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
     virtual std::ostream& stateSnapshot(std::ostream& out) const;
 private:
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
