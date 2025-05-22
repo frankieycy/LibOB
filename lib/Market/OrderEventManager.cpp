@@ -157,6 +157,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::LimitOrderSu
         return;
     }
     auto order = report.order->copy(); // keep an internal clone of the order
+    order->setTimestamp(clockTick());
     if (order->isAlive())
         myActiveLimitOrders[order->getId()] = order;
 }
@@ -173,6 +174,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::MarketOrderS
         return;
     }
     auto order = report.order->copy(); // keep an internal clone of the order
+    order->setTimestamp(clockTick());
     if (order->isAlive())
         myQueuedMarketOrders[order->getId()] = order;
 }
@@ -190,6 +192,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
         return;
     }
     order->setOrderState(Market::OrderState::CANCELLED);
+    order->setTimestamp(clockTick());
     if (order->isLimitOrder())
         myActiveLimitOrders.erase(report.orderId);
     else
@@ -207,6 +210,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyP
     if (it != myActiveLimitOrders.end()) {
         auto order = it->second;
         order->setPrice(report.modifiedPrice);
+        order->setTimestamp(clockTick());
         if (!order->checkState())
             *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon price modification: " << *order;
     } else {
@@ -225,6 +229,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyQ
     if (it != myActiveLimitOrders.end()) {
         auto order = it->second;
         order->setQuantity(report.modifiedQuantity);
+        order->setTimestamp(clockTick());
         if (!order->checkState())
             *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon quantity modification: " << *order;
     } else
