@@ -16,7 +16,8 @@ public:
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> getWorldClock() const { return myWorldClock; }
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
     std::shared_ptr<const Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
-    const std::unordered_map<uint64_t, std::shared_ptr<Market::OrderBase>>& getActiveOrders() const { return myActiveOrders; }
+    const std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>>& getActiveLimitOrders() const { return myActiveLimitOrders; }
+    const std::unordered_map<uint64_t, std::shared_ptr<Market::MarketOrder>>& getQueuedMarketOrders() const { return myQueuedMarketOrders; }
     double getMinimumPriceTick() const { return myMinimumPriceTick; }
     bool isSyncClockWithEngine() const { return mySyncClockWithEngine; }
     bool isDebugMode() const { return myDebugMode; }
@@ -50,13 +51,15 @@ private:
     virtual std::shared_ptr<OrderCancelEvent> createOrderCancelEvent(const uint64_t orderId);
     virtual std::shared_ptr<OrderModifyPriceEvent> createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice);
     virtual std::shared_ptr<OrderModifyQuantityEvent> createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity);
+    virtual std::shared_ptr<OrderBase> fetchOrder(const uint64_t orderId) const;
 
     Utils::Counter::IdHandlerBase myOrderIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myEventIdHandler = Utils::Counter::IdHandlerBase();
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>();
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
-    std::unordered_map<uint64_t, std::shared_ptr<Market::OrderBase>> myActiveOrders;
+    std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>> myActiveLimitOrders;
+    std::unordered_map<uint64_t, std::shared_ptr<Market::MarketOrder>> myQueuedMarketOrders; // empty most of the time
     double myMinimumPriceTick = 0.01;
     bool mySyncClockWithEngine = false;
     bool myDebugMode = false;

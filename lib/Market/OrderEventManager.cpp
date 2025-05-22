@@ -49,33 +49,43 @@ std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createMarketOrderSubmit
 }
 
 std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(const uint64_t orderId) {
-    const auto& it = myActiveOrders.find(orderId);
-    if (it == myActiveOrders.end()) {
+    const auto& order = fetchOrder(orderId);
+    if (!order) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderCancelEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
-    const auto& order = it->second;
     return std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick());
 }
 
 std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice) {
-    const auto& it = myActiveOrders.find(orderId);
-    if (it == myActiveOrders.end()) {
+    const auto& order = fetchOrder(orderId);
+    if (!order) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyPriceEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
-    const auto& order = it->second;
-    return std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedPrice);
+    return std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), Maths::roundPriceToTick(modifiedPrice, myMinimumPriceTick));
 }
 
 std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity) {
-    const auto& it = myActiveOrders.find(orderId);
-    if (it == myActiveOrders.end()) {
+    const auto& order = fetchOrder(orderId);
+    if (!order) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyQuantityEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
-    const auto& order = it->second;
     return std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedQuantity);
+}
+
+std::shared_ptr<OrderBase> OrderEventManagerBase::fetchOrder(const uint64_t orderId) const {
+    const auto& itL = myActiveLimitOrders.find(orderId);
+    if (itL == myActiveLimitOrders.end()) {
+        const auto& itM = myQueuedMarketOrders.find(orderId);
+        if (itM == myQueuedMarketOrders.end()) {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchOrder] Order not found - orderId = " << orderId << ".";
+            return nullptr;
+        }
+        return itM->second;
+    }
+    return itL->second;
 }
 
 std::shared_ptr<const OrderSubmitEvent> OrderEventManagerBase::submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price) {
@@ -116,17 +126,21 @@ void OrderEventManagerBase::onOrderExecutionReport(const Exchange::OrderExecutio
         return;
     }
     if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
-        const auto& it = myActiveOrders.find(report.orderId);
-        if (it != myActiveOrders.end()) {
-            const auto& order = it->second;
-            const uint32_t updatedQuantity = order->getQuantity() - report.filledQuantity;
-            order->setQuantity(updatedQuantity);
-            if (updatedQuantity == 0) {
-                order->setOrderState(Market::OrderState::FILLED);
-                myActiveOrders.erase(it);
-            } else {
-                order->setOrderState(Market::OrderState::PARTIAL_FILLED);
-            }
+        auto order = fetchOrder(report.orderId);
+        if (!order) {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderExecutionReport] Order not found in active orders - orderId = " << report.orderId;
+            return;
+        }
+        const uint32_t updatedQuantity = order->getQuantity() - report.filledQuantity;
+        order->setQuantity(updatedQuantity);
+        if (updatedQuantity == 0) {
+            order->setOrderState(Market::OrderState::FILLED);
+            if (order->isLimitOrder())
+                myActiveLimitOrders.erase(report.orderId);
+            else
+                myQueuedMarketOrders.erase(report.orderId);
+        } else {
+            order->setOrderState(Market::OrderState::PARTIAL_FILLED);
         }
     }
 }
@@ -138,7 +152,11 @@ void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitRepor
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderSubmitReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
-    myActiveOrders[report.order->getId()] = report.order->clone();
+    auto order = report.order->clone();
+    if (order->isLimitOrder())
+        myActiveLimitOrders[report.orderId] = std::static_pointer_cast<LimitOrder>(order);
+    else
+        myQueuedMarketOrders[report.orderId] = std::static_pointer_cast<MarketOrder>(order);
 }
 
 void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& report) {
@@ -148,11 +166,16 @@ void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelRepor
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::OrderCancelReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
-    const auto& it = myActiveOrders.find(report.orderId);
-    if (it != myActiveOrders.end())
-        myActiveOrders.erase(it);
-    else
+    auto order = fetchOrder(report.orderId);
+    if (!order) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::OrderCancelReport] Order not found in active orders - orderId = " << report.orderId;
+        return;
+    }
+    order->setOrderState(Market::OrderState::CANCELLED);
+    if (order->isLimitOrder())
+        myActiveLimitOrders.erase(report.orderId);
+    else
+        myQueuedMarketOrders.erase(report.orderId);
 }
 
 void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModifyPriceReport& report) {
@@ -162,19 +185,22 @@ void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModify
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyPriceReport] Order modify price report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
-    const auto& it = myActiveOrders.find(report.orderId);
-    if (it != myActiveOrders.end()) {
-        // TODO
-    } else
+    const auto& it = myActiveLimitOrders.find(report.orderId);
+    if (it != myActiveLimitOrders.end()) {
+        auto order = it->second;
+        order->setPrice(report.modifiedPrice);
+    } else {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyPriceReport] Order not found in active orders - orderId = " << report.orderId;
+    }
 }
 
 void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& report) {
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order modify quantity report received.";
-    const auto& it = myActiveOrders.find(report.orderId);
-    if (it != myActiveOrders.end()) {
-        // TODO
+    const auto& it = myActiveLimitOrders.find(report.orderId);
+    if (it != myActiveLimitOrders.end()) {
+        auto order = it->second;
+        order->setQuantity(report.modifiedQuantity);
     } else
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order not found in active orders - orderId = " << report.orderId;
 }
@@ -183,7 +209,18 @@ std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
     out << "============================= Active Orders Snapshot ============================\n";
     out << "   Id   |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   \n";
     out << "---------------------------------------------------------------------------------\n";
-    for (const auto& orderPair : myActiveOrders) {
+    for (const auto& orderPair : myActiveLimitOrders) {
+        const auto& order = orderPair.second;
+        out << std::setw(6) << order->getId() << "  | "
+            << std::setw(10) << order->getTimestamp() << "  | "
+            << std::setw(9) << order->getOrderType() << "  | "
+            << std::setw(7) << order->getSide() << "  | "
+            << std::fixed << std::setprecision(2)
+            << std::setw(8) << order->getPrice() << "  | "
+            << std::setw(7) << order->getQuantity() << "  | "
+            << std::setw(8) << order->getOrderState() << "  \n";
+    }
+    for (const auto& orderPair : myQueuedMarketOrders) {
         const auto& order = orderPair.second;
         out << std::setw(6) << order->getId() << "  | "
             << std::setw(10) << order->getTimestamp() << "  | "
