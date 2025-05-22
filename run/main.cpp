@@ -7,6 +7,7 @@ inline void printProgramOpening() { Utils::IO::printLibOBBanner(std::cout); }
 
 int main() {
     printProgramOpening();
+    // Tests::MatchingEngine::testPrintOrderBookASCII();
     // Tests::MatchingEngine::testMatchingEngineSimpleBook();
     // Tests::MatchingEngine::testMatchingEngineOrderEventManager();
     // Tests::MatchingEngine::testMatchingEngineRandomOrders();
