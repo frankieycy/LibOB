@@ -3,6 +3,7 @@
 
 namespace Tests {
 namespace MatchingEngine {
+void testPrintOrderBookASCII();
 void testMatchingEngineSimpleBook();
 void testMatchingEngineOrderEventManager();
 void testMatchingEngineRandomOrders();

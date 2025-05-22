@@ -7,6 +7,16 @@
 
 namespace Tests {
 namespace MatchingEngine {
+void testPrintOrderBookASCII() {
+    std::vector<Exchange::OrderLevel> bids = {
+        {98.00, 3}, {97.57, 1}, {97.00, 7}, {96.00, 8}, {95.00, 9}, {94.00, 10}
+    };
+    std::vector<Exchange::OrderLevel> asks = {
+        {100.39, 1}, {101.46, 3}, {102.07, 2}, {107.00, 10}, {108.00, 10}, {110.00, 10}
+    };
+    std::cout << getOrderBookASCII(bids, asks);
+}
+
 void testMatchingEngineSimpleBook() {
     uint8_t orderId = 0;
     uint8_t timestamp = 0;
