@@ -34,7 +34,8 @@ std::string generateBar(uint32_t size, uint32_t maxSize, int maxWidth);
 std::string getOrderBookASCII(
     const std::vector<OrderLevel>& bidBook,
     const std::vector<OrderLevel>& askBook,
-    int barWidth = 40);
+    const int barWidth = 40,
+    const size_t maxDepth = 10);
 
 class OrderBookDisplayConfig {
 public:

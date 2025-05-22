@@ -61,19 +61,20 @@ std::string generateBar(uint32_t size, uint32_t maxSize, int maxWidth) {
 std::string getOrderBookASCII(
     const std::vector<OrderLevel>& bidBook,
     const std::vector<OrderLevel>& askBook,
-    int barWidth) {
+    const int barWidth,
+    const size_t maxDepth) {
         std::ostringstream oss;
-        const int fieldWidth = 15;
+        const int fieldWidth = 17;
         const int sideWidth = barWidth + 1 + fieldWidth;
 
-        oss << std::string(2 * sideWidth + 3, '=') << '\n';
+        oss << std::string(2 * sideWidth + 11, '=') << '\n';
         oss << std::setw(sideWidth) << std::right << "(Size | Price) BID"
-            << " | "
+            << " | Level | "
             << std::setw(sideWidth) << std::left << "ASK (Price | Size)"
             << '\n';
-        oss << std::string(2 * sideWidth + 3, '-') << '\n';
+        oss << std::string(2 * sideWidth + 11, '-') << '\n';
 
-        size_t depth = std::max(bidBook.size(), askBook.size());
+        size_t depth = std::min(std::max(bidBook.size(), askBook.size()), maxDepth);
         uint32_t maxSize = 0;
         for (const auto& b : bidBook) maxSize = std::max(maxSize, b.size);
         for (const auto& a : askBook) maxSize = std::max(maxSize, a.size);
@@ -86,8 +87,8 @@ std::string getOrderBookASCII(
                 std::string bar = generateBar(b.size, maxSize, barWidth);
                 std::ostringstream label;
                 label << std::setw(6) << b.size << " | "
-                      << std::fixed << std::setprecision(2) << std::setw(6) << b.price;
-                bidStream << std::setw(barWidth) << std::right << bar << " " << label.str();
+                      << std::fixed << std::setprecision(2) << std::setw(8) << b.price;
+                bidStream << std::right << std::setw(barWidth) << std::right << bar << " " << label.str();
             } else {
                 bidStream << std::string(sideWidth, ' ');
             }
@@ -96,7 +97,7 @@ std::string getOrderBookASCII(
                 const auto& a = askBook[i];
                 std::string bar = generateBar(a.size, maxSize, barWidth);
                 std::ostringstream label;
-                label << std::fixed << std::setprecision(2) << std::setw(6) << a.price
+                label << std::left << std::fixed << std::setprecision(2) << std::setw(8) << a.price
                       << " | " << std::setw(6) << a.size;
                 askStream << label.str() << " " << bar;
             } else {
@@ -104,12 +105,12 @@ std::string getOrderBookASCII(
             }
 
             oss << std::setw(sideWidth) << std::right << bidStream.str()
-                << " | "
+                << " | " << std::setw(5) << std::right << i + 1 << " | "
                 << std::setw(sideWidth) << std::left << askStream.str()
                 << '\n';
         }
 
-        oss << std::string(2 * sideWidth + 3, '=') << '\n';
+        oss << std::string(2 * sideWidth + 11, '=') << '\n';
         return oss.str();
 }
 
