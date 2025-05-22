@@ -59,6 +59,7 @@ public:
     virtual ~LimitOrder() = default;
     double getPrice() const override { return myPrice; }
     void setPrice(const double price) { myPrice = price; }
+    std::shared_ptr<LimitOrder> copy() const { return std::make_shared<LimitOrder>(*this); }
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;
@@ -75,6 +76,7 @@ public:
     MarketOrder(const MarketOrder& order);
     MarketOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     virtual ~MarketOrder() = default;
+    std::shared_ptr<MarketOrder> copy() const { return std::make_shared<MarketOrder>(*this); }
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<MarketOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;
