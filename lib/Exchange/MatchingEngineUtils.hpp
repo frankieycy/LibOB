@@ -24,6 +24,18 @@ std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProc
 std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderProcessingStatus);
 std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType);
 
+struct OrderLevel {
+    double price;
+    uint32_t size;
+};
+
+std::string generateBar(uint32_t size, uint32_t maxSize, int maxWidth);
+
+std::string getOrderBookASCII(
+    const std::vector<OrderLevel>& bidBook,
+    const std::vector<OrderLevel>& askBook,
+    int barWidth = 40);
+
 class OrderBookDisplayConfig {
 public:
     OrderBookDisplayConfig() = default;
