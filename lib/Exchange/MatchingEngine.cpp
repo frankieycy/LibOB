@@ -178,7 +178,10 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                 }
             }
             if (myOrderProcessingCallback) {
-                // TODO: add callback for OrderModifyReport
+                if (newPrice != oldPrice)
+                    myOrderProcessingCallback(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), newPrice, OrderProcessingStatus::SUCCESS));
+                if (newQuantity != oldQuantity)
+                    myOrderProcessingCallback(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), newQuantity, OrderProcessingStatus::SUCCESS));
             }
         } else {
             myRemovedLimitOrderLog.push_back(order);

@@ -18,7 +18,7 @@ using AscOrderBook = std::map<PriceLevel, LimitQueue>;
 using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>; // permits O(1) order access for cancellation and modification
-using OrderProcessingCallback = std::function<void(const std::shared_ptr<const OrderProcessingReport>&)>;
+using OrderProcessingCallback = std::function<void(const std::shared_ptr<const OrderProcessingReport>&)>; // communicates with OrderEventManager
 
 class IMatchingEngine {
 public:
