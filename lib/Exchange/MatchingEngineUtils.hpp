@@ -125,6 +125,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     std::shared_ptr<const Market::TradeBase> trade = nullptr;
 };
 
+// TODO: make OrderSubmitReport a base class for OrderSubmitEvent and OrderSubmitReport
 struct OrderSubmitReport : public OrderProcessingReport {
     OrderSubmitReport() = delete;
     OrderSubmitReport(

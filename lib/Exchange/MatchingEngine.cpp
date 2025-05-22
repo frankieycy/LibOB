@@ -143,7 +143,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         Error::LIB_THROW("[MatchingEngineBase::process] Order event is null.");
     if (event->isSubmit()) {
         process(event->getOrder());
-        if (myOrderProcessingCallback)
+        if (myOrderProcessingCallback) // TODO: specialize OrderSubmitReport to LimitOrder and MarketOrder disseminated from their respective process methods
             myOrderProcessingCallback(std::make_shared<OrderSubmitReport>(generateReportId(), clockTick(), event->getOrderId(), event->getOrder()->getSide(), event->getOrder(), OrderProcessingStatus::SUCCESS));
         return;
     }

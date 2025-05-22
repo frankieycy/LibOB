@@ -152,23 +152,23 @@ void OrderEventManagerBase::onOrderSubmitReport(const Exchange::OrderSubmitRepor
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderSubmitReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
-    auto order = report.order->clone();
+    auto order = report.order->clone(); // keep an internal clone of the order
     if (order->isLimitOrder())
-        myActiveLimitOrders[report.orderId] = std::static_pointer_cast<LimitOrder>(order);
+        myActiveLimitOrders[report.orderId] = std::static_pointer_cast<LimitOrder>(order); // TODO: bad design here, how to evade the static cast?
     else
         myQueuedMarketOrders[report.orderId] = std::static_pointer_cast<MarketOrder>(order);
 }
 
 void OrderEventManagerBase::onOrderCancelReport(const Exchange::OrderCancelReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::OrderCancelReport] Order cancel report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderCancelReport] Order cancel report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::OrderCancelReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderCancelReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     auto order = fetchOrder(report.orderId);
     if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::OrderCancelReport] Order not found in active orders - orderId = " << report.orderId;
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderCancelReport] Order not found in active orders - orderId = " << report.orderId;
         return;
     }
     order->setOrderState(Market::OrderState::CANCELLED);
