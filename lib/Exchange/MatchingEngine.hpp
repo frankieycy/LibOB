@@ -18,6 +18,7 @@ using AscOrderBook = std::map<PriceLevel, LimitQueue>;
 using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>; // permits O(1) order access for cancellation and modification
+using OrderProcessingCallback = std::function<void(const std::shared_ptr<const OrderProcessingReport>&)>;
 
 class IMatchingEngine {
 public:
@@ -106,6 +107,7 @@ public:
     const OrderProcessingReportLog& getOrderProcessingReportLog() const { return myOrderProcessingReportLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
+    OrderProcessingCallback getOrderProcessingCallback() const { return myOrderProcessingCallback; }
     void setBidBook(const DescOrderBook& bidBook) { myBidBook = bidBook; }
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
     void setMarketQueue(const MarketQueue& marketQueue) { myMarketQueue = marketQueue; }
@@ -169,7 +171,7 @@ private:
     OrderIndex myLimitOrderLookup;
     // the order processing callback can be as complicated as it gets (e.g. the report routed to various handlers)
     // but the exposed interface must be simple
-    std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> myOrderProcessingCallback;
+    OrderProcessingCallback myOrderProcessingCallback;
 };
 
 class MatchingEngineFIFO : public MatchingEngineBase {

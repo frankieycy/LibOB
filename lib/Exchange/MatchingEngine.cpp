@@ -143,8 +143,6 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         Error::LIB_THROW("[MatchingEngineBase::process] Order event is null.");
     if (event->isSubmit()) {
         process(event->getOrder());
-        if (myOrderProcessingCallback) // TODO: specialize OrderSubmitReport to LimitOrder and MarketOrder disseminated from their respective process methods
-            myOrderProcessingCallback(std::make_shared<OrderSubmitReport>(generateReportId(), clockTick(), event->getOrderId(), event->getOrder()->getSide(), event->getOrder(), OrderProcessingStatus::SUCCESS));
         return;
     }
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
@@ -542,8 +540,11 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
     AscOrderBook& askBook = getAskBook();
     AscOrderBookSize& askBookSize = getAskBookSize();
     MarketQueue& marketQueue = getMarketQueue();
+    OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
     LimitQueue dummyQueue; // avoids the creation of a new queue if the entire order is filled
     uint32_t dummySize = 0;
+    if (orderProcessingCallback)
+        orderProcessingCallback(std::make_shared<LimitOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order, OrderProcessingStatus::SUCCESS));
     executeAgainstQueuedMarketOrders(order, unfilledQuantity, marketQueue);
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty() && price >= askBook.begin()->first) {
@@ -584,6 +585,9 @@ void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder>
     AscOrderBook& askBook = getAskBook();
     AscOrderBookSize& askBookSize = getAskBookSize();
     MarketQueue& marketQueue = getMarketQueue();
+    OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
+    if (orderProcessingCallback)
+        orderProcessingCallback(std::make_shared<MarketOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order, OrderProcessingStatus::SUCCESS));
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty()) {
             fillOrderByMatchingTopLimitQueue(order, unfilledQuantity, askBookSize.begin()->second, askBook.begin()->second);
