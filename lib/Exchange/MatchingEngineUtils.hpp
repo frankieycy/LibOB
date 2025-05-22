@@ -125,24 +125,42 @@ struct OrderExecutionReport : public OrderProcessingReport {
     std::shared_ptr<const Market::TradeBase> trade = nullptr;
 };
 
-// TODO: make OrderSubmitReport a base class for OrderSubmitEvent and OrderSubmitReport
-struct OrderSubmitReport : public OrderProcessingReport {
-    OrderSubmitReport() = delete;
-    OrderSubmitReport(
+struct LimitOrderSubmitReport : public OrderProcessingReport {
+    LimitOrderSubmitReport() = delete;
+    LimitOrderSubmitReport(
         const uint64_t reportId,
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
-        const std::shared_ptr<const Market::OrderBase>& order,
+        const std::shared_ptr<const Market::LimitOrder>& order,
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
         OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::SUBMIT, status, latency, message),
         order(order) {}
-    virtual ~OrderSubmitReport() = default;
+    virtual ~LimitOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::string getAsJson() const override;
-    std::shared_ptr<const Market::OrderBase> order = nullptr;
+    std::shared_ptr<const Market::LimitOrder> order = nullptr;
+};
+
+struct MarketOrderSubmitReport : public OrderProcessingReport {
+    MarketOrderSubmitReport() = delete;
+    MarketOrderSubmitReport(
+        const uint64_t reportId,
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const std::shared_ptr<const Market::MarketOrder>& order,
+        const OrderProcessingStatus status,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::SUBMIT, status, latency, message),
+        order(order) {}
+    virtual ~MarketOrderSubmitReport() = default;
+    virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::string getAsJson() const override;
+    std::shared_ptr<const Market::MarketOrder> order = nullptr;
 };
 
 struct OrderCancelReport : public OrderProcessingReport {
