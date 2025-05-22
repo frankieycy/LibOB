@@ -189,6 +189,7 @@ void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModify
     if (it != myActiveLimitOrders.end()) {
         auto order = it->second;
         order->setPrice(report.modifiedPrice);
+        // TODO: order state validity check
     } else {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyPriceReport] Order not found in active orders - orderId = " << report.orderId;
     }
@@ -197,10 +198,15 @@ void OrderEventManagerBase::onOrderModifyPriceReport(const Exchange::OrderModify
 void OrderEventManagerBase::onOrderModifyQuantityReport(const Exchange::OrderModifyQuantityReport& report) {
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order modify quantity report received.";
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order modify quantity report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
+    }
     const auto& it = myActiveLimitOrders.find(report.orderId);
     if (it != myActiveLimitOrders.end()) {
         auto order = it->second;
         order->setQuantity(report.modifiedQuantity);
+        // TODO: order state validity check
     } else
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderModifyQuantityReport] Order not found in active orders - orderId = " << report.orderId;
 }
