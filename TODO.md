@@ -24,6 +24,9 @@
     - ok, override incoming orders or order updates with the internal clock
     - ok, make `fillOrderByMatchingLimitQueue` etc. as class member function
     - order matching test cases - submit, matching, cancel, modify, callback etc.
+    - ASCII order book dynamic display (time evolution of book)
+    - when will `OrderProcessingReport` report failure?
+    - order book construction from events stream, same for `OrderEventManager`
 * `Market::OrderEventManager`
     - ok, unified interface for order submmit, cancel, modify etc.
     - ok, take in a `TimestampHandlerBase` ptr
