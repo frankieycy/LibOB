@@ -143,6 +143,7 @@ public:
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
+    virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
     virtual void init() override;
     virtual void build() override;
     virtual void reset() override;
