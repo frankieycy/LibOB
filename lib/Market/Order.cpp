@@ -41,6 +41,21 @@ OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side sid
     myOrderState(OrderState::NULL_ORDER_STATE),
     myMetaInfo(metaInfo) {}
 
+bool OrderBase::checkState() const {
+    switch (myOrderState) {
+        case OrderState::ACTIVE:
+            return myQuantity > 0;
+        case OrderState::PARTIAL_FILLED:
+            return myQuantity > 0;
+        case OrderState::FILLED:
+            return myQuantity == 0;
+        case OrderState::CANCELLED:
+            return myQuantity == 0;
+        default:
+            return false;
+    }
+}
+
 void OrderBase::init() {
     setOrderState(OrderState::ACTIVE);
 }
@@ -90,6 +105,10 @@ void LimitOrder::executeOrderEvent(const OrderEventBase& event) {
 
 void LimitOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
     matchingEngine.addToLimitOrderBook(std::make_shared<LimitOrder>(*this));
+}
+
+bool LimitOrder::checkState() const {
+    return (myPrice >= 0) && OrderBase::checkState();
 }
 
 void LimitOrder::init() {

@@ -207,7 +207,8 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyP
     if (it != myActiveLimitOrders.end()) {
         auto order = it->second;
         order->setPrice(report.modifiedPrice);
-        // TODO: order state validity check
+        if (!order->checkState())
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon price modification: " << *order;
     } else {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
     }
@@ -224,7 +225,8 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyQ
     if (it != myActiveLimitOrders.end()) {
         auto order = it->second;
         order->setQuantity(report.modifiedQuantity);
-        // TODO: order state validity check
+        if (!order->checkState())
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon quantity modification: " << *order;
     } else
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
 }

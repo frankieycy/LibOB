@@ -38,6 +38,7 @@ public:
     virtual double getPrice() const { return Utils::Consts::NAN_DOUBLE; }
     virtual void executeOrderEvent(const OrderEventBase& /* event */) {}
     virtual void submit(Exchange::IMatchingEngine& /* matchingEngine */) const {}
+    virtual bool checkState() const;
     virtual void init();
     virtual void cancel();
     virtual std::string getAsJson() const;
@@ -63,6 +64,7 @@ public:
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
     virtual void submit(Exchange::IMatchingEngine& matchingEngine) const override;
+    virtual bool checkState() const override;
     virtual void init() override;
     virtual void cancel() override;
     virtual std::string getAsJson() const override;
