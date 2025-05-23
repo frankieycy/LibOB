@@ -6,6 +6,8 @@
     - ok, remove const on function value return
     - ok, return `shared_ptr` to const in class getters
     - ok, organize the lib hpp/cpp files into folders of their namespace e.g. `Utils` and `Market`
+    - ok, avoid `return out` in `operator<<` if unneeded
+    - ok, string util functions are to be put at file end after class definitions
 * Misc. Utils
     - ok, ability to cast Enum as string, `to_string`
     - ok, write up `Logger` class, use it for debug logging
@@ -32,6 +34,10 @@
     - ok, take in a `TimestampHandlerBase` ptr
     - ok, order id handler
     - ok, sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
+* `Analytics::MatchingEngineMonitor`
+* `RegressionTests`
+    - cpp files in `Inputs` (small selections from `Tests`) and log files in `Baseline` (outputs from running cpp)
+    - add `RegressionTests` and `UpdateBaselines` to makefile
 
 ### Analytics
 
