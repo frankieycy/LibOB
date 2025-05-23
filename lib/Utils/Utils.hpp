@@ -14,6 +14,9 @@
 #include <random>
 #include <limits>
 #include <optional>
+#include <thread>
+#include <chrono>
+#include <functional>
 #include "Utils/Logger.hpp"
 
 template<typename T>
@@ -52,6 +55,14 @@ public:
 private:
     uint64_t myCurrentTimestamp = 0;
 };
+
+template<typename Duration = std::chrono::microseconds, typename Func>
+auto timeOperation(Func&& func) -> typename Duration::rep {
+    auto start = std::chrono::high_resolution_clock::now();
+    func();
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<Duration>(end - start).count();
+}
 }
 
 namespace Error {
