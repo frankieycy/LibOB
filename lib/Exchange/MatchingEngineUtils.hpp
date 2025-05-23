@@ -29,12 +29,12 @@ struct OrderLevel {
     uint32_t size;
 };
 
-std::string generateBar(uint32_t size, uint32_t maxSize, int maxWidth);
+std::string generateBar(const uint32_t size, const uint32_t maxSize, const size_t maxWidth);
 
 std::string getOrderBookASCII(
     const std::vector<OrderLevel>& bidBook,
     const std::vector<OrderLevel>& askBook,
-    const int barWidth = 40,
+    const size_t barWidth = 40,
     const size_t maxDepth = 10);
 
 class OrderBookDisplayConfig {
@@ -47,24 +47,30 @@ public:
     uint16_t getTradeLogLevels() const { return myTradeLogLevels; }
     uint16_t getRemovedLimitOrderLogLevels() const { return myRemovedLimitOrderLogLevels; }
     uint16_t getOrderLookupLevels() const { return myOrderLookupLevels; }
+    size_t getOrderBookBarWidth() const { return myOrderBookBarWidth; }
     bool isAggregateOrderBook() const { return myAggregateOrderBook; }
+    bool isPrintAsciiOrderBook() const { return myPrintAsciiOrderBook; }
     bool isShowOrderBook() const { return myShowOrderBook; }
     bool isShowMarketQueue() const { return myShowMarketQueue; }
     bool isShowTradeLog() const { return myShowTradeLog; }
     bool isShowRemovedLimitOrderLog() const { return myShowRemovedLimitOrderLog; }
     bool isShowOrderLookup() const { return myShowOrderLookup; }
+    bool isLiveDisplay() const { return myIsLiveDisplay; }
     bool isDebugMode() const { return myDebugMode; }
     void setOrderBookLevels(const uint16_t orderBookLevels) { myOrderBookLevels = orderBookLevels; }
     void setMarketQueueLevels(const uint16_t marketQueueLevels) { myMarketQueueLevels = marketQueueLevels; }
     void setTradeLogLevels(const uint16_t tradeLogLevels) { myTradeLogLevels = tradeLogLevels; }
     void setRemovedLimitOrderLogLevels(const uint16_t removedLimitOrderLogLevels) { myRemovedLimitOrderLogLevels = removedLimitOrderLogLevels; }
     void setOrderLookupLevels(const uint16_t orderLookupLevels) { myOrderLookupLevels = orderLookupLevels; }
+    void setOrderBookBarWidth(const size_t orderBookBarWidth) { myOrderBookBarWidth = orderBookBarWidth; }
     void setAggregateOrderBook(const bool aggregateOrderBook) { myAggregateOrderBook = aggregateOrderBook; }
+    void setPrintAsciiOrderBook(const bool printAsciiOrderBook) { myPrintAsciiOrderBook = printAsciiOrderBook; }
     void setShowOrderBook(const bool showOrderBook) { myShowOrderBook = showOrderBook; }
     void setShowMarketQueue(const bool showMarketQueue) { myShowMarketQueue = showMarketQueue; }
     void setShowTradeLog(const bool showTradeLog) { myShowTradeLog = showTradeLog; }
     void setShowRemovedLimitOrderLog(const bool showRemovedLimitOrderLog) { myShowRemovedLimitOrderLog = showRemovedLimitOrderLog; }
     void setShowOrderLookup(const bool showOrderLookup) { myShowOrderLookup = showOrderLookup; }
+    void setLiveDisplay(const bool liveDisplay) { myIsLiveDisplay = liveDisplay; }
     void setDebugMode(const bool debugMode);
 private:
     uint16_t myOrderBookLevels = 5;
@@ -72,12 +78,15 @@ private:
     uint16_t myTradeLogLevels = 10;
     uint16_t myRemovedLimitOrderLogLevels = 10;
     uint16_t myOrderLookupLevels = 10;
+    size_t myOrderBookBarWidth = 40;
     bool myAggregateOrderBook = true;
+    bool myPrintAsciiOrderBook = false;
     bool myShowOrderBook = true;
     bool myShowMarketQueue = true;
     bool myShowTradeLog = true;
     bool myShowRemovedLimitOrderLog = true;
     bool myShowOrderLookup = true;
+    bool myIsLiveDisplay = false;
     bool myDebugMode = false;
 };
 
