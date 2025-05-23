@@ -29,7 +29,14 @@ void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_p
     }
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event submitted: " << *event;
-    myMatchingEngine->process(event);
+    if (myMillisecondsToPauseBeforeEventSubmit > 0)
+        std::this_thread::sleep_for(std::chrono::milliseconds(myMillisecondsToPauseBeforeEventSubmit));
+    if (myTimeEngineOrderEventsProcessing) {
+        const auto& duration = Counter::timeOperation<std::chrono::microseconds>([this, event]() { myMatchingEngine->process(event); });
+        *myLogger << "[OrderEventManagerBase] Matching engine order event processing time: " << duration << " microseconds. Note that IO operations are also counted in.";
+    } else {
+        myMatchingEngine->process(event);
+    }
     if (myDebugMode) {
         *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event manager state:\n" << *this;
         if (myPrintOrderBookPerOrderSubmit)

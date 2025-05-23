@@ -19,6 +19,8 @@ public:
     const std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>>& getActiveLimitOrders() const { return myActiveLimitOrders; }
     const std::unordered_map<uint64_t, std::shared_ptr<Market::MarketOrder>>& getQueuedMarketOrders() const { return myQueuedMarketOrders; }
     double getMinimumPriceTick() const { return myMinimumPriceTick; }
+    long long getMillisecondsToPauseBeforeEventSubmit() const { return myMillisecondsToPauseBeforeEventSubmit; }
+    bool isTimeEngineOrderEventsProcessing() const { return myTimeEngineOrderEventsProcessing; }
     bool isSyncClockWithEngine() const { return mySyncClockWithEngine; }
     bool isDebugMode() const { return myDebugMode; }
     bool isPrintOrderBookPerOrderSubmit() const { return myPrintOrderBookPerOrderSubmit; }
@@ -28,6 +30,8 @@ public:
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     void setMatchingEngine(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setMinimumPriceTick(const double minimumPriceTick) { myMinimumPriceTick = minimumPriceTick; }
+    void setMillisecondsToPauseBeforeEventSubmit(const long long millisecondsToPauseBeforeEventSubmit) { myMillisecondsToPauseBeforeEventSubmit = millisecondsToPauseBeforeEventSubmit; }
+    void setTimeEngineOrderEventsProcessing(const bool timeEngineOrderEventsProcessing) { myTimeEngineOrderEventsProcessing = timeEngineOrderEventsProcessing; }
     void setSyncClockWithEngine(const bool syncClockWithEngine) { mySyncClockWithEngine = syncClockWithEngine; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
@@ -62,6 +66,8 @@ private:
     std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>> myActiveLimitOrders;
     std::unordered_map<uint64_t, std::shared_ptr<Market::MarketOrder>> myQueuedMarketOrders; // empty most of the time
     double myMinimumPriceTick = 0.01;
+    long long myMillisecondsToPauseBeforeEventSubmit = 0; // avoids high-frequency log outputs e.g. book snapshot during debug
+    bool myTimeEngineOrderEventsProcessing = false; // whether to time order events processing in the matching engine
     bool mySyncClockWithEngine = false;
     bool myDebugMode = false;
     bool myPrintOrderBookPerOrderSubmit = false;
