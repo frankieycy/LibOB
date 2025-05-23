@@ -209,33 +209,54 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
         auto bidIt = myBidBook.begin();
         auto askIt = myAskBook.begin();
         if (config.isAggregateOrderBook()) {
-            uint level = 1;
-            out << "================= Order Book Snapshot ===================\n";
-            out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
-            out << "---------------------------------------------------------\n";
-            while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
-                if (bidIt != myBidBook.end()) {
-                    uint32_t bidSize = myBidBookSize.at(bidIt->first);
-                    out << std::setw(9) << bidSize << "  | "
-                        << std::fixed << std::setprecision(2)
-                        << std::setw(8) << bidIt->first << "  || ";
-                    ++bidIt;
-                } else {
-                    out << "           |           || ";
+            if (config.isPrintAsciiOrderBook()) {
+                uint level = 1;
+                std::vector<OrderLevel> bidLevels;
+                std::vector<OrderLevel> askLevels;
+                while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
+                    if (bidIt != myBidBook.end()) {
+                        const uint32_t bidSize = myBidBookSize.at(bidIt->first);
+                        bidLevels.push_back({bidIt->first, bidSize});
+                        ++bidIt;
+                    }
+                    if (askIt != myAskBook.end()) {
+                        const uint32_t askSize = myAskBookSize.at(askIt->first);
+                        askLevels.push_back({askIt->first, askSize});
+                        ++askIt;
+                    }
+                    if (++level > config.getOrderBookLevels())
+                        break;
                 }
-                out << std::setw(5) << level << " || ";
-                if (askIt != myAskBook.end()) {
-                    uint32_t askSize = myAskBookSize.at(askIt->first);
-                    out << std::setw(8) << askIt->first << "  | "
-                        << std::setw(8) << askSize << "  \n";
-                    ++askIt;
-                } else {
-                    out << "          |           \n";
+                out << getOrderBookASCII(bidLevels, askLevels, config.getOrderBookBarWidth(), config.getOrderBookLevels());
+            } else {
+                uint level = 1;
+                out << "================= Order Book Snapshot ===================\n";
+                out << "  BID Size | BID Price || Level || ASK Price | ASK Size  \n";
+                out << "---------------------------------------------------------\n";
+                while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
+                    if (bidIt != myBidBook.end()) {
+                        const uint32_t bidSize = myBidBookSize.at(bidIt->first);
+                        out << std::setw(9) << bidSize << "  | "
+                            << std::fixed << std::setprecision(2)
+                            << std::setw(8) << bidIt->first << "  || ";
+                        ++bidIt;
+                    } else {
+                        out << "           |           || ";
+                    }
+                    out << std::setw(5) << level << " || ";
+                    if (askIt != myAskBook.end()) {
+                        const uint32_t askSize = myAskBookSize.at(askIt->first);
+                        out << std::setw(8) << askIt->first << "  | "
+                            << std::setw(8) << askSize << "  \n";
+                        ++askIt;
+                    } else {
+                        out << "          |           \n";
+                    }
+                    if (++level > config.getOrderBookLevels())
+                        break;
                 }
-                if (++level > config.getOrderBookLevels())
-                    break;
+                out << "---------------------------------------------------------\n";
             }
-            out << "---------------------------------------------------------\n";
         } else {
             uint level = 1;
             out << "================= Bid Book Snapshot ===================\n";
@@ -245,7 +266,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 out << std::setw(6) << level << " || "
                     << std::fixed << std::setprecision(2)
                     << std::setw(9) << bidIt->first << " | ";
-                uint32_t bidSize = myBidBookSize.at(bidIt->first);
+                const uint32_t bidSize = myBidBookSize.at(bidIt->first);
                 out << std::setw(8) << bidSize << " | ";
                 for (const auto& order : bidIt->second) {
                     out << "(" << order->getId() << "," << order->getTimestamp() << "|" << order->getQuantity() << ") ";
@@ -264,7 +285,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
                 out << std::setw(6) << level << " || "
                     << std::fixed << std::setprecision(2)
                     << std::setw(9) << askIt->first << " | ";
-                uint32_t askSize = myAskBookSize.at(askIt->first);
+                const uint32_t askSize = myAskBookSize.at(askIt->first);
                 out << std::setw(8) << askSize << " | ";
                 for (const auto& order : askIt->second) {
                     out << "(" << order->getId() << "," << order->getTimestamp() << "|" << order->getQuantity() << ") ";
