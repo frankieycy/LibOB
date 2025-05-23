@@ -177,15 +177,21 @@ std::string OrderModifyPriceEvent::getAsJson() const {
 
 OrderModifyQuantityEvent::OrderModifyQuantityEvent() :
     OrderEventBase(),
-    myModifiedQuantity(0) {}
+    myModifiedQuantity(0) {
+    init();
+}
 
 OrderModifyQuantityEvent::OrderModifyQuantityEvent(const OrderModifyQuantityEvent& event) :
     OrderEventBase(event),
-    myModifiedQuantity(event.myModifiedQuantity) {}
+    myModifiedQuantity(event.myModifiedQuantity) {
+    init();
+}
 
 OrderModifyQuantityEvent::OrderModifyQuantityEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const double modifiedQuantity) :
     OrderEventBase(eventId, orderId, timestamp),
-    myModifiedQuantity(modifiedQuantity) {}
+    myModifiedQuantity(modifiedQuantity) {
+    init();
+}
 
 void OrderModifyQuantityEvent::applyTo(LimitOrder& order) const {
     order.setQuantity(myModifiedQuantity);
