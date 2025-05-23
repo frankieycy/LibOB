@@ -4,11 +4,8 @@
 
 namespace Utils {
 namespace Logger {
-enum class LogLevel { INFO, WARNING, ERROR, DEBUG, TRACE, NULL_LOG_LEVEL };
 class LoggerBase;
-
-std::string to_string(const LogLevel& level);
-std::ostream& operator<<(std::ostream& out, const LogLevel& level);
+enum class LogLevel { INFO, WARNING, ERROR, DEBUG, TRACE, NULL_LOG_LEVEL };
 
 class LoggerStream {
 public:
@@ -28,6 +25,9 @@ private:
     LogLevel myLevel;
     std::ostringstream myStream;
 };
+
+std::string to_string(const LogLevel& level);
+std::ostream& operator<<(std::ostream& out, const LogLevel& level);
 }
 }
 
