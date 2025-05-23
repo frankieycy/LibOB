@@ -142,7 +142,14 @@ void testMatchingEngineOrderCancelModify() {
     em.modifyOrderPrice(7, 102.0);
     em.modifyOrderPrice(7, 103.0);
     em.modifyOrderPrice(9, 100.0);
-    // TODO: modify quantity
+    // modify quantity
+    em.modifyOrderQuantity(2, 5);
+    em.modifyOrderQuantity(3, 20);
+    em.modifyOrderQuantity(4, 0);
+    em.modifyOrderQuantity(6, 0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 5, 103.0);
+    em.modifyOrderQuantity(7, 15);
+    em.modifyOrderQuantity(10, 10);
 }
 
 void testMatchingEngineZeroIntelligence() {
