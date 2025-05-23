@@ -9,8 +9,7 @@ namespace Market {
 using namespace Utils;
 
 std::ostream& operator<<(std::ostream& out, const TradeBase& trade) {
-    out << trade.getAsJson();
-    return out;
+    return out << trade.getAsJson();
 }
 
 TradeBase::TradeBase() :

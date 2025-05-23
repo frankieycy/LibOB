@@ -14,16 +14,6 @@ enum class OrderProcessingType   { EXECUTE, SUBMIT, CANCEL, MODIFY_PRICE, MODIFY
 enum class OrderProcessingStatus { SUCCESS, FAILURE, NULL_ORDER_PROCESSING_STATUS };
 enum class OrderExecutionType    { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
 
-std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy);
-std::string to_string(const OrderProcessingType& orderProcessingType);
-std::string to_string(const OrderProcessingStatus& orderProcessingStatus);
-std::string to_string(const OrderExecutionType& orderExecutionType);
-
-std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy);
-std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProcessingType);
-std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderProcessingStatus);
-std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType);
-
 struct OrderLevel {
     double price;
     uint32_t size;
@@ -239,6 +229,15 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     uint32_t modifiedQuantity;
 };
 
+std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy);
+std::string to_string(const OrderProcessingType& orderProcessingType);
+std::string to_string(const OrderProcessingStatus& orderProcessingStatus);
+std::string to_string(const OrderExecutionType& orderExecutionType);
+
+std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy);
+std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProcessingType);
+std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderProcessingStatus);
+std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType);
 std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& event);
 }
 

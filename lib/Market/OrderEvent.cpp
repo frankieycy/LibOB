@@ -9,8 +9,7 @@ namespace Market {
 using namespace Utils;
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event) {
-    out << event.getAsJson();
-    return out;
+    return out << event.getAsJson();
 }
 
 OrderEventBase::OrderEventBase() :

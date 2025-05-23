@@ -24,8 +24,7 @@ std::ostream& operator<<(std::ostream& out, std::vector<T>& vec) {
         if (i != vec.size() - 1)
             out << ", ";
     }
-    out << "]";
-    return out;
+    return out << "]";
 }
 
 namespace Utils {

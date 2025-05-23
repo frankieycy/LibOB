@@ -5,8 +5,7 @@
 
 namespace Market {
 std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& metaInfo) {
-    out << metaInfo.getAsJson();
-    return out;
+    return out << metaInfo.getAsJson();
 }
 
 TradeMetaInfo::TradeMetaInfo(const TradeMetaInfo& info) :

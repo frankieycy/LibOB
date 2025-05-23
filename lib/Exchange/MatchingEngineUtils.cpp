@@ -53,6 +53,8 @@ std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderPr
 
 std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType) { return out << to_string(orderExecutionType); }
 
+std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& event) { return out << event.getAsJson(); }
+
 std::string generateBar(const uint32_t size, const uint32_t maxSize, const size_t maxWidth) {
     const size_t barWidth = (maxSize == 0) ? 0 : static_cast<size_t>((static_cast<double>(size) / maxSize) * maxWidth);
     return std::string(barWidth, 'o');
@@ -256,11 +258,6 @@ std::string OrderModifyQuantityReport::getAsJson() const {
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
-}
-
-std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& event) {
-    out << event.getAsJson();
-    return out;
 }
 }
 

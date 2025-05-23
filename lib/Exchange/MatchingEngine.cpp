@@ -10,8 +10,7 @@ namespace Exchange {
 using namespace Utils;
 
 std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine) {
-    matchingEngine.orderBookSnapshot(out);
-    return out;
+    return matchingEngine.orderBookSnapshot(out);
 }
 
 IMatchingEngine::IMatchingEngine(const bool debugMode) :

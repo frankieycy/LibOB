@@ -9,8 +9,7 @@
 namespace Market {
 using namespace Utils;
 std::ostream& operator<<(std::ostream& out, const OrderEventManagerBase& manager) {
-    manager.stateSnapshot(out);
-    return out;
+    return manager.stateSnapshot(out);
 }
 
 OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) {
