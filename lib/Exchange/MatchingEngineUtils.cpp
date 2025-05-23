@@ -155,7 +155,7 @@ std::string OrderExecutionReport::getAsJson() const {
         "\"OrderExecutionType\":\""  << orderExecutionType   << "\","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
-        "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
+        "\"Latency\":"               << latency.value_or(0) << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
@@ -175,7 +175,7 @@ std::string LimitOrderSubmitReport::getAsJson() const {
         "\"Order\":"                 << order                << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
-        "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
+        "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
@@ -195,7 +195,7 @@ std::string MarketOrderSubmitReport::getAsJson() const {
         "\"Order\":"                 << order                << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
-        "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
+        "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
@@ -214,7 +214,7 @@ std::string OrderCancelReport::getAsJson() const {
         "\"OrderSide\":\""           << orderSide            << "\","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
-        "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
+        "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
@@ -234,7 +234,7 @@ std::string OrderModifyPriceReport::getAsJson() const {
         "\"ModifiedPrice\":"         << modifiedPrice        << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
-        "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
+        "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
@@ -254,7 +254,7 @@ std::string OrderModifyQuantityReport::getAsJson() const {
         "\"ModifiedQuantity\":"      << modifiedQuantity     << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
-        "\"Latency\":"               << latency.value_or(Consts::quietNaN<uint64_t>()) << ","
+        "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
