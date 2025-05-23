@@ -22,16 +22,18 @@ LoggerBase::~LoggerBase() {
 }
 
 void LoggerBase::log(const std::string& message, const LogLevel& level) {
-    std::string timestampStr = myShowLogTimestamp ? ('[' + getTimestamp() + ']') : "";
+    const std::string timestampStr = myShowLogTimestamp ? ('[' + getTimestamp() + ']') : "[LOG]";
+    const std::string logMessage = timestampStr + " " + to_string(level) + " " + message;
+    myLastLogCache = logMessage;
     if (myLogToConsole)
-        std::cout << timestampStr << " " << level << " " << message << std::endl;
+        std::cout << logMessage << std::endl;
     if (myLogToFile && myLogFile.is_open())
-        myLogFile << timestampStr << " " << level << " " << message << std::endl;
+        myLogFile << logMessage << std::endl;
 }
 
 std::string LoggerBase::getTimestamp() const {
-    std::time_t now = std::time(nullptr);
-    std::tm* localTime = std::localtime(&now);
+    const std::time_t now = std::time(nullptr);
+    const std::tm* localTime = std::localtime(&now);
     char buffer[20];
     std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localTime);
     return std::string(buffer);

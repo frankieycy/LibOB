@@ -24,6 +24,7 @@ public:
     }
 private:
     std::string myLogFileName;
+    std::string myLastLogCache;
     std::ofstream myLogFile;
     bool myLogToFile = false;
     bool myLogToConsole = true;
