@@ -19,7 +19,7 @@ struct OrderLevel {
     uint32_t size;
 };
 
-std::string generateBar(const uint32_t size, const uint32_t maxSize, const size_t maxWidth);
+std::string generateBar(const uint32_t size, const uint32_t maxSize, const size_t maxWidth, const char symbol = 'o');
 
 std::string getOrderBookASCII(
     const std::vector<OrderLevel>& bidBook,

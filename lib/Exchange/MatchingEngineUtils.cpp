@@ -55,9 +55,9 @@ std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecu
 
 std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& event) { return out << event.getAsJson(); }
 
-std::string generateBar(const uint32_t size, const uint32_t maxSize, const size_t maxWidth) {
+std::string generateBar(const uint32_t size, const uint32_t maxSize, const size_t maxWidth, const char symbol) {
     const size_t barWidth = (maxSize == 0) ? 0 : static_cast<size_t>((static_cast<double>(size) / maxSize) * maxWidth);
-    return std::string(barWidth, 'o');
+    return std::string(barWidth, symbol);
 }
 
 std::string getOrderBookASCII(
@@ -129,6 +129,18 @@ void OrderBookDisplayConfig::setDebugMode(const bool debugMode) {
         myRemovedLimitOrderLogLevels = 20;
         myOrderLookupLevels = 20;
         myAggregateOrderBook = false;
+        myShowOrderBook = true;
+        myShowMarketQueue = true;
+        myShowTradeLog = true;
+        myShowRemovedLimitOrderLog = true;
+        myShowOrderLookup = true;
+    } else {
+        myOrderBookLevels = 5;
+        myMarketQueueLevels = 10;
+        myTradeLogLevels = 10;
+        myRemovedLimitOrderLogLevels = 10;
+        myOrderLookupLevels = 10;
+        myAggregateOrderBook = true;
         myShowOrderBook = true;
         myShowMarketQueue = true;
         myShowTradeLog = true;
