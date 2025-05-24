@@ -13,6 +13,7 @@ public:
     virtual ~LoggerBase();
     virtual void log(const std::string& message, const LogLevel level = LogLevel::INFO, const OverwriteLastLog overwrite = OverwriteLastLog::NO);
     virtual std::string getTimestamp() const;
+    void setSilent(const bool silent) { myIsSilent = silent; }
     LoggerStream operator<<(const LogLevel& level) {
         return LoggerStream(*this, level);
     }
@@ -30,6 +31,7 @@ private:
     bool myLogToFile = false;
     bool myLogToConsole = true;
     bool myShowLogTimestamp = true;
+    bool myIsSilent = false;
 };
 }
 }

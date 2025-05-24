@@ -22,6 +22,8 @@ LoggerBase::~LoggerBase() {
 }
 
 void LoggerBase::log(const std::string& message, const LogLevel level, const OverwriteLastLog overwrite) {
+    if (myIsSilent)
+        return;
     const std::string timestampStr = myShowLogTimestamp ? ('[' + getTimestamp() + ']') : "[LOG]";
     const std::string logMessage = timestampStr + " " + to_string(level) + " " + message;
     if (myLogToConsole) {
