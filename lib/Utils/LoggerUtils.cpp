@@ -18,8 +18,11 @@ std::string to_string(const LogLevel& level) {
 
 std::ostream& operator<<(std::ostream& out, const LogLevel& level) { return out << to_string(level); }
 
-LoggerStream::~LoggerStream() {
-    myLogger.log(myStream.str(), myLevel);
+void LoggerStream::flush() {
+    if (!myFlushed) {
+        myLogger.log(myStream.str(), myLevel, myOverwriteLastLog);
+        myFlushed = true;
+    }
 }
 }
 }

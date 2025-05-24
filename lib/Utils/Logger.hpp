@@ -11,7 +11,7 @@ public:
     LoggerBase() = default;
     LoggerBase(const std::string& logFileName, const bool logToFile = true, const bool logToConsole = false, const bool showLogTimestamp = true);
     virtual ~LoggerBase();
-    virtual void log(const std::string& message, const LogLevel& level = LogLevel::INFO);
+    virtual void log(const std::string& message, const LogLevel level = LogLevel::INFO, const OverwriteLastLog overwrite = OverwriteLastLog::NO);
     virtual std::string getTimestamp() const;
     LoggerStream operator<<(const LogLevel& level) {
         return LoggerStream(*this, level);
@@ -23,9 +23,10 @@ public:
         return stream;
     }
 private:
+    std::ofstream myLogFile;
     std::string myLogFileName;
     std::string myLastLogCache;
-    std::ofstream myLogFile;
+    size_t myLastLogLineCount = 0;
     bool myLogToFile = false;
     bool myLogToConsole = true;
     bool myShowLogTimestamp = true;

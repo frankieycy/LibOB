@@ -21,14 +21,20 @@ LoggerBase::~LoggerBase() {
         myLogFile.close();
 }
 
-void LoggerBase::log(const std::string& message, const LogLevel& level) {
+void LoggerBase::log(const std::string& message, const LogLevel level, const OverwriteLastLog overwrite) {
     const std::string timestampStr = myShowLogTimestamp ? ('[' + getTimestamp() + ']') : "[LOG]";
     const std::string logMessage = timestampStr + " " + to_string(level) + " " + message;
-    myLastLogCache = logMessage;
-    if (myLogToConsole)
+    if (myLogToConsole) {
+        if (overwrite == OverwriteLastLog::YES)
+            for (size_t i = 0; i < myLastLogLineCount; ++i)
+                std::cout << "\x1b[1A"  // move up one line
+                          << "\x1b[2K"; // clear the line
         std::cout << logMessage << std::endl;
+    }
     if (myLogToFile && myLogFile.is_open())
         myLogFile << logMessage << std::endl;
+    myLastLogCache = logMessage;
+    myLastLogLineCount = std::count(logMessage.begin(), logMessage.end(), '\n') + 1;
 }
 
 std::string LoggerBase::getTimestamp() const {
