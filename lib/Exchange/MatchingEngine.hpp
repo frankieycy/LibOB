@@ -73,7 +73,6 @@ public:
     virtual void init() = 0;
     virtual void build() = 0; // builds the book given some user-input order events stream
     virtual void reset();
-    virtual void liveOrderBookSnapshot() const = 0;
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
     virtual std::string getAsJson() const = 0;
 protected:
@@ -148,7 +147,6 @@ public:
     virtual void init() override;
     virtual void build() override;
     virtual void reset() override;
-    virtual void liveOrderBookSnapshot() const override;
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const override;
     virtual std::string getAsJson() const override;
 protected:

@@ -202,36 +202,6 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
     }
 }
 
-void MatchingEngineBase::liveOrderBookSnapshot() const {
-    getLogger()->setSilent(false);
-    const OrderBookDisplayConfig& config = getOrderBookDisplayConfig();
-    uint level = 1;
-    std::vector<OrderLevel> bidLevels;
-    std::vector<OrderLevel> askLevels;
-    auto bidIt = myBidBook.begin();
-    auto askIt = myAskBook.begin();
-    while (bidIt != myBidBook.end() || askIt != myAskBook.end()) {
-        if (bidIt != myBidBook.end()) {
-            const uint32_t bidSize = myBidBookSize.at(bidIt->first);
-            bidLevels.push_back({bidIt->first, bidSize});
-            ++bidIt;
-        }
-        if (askIt != myAskBook.end()) {
-            const uint32_t askSize = myAskBookSize.at(askIt->first);
-            askLevels.push_back({askIt->first, askSize});
-            ++askIt;
-        }
-        if (++level > config.getOrderBookLevels())
-            break;
-    }
-    *getLogger()
-        << Logger::LogLevel::INFO
-        << Logger::OverwriteLastLog::YES
-        << "[MatchingEngineBase] Live order book snapshot:\n"
-        << getOrderBookASCII(bidLevels, askLevels, config.getOrderBookBarWidth(), config.getOrderBookLevels());
-    getLogger()->setSilent(true); // guarantees that the logger is silent after the snapshot and before the next one
-}
-
 std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     const OrderBookDisplayConfig& config = getOrderBookDisplayConfig();
     if (config.isShowOrderBook()) {
