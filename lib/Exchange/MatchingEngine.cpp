@@ -203,7 +203,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
 }
 
 void MatchingEngineBase::liveOrderBookSnapshot() const {
-    // TODO: guarantee that other logs are not written out so that the last log overwritten is really the last book snapshot
+    getLogger()->setSilent(false);
     const OrderBookDisplayConfig& config = getOrderBookDisplayConfig();
     uint level = 1;
     std::vector<OrderLevel> bidLevels;
@@ -229,6 +229,7 @@ void MatchingEngineBase::liveOrderBookSnapshot() const {
         << Logger::OverwriteLastLog::YES
         << "[MatchingEngineBase] Live order book snapshot:\n"
         << getOrderBookASCII(bidLevels, askLevels, config.getOrderBookBarWidth(), config.getOrderBookLevels());
+    getLogger()->setSilent(true); // guarantees that the logger is silent after the snapshot and before the next one
 }
 
 std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
