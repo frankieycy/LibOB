@@ -1,5 +1,6 @@
 #ifndef STATISTICS_UTILS_CPP
 #define STATISTICS_UTILS_CPP
+#include <sstream>
 #include <vector>
 #include <algorithm>
 #include "Utils/ErrorUtils.hpp"
@@ -7,7 +8,22 @@
 
 namespace Utils {
 namespace Statistics {
-size_t drawIndexWithRelativeProbability(const std::vector<double>& probabilities, const bool deterministic) {
+std::string to_string(const VectorStats& stats) {
+    std::ostringstream oss;
+    oss << "{"
+        << "\"size\":" << stats.size << ","
+        << "\"mean\":" << stats.mean << ","
+        << "\"variance\":" << stats.variance << ","
+        << "\"stddev\":" << stats.stddev
+        << "}";
+    return oss.str();
+}
+
+std::ostream& operator<<(std::ostream& out, const VectorStats& stats) {
+    return out << to_string(stats);
+}
+
+size_t drawIndexWithRelativeProbabilities(const std::vector<double>& probabilities, const bool deterministic) {
     if (probabilities.empty())
         Error::LIB_THROW("[drawIndexWithRelativeProbability] Empty probabilities vector.");
     if (std::any_of(probabilities.begin(), probabilities.end(), [](double p) { return p < 0.0; }))

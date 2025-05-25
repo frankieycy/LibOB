@@ -5,6 +5,16 @@
 
 namespace Utils {
 namespace Statistics {
+struct VectorStats {
+    size_t size;
+    double mean;
+    double variance;
+    double stddev;
+};
+
+std::string to_string(const VectorStats& stats);
+std::ostream& operator<<(std::ostream& out, const VectorStats& orderMatchingStrategy);
+
 inline std::mt19937& GLOBAL_RNG() {
     static thread_local std::mt19937 eng{ std::random_device{}() };
     return eng;
@@ -50,7 +60,26 @@ auto drawRandomIterator(Container& container, const bool deterministic = false) 
     return it;
 }
 
-size_t drawIndexWithRelativeProbability(const std::vector<double>& probabilities, const bool deterministic = false);
+size_t drawIndexWithRelativeProbabilities(const std::vector<double>& probabilities, const bool deterministic = false);
+
+template <typename T>
+VectorStats getVectorStats(const std::vector<T>& vec) {
+    if (vec.empty())
+        Error::LIB_THROW("[getVectorStats] Empty vector.");
+    VectorStats stats;
+    stats.size = vec.size();
+    stats.mean = std::accumulate(vec.begin(), vec.end(), 0.0,
+        [](double acc, const T& val) {
+            return acc + static_cast<double>(val);
+        }) / stats.size;
+    stats.variance = std::accumulate(vec.begin(), vec.end(), 0.0,
+        [mean = stats.mean](double acc, const T& val) {
+            double d = static_cast<double>(val);
+            return acc + (d - mean) * (d - mean);
+        }) / stats.size;
+    stats.stddev = std::sqrt(stats.variance);
+    return stats;
+}
 }
 }
 
