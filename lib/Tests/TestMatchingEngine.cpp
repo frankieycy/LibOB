@@ -118,9 +118,11 @@ void testMatchingEngineRandomOrders() {
 }
 
 void testMatchingEngineOrderCancelModify() {
+    // test order cancellation and modification
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>(true);
     Market::OrderEventManagerBase em{e};
     em.setPrintOrderBookPerOrderSubmit(true);
+    em.setTimeEngineOrderEventsProcessing(true);
     em.submitLimitOrderEvent(Market::Side::BUY, 15, 99.0);
     em.submitLimitOrderEvent(Market::Side::BUY, 5, 99.0);
     em.submitLimitOrderEvent(Market::Side::BUY, 10, 98.0);
@@ -150,6 +152,36 @@ void testMatchingEngineOrderCancelModify() {
     em.submitLimitOrderEvent(Market::Side::SELL, 5, 103.0);
     em.modifyOrderQuantity(7, 15);
     em.modifyOrderQuantity(10, 10);
+}
+
+void testMatchingEngineRandomOrdersSpeedTest() {
+    // TODO: run market dynamics by bulk submission of orders to test the speed of various matching engine operations
+    // e.g. order submission, cancellation, modification, and execution
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
+    Market::OrderEventManagerBase em{e};
+    em.setPrintOrderBookPerOrderSubmit(true);
+    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1};
+    std::vector<long long> timesPerLimitOrderSubmit;
+    for (int i = 0; i < 1000000; ++i) {
+        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
+        const int ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        const double u = Utils::Statistics::getRandomUniform01(true);
+        if (u < 0.5) {
+            timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui, j]() { em.submitLimitOrderEvent(Market::Side::BUY, ui, 100.0 - j); }));
+        } else {
+            timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui, j]() { em.submitLimitOrderEvent(Market::Side::SELL, ui, 100.0 + j); }));
+        }
+    }
+    std::cout << "Timing stats (ns) per limit order submit: " << Utils::Statistics::getVectorStats(timesPerLimitOrderSubmit) << std::endl;
+    Utils::IO::printDebugBanner(std::cout);
+    auto& config = e->getOrderBookDisplayConfig();
+    config.setPrintAsciiOrderBook(true);
+    config.setOrderBookLevels(10);
+    std::cout << *e << std::endl;
+}
+
+void testMatchingEngineRandomOrdersStressTest() {
+    // TODO: run market dynamics by bulk submission of orders to stress test the matching engine
 }
 
 void testMatchingEngineZeroIntelligence() {

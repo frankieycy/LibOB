@@ -8,6 +8,8 @@ void testMatchingEngineSimpleBook();
 void testMatchingEngineOrderEventManager();
 void testMatchingEngineRandomOrders();
 void testMatchingEngineOrderCancelModify();
+void testMatchingEngineRandomOrdersSpeedTest();
+void testMatchingEngineRandomOrdersStressTest();
 void testMatchingEngineZeroIntelligence();
 }
 }
