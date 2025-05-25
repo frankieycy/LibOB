@@ -18,6 +18,13 @@
 #include <chrono>
 #include <functional>
 #include "Utils/Logger.hpp"
+#include "Utils/ErrorUtils.hpp"
+#include "Utils/IOUtils.hpp"
+#include "Utils/CounterUtils.hpp"
+#include "Utils/ConstsUtils.hpp"
+#include "Utils/MathsUtils.hpp"
+#include "Utils/StatisticsUtils.hpp"
+#include "Utils/VectorUtils.hpp"
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, std::vector<T>& vec) {
@@ -28,169 +35,6 @@ std::ostream& operator<<(std::ostream& out, std::vector<T>& vec) {
             out << ", ";
     }
     return out << "]";
-}
-
-namespace Utils {
-namespace Counter {
-class IdHandlerBase {
-public:
-    IdHandlerBase() = default;
-    IdHandlerBase(const bool idLogEnabled) : myIdLogEnabled(idLogEnabled) {}
-    const std::vector<uint64_t>& getIdLog() const { return myIdLog; }
-    uint64_t getCurrentId() const { return myCurrentId; }
-    uint64_t generateId();
-    void reset();
-private:
-    uint64_t myCurrentId = 0;
-    bool myIdLogEnabled = false;
-    std::vector<uint64_t> myIdLog;
-};
-
-class TimestampHandlerBase {
-public:
-    TimestampHandlerBase() = default;
-    uint64_t getCurrentTimestamp() const { return myCurrentTimestamp; }
-    uint64_t tick(const uint64_t elapsedTimeUnit = 1);
-    void reset();
-private:
-    uint64_t myCurrentTimestamp = 0;
-};
-
-template<typename Duration = std::chrono::microseconds, typename Func>
-auto timeOperation(Func&& func) -> typename Duration::rep {
-    auto start = std::chrono::high_resolution_clock::now();
-    func();
-    auto end = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<Duration>(end - start).count();
-}
-}
-
-namespace Error {
-class LibException : public std::exception {
-public:
-    LibException(const char* message) : myMessage(message) {}
-    LibException(const std::string& message) : myMessage(message) {}
-    const char* what() const noexcept override { return myMessage.c_str(); }
-private:
-    std::string myMessage;
-};
-
-inline void LIB_THROW(const std::string& message) { throw LibException(message); }
-inline void LIB_ASSERT(const bool condition, const std::string& message) { if (!condition) LIB_THROW(message); }
-}
-
-namespace Consts {
-constexpr double NAN_DOUBLE = std::numeric_limits<double>::quiet_NaN();
-constexpr double POS_INF_DOUBLE = std::numeric_limits<double>::infinity();
-constexpr double NEG_INF_DOUBLE = -std::numeric_limits<double>::infinity();
-template<typename T>
-constexpr T quietNaN() {
-    LIB_ASSERT(std::is_floating_point_v<T>, "quietNaN() is only defined for floating-point types");
-    return std::numeric_limits<T>::quiet_NaN();
-}
-inline bool isNaN(double x) { return std::isnan(x); }
-}
-
-namespace Vector {
-std::vector<double> getVectorRange(const double a, const double b, const double x);
-std::vector<double> getVectorRange(const double a, const double b, const int n);
-}
-
-namespace Maths {
-inline double roundPriceToTick(double price, double tick = 0.01) {
-    const auto ticks = std::llround(price / tick);
-    return ticks * tick;
-}
-}
-
-namespace Statistics {
-inline std::mt19937& GLOBAL_RNG() {
-    static thread_local std::mt19937 eng{ std::random_device{}() };
-    return eng;
-}
-
-inline std::mt19937& RNG_42() {
-    static thread_local std::mt19937 eng{ 42 };
-    return eng;
-}
-
-template<class Engine>
-inline double getRandomUniform01(Engine& eng) {
-    static thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
-    return dist(eng);
-}
-
-inline double getRandomUniform01(const bool deterministic = false) { return deterministic ? getRandomUniform01(RNG_42()) : getRandomUniform01(GLOBAL_RNG()); }
-
-inline double getRandomUniform(const double a, const double b, const bool deterministic = false) { return a + (b - a) * getRandomUniform01(deterministic); }
-
-template<class Engine, class Int>
-inline int getRandomUniformInt(const Int a, const Int b, Engine& eng) {
-    static thread_local std::uniform_int_distribution<Int> dist(a, b);
-    return dist(eng);
-}
-
-template<class Int>
-inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) { return deterministic ? getRandomUniformInt(a, b, RNG_42()) : getRandomUniformInt(a, b, GLOBAL_RNG()); }
-
-template<class T>
-inline T drawRandomElement(const std::vector<T>& vec, const bool deterministic = false) {
-    if (vec.empty())
-        Error::LIB_THROW("[drawRandomElement] Empty vector.");
-    return vec[getRandomUniformInt(0, static_cast<int>(vec.size()) - 1, deterministic)];
-}
-
-template <typename Container>
-auto drawRandomIterator(Container& container, const bool deterministic = false) {
-    if (container.empty())
-        Error::LIB_THROW("[getRandomIterator] Empty container.");
-    auto it = container.begin();
-    std::advance(it, getRandomUniformInt(0, static_cast<int>(container.size()) - 1, deterministic));
-    return it;
-}
-}
-
-namespace IO {
-inline constexpr char LIB_OB_BANNER[] = R"(
-    =======================================================================
-    =======================================================================
-    ||||                                                               ||||
-    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░   ||||
-    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
-    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
-    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░   ||||
-    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
-    ||||  ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ||||
-    ||||  ░▒▓████████▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░   ||||
-    ||||                                                               ||||
-    =======================================================================
-    =======================================================================
-)";
-
-inline constexpr char DEBUG_BANNER[] = R"(
-    ==================================================================
-    ==================================================================
-    ||||   ________  _______   ________  ___  ___  ________       ||||
-    ||||  |\   ___ \|\  ___ \ |\   __  \|\  \|\  \|\   ____\      ||||
-    ||||  \ \  \_|\ \ \   __/|\ \  \|\ /\ \  \\\  \ \  \___|      ||||
-    ||||   \ \  \ \\ \ \  \_|/_\ \   __  \ \  \\\  \ \  \  ___    ||||
-    ||||    \ \  \_\\ \ \  \_|\ \ \  \|\  \ \  \\\  \ \  \|\  \   ||||
-    ||||     \ \_______\ \_______\ \_______\ \_______\ \_______\  ||||
-    ||||      \|_______|\|_______|\|_______|\|_______|\|_______|  ||||
-    ||||                                                          ||||
-    ==================================================================
-    ==================================================================
-)";
-
-inline void printLibOBBanner(std::ostream& out) { out << LIB_OB_BANNER << "\n"; }
-
-inline void printDebugBanner(std::ostream& out) { out << DEBUG_BANNER << "\n"; }
-
-inline void printLineSeperator(std::ostream& out, const int lines = 1, const int length = 80, const std::string& line = "=") {
-    for (int i = 0; i < lines; ++i)
-        out << std::string(length, line[0]) << "\n";
-}
-}
 }
 
 #endif
