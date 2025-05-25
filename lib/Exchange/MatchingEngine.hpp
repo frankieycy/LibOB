@@ -29,6 +29,7 @@ public:
     std::string getSymbol() const { return mySymbol; }
     std::string getExchangeId() const { return myExchangeId; }
     OrderMatchingStrategy getOrderMatchingStrategy() const { return myOrderMatchingStrategy; }
+    OrderBookDisplayConfig& getOrderBookDisplayConfig() { return myOrderBookDisplayConfig; }
     const OrderBookDisplayConfig& getOrderBookDisplayConfig() const { return myOrderBookDisplayConfig; }
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> getWorldClock() const { return myWorldClock; }
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
