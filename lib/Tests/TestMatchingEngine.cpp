@@ -179,9 +179,18 @@ void testMatchingEngineRandomOrdersSpeedTest() {
     std::cout << "Timing stats (ns) per limit order submit: " << Utils::Statistics::getVectorStats(timesPerLimitOrderSubmit) << std::endl;
     // order cancellation
     const auto& activeOrders = em.getActiveLimitOrders();
+    std::vector<uint64_t> activeOrderIds;
+    activeOrderIds.reserve(activeOrders.size());
+    for (const auto& orderPair : activeOrders)
+        activeOrderIds.push_back(orderPair.first);
     for (int i = 0; i < 100000; ++i) {
-        const auto& it = Utils::Statistics::drawRandomIterator(activeOrders, true);
-        timesPerLimitOrderCancel.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, it]() { em.cancelOrder(it->first); }));
+        // const auto& it = Utils::Statistics::drawRandomIterator(activeOrders, true); // advancing unordered_map iterator works in O(n) - slow!
+        // timesPerLimitOrderCancel.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, it]() { em.cancelOrder(it->first); }));
+        const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
+        const uint64_t orderId = activeOrderIds[randomIndex];
+        timesPerLimitOrderCancel.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, orderId]() { em.cancelOrder(orderId); }));
+        activeOrderIds[randomIndex] = activeOrderIds.back(); // swap and pop
+        activeOrderIds.pop_back();
     }
     std::cout << "Timing stats (ns) per limit order cancel: " << Utils::Statistics::getVectorStats(timesPerLimitOrderCancel) << std::endl;
     // TODO: order price modification
