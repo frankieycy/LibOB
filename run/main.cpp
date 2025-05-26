@@ -11,6 +11,8 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineSimpleBook();
     // Tests::MatchingEngine::testMatchingEngineOrderEventManager();
     // Tests::MatchingEngine::testMatchingEngineRandomOrders();
-    Tests::MatchingEngine::testMatchingEngineOrderCancelModify();
+    // Tests::MatchingEngine::testMatchingEngineOrderCancelModify();
+    // Tests::MatchingEngine::testMatchingEngineRandomOrdersSpeedTest();
+    Tests::MatchingEngine::testMatchingEngineRandomOrdersStressTest();
     return 0;
 }

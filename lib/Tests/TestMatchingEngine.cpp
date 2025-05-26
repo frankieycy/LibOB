@@ -80,17 +80,17 @@ void testMatchingEngineRandomOrders() {
     for (int i = 0; i < 10; ++i) {
         const double u0 = Utils::Statistics::getRandomUniform01(true);
         const double u1 = Utils::Statistics::getRandomUniform01(true);
-        const uint32_t ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        const uint32_t qty = Utils::Statistics::getRandomUniformInt(1, 3, true);
         if (u0 < 0.5) {
             if (u1 < 0.5)
-                em.submitLimitOrderEvent(Market::Side::BUY, ui, Utils::Statistics::getRandomUniform(e->getBestAskPrice() - 5.0, e->getBestAskPrice() - 1.0, true));
+                em.submitLimitOrderEvent(Market::Side::BUY, qty, Utils::Statistics::getRandomUniform(e->getBestAskPrice() - 5.0, e->getBestAskPrice() - 1.0, true));
             else
-                em.submitLimitOrderEvent(Market::Side::SELL, ui, Utils::Statistics::getRandomUniform(e->getBestBidPrice() + 1.0, e->getBestBidPrice() + 5.0, true));
+                em.submitLimitOrderEvent(Market::Side::SELL, qty, Utils::Statistics::getRandomUniform(e->getBestBidPrice() + 1.0, e->getBestBidPrice() + 5.0, true));
         } else {
             if (u1 < 0.5)
-                em.submitMarketOrderEvent(Market::Side::BUY, ui);
+                em.submitMarketOrderEvent(Market::Side::BUY, qty);
             else
-                em.submitMarketOrderEvent(Market::Side::SELL, ui);
+                em.submitMarketOrderEvent(Market::Side::SELL, qty);
         }
     }
     // random orders in bulk
@@ -98,17 +98,17 @@ void testMatchingEngineRandomOrders() {
     for (int i = 0; i < 100; ++i) {
         const double u0 = Utils::Statistics::getRandomUniform01(true);
         const double u1 = Utils::Statistics::getRandomUniform01(true);
-        const int ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        const int qty = Utils::Statistics::getRandomUniformInt(1, 3, true);
         if (u0 < 0.5) {
             if (u1 < 0.5)
-                em.submitLimitOrderEvent(Market::Side::BUY, ui, Utils::Statistics::getRandomUniform(e->getBestAskPrice() - 5.0, e->getBestAskPrice() - 1.0, true));
+                em.submitLimitOrderEvent(Market::Side::BUY, qty, Utils::Statistics::getRandomUniform(e->getBestAskPrice() - 5.0, e->getBestAskPrice() - 1.0, true));
             else
-                em.submitLimitOrderEvent(Market::Side::SELL, ui, Utils::Statistics::getRandomUniform(e->getBestBidPrice() + 1.0, e->getBestBidPrice() + 5.0, true));
+                em.submitLimitOrderEvent(Market::Side::SELL, qty, Utils::Statistics::getRandomUniform(e->getBestBidPrice() + 1.0, e->getBestBidPrice() + 5.0, true));
         } else {
             if (u1 < 0.5)
-                em.submitMarketOrderEvent(Market::Side::BUY, ui);
+                em.submitMarketOrderEvent(Market::Side::BUY, qty);
             else
-                em.submitMarketOrderEvent(Market::Side::SELL, ui);
+                em.submitMarketOrderEvent(Market::Side::SELL, qty);
         }
     }
     Utils::IO::printDebugBanner(std::cout);
@@ -155,13 +155,12 @@ void testMatchingEngineOrderCancelModify() {
 }
 
 void testMatchingEngineRandomOrdersSpeedTest() {
-    // TODO: run market dynamics by bulk submission of orders to test the speed of various matching engine operations
+    // run market dynamics by bulk submission of orders to test the speed of various matching engine operations
     // e.g. order submission, cancellation, modification, and execution
-    const int numOrders = 1000000;
-    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1}; // relative probabilities for order book levels
+    const int numOrders = 1000000; // 1 million orders
+    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
-    em.setPrintOrderBookPerOrderSubmit(true);
     std::vector<long long> timesPerLimitOrderSubmit;
     std::vector<long long> timesPerLimitOrderCancel;
     std::vector<long long> timesPerLimitOrderModifyPrice;
@@ -169,13 +168,13 @@ void testMatchingEngineRandomOrdersSpeedTest() {
     std::vector<long long> timesPerMarketOrderSubmit;
     // order submission
     for (int i = 0; i < numOrders; ++i) {
-        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
-        const int ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
         const double u = Utils::Statistics::getRandomUniform01(true);
+        const int qty = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
         if (u < 0.5)
-            timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui, j]() { em.submitLimitOrderEvent(Market::Side::BUY, ui, 100.0 - j); }));
+            timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, qty, j]() { em.submitLimitOrderEvent(Market::Side::BUY, qty, 100.0 - j); }));
         else
-            timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui, j]() { em.submitLimitOrderEvent(Market::Side::SELL, ui, 100.0 + j); }));
+            timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, qty, j]() { em.submitLimitOrderEvent(Market::Side::SELL, qty, 100.0 + j); }));
     }
     std::cout << "Timing stats (ns) per limit order submit: " << Utils::Statistics::getVectorStats(timesPerLimitOrderSubmit) << std::endl;
     // order cancellation
@@ -214,24 +213,54 @@ void testMatchingEngineRandomOrdersSpeedTest() {
     std::cout << "Timing stats (ns) per limit order modify quantity: " << Utils::Statistics::getVectorStats(timesPerLimitOrderModifyQuantity) << std::endl;
     // market order submission
     for (int i = 0; i < numOrders / 5; ++i) {
-        const int ui = Utils::Statistics::getRandomUniformInt(1, 10, true);
         const double u = Utils::Statistics::getRandomUniform01(true);
+        const int qty = Utils::Statistics::getRandomUniformInt(1, 10, true);
         if (u < 0.5)
-            timesPerMarketOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui]() { em.submitMarketOrderEvent(Market::Side::BUY, ui); }));
+            timesPerMarketOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, qty]() { em.submitMarketOrderEvent(Market::Side::BUY, qty); }));
         else
-            timesPerMarketOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui]() { em.submitMarketOrderEvent(Market::Side::SELL, ui); }));
+            timesPerMarketOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, qty]() { em.submitMarketOrderEvent(Market::Side::SELL, qty); }));
     }
     std::cout << "Timing stats (ns) per market order submit: " << Utils::Statistics::getVectorStats(timesPerMarketOrderSubmit) << std::endl;
     // final order book state
     Utils::IO::printDebugBanner(std::cout);
     auto& config = e->getOrderBookDisplayConfig();
     config.setPrintAsciiOrderBook(true);
-    config.setOrderBookLevels(10);
+    config.setOrderBookLevels(20);
     std::cout << *e << std::endl;
 }
 
 void testMatchingEngineRandomOrdersStressTest() {
-    // TODO: run market dynamics by bulk submission of orders to stress test the matching engine
+    // run market dynamics by bulk submission of orders to stress test the matching engine
+    const int numOrders = 10000000; // 10 million orders
+    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
+    Market::OrderEventManagerBase em{e};
+    e->reserve(numOrders);
+    // stress test mixed limit and market order submission
+    for (int i = 0; i < numOrders; ++i) {
+        const double u0 = Utils::Statistics::getRandomUniform01(true);
+        const double u1 = Utils::Statistics::getRandomUniform01(true);
+        const int qty0 = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        const int qty1 = Utils::Statistics::getRandomUniformInt(1, 5, true);
+        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
+        if (u0 < 0.7) {
+            if (u1 < 0.5)
+                em.submitLimitOrderEvent(Market::Side::BUY, qty0, 100.0 - j);
+            else
+                em.submitLimitOrderEvent(Market::Side::SELL, qty0, 100.0 + j);
+        } else {
+            if (u1 < 0.5)
+                em.submitMarketOrderEvent(Market::Side::BUY, qty1);
+            else
+                em.submitMarketOrderEvent(Market::Side::SELL, qty1);
+        }
+    }
+    // final order book state
+    Utils::IO::printDebugBanner(std::cout);
+    auto& config = e->getOrderBookDisplayConfig();
+    config.setPrintAsciiOrderBook(true);
+    config.setOrderBookLevels(20);
+    std::cout << *e << std::endl;
 }
 
 void testMatchingEngineZeroIntelligence() {
