@@ -160,19 +160,33 @@ void testMatchingEngineRandomOrdersSpeedTest() {
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
     em.setPrintOrderBookPerOrderSubmit(true);
-    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1};
+    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1}; // relative probabilities for order book levels
     std::vector<long long> timesPerLimitOrderSubmit;
+    std::vector<long long> timesPerLimitOrderCancel;
+    std::vector<long long> timesPerLimitOrderModifyPrice;
+    std::vector<long long> timesPerLimitOrderModifyQuantity;
+    std::vector<long long> timesPerMarketOrderSubmit;
+    // order submission
     for (int i = 0; i < 1000000; ++i) {
         const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
         const int ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
         const double u = Utils::Statistics::getRandomUniform01(true);
-        if (u < 0.5) {
+        if (u < 0.5)
             timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui, j]() { em.submitLimitOrderEvent(Market::Side::BUY, ui, 100.0 - j); }));
-        } else {
+        else
             timesPerLimitOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui, j]() { em.submitLimitOrderEvent(Market::Side::SELL, ui, 100.0 + j); }));
-        }
     }
     std::cout << "Timing stats (ns) per limit order submit: " << Utils::Statistics::getVectorStats(timesPerLimitOrderSubmit) << std::endl;
+    // order cancellation
+    const auto& activeOrders = em.getActiveLimitOrders();
+    for (int i = 0; i < 100000; ++i) {
+        const auto& it = Utils::Statistics::drawRandomIterator(activeOrders, true);
+        timesPerLimitOrderCancel.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, it]() { em.cancelOrder(it->first); }));
+    }
+    std::cout << "Timing stats (ns) per limit order cancel: " << Utils::Statistics::getVectorStats(timesPerLimitOrderCancel) << std::endl;
+    // TODO: order price modification
+    // TODO: order quantity modification
+    // TODO: market order submission
     Utils::IO::printDebugBanner(std::cout);
     auto& config = e->getOrderBookDisplayConfig();
     config.setPrintAsciiOrderBook(true);
