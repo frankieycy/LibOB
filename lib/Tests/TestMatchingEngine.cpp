@@ -161,6 +161,7 @@ void testMatchingEngineRandomOrdersSpeedTest() {
     const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
+    e->reserve(numOrders);
     std::vector<long long> timesPerLimitOrderSubmit;
     std::vector<long long> timesPerLimitOrderCancel;
     std::vector<long long> timesPerLimitOrderModifyPrice;
@@ -237,24 +238,55 @@ void testMatchingEngineRandomOrdersStressTest() {
     Market::OrderEventManagerBase em{e};
     e->reserve(numOrders);
     // stress test mixed limit and market order submission
-    for (int i = 0; i < numOrders; ++i) {
-        const double u0 = Utils::Statistics::getRandomUniform01(true);
-        const double u1 = Utils::Statistics::getRandomUniform01(true);
-        const int qty0 = Utils::Statistics::getRandomUniformInt(1, 3, true);
-        const int qty1 = Utils::Statistics::getRandomUniformInt(1, 5, true);
-        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
-        if (u0 < 0.7) {
-            if (u1 < 0.5)
-                em.submitLimitOrderEvent(Market::Side::BUY, qty0, 100.0 - j);
-            else
-                em.submitLimitOrderEvent(Market::Side::SELL, qty0, 100.0 + j);
-        } else {
-            if (u1 < 0.5)
-                em.submitMarketOrderEvent(Market::Side::BUY, qty1);
-            else
-                em.submitMarketOrderEvent(Market::Side::SELL, qty1);
+    const auto timeOrderSubmit = Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, &p]() {
+        for (int i = 0; i < numOrders; ++i) {
+            const double u0 = Utils::Statistics::getRandomUniform01(true);
+            const double u1 = Utils::Statistics::getRandomUniform01(true);
+            const int qty0 = Utils::Statistics::getRandomUniformInt(1, 3, true);
+            const int qty1 = Utils::Statistics::getRandomUniformInt(1, 5, true);
+            const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
+            if (u0 < 0.7) {
+                if (u1 < 0.5)
+                    em.submitLimitOrderEvent(Market::Side::BUY, qty0, 100.0 - j);
+                else
+                    em.submitLimitOrderEvent(Market::Side::SELL, qty0, 100.0 + j);
+            } else {
+                if (u1 < 0.5)
+                    em.submitMarketOrderEvent(Market::Side::BUY, qty1);
+                else
+                    em.submitMarketOrderEvent(Market::Side::SELL, qty1);
+            }
         }
-    }
+    });
+    std::cout << "Timing taken for bulk order submission: " << timeOrderSubmit / 1e9 << " secs / " << numOrders << " orders" << std::endl;
+    // stress test mixed order cancellation and modification
+    const auto timeOrderCancelModify = Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, &p]() {
+        const auto& activeOrders = em.getActiveLimitOrders();
+        std::vector<uint64_t> activeOrderIds;
+        activeOrderIds.reserve(activeOrders.size());
+        for (const auto& orderPair : activeOrders)
+            activeOrderIds.push_back(orderPair.first);
+        for (int i = 0; i < numOrders; ++i) {
+            const double u = Utils::Statistics::getRandomUniform01(true);
+            const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
+            const uint64_t orderId = activeOrderIds[randomIndex];
+            if (u < 0.2) { // cancel
+                em.cancelOrder(orderId);
+                activeOrderIds[randomIndex] = activeOrderIds.back(); // swap and pop
+                activeOrderIds.pop_back();
+            } else if (u < 0.6) { // modify price
+                const auto& order = activeOrders.at(orderId);
+                const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
+                const double modifiedPrice = order->isBuy() ? 100.0 - j : 100.0 + j;
+                em.modifyOrderPrice(orderId, modifiedPrice);
+            } else { // modify quantity
+                const double modifiedQuantity = Utils::Statistics::getRandomUniformInt(1, 3, true);
+                em.modifyOrderQuantity(orderId, modifiedQuantity);
+            }
+        }
+    });
+    std::cout << "Timing taken for bulk order cancel/modify: " << timeOrderCancelModify / 1e9 << " secs / " << numOrders << " orders" << std::endl;
+    // TODO: stress test mixed order submission, cancellation and modification
     // final order book state
     Utils::IO::printDebugBanner(std::cout);
     auto& config = e->getOrderBookDisplayConfig();
