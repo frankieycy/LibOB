@@ -37,12 +37,20 @@ inline double getRandomUniform(const double a, const double b, const bool determ
 
 template<class Engine, class Int>
 inline int getRandomUniformInt(const Int a, const Int b, Engine& eng) {
-    static thread_local std::uniform_int_distribution<Int> dist(a, b);
+    std::uniform_int_distribution<Int> dist(a, b);
     return dist(eng);
 }
 
+template<class Engine, class Int>
+inline Int getRandomUniformIntFast(const Int a, const Int b, Engine& eng) {
+    static thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
+    const double u = dist(eng);
+    Int result = static_cast<Int>(a + std::floor(u * (b - a + 1)));
+    return (result > b) ? b : result;
+}
+
 template<class Int>
-inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) { return deterministic ? getRandomUniformInt(a, b, RNG_42()) : getRandomUniformInt(a, b, GLOBAL_RNG()); }
+inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) { return deterministic ? getRandomUniformIntFast(a, b, RNG_42()) : getRandomUniformIntFast(a, b, GLOBAL_RNG()); }
 
 template<class T>
 inline T drawRandomElement(const std::vector<T>& vec, const bool deterministic = false) {
@@ -51,18 +59,20 @@ inline T drawRandomElement(const std::vector<T>& vec, const bool deterministic =
     return vec[getRandomUniformInt(0, static_cast<int>(vec.size()) - 1, deterministic)];
 }
 
-template <typename Container>
-auto drawRandomIterator(Container& container, const bool deterministic = false) {
+template<typename Container>
+auto drawRandomIterator(const Container& container, const bool deterministic = false) {
     if (container.empty())
-        Error::LIB_THROW("[getRandomIterator] Empty container.");
-    auto it = container.begin();
-    std::advance(it, getRandomUniformInt(0, static_cast<int>(container.size()) - 1, deterministic));
-    return it;
+        Error::LIB_THROW("[drawRandomIterator] Empty container.");
+    const size_t index = getRandomUniformInt(0, static_cast<int>(container.size()) - 1, deterministic);
+    if constexpr (std::is_base_of_v<std::random_access_iterator_tag, typename std::iterator_traits<typename Container::const_iterator>::iterator_category>)
+        return container.begin() + index; // specialization for random access iterators e.g. std::vector, std::deque
+    else
+        return std::next(container.begin(), index);
 }
 
 size_t drawIndexWithRelativeProbabilities(const std::vector<double>& probabilities, const bool deterministic = false);
 
-template <typename T>
+template<typename T>
 VectorStats getVectorStats(const std::vector<T>& vec) {
     if (vec.empty())
         Error::LIB_THROW("[getVectorStats] Empty vector.");
