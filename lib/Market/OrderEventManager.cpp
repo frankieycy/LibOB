@@ -243,12 +243,12 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyQ
 }
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
-    out << "============================= Active Orders Snapshot ============================\n";
-    out << "   Id   |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   \n";
-    out << "---------------------------------------------------------------------------------\n";
+    out << "============================== Active Orders Snapshot =============================\n";
+    out << "    Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   \n";
+    out << "-----------------------------------------------------------------------------------\n";
     for (const auto& orderPair : myActiveLimitOrders) {
         const auto& order = orderPair.second;
-        out << std::setw(6) << order->getId() << "  | "
+        out << std::setw(8) << order->getId() << "  | "
             << std::setw(10) << order->getTimestamp() << "  | "
             << std::setw(9) << order->getOrderType() << "  | "
             << std::setw(7) << order->getSide() << "  | "
