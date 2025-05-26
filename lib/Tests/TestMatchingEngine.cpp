@@ -157,17 +157,18 @@ void testMatchingEngineOrderCancelModify() {
 void testMatchingEngineRandomOrdersSpeedTest() {
     // TODO: run market dynamics by bulk submission of orders to test the speed of various matching engine operations
     // e.g. order submission, cancellation, modification, and execution
+    const int numOrders = 1000000;
+    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1}; // relative probabilities for order book levels
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
     em.setPrintOrderBookPerOrderSubmit(true);
-    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1}; // relative probabilities for order book levels
     std::vector<long long> timesPerLimitOrderSubmit;
     std::vector<long long> timesPerLimitOrderCancel;
     std::vector<long long> timesPerLimitOrderModifyPrice;
     std::vector<long long> timesPerLimitOrderModifyQuantity;
     std::vector<long long> timesPerMarketOrderSubmit;
     // order submission
-    for (int i = 0; i < 1000000; ++i) {
+    for (int i = 0; i < numOrders; ++i) {
         const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
         const int ui = Utils::Statistics::getRandomUniformInt(1, 3, true);
         const double u = Utils::Statistics::getRandomUniform01(true);
@@ -183,7 +184,7 @@ void testMatchingEngineRandomOrdersSpeedTest() {
     activeOrderIds.reserve(activeOrders.size());
     for (const auto& orderPair : activeOrders)
         activeOrderIds.push_back(orderPair.first);
-    for (int i = 0; i < 100000; ++i) {
+    for (int i = 0; i < numOrders / 5; ++i) {
         // const auto& it = Utils::Statistics::drawRandomIterator(activeOrders, true); // advancing unordered_map iterator works in O(n) - slow!
         // timesPerLimitOrderCancel.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, it]() { em.cancelOrder(it->first); }));
         const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
@@ -193,9 +194,35 @@ void testMatchingEngineRandomOrdersSpeedTest() {
         activeOrderIds.pop_back();
     }
     std::cout << "Timing stats (ns) per limit order cancel: " << Utils::Statistics::getVectorStats(timesPerLimitOrderCancel) << std::endl;
-    // TODO: order price modification
-    // TODO: order quantity modification
-    // TODO: market order submission
+    // order price modification
+    for (int i = 0; i < numOrders / 5; ++i) {
+        const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
+        const uint64_t orderId = activeOrderIds[randomIndex];
+        const auto& order = activeOrders.at(orderId);
+        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
+        const double modifiedPrice = order->isBuy() ? 100.0 - j : 100.0 + j;
+        timesPerLimitOrderModifyPrice.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, orderId, modifiedPrice]() { em.modifyOrderPrice(orderId, modifiedPrice); }));
+    }
+    std::cout << "Timing stats (ns) per limit order modify price: " << Utils::Statistics::getVectorStats(timesPerLimitOrderModifyPrice) << std::endl;
+    // order quantity modification
+    for (int i = 0; i < numOrders / 5; ++i) {
+        const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
+        const uint64_t orderId = activeOrderIds[randomIndex];
+        const double modifiedQuantity = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        timesPerLimitOrderModifyQuantity.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, orderId, modifiedQuantity]() { em.modifyOrderQuantity(orderId, modifiedQuantity); }));
+    }
+    std::cout << "Timing stats (ns) per limit order modify quantity: " << Utils::Statistics::getVectorStats(timesPerLimitOrderModifyQuantity) << std::endl;
+    // market order submission
+    for (int i = 0; i < numOrders / 5; ++i) {
+        const int ui = Utils::Statistics::getRandomUniformInt(1, 10, true);
+        const double u = Utils::Statistics::getRandomUniform01(true);
+        if (u < 0.5)
+            timesPerMarketOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui]() { em.submitMarketOrderEvent(Market::Side::BUY, ui); }));
+        else
+            timesPerMarketOrderSubmit.push_back(Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, ui]() { em.submitMarketOrderEvent(Market::Side::SELL, ui); }));
+    }
+    std::cout << "Timing stats (ns) per market order submit: " << Utils::Statistics::getVectorStats(timesPerMarketOrderSubmit) << std::endl;
+    // final order book state
     Utils::IO::printDebugBanner(std::cout);
     auto& config = e->getOrderBookDisplayConfig();
     config.setPrintAsciiOrderBook(true);
