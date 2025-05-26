@@ -299,14 +299,14 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     }
 
     if (config.isShowTradeLog()) {
-        out << "====================== Trade Log ========================\n";
-        out << "   Id   |  Timestamp  |   Side   |    Price    |   Size  \n";
-        out << "---------------------------------------------------------\n";
+        out << "======================= Trade Log =========================\n";
+        out << "    Id    |  Timestamp  |   Side   |    Price    |   Size  \n";
+        out << "-----------------------------------------------------------\n";
         auto tradeIt = myTradeLog.end();
         uint level = 1;
         while (tradeIt != myTradeLog.begin()) {
             const auto& trade = *--tradeIt;
-            out << std::setw(6) << trade->getId() << "  | "
+            out << std::setw(8) << trade->getId() << "  | "
                 << std::setw(10) << trade->getTimestamp() << "  | "
                 << std::setw(7) << (trade->getIsBuyInitiated() ? "Buy" : "Sell") << "  | "
                 << std::fixed << std::setprecision(2)
@@ -319,14 +319,14 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     }
 
     if (config.isShowMarketQueue()) {
-        out << "=============== Market Queue ==============\n";
-        out << "   Id   |  Timestamp  |   Side   |   Size  \n";
-        out << "-------------------------------------------\n";
+        out << "================ Market Queue ===============\n";
+        out << "    Id    |  Timestamp  |   Side   |   Size  \n";
+        out << "---------------------------------------------\n";
         auto marketIt = myMarketQueue.end();
         uint level = 1;
         while (marketIt != myMarketQueue.begin()) {
             const auto& order = *--marketIt;
-            out << std::setw(6) << order->getId() << "  | "
+            out << std::setw(8) << order->getId() << "  | "
                 << std::setw(10) << order->getTimestamp() << "  | "
                 << std::setw(7) << order->getSide() << "  | "
                 << std::setw(6) << order->getQuantity() << "  \n";
@@ -337,14 +337,14 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     }
 
     if (config.isShowRemovedLimitOrderLog()) {
-        out << "========================= Removed Limit Orders =======================\n";
-        out << "   Id   |  Timestamp  |   Side   |    Price    |   Size   |   State   \n";
-        out << "----------------------------------------------------------------------\n";
+        out << "========================== Removed Limit Orders ========================\n";
+        out << "    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   \n";
+        out << "------------------------------------------------------------------------\n";
         auto removedIt = myRemovedLimitOrderLog.end();
         uint level = 1;
         while (removedIt != myRemovedLimitOrderLog.begin()) {
             const auto& order = *--removedIt;
-            out << std::setw(6) << order->getId() << "  | "
+            out << std::setw(8) << order->getId() << "  | "
                 << std::setw(10) << order->getTimestamp() << "  | "
                 << std::setw(7) << order->getSide() << "  | "
                 << std::fixed << std::setprecision(2)
@@ -358,13 +358,13 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     }
 
     if (config.isShowOrderLookup()) {
-        out << "======================= Order Lookup Table ===========================\n";
-        out << "   Id   |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
-        out << "----------------------------------------------------------------------\n";
+        out << "======================== Order Lookup Table ============================\n";
+        out << "    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
+        out << "------------------------------------------------------------------------\n";
         uint level = 1;
         for (const auto& orderPair : myLimitOrderLookup) {
             const auto& order = *orderPair.second.second;
-            out << std::setw(6) << order->getId() << "  | "
+            out << std::setw(8) << order->getId() << "  | "
                 << std::setw(10) << order->getTimestamp() << "  | "
                 << std::fixed << std::setprecision(2)
                 << std::setw(10) << order->getPrice() << "  | "
@@ -378,6 +378,13 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     }
 
     return out;
+}
+
+void MatchingEngineBase::reserve(const size_t numOrdersEstimate) {
+    myTradeLog.reserve(numOrdersEstimate);
+    myOrderProcessingReportLog.reserve(numOrdersEstimate);
+    myRemovedLimitOrderLog.reserve(numOrdersEstimate);
+    myLimitOrderLookup.reserve(numOrdersEstimate);
 }
 
 void MatchingEngineBase::init() {

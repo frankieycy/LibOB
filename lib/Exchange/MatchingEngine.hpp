@@ -71,6 +71,7 @@ public:
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
+    virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
     virtual void init() = 0;
     virtual void build() = 0; // builds the book given some user-input order events stream
     virtual void reset();
@@ -145,6 +146,7 @@ public:
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
+    virtual void reserve(const size_t numOrdersEstimate) override;
     virtual void init() override;
     virtual void build() override;
     virtual void reset() override;
