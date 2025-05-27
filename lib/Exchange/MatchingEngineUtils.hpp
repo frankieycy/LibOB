@@ -182,13 +182,16 @@ struct OrderCancelReport : public OrderProcessingReport {
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
+        const Market::OrderType orderType,
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message) {}
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message),
+        orderType(orderType) {}
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::string getAsJson() const override;
+    Market::OrderType orderType;
 };
 
 struct OrderModifyPriceReport : public OrderProcessingReport {
