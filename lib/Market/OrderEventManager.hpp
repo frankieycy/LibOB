@@ -6,6 +6,9 @@
 #include "Exchange/MatchingEngine.hpp"
 
 namespace Market {
+using LimitOrderIndex = std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>>;
+using MarketOrderIndex = std::unordered_map<uint64_t, std::shared_ptr<Market::MarketOrder>>;
+
 class OrderEventManagerBase {
 public:
     OrderEventManagerBase() = default;
@@ -16,8 +19,8 @@ public:
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> getWorldClock() const { return myWorldClock; }
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
     std::shared_ptr<const Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
-    const std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>>& getActiveLimitOrders() const { return myActiveLimitOrders; }
-    const std::unordered_map<uint64_t, std::shared_ptr<Market::MarketOrder>>& getQueuedMarketOrders() const { return myQueuedMarketOrders; }
+    const LimitOrderIndex& getActiveLimitOrders() const { return myActiveLimitOrders; }
+    const MarketOrderIndex& getQueuedMarketOrders() const { return myQueuedMarketOrders; }
     double getMinimumPriceTick() const { return myMinimumPriceTick; }
     long long getMillisecondsToPauseBeforeEventSubmit() const { return myMillisecondsToPauseBeforeEventSubmit; }
     bool isTimeEngineOrderEventsProcessing() const { return myTimeEngineOrderEventsProcessing; }
@@ -49,6 +52,7 @@ public:
     virtual void onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
     virtual std::ostream& stateSnapshot(std::ostream& out) const;
+    virtual void reserve(const size_t numOrdersEstimate);
 private:
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
     virtual std::shared_ptr<OrderSubmitEvent> createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price);
@@ -57,14 +61,16 @@ private:
     virtual std::shared_ptr<OrderModifyPriceEvent> createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice);
     virtual std::shared_ptr<OrderModifyQuantityEvent> createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity);
     virtual std::shared_ptr<OrderBase> fetchOrder(const uint64_t orderId) const;
+    virtual LimitOrderIndex::const_iterator fetchLimitOrderIterator(const uint64_t orderId) const;
+    virtual MarketOrderIndex::const_iterator fetchMarketOrderIterator(const uint64_t orderId) const;
 
     Utils::Counter::IdHandlerBase myOrderIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myEventIdHandler = Utils::Counter::IdHandlerBase();
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>();
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
-    std::unordered_map<uint64_t, std::shared_ptr<Market::LimitOrder>> myActiveLimitOrders;
-    std::unordered_map<uint64_t, std::shared_ptr<Market::MarketOrder>> myQueuedMarketOrders; // empty most of the time
+    LimitOrderIndex myActiveLimitOrders;
+    MarketOrderIndex myQueuedMarketOrders; // empty most of the time
     double myMinimumPriceTick = 0.01;
     long long myMillisecondsToPauseBeforeEventSubmit = 0; // avoids high-frequency log outputs e.g. book snapshot during debug
     bool myTimeEngineOrderEventsProcessing = false; // whether to time order events processing in the matching engine

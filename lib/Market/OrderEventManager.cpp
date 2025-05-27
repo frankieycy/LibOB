@@ -94,6 +94,24 @@ std::shared_ptr<OrderBase> OrderEventManagerBase::fetchOrder(const uint64_t orde
     return itL->second;
 }
 
+LimitOrderIndex::const_iterator OrderEventManagerBase::fetchLimitOrderIterator(const uint64_t orderId) const {
+    const auto& it = myActiveLimitOrders.find(orderId);
+    if (it == myActiveLimitOrders.end()) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchLimitOrderIterator] Limit order not found - orderId = " << orderId << ".";
+        return myActiveLimitOrders.cend();
+    }
+    return it;
+}
+
+MarketOrderIndex::const_iterator OrderEventManagerBase::fetchMarketOrderIterator(const uint64_t orderId) const {
+    const auto& it = myQueuedMarketOrders.find(orderId);
+    if (it == myQueuedMarketOrders.end()) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchMarketOrderIterator] Market order not found - orderId = " << orderId << ".";
+        return myQueuedMarketOrders.cend();
+    }
+    return it;
+}
+
 std::shared_ptr<const OrderSubmitEvent> OrderEventManagerBase::submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price) {
     const auto& event = createLimitOrderSubmitEvent(side, quantity, price);
     submitOrderEventToMatchingEngine(event);
@@ -192,17 +210,29 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
-    auto order = fetchOrder(report.orderId);
-    if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
-        return;
+    if (report.orderType == Market::OrderType::LIMIT) {
+        const auto& it = fetchLimitOrderIterator(report.orderId);
+        if (it != myActiveLimitOrders.end()) {
+            auto order = it->second;
+            order->setOrderState(Market::OrderState::CANCELLED);
+            order->setTimestamp(clockTick());
+            myActiveLimitOrders.erase(it);
+        } else {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
+        }
+    } else if (report.orderType == Market::OrderType::MARKET) {
+        const auto& it = fetchMarketOrderIterator(report.orderId);
+        if (it != myQueuedMarketOrders.end()) {
+            auto order = it->second;
+            order->setOrderState(Market::OrderState::CANCELLED);
+            order->setTimestamp(clockTick());
+            myQueuedMarketOrders.erase(it);
+        } else {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
+        }
+    } else {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in cancel report - orderId = " << report.orderId;
     }
-    order->setOrderState(Market::OrderState::CANCELLED);
-    order->setTimestamp(clockTick());
-    if (order->isLimitOrder())
-        myActiveLimitOrders.erase(report.orderId);
-    else
-        myQueuedMarketOrders.erase(report.orderId);
 }
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report) {
@@ -270,6 +300,12 @@ std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
     }
     out << "---------------------------------------------------------------------------------\n";
     return out;
+}
+
+void OrderEventManagerBase::reserve(const size_t numOrdersEstimate) {
+    myMatchingEngine->reserve(numOrdersEstimate);
+    myActiveLimitOrders.reserve(numOrdersEstimate);
+    myQueuedMarketOrders.reserve(numOrdersEstimate);
 }
 }
 
