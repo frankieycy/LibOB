@@ -163,16 +163,18 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             newQueue.push_back(order);
             it->second = {&newQueue, std::prev(newQueue.end())};
             if (order->isBuy()) {
-                myBidBookSize[newPrice] += newQuantity;
+                uint32_t& bidBookSizeAtNewPrice = myBidBookSize[newPrice];
                 uint32_t& bidBookSizeAtOldPrice = myBidBookSize[oldPrice];
+                bidBookSizeAtNewPrice += newQuantity;
                 bidBookSizeAtOldPrice -= oldQuantity;
                 if (bidBookSizeAtOldPrice == 0) {
                     myBidBookSize.erase(oldPrice);
                     myBidBook.erase(oldPrice);
                 }
             } else {
-                myAskBookSize[newPrice] += newQuantity;
+                uint32_t& askBookSizeAtNewPrice = myAskBookSize[newPrice];
                 uint32_t& askBookSizeAtOldPrice = myAskBookSize[oldPrice];
+                askBookSizeAtNewPrice += newQuantity;
                 askBookSizeAtOldPrice -= oldQuantity;
                 if (askBookSizeAtOldPrice == 0) {
                     myAskBookSize.erase(oldPrice);
