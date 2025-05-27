@@ -145,6 +145,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         return;
     }
     const auto& it = myLimitOrderLookup.find(event->getOrderId());
+    // limit order events handling
     if (it != myLimitOrderLookup.end()) {
         auto& queueOrderPair = it->second;
         auto& queue = queueOrderPair.first;
@@ -163,15 +164,17 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             it->second = {&newQueue, std::prev(newQueue.end())};
             if (order->isBuy()) {
                 myBidBookSize[newPrice] += newQuantity;
-                myBidBookSize[oldPrice] -= oldQuantity;
-                if (myBidBookSize[oldPrice] == 0) {
+                uint32_t& bidBookSizeAtOldPrice = myBidBookSize[oldPrice];
+                bidBookSizeAtOldPrice -= oldQuantity;
+                if (bidBookSizeAtOldPrice == 0) {
                     myBidBookSize.erase(oldPrice);
                     myBidBook.erase(oldPrice);
                 }
             } else {
                 myAskBookSize[newPrice] += newQuantity;
-                myAskBookSize[oldPrice] -= oldQuantity;
-                if (myAskBookSize[oldPrice] == 0) {
+                uint32_t& askBookSizeAtOldPrice = myAskBookSize[oldPrice];
+                askBookSizeAtOldPrice -= oldQuantity;
+                if (askBookSizeAtOldPrice == 0) {
                     myAskBookSize.erase(oldPrice);
                     myAskBook.erase(oldPrice);
                 }
@@ -185,19 +188,21 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             myLimitOrderLookup.erase(it);
             queue->erase(orderIt);
             if (order->isBuy()) {
-                myBidBookSize[oldPrice] -= oldQuantity;
-                if (myBidBookSize[oldPrice] == 0) {
+                uint32_t& bidBookSizeAtOldPrice = myBidBookSize[oldPrice];
+                bidBookSizeAtOldPrice -= oldQuantity;
+                if (bidBookSizeAtOldPrice == 0) {
                     myBidBookSize.erase(oldPrice);
                     myBidBook.erase(oldPrice);
                 }
             } else {
-                myAskBookSize[oldPrice] -= oldQuantity;
-                if (myAskBookSize[oldPrice] == 0) {
+                uint32_t& askBookSizeAtOldPrice = myAskBookSize[oldPrice];
+                askBookSizeAtOldPrice -= oldQuantity;
+                if (askBookSizeAtOldPrice == 0) {
                     myAskBookSize.erase(oldPrice);
                     myAskBook.erase(oldPrice);
                 }
             }
-            logOrderProcessingReport(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), OrderProcessingStatus::SUCCESS));
+            logOrderProcessingReport(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), Market::OrderType::LIMIT, OrderProcessingStatus::SUCCESS));
         }
     }
 }
