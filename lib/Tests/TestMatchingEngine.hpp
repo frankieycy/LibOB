@@ -10,6 +10,7 @@ void testMatchingEngineRandomOrders();
 void testMatchingEngineOrderCancelModify();
 void testMatchingEngineRandomOrdersSpeedTest();
 void testMatchingEngineRandomOrdersStressTest();
+void testMatchingEngineSpeedProfiling();
 void testMatchingEngineZeroIntelligence();
 }
 }

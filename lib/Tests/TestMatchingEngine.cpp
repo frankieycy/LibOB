@@ -157,11 +157,17 @@ void testMatchingEngineOrderCancelModify() {
 void testMatchingEngineRandomOrdersSpeedTest() {
     // run market dynamics by bulk submission of orders to test the speed of various matching engine operations
     // e.g. order submission, cancellation, modification, and execution
+    // sample outputs ==================================================================================================
+    // Timing stats (ns) per limit order submit: {"size":1000000,"mean":359.241,"variance":3.80675e+08,"stddev":19510.9}
+    // Timing stats (ns) per limit order cancel: {"size":200000,"mean":1067.45,"variance":1.00545e+07,"stddev":3170.88}
+    // Timing stats (ns) per limit order modify price: {"size":200000,"mean":421.857,"variance":196068,"stddev":442.796}
+    // Timing stats (ns) per limit order modify quantity: {"size":200000,"mean":856.257,"variance":241391,"stddev":491.316}
+    // Timing stats (ns) per market order submit: {"size":200000,"mean":2417.06,"variance":1.90288e+09,"stddev":43622}
     const int numOrders = 1000000; // 1 million orders
     const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
-    e->reserve(numOrders);
+    em.reserve(numOrders);
     std::vector<long long> timesPerLimitOrderSubmit;
     std::vector<long long> timesPerLimitOrderCancel;
     std::vector<long long> timesPerLimitOrderModifyPrice;
@@ -232,11 +238,14 @@ void testMatchingEngineRandomOrdersSpeedTest() {
 
 void testMatchingEngineRandomOrdersStressTest() {
     // run market dynamics by bulk submission of orders to stress test the matching engine
+    // sample outputs =======================================================
+    // Timing taken for bulk order submission: 10.7403 secs / 10000000 orders
+    // Timing taken for bulk order cancel/modify: 53.3957 secs / 10000000 orders
     const int numOrders = 10000000; // 10 million orders
     const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
-    e->reserve(numOrders);
+    em.reserve(numOrders);
     // stress test mixed limit and market order submission
     const auto timeOrderSubmit = Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, &p]() {
         for (int i = 0; i < numOrders; ++i) {
@@ -286,13 +295,16 @@ void testMatchingEngineRandomOrdersStressTest() {
         }
     });
     std::cout << "Timing taken for bulk order cancel/modify: " << timeOrderCancelModify / 1e9 << " secs / " << numOrders << " orders" << std::endl;
-    // TODO: stress test mixed order submission, cancellation and modification
     // final order book state
     Utils::IO::printDebugBanner(std::cout);
     auto& config = e->getOrderBookDisplayConfig();
     config.setPrintAsciiOrderBook(true);
     config.setOrderBookLevels(20);
     std::cout << *e << std::endl;
+}
+
+void testMatchingEngineSpeedProfiling() {
+    // TODO
 }
 
 void testMatchingEngineZeroIntelligence() {
