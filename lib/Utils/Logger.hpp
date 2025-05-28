@@ -9,17 +9,19 @@ namespace Logger {
 class LoggerBase {
 public:
     LoggerBase() = default;
-    LoggerBase(const std::string& logFileName, const bool logToFile = true, const bool logToConsole = false, const bool showLogTimestamp = true);
+    LoggerBase(const std::string& logFileName, const bool logToConsole = false, const bool showLogTimestamp = true);
     virtual ~LoggerBase();
     virtual void log(const std::string& message, const LogLevel level = LogLevel::INFO, const OverwriteLastLog overwrite = OverwriteLastLog::NO);
     virtual std::string getTimestamp() const;
     void setSilent(const bool silent) { myIsSilent = silent; }
-    void setLogFile(const std::string& logFileName, const bool showLogTimestamp = true) {
-        if (myLogToFile && myLogFile.is_open())
+    void setLogFile(const std::string& logFileName, const bool logToConsole = false, const bool showLogTimestamp = true) {
+        myLogToFile = true;
+        myLogToConsole = logToConsole;
+        myShowLogTimestamp = showLogTimestamp;
+        if (myLogFile.is_open())
             myLogFile.close();
         myLogFileName = logFileName;
         myLogFile.open(myLogFileName, std::ios::out | std::ios::app);
-        myShowLogTimestamp = showLogTimestamp;
     }
     LoggerStream operator<<(const LogLevel& level) {
         return LoggerStream(*this, level);

@@ -7,8 +7,8 @@
 
 namespace Utils {
 namespace Logger {
-LoggerBase::LoggerBase(const std::string& logFileName, const bool logToFile, const bool logToConsole, const bool showLogTimestamp) :
-    myLogFileName(logFileName), myLogToFile(logToFile), myLogToConsole(logToConsole), myShowLogTimestamp(showLogTimestamp) {
+LoggerBase::LoggerBase(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) :
+    myLogFileName(logFileName), myLogToFile(true), myLogToConsole(logToConsole), myShowLogTimestamp(showLogTimestamp) {
     if (myLogToFile) {
         myLogFile.open(myLogFileName, std::ios::out | std::ios::app);
         if (!myLogFile.is_open())

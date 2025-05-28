@@ -8,7 +8,7 @@ const std::string TEST_NAME = "MatchingEngineOrderEventManager";
 int main() {
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>(true);
     Market::OrderEventManagerBase em{e};
-    em.setLoggerLogFile(Utils::RegressionTests::getBaselineFileName(TEST_NAME), false);
+    em.setLoggerLogFile(Utils::RegressionTests::getBaselineFileName(TEST_NAME), false, false);
     em.setPrintOrderBookPerOrderSubmit(true);
     em.submitLimitOrderEvent(Market::Side::BUY, 15, 99.0);
     em.submitLimitOrderEvent(Market::Side::BUY, 5, 99.0);

@@ -112,12 +112,12 @@ MarketOrderIndex::const_iterator OrderEventManagerBase::fetchMarketOrderIterator
     return it;
 }
 
-void OrderEventManagerBase::setLoggerLogFile(const std::string& logFileName, const bool showLogTimestamp) {
+void OrderEventManagerBase::setLoggerLogFile(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) {
     if (logFileName.empty()) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::setLoggerLogFile] Log file name is empty, logger will not log to file.";
         return;
     }
-    myLogger->setLogFile(logFileName, showLogTimestamp);
+    myLogger->setLogFile(logFileName, logToConsole, showLogTimestamp);
     myMatchingEngine->setLogger(myLogger);
     *myLogger << Logger::LogLevel::INFO << "[OrderEventManagerBase::setLoggerLogFile] Logger log file set to: " << logFileName;
 }
