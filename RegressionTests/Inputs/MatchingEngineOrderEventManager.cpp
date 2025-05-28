@@ -5,7 +5,7 @@
 
 const std::string TEST_NAME = "MatchingEngineOrderEventManager";
 
-int RegTest_MatchingEngineOrderEventManager() {
+int main() {
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>(true);
     Market::OrderEventManagerBase em{e};
     em.setLoggerLogFile(Utils::RegressionTests::getBaselineFileName(TEST_NAME), false);
