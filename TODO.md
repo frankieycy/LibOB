@@ -25,10 +25,12 @@
     - ok, move updated orders to the back of limit queue
     - ok, override incoming orders or order updates with the internal clock
     - ok, make `fillOrderByMatchingLimitQueue` etc. as class member function
-    - order matching test cases - submit, matching, cancel, modify, callback etc.
+    - ok, order matching test cases - submit, matching, cancel, modify, callback etc.
+    - ok, order book data members size reserve to reduce memory reallocation in STL containers
     - ASCII order book dynamic display (time evolution of book)
     - when will `OrderProcessingReport` report failure?
     - order book construction from events stream, same for `OrderEventManager`
+    - detailed speed profiling for various matching engine operations
 * `Market::OrderEventManager`
     - ok, unified interface for order submmit, cancel, modify etc.
     - ok, take in a `TimestampHandlerBase` ptr
@@ -36,7 +38,7 @@
     - ok, sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
 * `Analytics::MatchingEngineMonitor`
 * `RegressionTests`
-    - cpp files in `Inputs` (small selections from `Tests`) and log files in `Baseline` (outputs from running cpp)
+    - ok, cpp files in `Inputs` (small selections from `Tests`) and log files in `Baseline` (outputs from running cpp)
     - add `RegressionTests` and `UpdateBaselines` to makefile
 
 ### Analytics
