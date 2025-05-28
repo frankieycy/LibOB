@@ -3,7 +3,7 @@
 
 namespace Utils {
 namespace RegressionTests {
-constexpr const char* BASELINE_DIR = "lib/RegressionTests/Baseline/";
+constexpr const char* BASELINE_DIR = "RegressionTests/Baseline/";
 const std::string BASELINE_FILE_PREFIX = std::string(BASELINE_DIR);
 const std::string BASELINE_FILE_SUFFIX = ".baseline.txt";
 inline std::string getBaselineFileName(const std::string& testName) {
