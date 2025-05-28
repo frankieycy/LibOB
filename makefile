@@ -9,6 +9,11 @@ DEP := $(OBJ:.o=.d)
 
 TARGET = exe/main
 # --------------------------------------------------------------------
+# Regression test setup
+REG_SRC := $(shell find RegressionTests/Inputs -name '*.cpp')
+REG_OBJ := $(patsubst %.cpp, obj/%.o, $(REG_SRC))
+REG_EXE := $(patsubst RegressionTests/Inputs/%.cpp, exe/RegressionTests/%, $(REG_SRC))
+# --------------------------------------------------------------------
 
 all: $(TARGET)
 
