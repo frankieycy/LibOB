@@ -304,7 +304,79 @@ void testMatchingEngineRandomOrdersStressTest() {
 }
 
 void testMatchingEngineSpeedProfiling() {
-    // TODO
+    // detailed speed profiling of matching engine operations - set numerous timers inside MatchingEngine::process(event)
+    const int numOrders = 250;
+    const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
+    Market::OrderEventManagerBase em{e};
+    em.reserve(numOrders);
+    // order submission
+    std::cout << "Submitting " << numOrders << " random limit orders..." << std::endl;
+    for (int i = 0; i < numOrders; ++i) {
+        const double u = Utils::Statistics::getRandomUniform01(true);
+        const int qty = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
+        if (u < 0.5)
+            em.submitLimitOrderEvent(Market::Side::BUY, qty, 100.0 - j);
+        else
+            em.submitLimitOrderEvent(Market::Side::SELL, qty, 100.0 + j);
+    }
+    // order cancellation
+    // sample outputs ===========================================
+    // Time (ns) myLimitOrderLookup.find(event->getOrderId()): 42
+    // Time (ns) order->executeOrderEvent(*event): 41
+    // Time (ns) !order->isAlive() pre-processing: 2834
+    // Time (ns) !order->isAlive() book update: 2708
+    // Time (ns) !order->isAlive() order report: 3000
+    std::cout << "\n\nCancelling " << numOrders / 5 << " random limit orders..." << std::endl;
+    const auto& activeOrders = em.getActiveLimitOrders();
+    std::vector<uint64_t> activeOrderIds;
+    activeOrderIds.reserve(activeOrders.size());
+    for (const auto& orderPair : activeOrders)
+        activeOrderIds.push_back(orderPair.first);
+    for (int i = 0; i < numOrders / 5; ++i) {
+        const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
+        const uint64_t orderId = activeOrderIds[randomIndex];
+        em.cancelOrder(orderId);
+        activeOrderIds[randomIndex] = activeOrderIds.back(); // swap and pop
+        activeOrderIds.pop_back();
+    }
+    // order price modification
+    // sample outputs ===========================================
+    // Time (ns) myLimitOrderLookup.find(event->getOrderId()): 41
+    // Time (ns) order->executeOrderEvent(*event): 42
+    // Time (ns) order->isAlive() pre-processing: 2208
+    // Time (ns) order->isAlive() book update: 2458
+    // Time (ns) order->isAlive() order report: 2417
+    std::cout << "\n\nModifying price of " << numOrders / 5 << " random limit orders..." << std::endl;
+    for (int i = 0; i < numOrders / 5; ++i) {
+        const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
+        const uint64_t orderId = activeOrderIds[randomIndex];
+        const auto& order = activeOrders.at(orderId);
+        const size_t j = Utils::Statistics::drawIndexWithRelativeProbabilities(p, true);
+        const double modifiedPrice = order->isBuy() ? 100.0 - j : 100.0 + j;
+        em.modifyOrderPrice(orderId, modifiedPrice);
+    }
+    // order quantity modification
+    // sample outputs ===========================================
+    // Time (ns) myLimitOrderLookup.find(event->getOrderId()): 42
+    // Time (ns) order->executeOrderEvent(*event): 41
+    // Time (ns) order->isAlive() pre-processing: 1792
+    // Time (ns) order->isAlive() book update: 1958
+    // Time (ns) order->isAlive() order report: 2000
+    std::cout << "\n\nModifying quantity of " << numOrders / 5 << " random limit orders..." << std::endl;
+    for (int i = 0; i < numOrders / 5; ++i) {
+        const size_t randomIndex = Utils::Statistics::getRandomUniformInt(static_cast<size_t>(0), activeOrderIds.size() - 1, true);
+        const uint64_t orderId = activeOrderIds[randomIndex];
+        const double modifiedQuantity = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        em.modifyOrderQuantity(orderId, modifiedQuantity);
+    }
+    // final order book state
+    Utils::IO::printDebugBanner(std::cout);
+    auto& config = e->getOrderBookDisplayConfig();
+    config.setPrintAsciiOrderBook(true);
+    config.setOrderBookLevels(20);
+    std::cout << *e << std::endl;
 }
 
 void testMatchingEngineZeroIntelligence() {

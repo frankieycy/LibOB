@@ -13,6 +13,7 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineRandomOrders();
     // Tests::MatchingEngine::testMatchingEngineOrderCancelModify();
     // Tests::MatchingEngine::testMatchingEngineRandomOrdersSpeedTest();
-    Tests::MatchingEngine::testMatchingEngineRandomOrdersStressTest();
+    // Tests::MatchingEngine::testMatchingEngineRandomOrdersStressTest();
+    Tests::MatchingEngine::testMatchingEngineSpeedProfiling();
     return 0;
 }
