@@ -27,6 +27,19 @@ obj/%.o: %.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# Regression: build and run all regression tests
+regression: $(REG_EXE)
+	@echo "Running regression tests..."
+	@for exe in $(REG_EXE); do \
+		echo "Running $$exe..."; \
+		./$$exe || echo "Test failed: $$exe"; \
+	done
+
+# Rule to build each regression test executable from its object file
+exe/RegressionTests/%: obj/RegressionTests/Inputs/%.o $(filter-out obj/run/%.o, $(OBJ))
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
 clean:
 	rm -rf obj exe
 
