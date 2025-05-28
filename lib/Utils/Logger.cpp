@@ -10,7 +10,7 @@ namespace Logger {
 LoggerBase::LoggerBase(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) :
     myLogFileName(logFileName), myLogToFile(true), myLogToConsole(logToConsole), myShowLogTimestamp(showLogTimestamp) {
     if (myLogToFile) {
-        myLogFile.open(myLogFileName, std::ios::out | std::ios::app);
+        myLogFile.open(myLogFileName, std::ios::out);
         if (!myLogFile.is_open())
             throw std::runtime_error("LoggerBase: failed to open log file " + myLogFileName);
     }

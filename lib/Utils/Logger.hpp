@@ -21,7 +21,7 @@ public:
         if (myLogFile.is_open())
             myLogFile.close();
         myLogFileName = logFileName;
-        myLogFile.open(myLogFileName, std::ios::out | std::ios::app);
+        myLogFile.open(myLogFileName, std::ios::out);
     }
     LoggerStream operator<<(const LogLevel& level) {
         return LoggerStream(*this, level);
