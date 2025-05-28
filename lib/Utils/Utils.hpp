@@ -25,6 +25,7 @@
 #include "Utils/MathsUtils.hpp"
 #include "Utils/StatisticsUtils.hpp"
 #include "Utils/VectorUtils.hpp"
+#include "Utils/RegressionTestsUtils.hpp"
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, std::vector<T>& vec) {
