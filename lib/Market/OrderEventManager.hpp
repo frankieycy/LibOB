@@ -38,6 +38,7 @@ public:
     void setSyncClockWithEngine(const bool syncClockWithEngine) { mySyncClockWithEngine = syncClockWithEngine; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setPrintOrderBookPerOrderSubmit(const bool printOrderBookPerOrderSubmit) { myPrintOrderBookPerOrderSubmit = printOrderBookPerOrderSubmit; }
+    void setLoggerLogFile(const std::string& logFileName, const bool showLogTimestamp = true);
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     std::shared_ptr<const OrderSubmitEvent> submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price);
     std::shared_ptr<const OrderSubmitEvent> submitMarketOrderEvent(const Side side, const uint32_t quantity);
