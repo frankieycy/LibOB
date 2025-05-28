@@ -322,7 +322,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             if (++level > config.getTradeLogLevels())
                 break;
         }
-        out << "---------------------------------------------------------\n";
+        out << "-----------------------------------------------------------\n";
     }
 
     if (config.isShowMarketQueue()) {
@@ -340,7 +340,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             if (++level > config.getMarketQueueLevels())
                 break;
         }
-        out << "-------------------------------------------\n";
+        out << "---------------------------------------------\n";
     }
 
     if (config.isShowRemovedLimitOrderLog()) {
@@ -361,7 +361,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             if (++level > config.getRemovedLimitOrderLogLevels())
                 break;
         }
-        out << "----------------------------------------------------------------------\n";
+        out << "------------------------------------------------------------------------\n";
     }
 
     if (config.isShowOrderLookup()) {
@@ -381,7 +381,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
             if (++level > config.getOrderLookupLevels())
                 break;
         }
-        out << "----------------------------------------------------------------------\n";
+        out << "------------------------------------------------------------------------\n";
     }
 
     return out;

@@ -299,7 +299,7 @@ std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
     }
     for (const auto& orderPair : myQueuedMarketOrders) {
         const auto& order = orderPair.second;
-        out << std::setw(6) << order->getId() << "  | "
+        out << std::setw(8) << order->getId() << "  | "
             << std::setw(10) << order->getTimestamp() << "  | "
             << std::setw(9) << order->getOrderType() << "  | "
             << std::setw(7) << order->getSide() << "  | "
@@ -308,7 +308,7 @@ std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {
             << std::setw(7) << order->getQuantity() << "  | "
             << std::setw(8) << order->getOrderState() << "  \n";
     }
-    out << "---------------------------------------------------------------------------------\n";
+    out << "-----------------------------------------------------------------------------------\n";
     return out;
 }
 
