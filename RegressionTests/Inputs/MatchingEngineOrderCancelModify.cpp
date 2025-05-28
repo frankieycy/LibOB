@@ -10,7 +10,6 @@ int main() {
     Market::OrderEventManagerBase em{e};
     em.setLoggerLogFile(Utils::RegressionTests::getBaselineFileName(TEST_NAME), false, false);
     em.setPrintOrderBookPerOrderSubmit(true);
-    em.setTimeEngineOrderEventsProcessing(true);
     em.submitLimitOrderEvent(Market::Side::BUY, 15, 99.0);
     em.submitLimitOrderEvent(Market::Side::BUY, 5, 99.0);
     em.submitLimitOrderEvent(Market::Side::BUY, 10, 98.0);

@@ -3,7 +3,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":0,"Timestamp":1,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":0,"Timestamp":2,"OrderId":0,"OrderSide":"Buy","Order":{"Id":0,"Timestamp":1,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":0,"Timestamp":4,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 58 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -43,7 +42,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":1,"Timestamp":6,"OrderId":1,"OrderSide":"Buy","Order":{"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":1,"Timestamp":8,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 65 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -85,7 +83,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":2,"Timestamp":10,"OrderId":2,"OrderSide":"Buy","Order":{"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":2,"Timestamp":12,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 37 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -130,7 +127,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":3,"Timestamp":14,"OrderId":3,"OrderSide":"Buy","Order":{"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":3,"Timestamp":16,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 36 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -177,7 +173,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":4,"Timestamp":18,"OrderId":4,"OrderSide":"Buy","Order":{"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":4,"Timestamp":20,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 36 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -227,7 +222,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":5,"Timestamp":22,"OrderId":5,"OrderSide":"Sell","Order":{"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":5,"Timestamp":24,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 37 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -280,7 +274,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":6,"Timestamp":26,"OrderId":6,"OrderSide":"Sell","Order":{"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":6,"Timestamp":28,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 35 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -335,7 +328,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":7,"Timestamp":30,"OrderId":7,"OrderSide":"Sell","Order":{"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":7,"Timestamp":32,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 35 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -393,7 +385,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":8,"Timestamp":34,"OrderId":8,"OrderSide":"Sell","Order":{"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":8,"Timestamp":36,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 35 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -452,7 +443,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":9,"OrderId":0,"Timestamp":37,"EventType":"Cancel"}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":9,"Timestamp":39,"OrderId":0,"OrderSide":"Buy","OrderProcessingType":"Cancel","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 16 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -510,7 +500,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":10,"OrderId":1,"Timestamp":41,"EventType":"Cancel"}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":10,"Timestamp":43,"OrderId":1,"OrderSide":"Buy","OrderProcessingType":"Cancel","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 12 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -566,7 +555,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":11,"OrderId":8,"Timestamp":45,"EventType":"Cancel"}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":11,"Timestamp":47,"OrderId":8,"OrderSide":"Sell","OrderProcessingType":"Cancel","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 11 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -623,7 +611,6 @@
 [LOG] WARNING [OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":12,"OrderId":2,"Timestamp":49,"EventType":"ModifyPrice","ModifiedPrice":100}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":12,"Timestamp":51,"OrderId":2,"OrderSide":"Buy","ModifiedPrice":100,"OrderProcessingType":"ModifyPrice","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 13 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -678,7 +665,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":13,"OrderId":4,"Timestamp":53,"EventType":"ModifyPrice","ModifiedPrice":95}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":13,"Timestamp":55,"OrderId":4,"OrderSide":"Buy","ModifiedPrice":95,"OrderProcessingType":"ModifyPrice","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 13 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -733,7 +719,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":14,"OrderId":5,"Timestamp":57,"EventType":"ModifyPrice","ModifiedPrice":102}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":14,"Timestamp":59,"OrderId":5,"OrderSide":"Sell","ModifiedPrice":102,"OrderProcessingType":"ModifyPrice","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 12 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -787,7 +772,6 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":15,"OrderId":7,"Timestamp":61,"EventType":"ModifyPrice","ModifiedPrice":102}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 0 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -842,7 +826,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":16,"OrderId":7,"Timestamp":63,"EventType":"ModifyPrice","ModifiedPrice":103}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":15,"Timestamp":65,"OrderId":7,"OrderSide":"Sell","ModifiedPrice":103,"OrderProcessingType":"ModifyPrice","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 12 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -901,7 +884,6 @@
 [LOG] WARNING [OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":17,"OrderId":2,"Timestamp":67,"EventType":"ModifyQuantity","ModifiedQuantity":5}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: {"ReportId":16,"Timestamp":69,"OrderId":2,"OrderSide":"Buy","ModifiedQuantity":5,"OrderProcessingType":"ModifyQuantity","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 12 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -957,7 +939,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":18,"OrderId":3,"Timestamp":71,"EventType":"ModifyQuantity","ModifiedQuantity":20}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: {"ReportId":17,"Timestamp":73,"OrderId":3,"OrderSide":"Buy","ModifiedQuantity":20,"OrderProcessingType":"ModifyQuantity","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 11 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -1013,7 +994,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":19,"OrderId":4,"Timestamp":75,"EventType":"ModifyQuantity","ModifiedQuantity":0}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":18,"Timestamp":77,"OrderId":4,"OrderSide":"Buy","OrderProcessingType":"Cancel","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 11 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -1067,7 +1047,6 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":20,"OrderId":6,"Timestamp":79,"EventType":"ModifyQuantity","ModifiedQuantity":0}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":19,"Timestamp":81,"OrderId":6,"OrderSide":"Sell","OrderProcessingType":"Cancel","Status":"Success","Latency":0,"Message":""}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 11 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -1121,7 +1100,6 @@
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":9,"Timestamp":83,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":20,"Timestamp":84,"OrderId":9,"OrderSide":"Sell","Order":{"Id":9,"Timestamp":83,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":9,"Timestamp":86,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 35 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -1174,7 +1152,6 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":22,"OrderId":7,"Timestamp":87,"EventType":"ModifyQuantity","ModifiedQuantity":15}
-[LOG] INFO [OrderEventManagerBase] Matching engine order event processing time: 0 microseconds. Note that IO operations are also counted in.
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
