@@ -159,8 +159,8 @@ std::shared_ptr<Market::OrderEventBase> OrderExecutionReport::makeEvent() const 
         order = std::make_shared<Market::LimitOrder>(orderId, timestamp, orderSide, filledQuantity, filledPrice);
     else if (orderType == Market::OrderType::MARKET)
         std::make_shared<Market::MarketOrder>(orderId, timestamp, orderSide, filledQuantity);
-    if (order) // maker orders passively rest on the book; only taker orders imply an order submit event
-        return isMakerOrder ? nullptr : std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order);
+    if (order && !isMakerOrder) // maker orders passively rest on the book; only taker orders imply an order submit event
+        return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order);
     return nullptr;
 }
 
