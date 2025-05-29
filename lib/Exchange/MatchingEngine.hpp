@@ -73,7 +73,6 @@ public:
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
     virtual void init() = 0;
-    virtual void build() = 0; // builds the book given some user-input order events stream
     virtual void reset();
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
     virtual std::string getAsJson() const = 0;
@@ -87,7 +86,8 @@ private:
     OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
     Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myReportIdHandler = Utils::Counter::IdHandlerBase();
-    std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>(); // maintains an internal clock that restamps orders upon order events (submit, cancel, etc.)
+    // maintains an internal clock that restamps orders upon order events (submit, cancel, etc.)
+    std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>();
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     bool myDebugMode = false;
 };
@@ -99,6 +99,7 @@ public:
     MatchingEngineBase() = default;
     MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
     MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
+    MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog);
     virtual ~MatchingEngineBase() = default;
     const DescOrderBook& getBidBook() const { return myBidBook; }
     const AscOrderBook& getAskBook() const { return myAskBook; }
@@ -140,6 +141,7 @@ public:
     std::shared_ptr<const Market::TradeBase> getLastTrade() const override;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) override;
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) override;
+    virtual void build(const OrderProcessingReportLog& orderProcessingReportLog); // builds the book given some user-input order events stream
     virtual void executeAgainstQueuedMarketOrders(const std::shared_ptr<Market::LimitOrder>& order, uint32_t& unfilledQuantity, MarketQueue& marketQueue);
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
@@ -148,7 +150,6 @@ public:
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
     virtual void reserve(const size_t numOrdersEstimate) override;
     virtual void init() override;
-    virtual void build() override;
     virtual void reset() override;
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const override;
     virtual std::string getAsJson() const override;
@@ -183,6 +184,7 @@ public:
     MatchingEngineFIFO() = default;
     MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
     MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
+    MatchingEngineFIFO(const OrderProcessingReportLog& orderProcessingReportLog) : MatchingEngineBase(orderProcessingReportLog) {}
     virtual ~MatchingEngineFIFO() = default;
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFO>(*this); }
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) override;

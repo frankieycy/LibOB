@@ -24,6 +24,12 @@ void IMatchingEngine::reset() {
     myWorldClock->reset();
 }
 
+MatchingEngineBase::MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog) :
+    IMatchingEngine() {
+    build(orderProcessingReportLog);
+    init();
+}
+
 std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};
@@ -207,6 +213,11 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             logOrderProcessingReport(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), Market::OrderType::LIMIT, OrderProcessingStatus::SUCCESS));
         }
     }
+}
+
+void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingReportLog) {
+    for (const auto& report : orderProcessingReportLog)
+        process(report->makeEvent());
 }
 
 std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
@@ -395,11 +406,13 @@ void MatchingEngineBase::reserve(const size_t numOrdersEstimate) {
 }
 
 void MatchingEngineBase::init() {
-    // TODO
-}
-
-void MatchingEngineBase::build() {
-    // TODO
+    // TODO: consistency checks for order book data members requiring that
+    // * the order indices are unique
+    // * the orders are sorted by timestamp in the limit queues
+    // * the price levels of the order books and order book sizes match
+    // * the individual order sizes add up to the total size at each price level
+    // * the removed limit orders are not present in the order book or market queue
+    // * the limit order lookup maps exactly to the limit orders in the book
 }
 
 void MatchingEngineBase::reset() {
