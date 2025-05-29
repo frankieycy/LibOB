@@ -24,6 +24,13 @@ void IMatchingEngine::reset() {
     myWorldClock->reset();
 }
 
+MatchingEngineBase::MatchingEngineBase(const MatchingEngineBase& matchingEngine) :
+    IMatchingEngine(matchingEngine),
+    myOrderProcessingCallback(matchingEngine.myOrderProcessingCallback) {
+    build(matchingEngine.getOrderProcessingReportLog());
+    init();
+}
+
 MatchingEngineBase::MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog) :
     IMatchingEngine() {
     build(orderProcessingReportLog);
@@ -137,15 +144,19 @@ std::shared_ptr<const Market::TradeBase> MatchingEngineBase::getLastTrade() cons
 }
 
 void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderBase>& order) {
-    if (!order)
-        Error::LIB_THROW("[MatchingEngineBase::process] Order is null.");
+    if (!order) {
+        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order is null.";
+        return;
+    }
     order->submit(*this); // relegate the order processing to OrderBase since it knows about the order type
 }
 
 void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventBase>& event) {
     // the hardcore order processing engine that interacts with external order event streams
-    if (!event)
-        Error::LIB_THROW("[MatchingEngineBase::process] Order event is null.");
+    if (!event) {
+        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order event is null.";
+        return;
+    }
     if (event->isSubmit()) {
         process(event->getOrder());
         return;
@@ -216,8 +227,12 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
 }
 
 void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingReportLog) {
-    for (const auto& report : orderProcessingReportLog)
-        process(report->makeEvent());
+    for (const auto& report : orderProcessingReportLog) {
+        if (isDebugMode())
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase::build] Processing order report: " << *report;
+        if (report)
+            process(report->makeEvent());
+    }
 }
 
 std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
@@ -592,8 +607,7 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
     OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
     LimitQueue dummyQueue; // avoids the creation of a new queue if the entire order is filled
     uint32_t dummySize = 0;
-    if (orderProcessingCallback)
-        orderProcessingCallback(std::make_shared<LimitOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order, OrderProcessingStatus::SUCCESS));
+    logOrderProcessingReport(std::make_shared<LimitOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order, OrderProcessingStatus::SUCCESS));
     executeAgainstQueuedMarketOrders(order, unfilledQuantity, marketQueue);
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty() && price >= askBook.begin()->first) {
@@ -635,8 +649,7 @@ void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder>
     AscOrderBookSize& askBookSize = getAskBookSize();
     MarketQueue& marketQueue = getMarketQueue();
     OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
-    if (orderProcessingCallback)
-        orderProcessingCallback(std::make_shared<MarketOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order, OrderProcessingStatus::SUCCESS));
+    logOrderProcessingReport(std::make_shared<MarketOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order, OrderProcessingStatus::SUCCESS));
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty()) {
             fillOrderByMatchingTopLimitQueue(order, unfilledQuantity, askBookSize.begin()->second, askBook.begin()->second);

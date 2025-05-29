@@ -97,7 +97,7 @@ private:
 class MatchingEngineBase : public IMatchingEngine {
 public:
     MatchingEngineBase() = default;
-    MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
+    MatchingEngineBase(const MatchingEngineBase& matchingEngine);
     MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
     MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog);
     virtual ~MatchingEngineBase() = default;
@@ -182,7 +182,7 @@ private:
 class MatchingEngineFIFO : public MatchingEngineBase {
 public:
     MatchingEngineFIFO() = default;
-    MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
+    MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) : MatchingEngineBase(matchingEngine) {}
     MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
     MatchingEngineFIFO(const OrderProcessingReportLog& orderProcessingReportLog) : MatchingEngineBase(orderProcessingReportLog) {}
     virtual ~MatchingEngineFIFO() = default;
