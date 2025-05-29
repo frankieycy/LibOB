@@ -96,6 +96,7 @@ struct OrderProcessingReport {
         status(status), latency(latency), message(message) {}
     virtual ~OrderProcessingReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const = 0;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const = 0;
     virtual std::string getAsJson() const = 0;
     uint64_t reportId;
     uint64_t timestamp;
@@ -128,6 +129,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
         orderExecutionType(orderExecutionType), trade(trade) {}
     virtual ~OrderExecutionReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::string getAsJson() const override;
     uint64_t tradeId;
     uint32_t filledQuantity;
@@ -152,6 +154,7 @@ struct LimitOrderSubmitReport : public OrderProcessingReport {
         order(order) {}
     virtual ~LimitOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::LimitOrder> order = nullptr;
 };
@@ -171,6 +174,7 @@ struct MarketOrderSubmitReport : public OrderProcessingReport {
         order(order) {}
     virtual ~MarketOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::MarketOrder> order = nullptr;
 };
@@ -190,6 +194,7 @@ struct OrderCancelReport : public OrderProcessingReport {
         orderType(orderType) {}
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
 };
@@ -209,6 +214,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
         modifiedPrice(modifiedPrice) {}
     virtual ~OrderModifyPriceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::string getAsJson() const override;
     double modifiedPrice;
 };
@@ -228,6 +234,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
         modifiedQuantity(modifiedQuantity) {}
     virtual ~OrderModifyQuantityReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::string getAsJson() const override;
     uint32_t modifiedQuantity;
 };

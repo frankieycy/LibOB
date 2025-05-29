@@ -153,6 +153,10 @@ void OrderExecutionReport::dispatchTo(Market::OrderEventManagerBase& orderEventM
     orderEventManager.onOrderProcessingReport(*this);
 }
 
+std::shared_ptr<Market::OrderEventBase> OrderExecutionReport::makeEvent() const {
+    return nullptr; // TODO
+}
+
 std::string OrderExecutionReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -177,6 +181,10 @@ void LimitOrderSubmitReport::dispatchTo(Market::OrderEventManagerBase& orderEven
     orderEventManager.onOrderProcessingReport(*this);
 }
 
+std::shared_ptr<Market::OrderEventBase> LimitOrderSubmitReport::makeEvent() const {
+    return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order->clone());
+}
+
 std::string LimitOrderSubmitReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -195,6 +203,10 @@ std::string LimitOrderSubmitReport::getAsJson() const {
 
 void MarketOrderSubmitReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
     orderEventManager.onOrderProcessingReport(*this);
+}
+
+std::shared_ptr<Market::OrderEventBase> MarketOrderSubmitReport::makeEvent() const {
+    return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order->clone());
 }
 
 std::string MarketOrderSubmitReport::getAsJson() const {
@@ -217,6 +229,10 @@ void OrderCancelReport::dispatchTo(Market::OrderEventManagerBase& orderEventMana
     orderEventManager.onOrderProcessingReport(*this);
 }
 
+std::shared_ptr<Market::OrderEventBase> OrderCancelReport::makeEvent() const {
+    return std::make_shared<Market::OrderCancelEvent>(reportId, orderId, timestamp);
+}
+
 std::string OrderCancelReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -234,6 +250,10 @@ std::string OrderCancelReport::getAsJson() const {
 
 void OrderModifyPriceReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
     orderEventManager.onOrderProcessingReport(*this);
+}
+
+std::shared_ptr<Market::OrderEventBase> OrderModifyPriceReport::makeEvent() const {
+    return std::make_shared<Market::OrderModifyPriceEvent>(reportId, orderId, timestamp, modifiedPrice);
 }
 
 std::string OrderModifyPriceReport::getAsJson() const {
@@ -254,6 +274,10 @@ std::string OrderModifyPriceReport::getAsJson() const {
 
 void OrderModifyQuantityReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
     orderEventManager.onOrderProcessingReport(*this);
+}
+
+std::shared_ptr<Market::OrderEventBase> OrderModifyQuantityReport::makeEvent() const {
+    return std::make_shared<Market::OrderModifyQuantityEvent>(reportId, orderId, timestamp, modifiedQuantity);
 }
 
 std::string OrderModifyQuantityReport::getAsJson() const {
