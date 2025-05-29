@@ -154,7 +154,14 @@ void OrderExecutionReport::dispatchTo(Market::OrderEventManagerBase& orderEventM
 }
 
 std::shared_ptr<Market::OrderEventBase> OrderExecutionReport::makeEvent() const {
-    return nullptr; // TODO
+    std::shared_ptr<Market::OrderBase> order;
+    if (orderType == Market::OrderType::LIMIT)
+        order = std::make_shared<Market::LimitOrder>(orderId, timestamp, orderSide, filledQuantity, filledPrice);
+    else if (orderType == Market::OrderType::MARKET)
+        std::make_shared<Market::MarketOrder>(orderId, timestamp, orderSide, filledQuantity);
+    if (order) // maker orders passively rest on the book; only taker orders imply an order submit event
+        return isMakerOrder ? nullptr : std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order);
+    return nullptr;
 }
 
 std::string OrderExecutionReport::getAsJson() const {
@@ -163,6 +170,7 @@ std::string OrderExecutionReport::getAsJson() const {
         "\"ReportId\":"              << reportId             << ","
         "\"Timestamp\":"             << timestamp            << ","
         "\"OrderId\":"               << orderId              << ","
+        "\"OrderType\":\""           << orderType            << "\","
         "\"OrderSide\":\""           << orderSide            << "\","
         "\"TradeId\":"               << tradeId              << ","
         "\"FilledQuantity\":"        << filledQuantity       << ","

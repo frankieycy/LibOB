@@ -472,8 +472,8 @@ void MatchingEngineBase::executeAgainstQueuedMarketOrders(
         // external callback of executed trades
         const OrderExecutionType takerOrderExecType = unfilledQuantity == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
         const OrderExecutionType makerOrderExecType = marketOrder->getQuantity() == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
-        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), true, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming maker order (limit order)
-        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), marketOrderId, marketOrder->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), false, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting taker order
+        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), order->getId(), Market::OrderType::LIMIT, order->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), true, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming maker order (limit order)
+        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), marketOrderId, Market::OrderType::MARKET, marketOrder->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), false, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting taker order
         if (isDebugMode())
             *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
     }
@@ -520,8 +520,8 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
         // external callback of executed trades
         const OrderExecutionType takerOrderExecType = unfilledQuantity == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
         const OrderExecutionType makerOrderExecType = matchOrder->getQuantity() == 0 ? OrderExecutionType::FILLED : OrderExecutionType::PARTIAL_FILLED;
-        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), orderId, order->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming taker order
-        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), matchOrderId, matchOrder->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting maker order (limit order)
+        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), orderId, order->getOrderType(), order->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming taker order
+        logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), matchOrderId, Market::OrderType::LIMIT, matchOrder->getSide(), trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting maker order (limit order)
         if (isDebugMode())
             *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
     }
