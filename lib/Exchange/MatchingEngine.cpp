@@ -624,11 +624,11 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
     const Market::Side side = order->getSide();
     const PriceLevel price = order->getPrice();
     uint32_t unfilledQuantity = order->getQuantity();
-    DescOrderBook& bidBook = getBidBook();
-    DescOrderBookSize& bidBookSize = getBidBookSize();
-    AscOrderBook& askBook = getAskBook();
-    AscOrderBookSize& askBookSize = getAskBookSize();
-    MarketQueue& marketQueue = getMarketQueue();
+    DescOrderBook& bidBook = accessBidBook();
+    DescOrderBookSize& bidBookSize = accessBidBookSize();
+    AscOrderBook& askBook = accessAskBook();
+    AscOrderBookSize& askBookSize = accessAskBookSize();
+    MarketQueue& marketQueue = accessMarketQueue();
     OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
     LimitQueue dummyQueue; // avoids the creation of a new queue if the entire order is filled
     uint32_t dummySize = 0;
@@ -668,11 +668,11 @@ void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder>
         return;
     const Market::Side side = order->getSide();
     uint32_t unfilledQuantity = order->getQuantity();
-    DescOrderBook& bidBook = getBidBook();
-    DescOrderBookSize& bidBookSize = getBidBookSize();
-    AscOrderBook& askBook = getAskBook();
-    AscOrderBookSize& askBookSize = getAskBookSize();
-    MarketQueue& marketQueue = getMarketQueue();
+    DescOrderBook& bidBook = accessBidBook();
+    DescOrderBookSize& bidBookSize = accessBidBookSize();
+    AscOrderBook& askBook = accessAskBook();
+    AscOrderBookSize& askBookSize = accessAskBookSize();
+    MarketQueue& marketQueue = accessMarketQueue();
     OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
     logOrderProcessingReport(std::make_shared<MarketOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order, OrderProcessingStatus::SUCCESS));
     if (side == Market::Side::BUY) {

@@ -159,16 +159,16 @@ public:
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const override;
     virtual std::string getAsJson() const override;
 protected:
-    DescOrderBook& getBidBook() { return myBidBook; }
-    AscOrderBook& getAskBook() { return myAskBook; }
-    DescOrderBookSize& getBidBookSize() { return myBidBookSize; }
-    AscOrderBookSize& getAskBookSize() { return myAskBookSize; }
-    MarketQueue& getMarketQueue() { return myMarketQueue; }
-    TradeLog& getTradeLog() { return myTradeLog; }
-    OrderEventLog& getOrderEventLog() { return myOrderEventLog; }
-    OrderProcessingReportLog& getOrderProcessingReportLog() { return myOrderProcessingReportLog; }
-    RemovedLimitOrderLog& getRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
-    OrderIndex& getLimitOrderLookup() { return myLimitOrderLookup; }
+    DescOrderBook& accessBidBook() { return myBidBook; }
+    AscOrderBook& accessAskBook() { return myAskBook; }
+    DescOrderBookSize& accessBidBookSize() { return myBidBookSize; }
+    AscOrderBookSize& accessAskBookSize() { return myAskBookSize; }
+    MarketQueue& accessMarketQueue() { return myMarketQueue; }
+    TradeLog& accessTradeLog() { return myTradeLog; }
+    OrderEventLog& accessOrderEventLog() { return myOrderEventLog; }
+    OrderProcessingReportLog& accessOrderProcessingReportLog() { return myOrderProcessingReportLog; }
+    RemovedLimitOrderLog& accessRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
+    OrderIndex& accessLimitOrderLookup() { return myLimitOrderLookup; }
 private:
     // each order processing must remember to update ALL the following data structures at once, each operation takes O(1)
     DescOrderBook myBidBook;
