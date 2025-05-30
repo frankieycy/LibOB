@@ -75,6 +75,7 @@
         "fstream": "cpp",
         "stack": "cpp",
         "numeric": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "set": "cpp"
     }
 }
