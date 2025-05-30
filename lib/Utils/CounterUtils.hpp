@@ -7,7 +7,10 @@ namespace Counter {
 class IdHandlerBase {
 public:
     IdHandlerBase() = default;
+    IdHandlerBase(const IdHandlerBase& idHandler) = default;
     IdHandlerBase(const bool idLogEnabled) : myIdLogEnabled(idLogEnabled) {}
+    virtual ~IdHandlerBase() = default;
+    virtual std::shared_ptr<IdHandlerBase> clone() const { return std::make_shared<IdHandlerBase>(*this); }
     const std::vector<uint64_t>& getIdLog() const { return myIdLog; }
     uint64_t getCurrentId() const { return myCurrentId; }
     uint64_t generateId();
@@ -21,6 +24,9 @@ private:
 class TimestampHandlerBase {
 public:
     TimestampHandlerBase() = default;
+    TimestampHandlerBase(const TimestampHandlerBase& timestampHandler) = default;
+    virtual ~TimestampHandlerBase() = default;
+    virtual std::shared_ptr<TimestampHandlerBase> clone() const { return std::make_shared<TimestampHandlerBase>(*this); }
     uint64_t getCurrentTimestamp() const { return myCurrentTimestamp; }
     uint64_t tick(const uint64_t elapsedTimeUnit = 1);
     void reset();
