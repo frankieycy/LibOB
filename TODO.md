@@ -27,6 +27,7 @@
     - ok, make `fillOrderByMatchingLimitQueue` etc. as class member function
     - ok, order matching test cases - submit, matching, cancel, modify, callback etc.
     - ok, order book data members size reserve to reduce memory reallocation in STL containers
+    - ok, implement constructors for `MatchingEngine` and `OrderEventManager`
     - ASCII order book dynamic display (time evolution of book)
     - when will `OrderProcessingReport` report failure?
     - order book construction from events stream, same for `OrderEventManager`
@@ -38,7 +39,7 @@
     - ok, sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
 * `Analytics::MatchingEngineMonitor`
 * `RegressionTests`
-    - ok, cpp files in `Inputs` (small selections from `Tests`) and log files in `Baseline` (outputs from running cpp)
+    - ok, cpp files in `Inputs` (small selections from `Tests`) and txt output files in `Baseline` (outputs from running cpp)
     - add `RegressionTests` and `UpdateBaselines` to makefile
 
 ### Analytics
