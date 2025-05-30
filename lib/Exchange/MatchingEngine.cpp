@@ -575,8 +575,22 @@ void MatchingEngineBase::reset() {
 }
 
 std::string MatchingEngineBase::getAsJson() const {
-    // TODO
-    return "";
+    // minimal Json representation of the matching engine state
+    std::ostringstream oss;
+    oss << "{"
+    "\"Symbol\":\""        << getSymbol()     << "\","
+    "\"ExchangeId\":\""    << getExchangeId() << "\","
+    "\"OrderEventLog\":[";
+    // TODO: use operator<< override for vector of pointers - implement in Utils.hpp
+    for (size_t i = 0; i < myOrderEventLog.size(); ++i) {
+        const auto& event = myOrderEventLog[i];
+        if (event)
+            oss << *event;
+        if (i < myOrderEventLog.size() - 1)
+            oss << ",";
+    }
+    oss << "]}";
+    return oss.str();
 }
 
 void MatchingEngineBase::executeAgainstQueuedMarketOrders(
