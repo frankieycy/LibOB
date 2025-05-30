@@ -73,6 +73,7 @@ public:
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
+    virtual void stateConsistencyCheck() const = 0; // checks the internal state of the matching engine for consistency
     virtual void init() = 0; // state consistency checks and class flags initialization called in every derived constructor
     virtual void reset(); // empties out the order book, trade log, market queue, world clock, logger, etc.
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
@@ -154,6 +155,7 @@ public:
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
     virtual void reserve(const size_t numOrdersEstimate) override;
+    virtual void stateConsistencyCheck() const override;
     virtual void init() override;
     virtual void reset() override;
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const override;

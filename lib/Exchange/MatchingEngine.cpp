@@ -482,8 +482,7 @@ void MatchingEngineBase::reserve(const size_t numOrdersEstimate) {
     myLimitOrderLookup.reserve(numOrdersEstimate);
 }
 
-void MatchingEngineBase::init() {
-    // consistency checks for order book data members requiring that
+void MatchingEngineBase::stateConsistencyCheck() const {
     const bool isFIFOBook = getOrderMatchingStrategy() == Exchange::OrderMatchingStrategy::FIFO;
     std::set<uint64_t> orderIds;
     if (myBidBook.size() != myBidBookSize.size()) // checks for consistency in the number of price levels
@@ -493,7 +492,7 @@ void MatchingEngineBase::init() {
     for (const auto& priceQueuePair : myBidBook) {
         const PriceLevel priceLevel = priceQueuePair.first;
         const LimitQueue& limitQueue = priceQueuePair.second;
-        const uint32_t queueSize = myBidBookSize[priceLevel];
+        const uint32_t queueSize = myBidBookSize.at(priceLevel);
         auto it = limitQueue.begin();
         uint64_t priorOrderTimestamp = 0;
         uint32_t cumQueueSize = 0;
@@ -504,7 +503,7 @@ void MatchingEngineBase::init() {
             const auto orderId = order->getId();
             const auto orderTimestamp = order->getTimestamp();
             const auto orderQuantity = order->getQuantity();
-            const auto& orderIndex = myLimitOrderLookup[orderId];
+            const auto& orderIndex = myLimitOrderLookup.at(orderId);
             if (orderIds.find(orderId) != orderIds.end()) // checks for duplicate order id
                 Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in bid book: " + std::to_string(orderId) + ".");
             if (isFIFOBook && order->getTimestamp() < priorOrderTimestamp) // checks for order timestamp sorting
@@ -522,7 +521,7 @@ void MatchingEngineBase::init() {
     for (const auto& priceQueuePair : myAskBook) {
         const PriceLevel priceLevel = priceQueuePair.first;
         const LimitQueue& limitQueue = priceQueuePair.second;
-        const uint32_t queueSize = myAskBookSize[priceLevel];
+        const uint32_t queueSize = myAskBookSize.at(priceLevel);
         auto it = limitQueue.begin();
         uint64_t priorOrderTimestamp = 0;
         uint32_t cumQueueSize = 0;
@@ -533,7 +532,7 @@ void MatchingEngineBase::init() {
             const auto orderId = order->getId();
             const auto orderTimestamp = order->getTimestamp();
             const auto orderQuantity = order->getQuantity();
-            const auto& orderIndex = myLimitOrderLookup[orderId];
+            const auto& orderIndex = myLimitOrderLookup.at(orderId);
             if (orderIds.find(orderId) != orderIds.end()) // checks for duplicate order id
                 Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in ask book: " + std::to_string(orderId) + ".");
             if (isFIFOBook && order->getTimestamp() < priorOrderTimestamp) // checks for order timestamp sorting
@@ -553,8 +552,12 @@ void MatchingEngineBase::init() {
             Error::LIB_THROW("[MatchingEngineBase::init] Null order found in removed limit order log.");
         const auto orderId = order->getId();
         if (orderIds.find(orderId) != orderIds.end()) // checks for removed limit order id presence in the order book
-            Error::LIB_THROW("[MatchingEngineBase::init] Removed limit order id found in order book: " + std::to_string(orderId));
+            Error::LIB_THROW("[MatchingEngineBase::init] Removed limit order id found in order book: " + std::to_string(orderId) + ".");
     }
+}
+
+void MatchingEngineBase::init() {
+    stateConsistencyCheck();
 }
 
 void MatchingEngineBase::reset() {
