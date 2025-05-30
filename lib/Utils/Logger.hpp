@@ -9,6 +9,7 @@ namespace Logger {
 class LoggerBase {
 public:
     LoggerBase() = default;
+    LoggerBase(const LoggerBase& logger) = delete; // disallow copy
     LoggerBase(const std::string& logFileName, const bool logToConsole = false, const bool showLogTimestamp = true);
     virtual ~LoggerBase();
     virtual void log(const std::string& message, const LogLevel level = LogLevel::INFO, const OverwriteLastLog overwrite = OverwriteLastLog::NO);
