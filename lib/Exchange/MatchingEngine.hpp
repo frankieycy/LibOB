@@ -69,12 +69,12 @@ public:
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) = 0;
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
-    virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0;
+    virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0; // left pure virtual unless the order matching strategy is defined
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
-    virtual void init() = 0;
-    virtual void reset();
+    virtual void init() = 0; // state consistency checks and class flags initialization called in every derived constructor
+    virtual void reset(); // empties out the order book, trade log, market queue, world clock, logger, etc.
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
     virtual std::string getAsJson() const = 0;
 protected:

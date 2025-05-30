@@ -48,8 +48,26 @@ MatchingEngineBase::MatchingEngineBase(const MatchingEngineBase& matchingEngine)
     myOrderEventLog(matchingEngine.myOrderEventLog),
     myOrderProcessingReportLog(matchingEngine.myOrderProcessingReportLog),
     myRemovedLimitOrderLog(matchingEngine.myRemovedLimitOrderLog) {
-    // TODO: construct myLimitOrderLookup by traversing each individual order in the bid and ask books
     *getLogger() << Logger::LogLevel::INFO << "[MatchingEngineBase] Copy constructor leaves out the order processing callback - re-establish it if needed.";
+    // construct myLimitOrderLookup by traversing each individual order in the bid and ask books
+    for (auto& priceQueuePair : myBidBook) {
+        LimitQueue& limitQueue = priceQueuePair.second;
+        auto it = limitQueue.begin();
+        while (it != limitQueue.end()) {
+            const auto& order = *it;
+            myLimitOrderLookup[order->getId()] = {&limitQueue, it};
+            ++it;
+        }
+    }
+    for (auto& priceQueuePair : myAskBook) {
+        LimitQueue& limitQueue = priceQueuePair.second;
+        auto it = limitQueue.begin();
+        while (it != limitQueue.end()) {
+            const auto& order = *it;
+            myLimitOrderLookup[order->getId()] = {&limitQueue, it};
+            ++it;
+        }
+    }
     init();
 }
 
@@ -465,13 +483,78 @@ void MatchingEngineBase::reserve(const size_t numOrdersEstimate) {
 }
 
 void MatchingEngineBase::init() {
-    // TODO: consistency checks for order book data members requiring that
-    // * the order indices are unique
-    // * the orders are sorted by timestamp in the limit queues
-    // * the price levels of the order books and order book sizes match
-    // * the individual order sizes add up to the total size at each price level
-    // * the removed limit orders are not present in the order book or market queue
-    // * the limit order lookup maps exactly to the limit orders in the book
+    // consistency checks for order book data members requiring that
+    const bool isFIFOBook = getOrderMatchingStrategy() == Exchange::OrderMatchingStrategy::FIFO;
+    std::set<uint64_t> orderIds;
+    if (myBidBook.size() != myBidBookSize.size()) // checks for consistency in the number of price levels
+        Error::LIB_THROW("[MatchingEngineBase::init] Bid book size mismatch: " + std::to_string(myBidBook.size()) + " vs " + std::to_string(myBidBookSize.size()) + ".");
+    if (myAskBook.size() != myAskBookSize.size())
+        Error::LIB_THROW("[MatchingEngineBase::init] Ask book size mismatch: " + std::to_string(myAskBook.size()) + " vs " + std::to_string(myAskBookSize.size()) + ".");
+    for (const auto& priceQueuePair : myBidBook) {
+        const PriceLevel priceLevel = priceQueuePair.first;
+        const LimitQueue& limitQueue = priceQueuePair.second;
+        const uint32_t queueSize = myBidBookSize[priceLevel];
+        auto it = limitQueue.begin();
+        uint64_t priorOrderTimestamp = 0;
+        uint32_t cumQueueSize = 0;
+        while (it != limitQueue.end()) {
+            const auto& order = *it;
+            if (!order) // checks for null order
+                Error::LIB_THROW("[MatchingEngineBase::init] Null order found in bid book.");
+            const auto orderId = order->getId();
+            const auto orderTimestamp = order->getTimestamp();
+            const auto orderQuantity = order->getQuantity();
+            const auto& orderIndex = myLimitOrderLookup[orderId];
+            if (orderIds.find(orderId) != orderIds.end()) // checks for duplicate order id
+                Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in bid book: " + std::to_string(orderId) + ".");
+            if (isFIFOBook && order->getTimestamp() < priorOrderTimestamp) // checks for order timestamp sorting
+                Error::LIB_THROW("[MatchingEngineBase::init] Orders in bid book are not sorted by timestamp: " + std::to_string(orderId) + ".");
+            if (orderIndex.first != &limitQueue || orderIndex.second != it) // checks for order index consistency
+                Error::LIB_THROW("[MatchingEngineBase::init] Order lookup index mismatch for order id: " + std::to_string(orderId) + ".");
+            orderIds.insert(orderId);
+            priorOrderTimestamp = orderTimestamp;
+            cumQueueSize += orderQuantity;
+            ++it;
+        }
+        if (cumQueueSize != queueSize) // checks for order queue size consistency
+            Error::LIB_THROW("[MatchingEngineBase::init] Bid book size mismatch at price level " + std::to_string(priceLevel) + ": expected " + std::to_string(queueSize) + ", got " + std::to_string(cumQueueSize) + ".");
+    }
+    for (const auto& priceQueuePair : myAskBook) {
+        const PriceLevel priceLevel = priceQueuePair.first;
+        const LimitQueue& limitQueue = priceQueuePair.second;
+        const uint32_t queueSize = myAskBookSize[priceLevel];
+        auto it = limitQueue.begin();
+        uint64_t priorOrderTimestamp = 0;
+        uint32_t cumQueueSize = 0;
+        while (it != limitQueue.end()) {
+            const auto& order = *it;
+            if (!order) // checks for null order
+                Error::LIB_THROW("[MatchingEngineBase::init] Null order found in ask book.");
+            const auto orderId = order->getId();
+            const auto orderTimestamp = order->getTimestamp();
+            const auto orderQuantity = order->getQuantity();
+            const auto& orderIndex = myLimitOrderLookup[orderId];
+            if (orderIds.find(orderId) != orderIds.end()) // checks for duplicate order id
+                Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in ask book: " + std::to_string(orderId) + ".");
+            if (isFIFOBook && order->getTimestamp() < priorOrderTimestamp) // checks for order timestamp sorting
+                Error::LIB_THROW("[MatchingEngineBase::init] Orders in ask book are not sorted by timestamp: " + std::to_string(orderId) + ".");
+            if (orderIndex.first != &limitQueue || orderIndex.second != it) // checks for order index consistency
+                Error::LIB_THROW("[MatchingEngineBase::init] Order lookup index mismatch for order id: " + std::to_string(orderId) + ".");
+            orderIds.insert(orderId);
+            priorOrderTimestamp = orderTimestamp;
+            cumQueueSize += orderQuantity;
+            ++it;
+        }
+        if (cumQueueSize != queueSize) // checks for order queue size consistency
+            Error::LIB_THROW("[MatchingEngineBase::init] Ask book size mismatch at price level " + std::to_string(priceLevel) + ": expected " + std::to_string(queueSize) + ", got " + std::to_string(cumQueueSize) + ".");
+    }
+    for (const auto& order : myRemovedLimitOrderLog) {
+        if (!order) // checks for null order
+            Error::LIB_THROW("[MatchingEngineBase::init] Null order found in removed limit order log.");
+        const auto orderId = order->getId();
+        if (orderIds.find(orderId) != orderIds.end()) // checks for removed limit order id presence in the order book
+            Error::LIB_THROW("[MatchingEngineBase::init] Removed limit order id found in order book: " + std::to_string(orderId));
+    }
 }
 
 void MatchingEngineBase::reset() {
