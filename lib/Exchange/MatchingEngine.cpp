@@ -37,6 +37,27 @@ void IMatchingEngine::reset() {
     myWorldClock->reset();
 }
 
+MatchingEngineBase::MatchingEngineBase(const MatchingEngineBase& matchingEngine) :
+    IMatchingEngine(matchingEngine),
+    myBidBook(matchingEngine.myBidBook),
+    myAskBook(matchingEngine.myAskBook),
+    myBidBookSize(matchingEngine.myBidBookSize),
+    myAskBookSize(matchingEngine.myAskBookSize),
+    myMarketQueue(matchingEngine.myMarketQueue),
+    myTradeLog(matchingEngine.myTradeLog),
+    myOrderEventLog(matchingEngine.myOrderEventLog),
+    myOrderProcessingReportLog(matchingEngine.myOrderProcessingReportLog),
+    myRemovedLimitOrderLog(matchingEngine.myRemovedLimitOrderLog) {
+    // TODO: construct myLimitOrderLookup by traversing each individual order in the bid and ask books
+    *getLogger() << Logger::LogLevel::INFO << "[MatchingEngineBase] Copy constructor leaves out the order processing callback - re-establish it if needed.";
+    init();
+}
+
+MatchingEngineBase::MatchingEngineBase() :
+    IMatchingEngine() {
+    init();
+}
+
 MatchingEngineBase::MatchingEngineBase(const OrderEventLog& orderEventLog) :
     IMatchingEngine() {
     build(orderEventLog);
@@ -247,7 +268,6 @@ void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {
             process(event);
     }
 }
-
 
 void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingReportLog) {
     for (const auto& report : orderProcessingReportLog) {
@@ -614,6 +634,16 @@ void MatchingEngineBase::logOrderProcessingReport(const std::shared_ptr<const Or
     myOrderProcessingReportLog.push_back(report);
     if (myOrderProcessingCallback)
         myOrderProcessingCallback(report);
+}
+
+MatchingEngineFIFO::MatchingEngineFIFO() :
+    MatchingEngineBase() {
+    init();
+}
+
+MatchingEngineFIFO::MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) :
+    MatchingEngineBase(matchingEngine) {
+    init();
 }
 
 void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) {
