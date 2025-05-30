@@ -419,6 +419,18 @@ void testMatchingEngineConstructFromEventsStream() {
     std::cout << *e2 << std::endl;
 }
 
+void testMatchingEngineGetAsJson() {
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
+    Market::OrderEventManagerBase em{e};
+    // initial book state
+    for (int i = 0; i < 20; ++i) {
+        em.submitLimitOrderEvent(Market::Side::BUY, std::min(5 + i, 10), 99.0 - i);
+        em.submitLimitOrderEvent(Market::Side::SELL, std::min(5 + i, 10), 101.0 + i);
+    }
+    // get matching engine state as Json
+    std::cout << "Matching engine Json:\n" << e->getAsJson() << std::endl;
+}
+
 void testMatchingEngineZeroIntelligence() {
     // TODO
 }

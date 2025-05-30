@@ -12,6 +12,7 @@ void testMatchingEngineRandomOrdersSpeedTest();
 void testMatchingEngineRandomOrdersStressTest();
 void testMatchingEngineSpeedProfiling();
 void testMatchingEngineConstructFromEventsStream();
+void testMatchingEngineGetAsJson();
 void testMatchingEngineZeroIntelligence();
 }
 }
