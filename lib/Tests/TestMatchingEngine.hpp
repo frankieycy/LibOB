@@ -11,6 +11,7 @@ void testMatchingEngineOrderCancelModify();
 void testMatchingEngineRandomOrdersSpeedTest();
 void testMatchingEngineRandomOrdersStressTest();
 void testMatchingEngineSpeedProfiling();
+void testMatchingEngineConstructFromEventsStream();
 void testMatchingEngineZeroIntelligence();
 }
 }

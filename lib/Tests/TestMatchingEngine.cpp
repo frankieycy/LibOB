@@ -379,6 +379,46 @@ void testMatchingEngineSpeedProfiling() {
     std::cout << *e << std::endl;
 }
 
+void testMatchingEngineConstructFromEventsStream() {
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
+    Market::OrderEventManagerBase em{e};
+    // initial book state
+    for (int i = 0; i < 20; ++i) {
+        em.submitLimitOrderEvent(Market::Side::BUY, std::min(5 + i, 10), 99.0 - i);
+        em.submitLimitOrderEvent(Market::Side::SELL, std::min(5 + i, 10), 101.0 + i);
+    }
+    // random limit and market orders
+    for (int i = 0; i < 10; ++i) {
+        const double u0 = Utils::Statistics::getRandomUniform01(true);
+        const double u1 = Utils::Statistics::getRandomUniform01(true);
+        const uint32_t qty = Utils::Statistics::getRandomUniformInt(1, 3, true);
+        if (u0 < 0.5) {
+            if (u1 < 0.5)
+                em.submitLimitOrderEvent(Market::Side::BUY, qty, Utils::Statistics::getRandomUniform(e->getBestAskPrice() - 5.0, e->getBestAskPrice() - 1.0, true));
+            else
+                em.submitLimitOrderEvent(Market::Side::SELL, qty, Utils::Statistics::getRandomUniform(e->getBestBidPrice() + 1.0, e->getBestBidPrice() + 5.0, true));
+        } else {
+            if (u1 < 0.5)
+                em.submitMarketOrderEvent(Market::Side::BUY, qty);
+            else
+                em.submitMarketOrderEvent(Market::Side::SELL, qty);
+        }
+    }
+    std::cout << *e << std::endl;
+    // construct new matching engine from order event logs
+    Utils::IO::printDebugBanner(std::cout);
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e1 = std::make_shared<Exchange::MatchingEngineFIFO>();
+    e1->setLogger(em.getLogger());
+    e1->build(e->getOrderEventLog());
+    std::cout << *e1 << std::endl;
+    // construct new matching engine from order report logs
+    Utils::IO::printDebugBanner(std::cout);
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e2 = std::make_shared<Exchange::MatchingEngineFIFO>();
+    e2->setLogger(em.getLogger());
+    e2->build(e->getOrderProcessingReportLog());
+    std::cout << *e2 << std::endl;
+}
+
 void testMatchingEngineZeroIntelligence() {
     // TODO
 }
