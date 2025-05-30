@@ -24,7 +24,7 @@ using OrderProcessingCallback = std::function<void(const std::shared_ptr<const O
 class IMatchingEngine {
 public:
     IMatchingEngine() = default;
-    IMatchingEngine(const IMatchingEngine& matchingEngine) = default;
+    IMatchingEngine(const IMatchingEngine& matchingEngine);
     IMatchingEngine(const bool debugMode);
     virtual ~IMatchingEngine() = default;
     std::string getSymbol() const { return mySymbol; }
@@ -100,6 +100,7 @@ public:
     MatchingEngineBase() = default;
     MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
     MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
+    MatchingEngineBase(const OrderEventLog& orderEventLog);
     MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog);
     virtual ~MatchingEngineBase() = default;
     const DescOrderBook& getBidBook() const { return myBidBook; }
@@ -144,7 +145,8 @@ public:
     std::shared_ptr<const Market::TradeBase> getLastTrade() const override;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) override;
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) override;
-    virtual void build(const OrderProcessingReportLog& orderProcessingReportLog); // builds the book given some user-input order events stream
+    virtual void build(const OrderEventLog& orderEventLog); // builds the book given some user-input order events stream
+    virtual void build(const OrderProcessingReportLog& orderProcessingReportLog);
     virtual void executeAgainstQueuedMarketOrders(const std::shared_ptr<Market::LimitOrder>& order, uint32_t& unfilledQuantity, MarketQueue& marketQueue);
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);

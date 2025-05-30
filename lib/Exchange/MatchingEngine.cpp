@@ -37,6 +37,12 @@ void IMatchingEngine::reset() {
     myWorldClock->reset();
 }
 
+MatchingEngineBase::MatchingEngineBase(const OrderEventLog& orderEventLog) :
+    IMatchingEngine() {
+    build(orderEventLog);
+    init();
+}
+
 MatchingEngineBase::MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog) :
     IMatchingEngine() {
     build(orderProcessingReportLog);
@@ -232,6 +238,16 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         }
     }
 }
+
+void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {
+    for (const auto& event : orderEventLog) {
+        if (isDebugMode())
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase::build] Processing order event: " << *event;
+        if (event)
+            process(event);
+    }
+}
+
 
 void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingReportLog) {
     for (const auto& report : orderProcessingReportLog) {
