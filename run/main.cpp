@@ -14,6 +14,7 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineOrderCancelModify();
     // Tests::MatchingEngine::testMatchingEngineRandomOrdersSpeedTest();
     // Tests::MatchingEngine::testMatchingEngineRandomOrdersStressTest();
-    Tests::MatchingEngine::testMatchingEngineSpeedProfiling();
+    // Tests::MatchingEngine::testMatchingEngineSpeedProfiling();
+    Tests::MatchingEngine::testMatchingEngineConstructFromEventsStream();
     return 0;
 }
