@@ -13,6 +13,19 @@ std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngin
     return matchingEngine.orderBookSnapshot(out);
 }
 
+IMatchingEngine::IMatchingEngine(const IMatchingEngine& matchingEngine) :
+    mySymbol(matchingEngine.mySymbol),
+    myExchangeId(matchingEngine.myExchangeId),
+    myOrderMatchingStrategy(matchingEngine.myOrderMatchingStrategy),
+    myOrderBookDisplayConfig(matchingEngine.myOrderBookDisplayConfig),
+    myTradeIdHandler(matchingEngine.myTradeIdHandler),
+    myReportIdHandler(matchingEngine.myReportIdHandler),
+    // ensure that a new instance of the world clock and logger is created
+    myWorldClock(matchingEngine.myWorldClock ? matchingEngine.myWorldClock->clone() : std::make_shared<Utils::Counter::TimestampHandlerBase>()),
+    myLogger(std::make_shared<Utils::Logger::LoggerBase>()) {
+    setDebugMode(matchingEngine.myDebugMode);
+}
+
 IMatchingEngine::IMatchingEngine(const bool debugMode) :
     myOrderBookDisplayConfig(debugMode),
     myDebugMode(debugMode) {}
@@ -22,13 +35,6 @@ void IMatchingEngine::reset() {
     myExchangeId.clear();
     myTradeIdHandler.reset();
     myWorldClock->reset();
-}
-
-MatchingEngineBase::MatchingEngineBase(const MatchingEngineBase& matchingEngine) :
-    IMatchingEngine(matchingEngine),
-    myOrderProcessingCallback(matchingEngine.myOrderProcessingCallback) {
-    build(matchingEngine.getOrderProcessingReportLog());
-    init();
 }
 
 MatchingEngineBase::MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog) :
@@ -157,6 +163,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order event is null.";
         return;
     }
+    myOrderEventLog.push_back(event);
     if (event->isSubmit()) {
         process(event->getOrder());
         return;
@@ -415,6 +422,7 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
 
 void MatchingEngineBase::reserve(const size_t numOrdersEstimate) {
     myTradeLog.reserve(numOrdersEstimate);
+    myOrderEventLog.reserve(numOrdersEstimate);
     myOrderProcessingReportLog.reserve(numOrdersEstimate);
     myRemovedLimitOrderLog.reserve(numOrdersEstimate);
     myLimitOrderLookup.reserve(numOrdersEstimate);
@@ -437,6 +445,7 @@ void MatchingEngineBase::reset() {
     myAskBookSize.clear();
     myMarketQueue.clear();
     myTradeLog.clear();
+    myOrderEventLog.clear();
     myOrderProcessingReportLog.clear();
     myRemovedLimitOrderLog.clear();
     myLimitOrderLookup.clear();

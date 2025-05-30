@@ -11,6 +11,7 @@ using PriceLevel = double;
 using LimitQueue = std::list<std::shared_ptr<Market::LimitOrder>>;
 using MarketQueue = std::list<std::shared_ptr<Market::MarketOrder>>;
 using TradeLog = std::vector<std::shared_ptr<const Market::TradeBase>>;
+using OrderEventLog = std::vector<std::shared_ptr<const Market::OrderEventBase>>;
 using OrderProcessingReportLog = std::vector<std::shared_ptr<const OrderProcessingReport>>;
 using RemovedLimitOrderLog = std::vector<std::shared_ptr<const Market::LimitOrder>>;
 using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
@@ -97,7 +98,7 @@ private:
 class MatchingEngineBase : public IMatchingEngine {
 public:
     MatchingEngineBase() = default;
-    MatchingEngineBase(const MatchingEngineBase& matchingEngine);
+    MatchingEngineBase(const MatchingEngineBase& matchingEngine) = default;
     MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
     MatchingEngineBase(const OrderProcessingReportLog& orderProcessingReportLog);
     virtual ~MatchingEngineBase() = default;
@@ -107,6 +108,7 @@ public:
     const AscOrderBookSize& getAskBookSize() const { return myAskBookSize; }
     const MarketQueue& getMarketQueue() const { return myMarketQueue; }
     const TradeLog& getTradeLog() const { return myTradeLog; }
+    const OrderEventLog& getOrderEventLog() const { return myOrderEventLog; }
     const OrderProcessingReportLog& getOrderProcessingReportLog() const { return myOrderProcessingReportLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
@@ -115,6 +117,7 @@ public:
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
     void setMarketQueue(const MarketQueue& marketQueue) { myMarketQueue = marketQueue; }
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
+    void setOrderEventLog(const OrderEventLog& orderEventLog) { myOrderEventLog = orderEventLog; }
     void setOrderProcessingReportLog(const OrderProcessingReportLog& orderProcessingReportLog) { myOrderProcessingReportLog = orderProcessingReportLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
@@ -160,6 +163,7 @@ protected:
     AscOrderBookSize& getAskBookSize() { return myAskBookSize; }
     MarketQueue& getMarketQueue() { return myMarketQueue; }
     TradeLog& getTradeLog() { return myTradeLog; }
+    OrderEventLog& getOrderEventLog() { return myOrderEventLog; }
     OrderProcessingReportLog& getOrderProcessingReportLog() { return myOrderProcessingReportLog; }
     RemovedLimitOrderLog& getRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
     OrderIndex& getLimitOrderLookup() { return myLimitOrderLookup; }
@@ -171,6 +175,7 @@ private:
     AscOrderBookSize myAskBookSize;
     MarketQueue myMarketQueue; // empty most of the time
     TradeLog myTradeLog;
+    OrderEventLog myOrderEventLog;
     OrderProcessingReportLog myOrderProcessingReportLog;
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
@@ -182,7 +187,7 @@ private:
 class MatchingEngineFIFO : public MatchingEngineBase {
 public:
     MatchingEngineFIFO() = default;
-    MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) : MatchingEngineBase(matchingEngine) {}
+    MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine) = default;
     MatchingEngineFIFO(const bool debugMode) : MatchingEngineBase(debugMode) {}
     MatchingEngineFIFO(const OrderProcessingReportLog& orderProcessingReportLog) : MatchingEngineBase(orderProcessingReportLog) {}
     virtual ~MatchingEngineFIFO() = default;
