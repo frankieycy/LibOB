@@ -2,6 +2,7 @@
 #define MATCHING_ENGINE_UTILS_CPP
 #include "Utils/Utils.hpp"
 #include "Market/OrderEventManager.hpp"
+#include "Exchange/ITCHEncoder.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 
 namespace Exchange {
@@ -185,6 +186,14 @@ std::string OrderExecutionReport::getAsJson() const {
     return oss.str();
 }
 
+std::string OrderExecutionReport::toITCHString() const {
+    return ITCHEncoder::encode(*this);
+}
+
+std::vector<uint8_t> OrderExecutionReport::toITCHBinary() const {
+    return ITCHEncoder::encodeBinary(*this);
+}
+
 void LimitOrderSubmitReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
     orderEventManager.onOrderProcessingReport(*this);
 }
@@ -207,6 +216,14 @@ std::string LimitOrderSubmitReport::getAsJson() const {
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
+}
+
+std::string LimitOrderSubmitReport::toITCHString() const {
+    return ITCHEncoder::encode(*this);
+}
+
+std::vector<uint8_t> LimitOrderSubmitReport::toITCHBinary() const {
+    return ITCHEncoder::encodeBinary(*this);
 }
 
 void MarketOrderSubmitReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
@@ -233,6 +250,14 @@ std::string MarketOrderSubmitReport::getAsJson() const {
     return oss.str();
 }
 
+std::string MarketOrderSubmitReport::toITCHString() const {
+    return ITCHEncoder::encode(*this);
+}
+
+std::vector<uint8_t> MarketOrderSubmitReport::toITCHBinary() const {
+    return ITCHEncoder::encodeBinary(*this);
+}
+
 void OrderCancelReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
     orderEventManager.onOrderProcessingReport(*this);
 }
@@ -254,6 +279,14 @@ std::string OrderCancelReport::getAsJson() const {
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
+}
+
+std::string OrderCancelReport::toITCHString() const {
+    return ITCHEncoder::encode(*this);
+}
+
+std::vector<uint8_t> OrderCancelReport::toITCHBinary() const {
+    return ITCHEncoder::encodeBinary(*this);
 }
 
 void OrderModifyPriceReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
@@ -280,6 +313,14 @@ std::string OrderModifyPriceReport::getAsJson() const {
     return oss.str();
 }
 
+std::string OrderModifyPriceReport::toITCHString() const {
+    return ITCHEncoder::encode(*this);
+}
+
+std::vector<uint8_t> OrderModifyPriceReport::toITCHBinary() const {
+    return ITCHEncoder::encodeBinary(*this);
+}
+
 void OrderModifyQuantityReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
     orderEventManager.onOrderProcessingReport(*this);
 }
@@ -302,6 +343,14 @@ std::string OrderModifyQuantityReport::getAsJson() const {
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
     return oss.str();
+}
+
+std::string OrderModifyQuantityReport::toITCHString() const {
+    return ITCHEncoder::encode(*this);
+}
+
+std::vector<uint8_t> OrderModifyQuantityReport::toITCHBinary() const {
+    return ITCHEncoder::encodeBinary(*this);
 }
 }
 

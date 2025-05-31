@@ -4,7 +4,6 @@
 #include "Market/OrderUtils.hpp"
 #include "Market/OrderEvent.hpp"
 #include "Market/Order.hpp"
-#include "Exchange/ITCHEncoder.hpp"
 
 namespace Market {
 using namespace Utils;
@@ -85,14 +84,6 @@ std::string OrderSubmitEvent::getAsJson() const {
     return oss.str();
 }
 
-std::string OrderSubmitEvent::toITCHString() const {
-    return Exchange::ITCHEncoder::encode(*this);
-}
-
-std::vector<uint8_t> OrderSubmitEvent::toITCHBinary() const {
-    return Exchange::ITCHEncoder::encodeBinary(*this);
-}
-
 OrderFillEvent::OrderFillEvent() :
     OrderEventBase(),
     myFillQuantity(0),
@@ -143,14 +134,6 @@ std::string OrderFillEvent::getAsJson() const {
     return oss.str();
 }
 
-std::string OrderFillEvent::toITCHString() const {
-    return Exchange::ITCHEncoder::encode(*this);
-}
-
-std::vector<uint8_t> OrderFillEvent::toITCHBinary() const {
-    return Exchange::ITCHEncoder::encodeBinary(*this);
-}
-
 OrderModifyPriceEvent::OrderModifyPriceEvent() :
     OrderEventBase(),
     myModifiedPrice(0) {
@@ -191,14 +174,6 @@ std::string OrderModifyPriceEvent::getAsJson() const {
     return oss.str();
 }
 
-std::string OrderModifyPriceEvent::toITCHString() const {
-    return Exchange::ITCHEncoder::encode(*this);
-}
-
-std::vector<uint8_t> OrderModifyPriceEvent::toITCHBinary() const {
-    return Exchange::ITCHEncoder::encodeBinary(*this);
-}
-
 OrderModifyQuantityEvent::OrderModifyQuantityEvent() :
     OrderEventBase(),
     myModifiedQuantity(0) {
@@ -237,14 +212,6 @@ std::string OrderModifyQuantityEvent::getAsJson() const {
     return oss.str();
 }
 
-std::string OrderModifyQuantityEvent::toITCHString() const {
-    return Exchange::ITCHEncoder::encode(*this);
-}
-
-std::vector<uint8_t> OrderModifyQuantityEvent::toITCHBinary() const {
-    return Exchange::ITCHEncoder::encodeBinary(*this);
-}
-
 OrderCancelEvent::OrderCancelEvent() :
     OrderEventBase() {
     init();
@@ -272,14 +239,6 @@ void OrderCancelEvent::applyTo(LimitOrder& order) const {
 
 void OrderCancelEvent::init() {
     setEventType(OrderEventType::CANCEL);
-}
-
-std::string OrderCancelEvent::toITCHString() const {
-    return Exchange::ITCHEncoder::encode(*this);
-}
-
-std::vector<uint8_t> OrderCancelEvent::toITCHBinary() const {
-    return Exchange::ITCHEncoder::encodeBinary(*this);
 }
 }
 

@@ -23,63 +23,82 @@ const std::unordered_map<ITCHEncoder::MessageType, std::pair<ITCHEncoder::Messag
     { ITCHEncoder::MessageType::BROKEN_TRADE,             { ITCHEncoder::MessageEncoding::B, "[B] Trade bust (e.g. error correction)" } }
 };
 
-std::string ITCHEncoder::encode(const Market::OrderSubmitEvent& event) {
+std::string ITCHEncoder::encode(const Exchange::OrderExecutionReport& /* report */) {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::encode(const Exchange::LimitOrderSubmitReport& report) {
     // ORDER_ADD: "A|timestamp|orderId|B/S|quantity|price|symbol"
     std::ostringstream oss;
-    const auto& order = event.getOrder();
+    const auto& order = report.order;
     const auto& metaInfo = order->getMetaInfo();
     if (!order)
-        Error::LIB_THROW("[ITCHEncoder::encode] Order is null in OrderSubmitEvent.");
-    if (order->isLimitOrder())
-        oss << "A|"
-            << event.getTimestamp()         << "|"
-            << event.getOrderId()           << "|"
-            << (order->isBuy() ? "B" : "S") << "|"
-            << order->getQuantity()         << "|"
-            << order->getPrice()            << "|"
-            << (metaInfo ? metaInfo->getSymbol() : "");
+        Error::LIB_THROW("[ITCHEncoder::encode] Order is null in LimitOrderSubmitReport.");
+    if (!order->isLimitOrder())
+        Error::LIB_THROW("[ITCHEncoder::encode] Order is not a limit order in LimitOrderSubmitReport.");
+    oss << "A|"
+        << report.timestamp             << "|"
+        << report.orderId               << "|"
+        << (order->isBuy() ? "B" : "S") << "|"
+        << order->getQuantity()         << "|"
+        << order->getPrice()            << "|"
+        << (metaInfo ? metaInfo->getSymbol() : "");
     return oss.str();
 }
 
-std::string ITCHEncoder::encode(const Market::OrderFillEvent& /* event */) {
+std::string ITCHEncoder::encode(const Exchange::MarketOrderSubmitReport& /* report */) {
+    // no encoding for market order submit
+    return "";
+}
+
+std::string ITCHEncoder::encode(const Exchange::OrderModifyPriceReport& /* report */) {
     return ""; // TODO
 }
 
-std::string ITCHEncoder::encode(const Market::OrderModifyPriceEvent& /* event */) {
+std::string ITCHEncoder::encode(const Exchange::OrderModifyQuantityReport& /* report */) {
     return ""; // TODO
 }
 
-std::string ITCHEncoder::encode(const Market::OrderModifyQuantityEvent& /* event */) {
-    return ""; // TODO
-}
-
-std::string ITCHEncoder::encode(const Market::OrderCancelEvent& event) {
+std::string ITCHEncoder::encode(const Exchange::OrderCancelReport& report) {
     // ORDER_DELETE: "D|timestamp|orderId"
     std::ostringstream oss;
     oss << "D|"
-        << event.getTimestamp() << "|"
-        << event.getOrderId();
+        << report.timestamp << "|"
+        << report.orderId;
     return oss.str();
 }
 
-std::vector<uint8_t> ITCHEncoder::encodeBinary(const Market::OrderSubmitEvent& /* event */) {
+std::vector<uint8_t> ITCHEncoder::encodeBinary(const Exchange::OrderExecutionReport& /* report */) {
     return {}; // TODO
 }
 
-std::vector<uint8_t> ITCHEncoder::encodeBinary(const Market::OrderFillEvent& /* event */) {
+std::vector<uint8_t> ITCHEncoder::encodeBinary(const Exchange::LimitOrderSubmitReport& /* report */) {
     return {}; // TODO
 }
 
-std::vector<uint8_t> ITCHEncoder::encodeBinary(const Market::OrderModifyPriceEvent& /* event */) {
+std::vector<uint8_t> ITCHEncoder::encodeBinary(const Exchange::MarketOrderSubmitReport& /* report */) {
+    // no encoding for market order submit
+    return {};
+}
+
+std::vector<uint8_t> ITCHEncoder::encodeBinary(const Exchange::OrderModifyPriceReport& /* report */) {
     return {}; // TODO
 }
 
-std::vector<uint8_t> ITCHEncoder::encodeBinary(const Market::OrderModifyQuantityEvent& /* event */) {
+std::vector<uint8_t> ITCHEncoder::encodeBinary(const Exchange::OrderModifyQuantityReport& /* report */) {
     return {}; // TODO
 }
 
-std::vector<uint8_t> ITCHEncoder::encodeBinary(const Market::OrderCancelEvent& /* event */) {
+std::vector<uint8_t> ITCHEncoder::encodeBinary(const Exchange::OrderCancelReport& /* report */) {
     return {}; // TODO
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::decodeStringMessage(const std::string& /* message */) {
+    return nullptr; // TODO
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::decodeBinaryMessage(const std::vector<uint8_t>& /* message */) {
+    return nullptr; // TODO
 }
 }
 

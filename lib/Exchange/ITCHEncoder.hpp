@@ -1,7 +1,7 @@
 #ifndef ITCH_ENCODER_HPP
 #define ITCH_ENCODER_HPP
 #include "Utils/Utils.hpp"
-#include "Market/OrderEvent.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 
 namespace Exchange {
 class ITCHEncoder {
@@ -21,16 +21,20 @@ public:
     };
     enum class MessageEncoding { S, A, F, E, C, X, D, U, P, Q, B };
     static const std::unordered_map<MessageType, std::pair<MessageEncoding, std::string>> MESSAGE_TYPE_ENCODINGS;
-    static std::string encode(const Market::OrderSubmitEvent& event);
-    static std::string encode(const Market::OrderFillEvent& event);
-    static std::string encode(const Market::OrderModifyPriceEvent& event);
-    static std::string encode(const Market::OrderModifyQuantityEvent& event);
-    static std::string encode(const Market::OrderCancelEvent& event);
-    static std::vector<uint8_t> encodeBinary(const Market::OrderSubmitEvent& event);
-    static std::vector<uint8_t> encodeBinary(const Market::OrderFillEvent& event);
-    static std::vector<uint8_t> encodeBinary(const Market::OrderModifyPriceEvent& event);
-    static std::vector<uint8_t> encodeBinary(const Market::OrderModifyQuantityEvent& event);
-    static std::vector<uint8_t> encodeBinary(const Market::OrderCancelEvent& event);
+    static std::string encode(const Exchange::OrderExecutionReport& report);
+    static std::string encode(const Exchange::LimitOrderSubmitReport& report);
+    static std::string encode(const Exchange::MarketOrderSubmitReport& report);
+    static std::string encode(const Exchange::OrderModifyPriceReport& report);
+    static std::string encode(const Exchange::OrderModifyQuantityReport& report);
+    static std::string encode(const Exchange::OrderCancelReport& report);
+    static std::vector<uint8_t> encodeBinary(const Exchange::OrderExecutionReport& report);
+    static std::vector<uint8_t> encodeBinary(const Exchange::LimitOrderSubmitReport& report);
+    static std::vector<uint8_t> encodeBinary(const Exchange::MarketOrderSubmitReport& report);
+    static std::vector<uint8_t> encodeBinary(const Exchange::OrderModifyPriceReport& report);
+    static std::vector<uint8_t> encodeBinary(const Exchange::OrderModifyQuantityReport& report);
+    static std::vector<uint8_t> encodeBinary(const Exchange::OrderCancelReport& report);
+    static std::shared_ptr<Market::OrderEventBase> decodeStringMessage(const std::string& message);
+    static std::shared_ptr<Market::OrderEventBase> decodeBinaryMessage(const std::vector<uint8_t>& message);
 };
 }
 
