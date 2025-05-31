@@ -30,6 +30,8 @@ public:
     virtual void applyTo(LimitOrder& order) const;
     virtual void init() {};
     virtual std::string getAsJson() const;
+    virtual std::string toITCHString() const { return ""; }
+    virtual std::vector<uint8_t> toITCHBinary() const { return {}; }
 private:
     uint64_t myEventId;
     uint64_t myOrderId;
@@ -47,6 +49,8 @@ public:
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderSubmitEvent>(*this); }
     virtual void init() override;
     virtual std::string getAsJson() const override;
+    virtual std::string toITCHString() const override;
+    virtual std::vector<uint8_t> toITCHBinary() const override;
 };
 
 class OrderFillEvent : public OrderEventBase {
@@ -64,6 +68,8 @@ public:
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
     virtual std::string getAsJson() const override;
+    virtual std::string toITCHString() const override;
+    virtual std::vector<uint8_t> toITCHBinary() const override;
 private:
     uint32_t myFillQuantity;
     double myFillPrice;
@@ -81,6 +87,8 @@ public:
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
     virtual std::string getAsJson() const override;
+    virtual std::string toITCHString() const override;
+    virtual std::vector<uint8_t> toITCHBinary() const override;
 private:
     double myModifiedPrice;
 };
@@ -97,6 +105,8 @@ public:
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
     virtual std::string getAsJson() const override;
+    virtual std::string toITCHString() const override;
+    virtual std::vector<uint8_t> toITCHBinary() const override;
 private:
     uint32_t myModifiedQuantity;
 };
@@ -111,6 +121,8 @@ public:
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
+    virtual std::string toITCHString() const override;
+    virtual std::vector<uint8_t> toITCHBinary() const override;
 };
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);
