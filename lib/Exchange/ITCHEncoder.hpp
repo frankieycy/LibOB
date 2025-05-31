@@ -6,6 +6,21 @@
 namespace Exchange {
 class ITCHEncoder {
 public:
+    enum class MessageType {
+        SYSTEM,
+        ORDER_ADD,
+        ORDER_ADD_WITH_MPID,
+        ORDER_EXECUTE,
+        ORDER_EXECUTE_WITH_PRICE,
+        ORDER_CANCEL,
+        ORDER_DELETE,
+        ORDER_REPLACE,
+        TRADE,
+        CROSS_TRADE,
+        BROKEN_TRADE
+    };
+    enum class MessageEncoding { S, A, F, E, C, X, D, U, P, Q, B };
+    static const std::unordered_map<MessageType, std::pair<MessageEncoding, std::string>> MESSAGE_TYPE_ENCODINGS;
     static std::string encode(const Market::OrderSubmitEvent& event);
     static std::string encode(const Market::OrderFillEvent& event);
     static std::string encode(const Market::OrderModifyPriceEvent& event);
