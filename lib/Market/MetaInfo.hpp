@@ -24,14 +24,17 @@ class OrderMetaInfo : public TradeMetaInfo {
 public:
     OrderMetaInfo() = default;
     OrderMetaInfo(const OrderMetaInfo& info);
-    OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId);
+    OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId, const std::string marketParticipantId);
     virtual ~OrderMetaInfo() = default;
     std::string getAgentId() const { return myAgentId; }
+    std::string getMarketParticipantId() const { return myMarketParticipantId; }
     void setAgentId(const std::string& agentId) { myAgentId = agentId; }
+    void setMarketParticipantId(const std::string& marketParticipantId) { myMarketParticipantId = marketParticipantId; }
     virtual std::shared_ptr<TradeMetaInfo> clone() const override { return std::make_shared<OrderMetaInfo>(*this); }
     virtual std::string getAsJson() const override;
 private:
     std::string myAgentId;
+    std::string myMarketParticipantId;
 };
 
 std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& order);

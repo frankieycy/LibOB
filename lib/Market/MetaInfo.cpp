@@ -29,9 +29,10 @@ OrderMetaInfo::OrderMetaInfo(const OrderMetaInfo& info) :
     TradeMetaInfo(info),
     myAgentId(info.myAgentId) {}
 
-OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId) :
+OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchangeId, const std::string agentId, const std::string marketParticipantId) :
     TradeMetaInfo(symbol, exchangeId),
-    myAgentId(agentId) {}
+    myAgentId(agentId),
+    myMarketParticipantId(marketParticipantId) {}
 
 std::string OrderMetaInfo::getAsJson() const {
     std::ostringstream oss;
