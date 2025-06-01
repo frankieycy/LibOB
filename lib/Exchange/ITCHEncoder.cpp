@@ -1,6 +1,7 @@
 #ifndef ITCH_ENCODER_CPP
 #define ITCH_ENCODER_CPP
 #include "Utils/Utils.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/ITCHEncoder.hpp"
 
 namespace Exchange {
@@ -18,7 +19,47 @@ const std::string ITCHEncoder::ITCHTradeMessage::ourDescription                 
 const std::string ITCHEncoder::ITCHCrossTradeMessage::ourDescription            = "[Q] Used for open/close crosses";
 const std::string ITCHEncoder::ITCHBrokenTradeMessage::ourDescription           = "[B] Trade bust (e.g. error correction)";
 
+std::string ITCHEncoder::ITCHSystemMessage::toString() const {
+    return ""; // TODO
+}
+
 std::string ITCHEncoder::ITCHOrderAddMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHOrderAddWithMPIDMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHOrderExecuteMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHOrderExecuteWithPriceMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHOrderDeleteMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHOrderCancelMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHTradeMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHCrossTradeMessage::toString() const {
+    return ""; // TODO
+}
+
+std::string ITCHEncoder::ITCHBrokenTradeMessage::toString() const {
     return ""; // TODO
 }
 
@@ -26,12 +67,26 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
     return nullptr; // TODO
 }
 
-std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::LimitOrderSubmitReport& /* report */) {
-    return nullptr; // TODO
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::LimitOrderSubmitReport& report) {
+    const auto& order = report.order;
+    if (!order)
+        Error::LIB_THROW("ITCHEncoder::encodeReport: LimitOrderSubmitReport order is null");
+    const auto& metaInfo = order->getMetaInfo();
+    return std::make_shared<ITCHOrderAddMessage>(
+        report.reportId,
+        report.timestamp,
+        String::hashStringTo<uint64_t>(metaInfo ? metaInfo->getAgentId() : ""),
+        "", // TODO: 8-char padded symbol
+        order->getId(),
+        order->isBuy(),
+        order->getQuantity(),
+        static_cast<uint32_t>(order->getPrice() * 10000)
+    );
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::MarketOrderSubmitReport& /* report */) {
-    return nullptr; // TODO
+    // no encoding for market submit reports - relegated to execution reports
+    return nullptr;
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderModifyPriceReport& /* report */) {
