@@ -164,6 +164,10 @@ std::shared_ptr<Market::OrderEventBase> OrderExecutionReport::makeEvent() const 
     return nullptr;
 }
 
+std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderExecutionReport::makeITCHMessage() const {
+    return ITCHEncoder::encodeReport(*this);
+}
+
 std::string OrderExecutionReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -193,6 +197,10 @@ std::shared_ptr<Market::OrderEventBase> LimitOrderSubmitReport::makeEvent() cons
     return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order->clone());
 }
 
+std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> LimitOrderSubmitReport::makeITCHMessage() const {
+    return ITCHEncoder::encodeReport(*this);
+}
+
 std::string LimitOrderSubmitReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -215,6 +223,10 @@ void MarketOrderSubmitReport::dispatchTo(Market::OrderEventManagerBase& orderEve
 
 std::shared_ptr<Market::OrderEventBase> MarketOrderSubmitReport::makeEvent() const {
     return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order->clone());
+}
+
+std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> MarketOrderSubmitReport::makeITCHMessage() const {
+    return ITCHEncoder::encodeReport(*this);
 }
 
 std::string MarketOrderSubmitReport::getAsJson() const {
@@ -241,6 +253,10 @@ std::shared_ptr<Market::OrderEventBase> OrderCancelReport::makeEvent() const {
     return std::make_shared<Market::OrderCancelEvent>(reportId, orderId, timestamp);
 }
 
+std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderCancelReport::makeITCHMessage() const {
+    return ITCHEncoder::encodeReport(*this);
+}
+
 std::string OrderCancelReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -262,6 +278,10 @@ void OrderModifyPriceReport::dispatchTo(Market::OrderEventManagerBase& orderEven
 
 std::shared_ptr<Market::OrderEventBase> OrderModifyPriceReport::makeEvent() const {
     return std::make_shared<Market::OrderModifyPriceEvent>(reportId, orderId, timestamp, modifiedPrice);
+}
+
+std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderModifyPriceReport::makeITCHMessage() const {
+    return ITCHEncoder::encodeReport(*this);
 }
 
 std::string OrderModifyPriceReport::getAsJson() const {
@@ -286,6 +306,10 @@ void OrderModifyQuantityReport::dispatchTo(Market::OrderEventManagerBase& orderE
 
 std::shared_ptr<Market::OrderEventBase> OrderModifyQuantityReport::makeEvent() const {
     return std::make_shared<Market::OrderModifyQuantityEvent>(reportId, orderId, timestamp, modifiedQuantity);
+}
+
+std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderModifyQuantityReport::makeITCHMessage() const {
+    return ITCHEncoder::encodeReport(*this);
 }
 
 std::string OrderModifyQuantityReport::getAsJson() const {
