@@ -1,11 +1,16 @@
 #ifndef ITCH_ENCODER_HPP
 #define ITCH_ENCODER_HPP
 #include "Utils/Utils.hpp"
-#include "Exchange/MatchingEngineUtils.hpp"
 
 namespace Exchange {
-class ITCHEncoder {
-public:
+struct OrderExecutionReport;
+struct LimitOrderSubmitReport;
+struct MarketOrderSubmitReport;
+struct OrderModifyPriceReport;
+struct OrderModifyQuantityReport;
+struct OrderCancelReport;
+
+struct ITCHEncoder {
     enum class EventCode { MARKET_OPEN, MARKET_CLOSE };
     enum class MessageType {
         SYSTEM,
@@ -22,7 +27,7 @@ public:
     };
 
     /* An inheritance hierachy of ITCH messages - the data types do not necessarily follow the NASDAQ ITCH protocol
-       but each class exposes an interface to cast the structure into a NASDAQ ITCH-compatible format */
+        but each class exposes an interface to cast the structure into a NASDAQ ITCH-compatible format */
     struct ITCHMessage {
         ITCHMessage() = delete;
         ITCHMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId) :
@@ -102,7 +107,7 @@ public:
     struct ITCHOrderExecuteWithPriceMessage : public ITCHOrderExecuteMessage {
         ITCHOrderExecuteWithPriceMessage() = delete;
         ITCHOrderExecuteWithPriceMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,
-                                         const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
+                                            const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
             ITCHOrderExecuteMessage(messageId, timestamp, agentId, orderId, matchOrderId, fillQuantity), fillPrice(fillPrice) {
             messageType = ourType;
         }
@@ -129,7 +134,7 @@ public:
     struct ITCHOrderCancelMessage : public ITCHOrderDeleteMessage {
         ITCHOrderCancelMessage() = delete;
         ITCHOrderCancelMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,
-                               const uint32_t cancelQuantity) :
+                                const uint32_t cancelQuantity) :
             ITCHOrderDeleteMessage(messageId, timestamp, agentId, orderId), cancelQuantity(cancelQuantity) {
             messageType = ourType;
         }
@@ -161,7 +166,7 @@ public:
     struct ITCHTradeMessage : public ITCHOrderExecuteWithPriceMessage {
         ITCHTradeMessage() = delete;
         ITCHTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,
-                         const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
+                            const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
             ITCHOrderExecuteWithPriceMessage(messageId, timestamp, agentId, orderId, matchOrderId, fillQuantity, fillPrice) {
             messageType = ourType;
         }

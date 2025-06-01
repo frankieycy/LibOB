@@ -3,6 +3,7 @@
 #include "Utils/Utils.hpp"
 #include "Market/OrderEventManager.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
+#include "Exchange/ITCHEncoder.hpp"
 
 namespace Exchange {
 using namespace Utils;
@@ -164,7 +165,7 @@ std::shared_ptr<Market::OrderEventBase> OrderExecutionReport::makeEvent() const 
     return nullptr;
 }
 
-std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderExecutionReport::makeITCHMessage() const {
+std::shared_ptr<ITCHEncoder::ITCHMessage> OrderExecutionReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
 }
 
@@ -197,7 +198,7 @@ std::shared_ptr<Market::OrderEventBase> LimitOrderSubmitReport::makeEvent() cons
     return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order->clone());
 }
 
-std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> LimitOrderSubmitReport::makeITCHMessage() const {
+std::shared_ptr<ITCHEncoder::ITCHMessage> LimitOrderSubmitReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
 }
 
@@ -225,7 +226,7 @@ std::shared_ptr<Market::OrderEventBase> MarketOrderSubmitReport::makeEvent() con
     return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order->clone());
 }
 
-std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> MarketOrderSubmitReport::makeITCHMessage() const {
+std::shared_ptr<ITCHEncoder::ITCHMessage> MarketOrderSubmitReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
 }
 
@@ -253,7 +254,7 @@ std::shared_ptr<Market::OrderEventBase> OrderCancelReport::makeEvent() const {
     return std::make_shared<Market::OrderCancelEvent>(reportId, orderId, timestamp);
 }
 
-std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderCancelReport::makeITCHMessage() const {
+std::shared_ptr<ITCHEncoder::ITCHMessage> OrderCancelReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
 }
 
@@ -280,7 +281,7 @@ std::shared_ptr<Market::OrderEventBase> OrderModifyPriceReport::makeEvent() cons
     return std::make_shared<Market::OrderModifyPriceEvent>(reportId, orderId, timestamp, modifiedPrice);
 }
 
-std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderModifyPriceReport::makeITCHMessage() const {
+std::shared_ptr<ITCHEncoder::ITCHMessage> OrderModifyPriceReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
 }
 
@@ -308,7 +309,7 @@ std::shared_ptr<Market::OrderEventBase> OrderModifyQuantityReport::makeEvent() c
     return std::make_shared<Market::OrderModifyQuantityEvent>(reportId, orderId, timestamp, modifiedQuantity);
 }
 
-std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> OrderModifyQuantityReport::makeITCHMessage() const {
+std::shared_ptr<ITCHEncoder::ITCHMessage> OrderModifyQuantityReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
 }
 

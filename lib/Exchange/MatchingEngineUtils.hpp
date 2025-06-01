@@ -3,6 +3,7 @@
 #include "Utils/Utils.hpp"
 #include "Market/Order.hpp"
 #include "Market/Trade.hpp"
+#include "Exchange/ITCHEncoder.hpp"
 
 namespace Market {
 class OrderEventManagerBase;
@@ -97,7 +98,7 @@ struct OrderProcessingReport {
     virtual ~OrderProcessingReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const = 0;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const = 0;
-    virtual std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> makeITCHMessage() const = 0;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const = 0;
     virtual std::string getAsJson() const = 0;
     uint64_t reportId;
     uint64_t timestamp;
@@ -132,7 +133,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     virtual ~OrderExecutionReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
-    virtual std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
     uint64_t tradeId;
@@ -159,7 +160,7 @@ struct LimitOrderSubmitReport : public OrderProcessingReport {
     virtual ~LimitOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
-    virtual std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::LimitOrder> order = nullptr;
 };
@@ -180,7 +181,7 @@ struct MarketOrderSubmitReport : public OrderProcessingReport {
     virtual ~MarketOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
-    virtual std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::MarketOrder> order = nullptr;
 };
@@ -201,7 +202,7 @@ struct OrderCancelReport : public OrderProcessingReport {
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
-    virtual std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
 };
@@ -222,7 +223,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
     virtual ~OrderModifyPriceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
-    virtual std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     double modifiedPrice;
 };
@@ -243,7 +244,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     virtual ~OrderModifyQuantityReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
-    virtual std::shared_ptr<Exchange::ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     uint32_t modifiedQuantity;
 };

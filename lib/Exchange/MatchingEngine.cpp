@@ -5,7 +5,6 @@
 #include "Market/Trade.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/MatchingEngine.hpp"
-#include "Exchange/ITCHEncoder.hpp"
 
 namespace Exchange {
 using namespace Utils;
