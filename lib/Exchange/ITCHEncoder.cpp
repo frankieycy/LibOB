@@ -75,12 +75,12 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
     return std::make_shared<ITCHOrderAddMessage>(
         report.reportId,
         report.timestamp,
-        String::hashStringTo<uint64_t>(metaInfo ? metaInfo->getAgentId() : ""),
-        "", // TODO: 8-char padded symbol
+        metaInfo ? metaInfo->getAgentIdHash() : ITCHEncoder::DEFAULT_AGENT_ID,
+        metaInfo ? metaInfo->getSymbolCharRaw() : ITCHEncoder::DEFAULT_SYMBOL,
         order->getId(),
         order->isBuy(),
         order->getQuantity(),
-        static_cast<uint32_t>(order->getPrice() * 10000)
+        order->getIntPrice()
     );
 }
 

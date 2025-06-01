@@ -11,6 +11,9 @@ struct OrderModifyQuantityReport;
 struct OrderCancelReport;
 
 struct ITCHEncoder {
+    static constexpr const uint64_t DEFAULT_AGENT_ID = 0;
+    static constexpr const char DEFAULT_SYMBOL[8] = "0000000";
+
     enum class EventCode { MARKET_OPEN, MARKET_CLOSE };
     enum class MessageType {
         SYSTEM,
@@ -48,7 +51,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHSystemMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::SYSTEM;
+        static constexpr const MessageType ourType = MessageType::SYSTEM;
         static const std::string ourDescription;
         EventCode eventCode;
     };
@@ -63,7 +66,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderAddMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::ORDER_ADD;
+        static constexpr const MessageType ourType = MessageType::ORDER_ADD;
         static const std::string ourDescription;
         char symbol[8];
         uint64_t orderId;
@@ -82,7 +85,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderAddWithMPIDMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::ORDER_ADD_WITH_MPID;
+        static constexpr const MessageType ourType = MessageType::ORDER_ADD_WITH_MPID;
         static const std::string ourDescription;
         char mpid[4]; // market participant id, aka. attribution
     };
@@ -97,7 +100,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderExecuteMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::ORDER_EXECUTE;
+        static constexpr const MessageType ourType = MessageType::ORDER_EXECUTE;
         static const std::string ourDescription;
         uint64_t orderId;
         uint64_t matchOrderId;
@@ -113,7 +116,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderExecuteWithPriceMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::ORDER_EXECUTE_WITH_PRICE;
+        static constexpr const MessageType ourType = MessageType::ORDER_EXECUTE_WITH_PRICE;
         static const std::string ourDescription;
         uint32_t fillPrice;
     };
@@ -126,7 +129,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderDeleteMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::ORDER_DELETE;
+        static constexpr const MessageType ourType = MessageType::ORDER_DELETE;
         static const std::string ourDescription;
         uint64_t orderId;
     };
@@ -140,7 +143,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderCancelMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::ORDER_CANCEL;
+        static constexpr const MessageType ourType = MessageType::ORDER_CANCEL;
         static const std::string ourDescription;
         uint32_t cancelQuantity;
     };
@@ -154,7 +157,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderReplaceMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::ORDER_REPLACE;
+        static constexpr const MessageType ourType = MessageType::ORDER_REPLACE;
         static const std::string ourDescription;
         uint64_t oldOrderId;
         uint64_t newOrderId;
@@ -172,7 +175,7 @@ struct ITCHEncoder {
         }
         virtual ~ITCHTradeMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::TRADE;
+        static constexpr const MessageType ourType = MessageType::TRADE;
         static const std::string ourDescription;
     };
 
@@ -181,7 +184,7 @@ struct ITCHEncoder {
         ITCHCrossTradeMessage() = delete;
         virtual ~ITCHCrossTradeMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::CROSS_TRADE;
+        static constexpr const MessageType ourType = MessageType::CROSS_TRADE;
         static const std::string ourDescription;
     };
 
@@ -190,7 +193,7 @@ struct ITCHEncoder {
         ITCHBrokenTradeMessage() = delete;
         virtual ~ITCHBrokenTradeMessage() = default;
         virtual std::string toString() const;
-        static const MessageType ourType = MessageType::BROKEN_TRADE;
+        static constexpr const MessageType ourType = MessageType::BROKEN_TRADE;
         static const std::string ourDescription;
     };
 
