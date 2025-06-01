@@ -240,6 +240,44 @@ void OrderCancelEvent::applyTo(LimitOrder& order) const {
 void OrderCancelEvent::init() {
     setEventType(OrderEventType::CANCEL);
 }
+
+OrderPartialCancelEvent::OrderPartialCancelEvent() :
+    OrderEventBase() {
+    init();
+}
+
+OrderPartialCancelEvent::OrderPartialCancelEvent(const OrderPartialCancelEvent& event) :
+    OrderEventBase(event) {
+    init();
+}
+
+OrderPartialCancelEvent::OrderPartialCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint32_t cancelQuantity) :
+    OrderEventBase(eventId, orderId, timestamp),
+    myCancelQuantity(cancelQuantity) {
+    init();
+}
+
+void OrderPartialCancelEvent::applyTo(MarketOrder& order) const {
+    if (myCancelQuantity < order.getQuantity()) {
+        order.setQuantity(order.getQuantity() - myCancelQuantity);
+    } else {
+        order.setQuantity(0);
+        order.setOrderState(OrderState::CANCELLED);
+    }
+}
+
+void OrderPartialCancelEvent::applyTo(LimitOrder& order) const {
+    if (myCancelQuantity < order.getQuantity()) {
+        order.setQuantity(order.getQuantity() - myCancelQuantity);
+    } else {
+        order.setQuantity(0);
+        order.setOrderState(OrderState::CANCELLED);
+    }
+}
+
+void OrderPartialCancelEvent::init() {
+    setEventType(OrderEventType::PARTIAL_CANCEL);
+}
 }
 
 #endif

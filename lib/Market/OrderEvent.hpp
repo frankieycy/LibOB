@@ -113,6 +113,20 @@ public:
     virtual void init() override;
 };
 
+class OrderPartialCancelEvent : public OrderEventBase {
+public:
+    OrderPartialCancelEvent();
+    OrderPartialCancelEvent(const OrderPartialCancelEvent& event);
+    OrderPartialCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint32_t cancelQuantity);
+    virtual ~OrderPartialCancelEvent() = default;
+    virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderPartialCancelEvent>(*this); }
+    virtual void applyTo(MarketOrder& order) const override;
+    virtual void applyTo(LimitOrder& order) const override;
+    virtual void init() override;
+private:
+    uint32_t myCancelQuantity;
+};
+
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);
 }
 
