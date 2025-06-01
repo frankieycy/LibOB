@@ -23,6 +23,7 @@
 #include "Utils/IOUtils.hpp"
 #include "Utils/CounterUtils.hpp"
 #include "Utils/ConstsUtils.hpp"
+#include "Utils/StringUtils.hpp"
 #include "Utils/MathsUtils.hpp"
 #include "Utils/StatisticsUtils.hpp"
 #include "Utils/VectorUtils.hpp"
