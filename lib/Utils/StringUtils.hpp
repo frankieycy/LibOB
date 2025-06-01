@@ -1,11 +1,20 @@
 #ifndef STRING_UTILS_HPP
 #define STRING_UTILS_HPP
 #include <string>
+#include <cstring>
 #include <cstdint>
+#include <algorithm>
 #include <type_traits>
 
 namespace Utils {
 namespace String {
+template <std::size_t N>
+void stringToCharRaw(const std::string& str, char (&out)[N], char padding = ' ') {
+    static_assert(N > 0, "Output array size must be greater than zero.");
+    std::memset(out, padding, N);
+    std::memcpy(out, str.data(), std::min(str.size(), N));
+}
+
 template<typename T>
 T packStringTo(const std::string& str) {
     static_assert(std::is_integral<T>::value, "T must be an integral type");
