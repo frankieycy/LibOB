@@ -3,6 +3,8 @@
 #include "Utils/Utils.hpp"
 
 namespace Market {
+using namespace Utils;
+
 class TradeMetaInfo {
 public:
     TradeMetaInfo() = default;
@@ -11,13 +13,24 @@ public:
     virtual ~TradeMetaInfo() = default;
     std::string getSymbol() const { return mySymbol; }
     std::string getExchangeId() const { return myExchangeId; }
-    void setSymbol(const std::string& symbol) { mySymbol = symbol; }
-    void setExchangeId(const std::string& exchangeId) { myExchangeId = exchangeId; }
+    const char* getSymbolCharRaw() const { return mySymbolCharRaw; }
+    const char* getExchangeIdCharRaw() const { return myExchangeIdCharRaw; }
+    void setSymbol(const std::string& symbol) {
+        mySymbol = symbol;
+        String::stringToCharRaw(symbol, mySymbolCharRaw, '0');
+    }
+    void setExchangeId(const std::string& exchangeId) {
+        myExchangeId = exchangeId;
+        String::stringToCharRaw(exchangeId, myExchangeIdCharRaw, '0');
+    }
     virtual std::shared_ptr<TradeMetaInfo> clone() const { return std::make_shared<TradeMetaInfo>(*this); }
+    virtual void init();
     virtual std::string getAsJson() const;
 private:
     std::string mySymbol;
     std::string myExchangeId;
+    char mySymbolCharRaw[8]; // for ITCH encoding
+    char myExchangeIdCharRaw[8];
 };
 
 class OrderMetaInfo : public TradeMetaInfo {
@@ -28,13 +41,24 @@ public:
     virtual ~OrderMetaInfo() = default;
     std::string getAgentId() const { return myAgentId; }
     std::string getMarketParticipantId() const { return myMarketParticipantId; }
-    void setAgentId(const std::string& agentId) { myAgentId = agentId; }
-    void setMarketParticipantId(const std::string& marketParticipantId) { myMarketParticipantId = marketParticipantId; }
+    uint64_t getAgentIdHash() const { return myAgentIdHash; }
+    uint64_t getMarketParticipantIdHash() const { return myMarketParticipantIdHash; }
+    void setAgentId(const std::string& agentId) {
+        myAgentId = agentId;
+        myAgentIdHash = String::hashStringTo<uint64_t>(agentId);
+    }
+    void setMarketParticipantId(const std::string& marketParticipantId) {
+        myMarketParticipantId = marketParticipantId;
+        myMarketParticipantIdHash = String::hashStringTo<uint64_t>(marketParticipantId);
+    }
     virtual std::shared_ptr<TradeMetaInfo> clone() const override { return std::make_shared<OrderMetaInfo>(*this); }
+    virtual void init() override;
     virtual std::string getAsJson() const override;
 private:
     std::string myAgentId;
     std::string myMarketParticipantId;
+    uint64_t myAgentIdHash; // for ITCH encoding
+    uint64_t myMarketParticipantIdHash;
 };
 
 std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& order);
