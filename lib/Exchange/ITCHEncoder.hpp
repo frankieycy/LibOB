@@ -189,7 +189,6 @@ public:
         static const std::string ourDescription;
     };
 
-    // TODO: log the ITCH-encoded report in the matching engine
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderExecutionReport& report);
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::LimitOrderSubmitReport& report);
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::MarketOrderSubmitReport& report);

@@ -5,6 +5,7 @@
 #include "Market/Trade.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/MatchingEngine.hpp"
+#include "Exchange/ITCHEncoder.hpp"
 
 namespace Exchange {
 using namespace Utils;
@@ -734,6 +735,8 @@ void MatchingEngineBase::logOrderProcessingReport(const std::shared_ptr<const Or
     myOrderProcessingReportLog.push_back(report);
     if (myOrderProcessingCallback)
         myOrderProcessingCallback(report);
+    if (myITCHMessageCallback)
+        myITCHMessageCallback(report->makeITCHMessage());
 }
 
 MatchingEngineFIFO::MatchingEngineFIFO() :

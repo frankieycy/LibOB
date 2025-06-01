@@ -5,6 +5,7 @@
 #include "Market/Order.hpp"
 #include "Market/Trade.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
+#include "Exchange/ITCHEncoder.hpp"
 
 namespace Exchange {
 using PriceLevel = double;
@@ -13,6 +14,7 @@ using MarketQueue = std::list<std::shared_ptr<Market::MarketOrder>>;
 using TradeLog = std::vector<std::shared_ptr<const Market::TradeBase>>;
 using OrderEventLog = std::vector<std::shared_ptr<const Market::OrderEventBase>>;
 using OrderProcessingReportLog = std::vector<std::shared_ptr<const OrderProcessingReport>>;
+using ITCHMessageLog = std::vector<std::shared_ptr<const ITCHEncoder::ITCHMessage>>;
 using RemovedLimitOrderLog = std::vector<std::shared_ptr<const Market::LimitOrder>>;
 using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
 using AscOrderBook = std::map<PriceLevel, LimitQueue>;
@@ -20,6 +22,7 @@ using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>; // permits O(1) order access for cancellation and modification
 using OrderProcessingCallback = std::function<void(const std::shared_ptr<const OrderProcessingReport>&)>; // communicates with OrderEventManager
+using ITCHMessageCallback = std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)>;
 
 class IMatchingEngine {
 public:
@@ -72,6 +75,7 @@ public:
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0; // left pure virtual unless the order matching strategy is defined
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
+    virtual void setITCHMessageCallback(std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)> callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
     virtual void stateConsistencyCheck() const = 0; // checks the internal state of the matching engine for consistency
     virtual void init() = 0; // state consistency checks and class flags initialization called in every derived constructor
@@ -95,7 +99,9 @@ private:
 };
 
 /* A simple MatchingEngine implmentation with O(1) order operations, including
-   submission, cancellation, modification, BBO fetch etc. */
+   submission, cancellation, modification, BBO fetch etc. The order book state
+   may be completely re-constructed if one gets the order events log, order reports
+   log, or the ITCH messages log. */
 class MatchingEngineBase : public IMatchingEngine {
 public:
     MatchingEngineBase();
@@ -115,6 +121,7 @@ public:
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
     OrderProcessingCallback getOrderProcessingCallback() const { return myOrderProcessingCallback; }
+    ITCHMessageCallback getITCHMessageCallback() const { return myITCHMessageCallback; }
     void setBidBook(const DescOrderBook& bidBook) { myBidBook = bidBook; }
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
     void setMarketQueue(const MarketQueue& marketQueue) { myMarketQueue = marketQueue; }
@@ -153,6 +160,7 @@ public:
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
+    virtual void setITCHMessageCallback(std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)> callback) override { myITCHMessageCallback = callback; }
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
     virtual void reserve(const size_t numOrdersEstimate) override;
     virtual void stateConsistencyCheck() const override;
@@ -181,11 +189,13 @@ private:
     TradeLog myTradeLog;
     OrderEventLog myOrderEventLog;
     OrderProcessingReportLog myOrderProcessingReportLog;
+    ITCHMessageLog myITCHMessageLog; // another equivalent (trimmed) representation of the order processing report
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
     // the order processing callback can be as complicated as it gets (e.g. the report routed to various handlers)
     // but the exposed interface must be simple
     OrderProcessingCallback myOrderProcessingCallback;
+    ITCHMessageCallback myITCHMessageCallback;
 };
 
 class MatchingEngineFIFO : public MatchingEngineBase {
