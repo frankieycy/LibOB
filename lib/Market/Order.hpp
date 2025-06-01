@@ -8,6 +8,7 @@ class IMatchingEngine;
 }
 
 namespace Market {
+using namespace Utils;
 class OrderEventBase;
 class OrderMetaInfo;
 
@@ -59,7 +60,11 @@ public:
     LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo = nullptr);
     virtual ~LimitOrder() = default;
     double getPrice() const override { return myPrice; }
-    void setPrice(const double price) { myPrice = price; }
+    uint32_t getIntPrice() const { return myIntPrice; }
+    void setPrice(const double price) {
+        myPrice = price;
+        myIntPrice = Maths::castDoublePriceAsInt<uint32_t>(price);
+    }
     std::shared_ptr<LimitOrder> copy() const { return std::make_shared<LimitOrder>(*this); }
     virtual std::shared_ptr<OrderBase> clone() const override { return std::make_shared<LimitOrder>(*this); }
     virtual void executeOrderEvent(const OrderEventBase& event) override;
@@ -70,6 +75,7 @@ public:
     virtual std::string getAsJson() const override;
 private:
     double myPrice;
+    uint32_t myIntPrice; // for ITCH encoding
 };
 
 class MarketOrder : public OrderBase {

@@ -90,11 +90,13 @@ LimitOrder::LimitOrder() :
 
 LimitOrder::LimitOrder(const LimitOrder& order) :
     OrderBase(order),
-    myPrice(order.myPrice) {}
+    myPrice(order.myPrice),
+    myIntPrice(order.myIntPrice) {}
 
 LimitOrder::LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
     OrderBase(id, timestamp, side, quantity, metaInfo),
-    myPrice(price) {
+    myPrice(price),
+    myIntPrice(Maths::castDoublePriceAsInt<uint32_t>(price)) {
     init();
 }
 
