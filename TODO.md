@@ -12,7 +12,7 @@
     - ok, ability to cast Enum as string, `to_string`
     - ok, write up `Logger` class, use it for debug logging
     - ok, add `LogLevel` to logger to enable `logger << LogLevel::INFO << ...`
-    - break Utils.hpp into smaller specific util files when the set of functions becomes big enough
+    - ok, break Utils.hpp into smaller specific util files when the set of functions becomes big enough
 * `Utils::Counter::TimestampHandlerBase`
     - ok, world clock synchronized over `MatchingEngine` and `OrderEventManager`
     - ok, unified timestamp generation function `tick()`
@@ -32,6 +32,9 @@
     - when will `OrderProcessingReport` report failure?
     - order book construction from events stream, same for `OrderEventManager`
     - detailed speed profiling for various matching engine operations
+* `Exchange::ITCHMessage`
+    - ok, inheritance hierachy of ITCH messages, each as a minimal and compact representation of `OrderProcessingReport`
+    - implement `encodeReport` for each class of `OrderProcessingReport`
 * `Market::OrderEventManager`
     - ok, unified interface for order submmit, cancel, modify etc.
     - ok, take in a `TimestampHandlerBase` ptr
