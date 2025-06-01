@@ -52,7 +52,7 @@ OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchang
 
 void OrderMetaInfo::init() {
     myAgentIdHash = String::hashStringTo<uint64_t>(myAgentId);
-    myMarketParticipantIdHash = String::hashStringTo<uint64_t>(myMarketParticipantId);
+    String::stringToCharRaw(myMarketParticipantId, myMarketParticipantIdCharRaw, '0');
 }
 
 std::string OrderMetaInfo::getAsJson() const {

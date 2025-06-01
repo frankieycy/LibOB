@@ -42,14 +42,14 @@ public:
     std::string getAgentId() const { return myAgentId; }
     std::string getMarketParticipantId() const { return myMarketParticipantId; }
     uint64_t getAgentIdHash() const { return myAgentIdHash; }
-    uint64_t getMarketParticipantIdHash() const { return myMarketParticipantIdHash; }
+    const char* getMarketParticipantIdHash() const { return myMarketParticipantIdCharRaw; }
     void setAgentId(const std::string& agentId) {
         myAgentId = agentId;
         myAgentIdHash = String::hashStringTo<uint64_t>(agentId);
     }
     void setMarketParticipantId(const std::string& marketParticipantId) {
         myMarketParticipantId = marketParticipantId;
-        myMarketParticipantIdHash = String::hashStringTo<uint64_t>(marketParticipantId);
+        String::stringToCharRaw(marketParticipantId, myMarketParticipantIdCharRaw, '0');
     }
     virtual std::shared_ptr<TradeMetaInfo> clone() const override { return std::make_shared<OrderMetaInfo>(*this); }
     virtual void init() override;
@@ -58,7 +58,7 @@ private:
     std::string myAgentId;
     std::string myMarketParticipantId;
     uint64_t myAgentIdHash; // for ITCH encoding
-    uint64_t myMarketParticipantIdHash;
+    char myMarketParticipantIdCharRaw[4];
 };
 
 std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& order);
