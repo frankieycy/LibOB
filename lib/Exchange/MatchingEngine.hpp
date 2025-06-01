@@ -189,7 +189,7 @@ private:
     TradeLog myTradeLog;
     OrderEventLog myOrderEventLog;
     OrderProcessingReportLog myOrderProcessingReportLog;
-    ITCHMessageLog myITCHMessageLog; // another equivalent (trimmed) representation of the order processing report
+    ITCHMessageLog myITCHMessageLog; // another equivalent representation of the order processing report, trimmed and standardized
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
     // the order processing callback can be as complicated as it gets (e.g. the report routed to various handlers)

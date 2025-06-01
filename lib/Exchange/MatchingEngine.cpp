@@ -731,11 +731,13 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
 }
 
 void MatchingEngineBase::logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report) {
+    const auto& message = report->makeITCHMessage();
     myOrderProcessingReportLog.push_back(report);
+    myITCHMessageLog.push_back(message);
     if (myOrderProcessingCallback)
         myOrderProcessingCallback(report);
     if (myITCHMessageCallback)
-        myITCHMessageCallback(report->makeITCHMessage());
+        myITCHMessageCallback(message);
 }
 
 MatchingEngineFIFO::MatchingEngineFIFO() :
