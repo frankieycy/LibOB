@@ -177,6 +177,7 @@ std::string OrderExecutionReport::getAsJson() const {
         "\"OrderId\":"               << orderId              << ","
         "\"OrderType\":\""           << orderType            << "\","
         "\"OrderSide\":\""           << orderSide            << "\","
+        "\"MatchOrderId\":"          << matchOrderId         << ","
         "\"TradeId\":"               << tradeId              << ","
         "\"FilledQuantity\":"        << filledQuantity       << ","
         "\"FilledPrice\":"           << filledPrice          << ","
@@ -184,6 +185,7 @@ std::string OrderExecutionReport::getAsJson() const {
         "\"OrderExecutionType\":\""  << orderExecutionType   << "\","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
         "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
@@ -212,6 +214,7 @@ std::string LimitOrderSubmitReport::getAsJson() const {
         "\"Order\":"                 << *order               << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
         "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
@@ -240,6 +243,7 @@ std::string MarketOrderSubmitReport::getAsJson() const {
         "\"Order\":"                 << *order               << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
         "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
@@ -267,6 +271,7 @@ std::string OrderCancelReport::getAsJson() const {
         "\"OrderSide\":\""           << orderSide            << "\","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
         "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
@@ -295,6 +300,7 @@ std::string OrderModifyPriceReport::getAsJson() const {
         "\"ModifiedPrice\":"         << modifiedPrice        << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
         "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";
@@ -323,6 +329,7 @@ std::string OrderModifyQuantityReport::getAsJson() const {
         "\"ModifiedQuantity\":"      << modifiedQuantity     << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
         "\"Latency\":"               << latency.value_or(0)  << ","
         "\"Message\":\""             << message.value_or("") << "\"";
     oss << "}";

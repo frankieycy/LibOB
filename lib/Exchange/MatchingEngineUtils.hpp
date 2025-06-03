@@ -106,6 +106,7 @@ struct OrderProcessingReport {
     Market::Side orderSide;
     OrderProcessingType orderProcessingType;
     OrderProcessingStatus status;
+    std::optional<uint64_t> agentIdHash = std::nullopt;
     std::optional<uint64_t> latency = std::nullopt;
     std::optional<std::string> message = std::nullopt;
 };
@@ -118,6 +119,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
         const uint64_t orderId,
         const Market::OrderType orderType,
         const Market::Side orderSide,
+        const uint64_t matchOrderId,
         const uint64_t tradeId,
         const uint32_t filledQuantity,
         const double filledPrice,
@@ -128,7 +130,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
         OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::EXECUTE, status, latency, message),
-        orderType(orderType), tradeId(tradeId), filledQuantity(filledQuantity), filledPrice(filledPrice),
+        orderType(orderType), matchOrderId(matchOrderId), tradeId(tradeId), filledQuantity(filledQuantity), filledPrice(filledPrice),
         isMakerOrder(isMakerOrder), orderExecutionType(orderExecutionType), trade(trade) {}
     virtual ~OrderExecutionReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
@@ -136,6 +138,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
+    uint64_t matchOrderId;
     uint64_t tradeId;
     uint32_t filledQuantity;
     double filledPrice;
