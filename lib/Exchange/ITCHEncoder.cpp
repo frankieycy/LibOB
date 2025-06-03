@@ -63,8 +63,29 @@ std::string ITCHEncoder::ITCHBrokenTradeMessage::toString() const {
     return ""; // TODO
 }
 
-std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderExecutionReport& /* report */) {
-    return nullptr; // TODO
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderExecutionReport& report) {
+    if (report.orderType == Market::OrderType::LIMIT) {
+        return std::make_shared<ITCHOrderExecuteWithPriceMessage>(
+            report.reportId,
+            report.timestamp,
+            report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
+            report.orderId,
+            report.matchOrderId,
+            report.filledQuantity,
+            Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice)
+        );
+    } else if (report.orderType == Market::OrderType::MARKET) {
+        return std::make_shared<ITCHTradeMessage>(
+            report.reportId,
+            report.timestamp,
+            report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
+            report.orderId,
+            report.matchOrderId,
+            report.filledQuantity,
+            Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice)
+        );
+    }
+    return nullptr;
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::LimitOrderSubmitReport& report) {
@@ -75,7 +96,7 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
     return std::make_shared<ITCHOrderAddMessage>(
         report.reportId,
         report.timestamp,
-        metaInfo ? metaInfo->getAgentIdHash() : ITCHEncoder::DEFAULT_AGENT_ID,
+        report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
         metaInfo ? metaInfo->getSymbolCharRaw() : ITCHEncoder::DEFAULT_SYMBOL,
         order->getId(),
         order->isBuy(),
@@ -97,8 +118,13 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
     return nullptr; // TODO
 }
 
-std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelReport& /* report */) {
-    return nullptr; // TODO
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelReport& report) {
+    return std::make_shared<ITCHOrderDeleteMessage>(
+        report.reportId,
+        report.timestamp,
+        report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
+        report.orderId
+    );
 }
 }
 

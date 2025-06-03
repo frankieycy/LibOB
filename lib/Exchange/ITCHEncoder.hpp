@@ -110,7 +110,7 @@ struct ITCHEncoder {
     struct ITCHOrderExecuteWithPriceMessage : public ITCHOrderExecuteMessage {
         ITCHOrderExecuteWithPriceMessage() = delete;
         ITCHOrderExecuteWithPriceMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,
-                                            const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
+                                         const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
             ITCHOrderExecuteMessage(messageId, timestamp, agentId, orderId, matchOrderId, fillQuantity), fillPrice(fillPrice) {
             messageType = ourType;
         }
@@ -137,7 +137,7 @@ struct ITCHEncoder {
     struct ITCHOrderCancelMessage : public ITCHOrderDeleteMessage {
         ITCHOrderCancelMessage() = delete;
         ITCHOrderCancelMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,
-                                const uint32_t cancelQuantity) :
+                               const uint32_t cancelQuantity) :
             ITCHOrderDeleteMessage(messageId, timestamp, agentId, orderId), cancelQuantity(cancelQuantity) {
             messageType = ourType;
         }
@@ -169,7 +169,7 @@ struct ITCHEncoder {
     struct ITCHTradeMessage : public ITCHOrderExecuteWithPriceMessage {
         ITCHTradeMessage() = delete;
         ITCHTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,
-                            const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
+                         const uint64_t matchOrderId, const uint32_t fillQuantity, const uint32_t fillPrice) :
             ITCHOrderExecuteWithPriceMessage(messageId, timestamp, agentId, orderId, matchOrderId, fillQuantity, fillPrice) {
             messageType = ourType;
         }
