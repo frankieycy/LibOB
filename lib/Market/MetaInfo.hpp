@@ -42,7 +42,7 @@ public:
     std::string getAgentId() const { return myAgentId; }
     std::string getMarketParticipantId() const { return myMarketParticipantId; }
     uint64_t getAgentIdHash() const { return myAgentIdHash; }
-    const char* getMarketParticipantIdHash() const { return myMarketParticipantIdCharRaw; }
+    const char* getMarketParticipantCharRaw() const { return myMarketParticipantIdCharRaw; }
     void setAgentId(const std::string& agentId) {
         myAgentId = agentId;
         myAgentIdHash = String::hashStringTo<uint64_t>(agentId);
