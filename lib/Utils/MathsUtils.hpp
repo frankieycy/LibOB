@@ -13,6 +13,11 @@ template <typename T>
 inline T castDoublePriceAsInt(double price, double multiplier = 10000.0) {
     return static_cast<T>(std::llround(price * multiplier));
 }
+
+template <typename T>
+inline double castIntPriceAsDouble(T price, double multiplier = 10000.0) {
+    return price / multiplier;
+}
 }
 }
 
