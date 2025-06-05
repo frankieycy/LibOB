@@ -19,40 +19,144 @@ const std::string ITCHEncoder::ITCHTradeMessage::ourDescription                 
 const std::string ITCHEncoder::ITCHCrossTradeMessage::ourDescription            = "[Q] Used for open/close crosses";
 const std::string ITCHEncoder::ITCHBrokenTradeMessage::ourDescription           = "[B] Trade bust (e.g. error correction)";
 
+std::string to_string(const ITCHEncoder::EventCode& eventCode) {
+    switch (eventCode) {
+        case ITCHEncoder::EventCode::MARKET_OPEN:  return "O";
+        case ITCHEncoder::EventCode::MARKET_CLOSE: return "C";
+        default:                                   return "!";
+    }
+}
+
+std::string to_string(const ITCHEncoder::MessageType& messageType) {
+    switch (messageType) {
+        case ITCHEncoder::MessageType::SYSTEM:                  return "S";
+        case ITCHEncoder::MessageType::ORDER_ADD:               return "A";
+        case ITCHEncoder::MessageType::ORDER_ADD_WITH_MPID:     return "F";
+        case ITCHEncoder::MessageType::ORDER_EXECUTE:           return "E";
+        case ITCHEncoder::MessageType::ORDER_EXECUTE_WITH_PRICE:return "C";
+        case ITCHEncoder::MessageType::ORDER_DELETE:            return "D";
+        case ITCHEncoder::MessageType::ORDER_CANCEL:            return "X";
+        case ITCHEncoder::MessageType::ORDER_REPLACE:           return "U";
+        case ITCHEncoder::MessageType::TRADE:                   return "P";
+        case ITCHEncoder::MessageType::CROSS_TRADE:             return "Q";
+        case ITCHEncoder::MessageType::BROKEN_TRADE:            return "B";
+        default:                                                return "!";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode) { return out << to_string(eventCode); }
+
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType) { return out << to_string(messageType); }
+
 std::string ITCHEncoder::ITCHSystemMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "S|"
+        << messageId << "|"
+        << timestamp << "|"
+        << agentId   << "|"
+        << eventCode;
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHOrderAddMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "A|"
+        << messageId              << "|"
+        << timestamp              << "|"
+        << agentId                << "|"
+        << std::string(symbol, 8) << "|"
+        << orderId                << "|"
+        << (isBuy ? 'B' : 'S')    << "|"
+        << quantity               << "|"
+        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price);
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHOrderAddWithMPIDMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "F|"
+        << messageId              << "|"
+        << timestamp              << "|"
+        << agentId                << "|"
+        << std::string(symbol, 8) << "|"
+        << orderId                << "|"
+        << (isBuy ? 'B' : 'S')    << "|"
+        << quantity               << "|"
+        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price) << "|"
+        << std::string(mpid, 4);
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHOrderExecuteMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "E|"
+        << messageId      << "|"
+        << timestamp      << "|"
+        << agentId        << "|"
+        << orderId        << "|"
+        << matchOrderId   << "|"
+        << fillQuantity;
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHOrderExecuteWithPriceMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "C|"
+        << messageId      << "|"
+        << timestamp      << "|"
+        << agentId        << "|"
+        << orderId        << "|"
+        << matchOrderId   << "|"
+        << fillQuantity   << "|"
+        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(fillPrice);
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHOrderDeleteMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "D|"
+        << messageId << "|"
+        << timestamp << "|"
+        << agentId   << "|"
+        << orderId;
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHOrderCancelMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "X|"
+        << messageId      << "|"
+        << timestamp      << "|"
+        << agentId        << "|"
+        << orderId        << "|"
+        << cancelQuantity;
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "U|"
+        << messageId      << "|"
+        << timestamp      << "|"
+        << agentId        << "|"
+        << oldOrderId     << "|"
+        << newOrderId     << "|"
+        << quantity       << "|"
+        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price);
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHTradeMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "P|"
+        << messageId      << "|"
+        << timestamp      << "|"
+        << agentId        << "|"
+        << orderId        << "|"
+        << matchOrderId   << "|"
+        << fillQuantity   << "|"
+        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(fillPrice);
+    return oss.str();
 }
 
 std::string ITCHEncoder::ITCHCrossTradeMessage::toString() const {
@@ -64,6 +168,8 @@ std::string ITCHEncoder::ITCHBrokenTradeMessage::toString() const {
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderExecutionReport& report) {
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
+        return nullptr;
     if (report.orderType == Market::OrderType::LIMIT) {
         return std::make_shared<ITCHOrderExecuteWithPriceMessage>(
             report.reportId,
@@ -89,6 +195,8 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::LimitOrderSubmitReport& report) {
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
+        return nullptr;
     const auto& order = report.order;
     if (!order)
         Error::LIB_THROW("ITCHEncoder::encodeReport: LimitOrderSubmitReport order is null");
@@ -119,6 +227,8 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelReport& report) {
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
+        return nullptr;
     return std::make_shared<ITCHOrderDeleteMessage>(
         report.reportId,
         report.timestamp,
