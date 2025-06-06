@@ -3,6 +3,7 @@
 #include "Market/Order.hpp"
 #include "Market/OrderEventManager.hpp"
 #include "Exchange/MatchingEngine.hpp"
+#include "Analytics/MatchingEngineMonitor.hpp"
 #include "Tests/TestMatchingEngine.hpp"
 
 namespace Tests {
