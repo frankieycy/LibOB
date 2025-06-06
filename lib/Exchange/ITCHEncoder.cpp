@@ -219,11 +219,11 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderModifyPriceReport& /* report */) {
-    return nullptr; // TODO
+    return nullptr; // TODO: ITCH implements a modify order as a cancel + add, different from OrderEvent::OrderModifyPriceEvent
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderModifyQuantityReport& /* report */) {
-    return nullptr; // TODO
+    return nullptr; // TODO: ITCH implements a modify order as a cancel + add, different from OrderEvent::OrderModifyQuantityEvent
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelReport& report) {
