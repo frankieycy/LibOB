@@ -1335,28 +1335,28 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
-      22  |         92  |      88.00  |      10  |     Buy  |   Active  
-      21  |         88  |     111.00  |      10  |    Sell  |   Active  
-      20  |         84  |      89.00  |      10  |     Buy  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
+      22  |         92  |     Buy  |      88.00  |      10  |   Active  
+      21  |         88  |    Sell  |     111.00  |      10  |   Active  
+      20  |         84  |     Buy  |      89.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":41,"OrderId":41,"Timestamp":168,"EventType":"Submit","Order":{"Id":41,"Timestamp":168,"Side":"Buy","Quantity":1,"OrderType":"Market","OrderState":"Active","MetaInfo":{}}}
@@ -1476,28 +1476,28 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
-      22  |         92  |      88.00  |      10  |     Buy  |   Active  
-      21  |         88  |     111.00  |      10  |    Sell  |   Active  
-      20  |         84  |      89.00  |      10  |     Buy  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
+      22  |         92  |     Buy  |      88.00  |      10  |   Active  
+      21  |         88  |    Sell  |     111.00  |      10  |   Active  
+      20  |         84  |     Buy  |      89.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":42,"OrderId":42,"Timestamp":175,"EventType":"Submit","Order":{"Id":42,"Timestamp":175,"Side":"Buy","Quantity":1,"Price":98.6,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -1615,28 +1615,28 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
-      22  |         92  |      88.00  |      10  |     Buy  |   Active  
-      21  |         88  |     111.00  |      10  |    Sell  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
+      22  |         92  |     Buy  |      88.00  |      10  |   Active  
+      21  |         88  |    Sell  |     111.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":43,"OrderId":43,"Timestamp":179,"EventType":"Submit","Order":{"Id":43,"Timestamp":179,"Side":"Sell","Quantity":3,"Price":100,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -1755,28 +1755,28 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      43  |        182  |     100.00  |       3  |    Sell  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
-      22  |         92  |      88.00  |      10  |     Buy  |   Active  
+      43  |        182  |    Sell  |     100.00  |       3  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
+      22  |         92  |     Buy  |      88.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":44,"OrderId":44,"Timestamp":183,"EventType":"Submit","Order":{"Id":44,"Timestamp":183,"Side":"Sell","Quantity":2,"OrderType":"Market","OrderState":"Active","MetaInfo":{}}}
@@ -1899,28 +1899,28 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      43  |        182  |     100.00  |       3  |    Sell  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
-      22  |         92  |      88.00  |      10  |     Buy  |   Active  
+      43  |        182  |    Sell  |     100.00  |       3  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
+      22  |         92  |     Buy  |      88.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":45,"OrderId":45,"Timestamp":190,"EventType":"Submit","Order":{"Id":45,"Timestamp":190,"Side":"Buy","Quantity":2,"Price":96.6,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -2041,28 +2041,28 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      45  |        193  |      96.60  |       2  |     Buy  |   Active  
-      43  |        182  |     100.00  |       3  |    Sell  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
+      45  |        193  |     Buy  |      96.60  |       2  |   Active  
+      43  |        182  |    Sell  |     100.00  |       3  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":46,"OrderId":46,"Timestamp":194,"EventType":"Submit","Order":{"Id":46,"Timestamp":194,"Side":"Sell","Quantity":1,"Price":100.36,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -2184,28 +2184,28 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      46  |        197  |     100.36  |       1  |    Sell  |   Active  
-      45  |        193  |      96.60  |       2  |     Buy  |   Active  
-      43  |        182  |     100.00  |       3  |    Sell  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
+      46  |        197  |    Sell  |     100.36  |       1  |   Active  
+      45  |        193  |     Buy  |      96.60  |       2  |   Active  
+      43  |        182  |    Sell  |     100.00  |       3  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":47,"OrderId":47,"Timestamp":198,"EventType":"Submit","Order":{"Id":47,"Timestamp":198,"Side":"Buy","Quantity":3,"OrderType":"Market","OrderState":"Active","MetaInfo":{}}}
@@ -2331,28 +2331,28 @@
       43  |        182  |    Sell  |     100.00  |       0  |   Filled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      46  |        197  |     100.36  |       1  |    Sell  |   Active  
-      45  |        193  |      96.60  |       2  |     Buy  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
+      46  |        197  |    Sell  |     100.36  |       1  |   Active  
+      45  |        193  |     Buy  |      96.60  |       2  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":48,"OrderId":48,"Timestamp":205,"EventType":"Submit","Order":{"Id":48,"Timestamp":205,"Side":"Sell","Quantity":3,"Price":101.8,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -2476,28 +2476,28 @@
       43  |        182  |    Sell  |     100.00  |       0  |   Filled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      46  |        197  |     100.36  |       1  |    Sell  |   Active  
-      45  |        193  |      96.60  |       2  |     Buy  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
+      46  |        197  |    Sell  |     100.36  |       1  |   Active  
+      45  |        193  |     Buy  |      96.60  |       2  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":49,"OrderId":49,"Timestamp":209,"EventType":"Submit","Order":{"Id":49,"Timestamp":209,"Side":"Sell","Quantity":2,"Price":101.54,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -2622,28 +2622,28 @@
       43  |        182  |    Sell  |     100.00  |       0  |   Filled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      46  |        197  |     100.36  |       1  |    Sell  |   Active  
-      45  |        193  |      96.60  |       2  |     Buy  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
-      32  |        132  |      83.00  |      10  |     Buy  |   Active  
-      31  |        128  |     116.00  |      10  |    Sell  |   Active  
-      30  |        124  |      84.00  |      10  |     Buy  |   Active  
-      29  |        120  |     115.00  |      10  |    Sell  |   Active  
-      28  |        116  |      85.00  |      10  |     Buy  |   Active  
-      27  |        112  |     114.00  |      10  |    Sell  |   Active  
-      26  |        108  |      86.00  |      10  |     Buy  |   Active  
-      25  |        104  |     113.00  |      10  |    Sell  |   Active  
-      24  |        100  |      87.00  |      10  |     Buy  |   Active  
-      23  |         96  |     112.00  |      10  |    Sell  |   Active  
+      46  |        197  |    Sell  |     100.36  |       1  |   Active  
+      45  |        193  |     Buy  |      96.60  |       2  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
+      32  |        132  |     Buy  |      83.00  |      10  |   Active  
+      31  |        128  |    Sell  |     116.00  |      10  |   Active  
+      30  |        124  |     Buy  |      84.00  |      10  |   Active  
+      29  |        120  |    Sell  |     115.00  |      10  |   Active  
+      28  |        116  |     Buy  |      85.00  |      10  |   Active  
+      27  |        112  |    Sell  |     114.00  |      10  |   Active  
+      26  |        108  |     Buy  |      86.00  |      10  |   Active  
+      25  |        104  |    Sell  |     113.00  |      10  |   Active  
+      24  |        100  |     Buy  |      87.00  |      10  |   Active  
+      23  |         96  |    Sell  |     112.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":50,"Timestamp":213,"Side":"Buy","Quantity":1,"Price":98.09,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
@@ -3023,28 +3023,28 @@
       49  |        212  |    Sell  |     101.54  |       0  |   Filled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-     149  |        786  |      97.51  |       2  |     Buy  |   Active  
-     148  |        782  |     100.93  |       2  |    Sell  |   Active  
-     147  |        778  |      96.23  |       3  |     Buy  |   Active  
-     146  |        774  |     101.75  |       2  |    Sell  |   Active  
-     143  |        756  |      95.17  |       2  |     Buy  |   Active  
-     141  |        745  |     100.50  |       3  |    Sell  |   Active  
-      96  |        493  |     101.80  |       3  |    Sell  |   Active  
-      92  |        459  |     100.46  |       2  |    Sell  |   Active  
-      91  |        455  |     100.33  |       1  |    Sell  | PartialFilled  
-      89  |        441  |     102.15  |       2  |    Sell  |   Active  
-      88  |        437  |     101.47  |       3  |    Sell  |   Active  
-      80  |        384  |     104.30  |       1  |    Sell  |   Active  
-      66  |        304  |      96.44  |       3  |     Buy  |   Active  
-      64  |        293  |     102.89  |       2  |    Sell  |   Active  
-      59  |        264  |      95.42  |       1  |     Buy  |   Active  
-      58  |        260  |      95.42  |       1  |     Buy  |   Active  
-      55  |        239  |     103.84  |       2  |    Sell  |   Active  
-      53  |        231  |     103.37  |       1  |    Sell  |   Active  
-      45  |        193  |      96.60  |       2  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
+     149  |        786  |     Buy  |      97.51  |       2  |   Active  
+     148  |        782  |    Sell  |     100.93  |       2  |   Active  
+     147  |        778  |     Buy  |      96.23  |       3  |   Active  
+     146  |        774  |    Sell  |     101.75  |       2  |   Active  
+     143  |        756  |     Buy  |      95.17  |       2  |   Active  
+     141  |        745  |    Sell  |     100.50  |       3  |   Active  
+      96  |        493  |    Sell  |     101.80  |       3  |   Active  
+      92  |        459  |    Sell  |     100.46  |       2  |   Active  
+      91  |        455  |    Sell  |     100.33  |       1  | PartialFilled  
+      89  |        441  |    Sell  |     102.15  |       2  |   Active  
+      88  |        437  |    Sell  |     101.47  |       3  |   Active  
+      80  |        384  |    Sell  |     104.30  |       1  |   Active  
+      66  |        304  |     Buy  |      96.44  |       3  |   Active  
+      64  |        293  |    Sell  |     102.89  |       2  |   Active  
+      59  |        264  |     Buy  |      95.42  |       1  |   Active  
+      58  |        260  |     Buy  |      95.42  |       1  |   Active  
+      55  |        239  |    Sell  |     103.84  |       2  |   Active  
+      53  |        231  |    Sell  |     103.37  |       1  |   Active  
+      45  |        193  |     Buy  |      96.60  |       2  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] INFO Order event manager state:

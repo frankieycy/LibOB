@@ -33,9 +33,9 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":1,"OrderId":1,"Timestamp":5,"EventType":"Submit","Order":{"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -73,10 +73,10 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":2,"OrderId":2,"Timestamp":9,"EventType":"Submit","Order":{"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -116,11 +116,11 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":3,"OrderId":3,"Timestamp":13,"EventType":"Submit","Order":{"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -161,12 +161,12 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":4,"OrderId":4,"Timestamp":17,"EventType":"Submit","Order":{"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -209,13 +209,13 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":5,"OrderId":5,"Timestamp":21,"EventType":"Submit","Order":{"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -260,14 +260,14 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":6,"OrderId":6,"Timestamp":25,"EventType":"Submit","Order":{"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -313,15 +313,15 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":7,"OrderId":7,"Timestamp":29,"EventType":"Submit","Order":{"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -369,16 +369,16 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":8,"OrderId":8,"Timestamp":33,"EventType":"Submit","Order":{"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -428,17 +428,17 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         36  |     103.00  |      10  |    Sell  |   Active  
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
-       0  |          4  |      99.00  |      15  |     Buy  |   Active  
+       8  |         36  |    Sell  |     103.00  |      10  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":9,"OrderId":0,"Timestamp":37,"EventType":"Cancel"}
@@ -486,16 +486,16 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         36  |     103.00  |      10  |    Sell  |   Active  
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
-       1  |          8  |      99.00  |       5  |     Buy  |   Active  
+       8  |         36  |    Sell  |     103.00  |      10  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       1  |          8  |     Buy  |      99.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":10,"OrderId":1,"Timestamp":41,"EventType":"Cancel"}
@@ -542,15 +542,15 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         36  |     103.00  |      10  |    Sell  |   Active  
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
+       8  |         36  |    Sell  |     103.00  |      10  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":11,"OrderId":8,"Timestamp":45,"EventType":"Cancel"}
@@ -596,14 +596,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         12  |      98.00  |      10  |     Buy  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         12  |     Buy  |      98.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] WARNING [OrderEventManagerBase::fetchOrder] Order not found - orderId = 9.
@@ -653,14 +653,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         20  |      97.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         50  |     100.00  |      10  |     Buy  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         20  |     Buy  |      97.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         50  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":13,"OrderId":4,"Timestamp":53,"EventType":"ModifyPrice","ModifiedPrice":95}
@@ -707,14 +707,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         24  |     101.00  |      10  |    Sell  |   Active  
-       4  |         54  |      95.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         50  |     100.00  |      10  |     Buy  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         24  |    Sell  |     101.00  |      10  |   Active  
+       4  |         54  |     Buy  |      95.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         50  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":14,"OrderId":5,"Timestamp":57,"EventType":"ModifyPrice","ModifiedPrice":102}
@@ -761,14 +761,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       4  |         54  |      95.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         50  |     100.00  |      10  |     Buy  |   Active  
+       7  |         32  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       4  |         54  |     Buy  |      95.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         50  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":15,"OrderId":7,"Timestamp":61,"EventType":"ModifyPrice","ModifiedPrice":102}
@@ -814,14 +814,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         62  |     102.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       4  |         54  |      95.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         50  |     100.00  |      10  |     Buy  |   Active  
+       7  |         62  |    Sell  |     102.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       4  |         54  |     Buy  |      95.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         50  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":16,"OrderId":7,"Timestamp":63,"EventType":"ModifyPrice","ModifiedPrice":103}
@@ -869,14 +869,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |     103.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       4  |         54  |      95.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         50  |     100.00  |      10  |     Buy  |   Active  
+       7  |         64  |    Sell  |     103.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       4  |         54  |     Buy  |      95.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         50  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] WARNING [OrderEventManagerBase::fetchOrder] Order not found - orderId = 9.
@@ -927,14 +927,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |     103.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       4  |         54  |      95.00  |      10  |     Buy  |   Active  
-       3  |         16  |      98.00  |       5  |     Buy  |   Active  
-       2  |         68  |     100.00  |       5  |     Buy  |   Active  
+       7  |         64  |    Sell  |     103.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       4  |         54  |     Buy  |      95.00  |      10  |   Active  
+       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+       2  |         68  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":18,"OrderId":3,"Timestamp":71,"EventType":"ModifyQuantity","ModifiedQuantity":20}
@@ -982,14 +982,14 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |     103.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       4  |         54  |      95.00  |      10  |     Buy  |   Active  
-       3  |         72  |      98.00  |      20  |     Buy  |   Active  
-       2  |         68  |     100.00  |       5  |     Buy  |   Active  
+       7  |         64  |    Sell  |     103.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       4  |         54  |     Buy  |      95.00  |      10  |   Active  
+       3  |         72  |     Buy  |      98.00  |      20  |   Active  
+       2  |         68  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":19,"OrderId":4,"Timestamp":75,"EventType":"ModifyQuantity","ModifiedQuantity":0}
@@ -1036,13 +1036,13 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |     103.00  |      15  |    Sell  |   Active  
-       6  |         28  |     101.00  |      10  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       3  |         72  |      98.00  |      20  |     Buy  |   Active  
-       2  |         68  |     100.00  |       5  |     Buy  |   Active  
+       7  |         64  |    Sell  |     103.00  |      15  |   Active  
+       6  |         28  |    Sell  |     101.00  |      10  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       3  |         72  |     Buy  |      98.00  |      20  |   Active  
+       2  |         68  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":20,"OrderId":6,"Timestamp":79,"EventType":"ModifyQuantity","ModifiedQuantity":0}
@@ -1088,12 +1088,12 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |     103.00  |      15  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       3  |         72  |      98.00  |      20  |     Buy  |   Active  
-       2  |         68  |     100.00  |       5  |     Buy  |   Active  
+       7  |         64  |    Sell  |     103.00  |      15  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       3  |         72  |     Buy  |      98.00  |      20  |   Active  
+       2  |         68  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":21,"OrderId":9,"Timestamp":83,"EventType":"Submit","Order":{"Id":9,"Timestamp":83,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
@@ -1142,13 +1142,13 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       9  |         86  |     103.00  |       5  |    Sell  |   Active  
-       7  |         64  |     103.00  |      15  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       3  |         72  |      98.00  |      20  |     Buy  |   Active  
-       2  |         68  |     100.00  |       5  |     Buy  |   Active  
+       9  |         86  |    Sell  |     103.00  |       5  |   Active  
+       7  |         64  |    Sell  |     103.00  |      15  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       3  |         72  |     Buy  |      98.00  |      20  |   Active  
+       2  |         68  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":22,"OrderId":7,"Timestamp":87,"EventType":"ModifyQuantity","ModifiedQuantity":15}
@@ -1194,13 +1194,13 @@
        0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       9  |         86  |     103.00  |       5  |    Sell  |   Active  
-       7  |         88  |     103.00  |      15  |    Sell  |   Active  
-       5  |         58  |     102.00  |      10  |    Sell  |   Active  
-       3  |         72  |      98.00  |      20  |     Buy  |   Active  
-       2  |         68  |     100.00  |       5  |     Buy  |   Active  
+       9  |         86  |    Sell  |     103.00  |       5  |   Active  
+       7  |         88  |    Sell  |     103.00  |      15  |   Active  
+       5  |         58  |    Sell  |     102.00  |      10  |   Active  
+       3  |         72  |     Buy  |      98.00  |      20  |   Active  
+       2  |         68  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] WARNING [OrderEventManagerBase::fetchOrder] Order not found - orderId = 10.

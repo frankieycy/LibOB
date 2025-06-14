@@ -27,18 +27,18 @@
       43  |        182  |    Sell  |     100.00  |       0  |   Filled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      46  |        197  |     100.36  |       1  |    Sell  |   Active  
-      45  |        193  |      96.60  |       2  |     Buy  |   Active  
-      42  |        178  |      98.60  |       1  |     Buy  |   Active  
-      39  |        160  |     120.00  |      10  |    Sell  |   Active  
-      38  |        156  |      80.00  |      10  |     Buy  |   Active  
-      37  |        152  |     119.00  |      10  |    Sell  |   Active  
-      36  |        148  |      81.00  |      10  |     Buy  |   Active  
-      35  |        144  |     118.00  |      10  |    Sell  |   Active  
-      34  |        140  |      82.00  |      10  |     Buy  |   Active  
-      33  |        136  |     117.00  |      10  |    Sell  |   Active  
+      46  |        197  |    Sell  |     100.36  |       1  |   Active  
+      45  |        193  |     Buy  |      96.60  |       2  |   Active  
+      42  |        178  |     Buy  |      98.60  |       1  |   Active  
+      39  |        160  |    Sell  |     120.00  |      10  |   Active  
+      38  |        156  |     Buy  |      80.00  |      10  |   Active  
+      37  |        152  |    Sell  |     119.00  |      10  |   Active  
+      36  |        148  |     Buy  |      81.00  |      10  |   Active  
+      35  |        144  |    Sell  |     118.00  |      10  |   Active  
+      34  |        140  |     Buy  |      82.00  |      10  |   Active  
+      33  |        136  |    Sell  |     117.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] INFO Order book state:
@@ -69,18 +69,18 @@
       43  |         94  |    Sell  |     100.00  |       0  |   Filled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      46  |        103  |     100.36  |       1  |    Sell  |   Active  
-      45  |        101  |      96.60  |       2  |     Buy  |   Active  
-      42  |         92  |      98.60  |       1  |     Buy  |   Active  
-      39  |         80  |     120.00  |      10  |    Sell  |   Active  
-      38  |         78  |      80.00  |      10  |     Buy  |   Active  
-      37  |         76  |     119.00  |      10  |    Sell  |   Active  
-      36  |         74  |      81.00  |      10  |     Buy  |   Active  
-      35  |         72  |     118.00  |      10  |    Sell  |   Active  
-      34  |         70  |      82.00  |      10  |     Buy  |   Active  
-      33  |         68  |     117.00  |      10  |    Sell  |   Active  
+      46  |        103  |    Sell  |     100.36  |       1  |   Active  
+      45  |        101  |     Buy  |      96.60  |       2  |   Active  
+      42  |         92  |     Buy  |      98.60  |       1  |   Active  
+      39  |         80  |    Sell  |     120.00  |      10  |   Active  
+      38  |         78  |     Buy  |      80.00  |      10  |   Active  
+      37  |         76  |    Sell  |     119.00  |      10  |   Active  
+      36  |         74  |     Buy  |      81.00  |      10  |   Active  
+      35  |         72  |    Sell  |     118.00  |      10  |   Active  
+      34  |         70  |     Buy  |      82.00  |      10  |   Active  
+      33  |         68  |    Sell  |     117.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] WARNING [MatchingEngineBase::process] Order event is null.
@@ -114,17 +114,17 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
-    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      46  |         86  |     100.36  |       1  |    Sell  |   Active  
-      45  |         84  |      96.60  |       2  |     Buy  |   Active  
-      42  |         82  |      98.60  |       1  |     Buy  |   Active  
-      39  |         80  |     120.00  |      10  |    Sell  |   Active  
-      38  |         78  |      80.00  |      10  |     Buy  |   Active  
-      37  |         76  |     119.00  |      10  |    Sell  |   Active  
-      36  |         74  |      81.00  |      10  |     Buy  |   Active  
-      35  |         72  |     118.00  |      10  |    Sell  |   Active  
-      34  |         70  |      82.00  |      10  |     Buy  |   Active  
-      33  |         68  |     117.00  |      10  |    Sell  |   Active  
+      46  |         86  |    Sell  |     100.36  |       1  |   Active  
+      45  |         84  |     Buy  |      96.60  |       2  |   Active  
+      42  |         82  |     Buy  |      98.60  |       1  |   Active  
+      39  |         80  |    Sell  |     120.00  |      10  |   Active  
+      38  |         78  |     Buy  |      80.00  |      10  |   Active  
+      37  |         76  |    Sell  |     119.00  |      10  |   Active  
+      36  |         74  |     Buy  |      81.00  |      10  |   Active  
+      35  |         72  |    Sell  |     118.00  |      10  |   Active  
+      34  |         70  |     Buy  |      82.00  |      10  |   Active  
+      33  |         68  |    Sell  |     117.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
