@@ -155,6 +155,30 @@ void testMatchingEngineOrderCancelModify() {
     em.modifyOrderQuantity(10, 10);
 }
 
+void testMatchingEngineOrderCancelReplace() {
+    // test order cancel-replace events
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>(true);
+    Market::OrderEventManagerBase em{e};
+    em.setPrintOrderBookPerOrderSubmit(true);
+    em.setTimeEngineOrderEventsProcessing(true);
+    em.submitLimitOrderEvent(Market::Side::BUY, 15, 99.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 5, 99.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 10, 98.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 5, 98.0);
+    em.submitLimitOrderEvent(Market::Side::BUY, 10, 97.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 10, 101.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 10, 101.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 15, 102.0);
+    em.submitLimitOrderEvent(Market::Side::SELL, 10, 103.0);
+    // cancel-replace events
+    em.cancelAndReplaceOrder(0, 10);
+    em.cancelAndReplaceOrder(1, std::nullopt, 100.0);
+    em.cancelAndReplaceOrder(2, 5, 97.0);
+    em.cancelAndReplaceOrder(7, std::nullopt, 103.0);
+    em.cancelAndReplaceOrder(8, 0);
+    em.cancelAndReplaceOrder(12, 0);
+}
+
 void testMatchingEngineRandomOrdersSpeedTest() {
     // run market dynamics by bulk submission of orders to test the speed of various matching engine operations
     // e.g. order submission, cancellation, modification, and execution
@@ -430,6 +454,10 @@ void testMatchingEngineGetAsJson() {
     }
     // get matching engine state as Json
     std::cout << "Matching engine Json:\n" << e->getAsJson() << std::endl;
+}
+
+void testMatchingEngineITCHMessage() {
+    // TODO
 }
 
 void testMatchingEngineZeroIntelligence() {

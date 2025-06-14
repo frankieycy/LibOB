@@ -8,11 +8,13 @@ void testMatchingEngineSimpleBook();
 void testMatchingEngineOrderEventManager();
 void testMatchingEngineRandomOrders();
 void testMatchingEngineOrderCancelModify();
+void testMatchingEngineOrderCancelReplace();
 void testMatchingEngineRandomOrdersSpeedTest();
 void testMatchingEngineRandomOrdersStressTest();
 void testMatchingEngineSpeedProfiling();
 void testMatchingEngineConstructFromEventsStream();
 void testMatchingEngineGetAsJson();
+void testMatchingEngineITCHMessage();
 void testMatchingEngineZeroIntelligence();
 }
 }
