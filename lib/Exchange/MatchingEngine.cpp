@@ -306,6 +306,15 @@ void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingRe
     }
 }
 
+void MatchingEngineBase::build(const ITCHMessageLog& itchMessageLog) {
+    for (const auto& message : itchMessageLog) {
+        if (isDebugMode())
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase::build] Processing ITCH message: " << *message;
+        if (message)
+            process(message->makeEvent());
+    }
+}
+
 std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
     const OrderBookDisplayConfig& config = getOrderBookDisplayConfig();
     if (config.isShowOrderBook()) {

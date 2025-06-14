@@ -118,6 +118,7 @@ public:
     const TradeLog& getTradeLog() const { return myTradeLog; }
     const OrderEventLog& getOrderEventLog() const { return myOrderEventLog; }
     const OrderProcessingReportLog& getOrderProcessingReportLog() const { return myOrderProcessingReportLog; }
+    const ITCHMessageLog& getITCHMessageLog() const { return myITCHMessageLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
     OrderProcessingCallback getOrderProcessingCallback() const { return myOrderProcessingCallback; }
@@ -128,6 +129,7 @@ public:
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
     void setOrderEventLog(const OrderEventLog& orderEventLog) { myOrderEventLog = orderEventLog; }
     void setOrderProcessingReportLog(const OrderProcessingReportLog& orderProcessingReportLog) { myOrderProcessingReportLog = orderProcessingReportLog; }
+    void setITCHMessageLog(const ITCHMessageLog& itchMessageLog) { myITCHMessageLog = itchMessageLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
     std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const override;
@@ -155,6 +157,7 @@ public:
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) override;
     virtual void build(const OrderEventLog& orderEventLog); // builds the book given some user-input order events stream
     virtual void build(const OrderProcessingReportLog& orderProcessingReportLog);
+    virtual void build(const ITCHMessageLog& itchMessageLog);
     virtual void executeAgainstQueuedMarketOrders(const std::shared_ptr<Market::LimitOrder>& order, uint32_t& unfilledQuantity, MarketQueue& marketQueue);
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
@@ -177,6 +180,7 @@ protected:
     TradeLog& accessTradeLog() { return myTradeLog; }
     OrderEventLog& accessOrderEventLog() { return myOrderEventLog; }
     OrderProcessingReportLog& accessOrderProcessingReportLog() { return myOrderProcessingReportLog; }
+    ITCHMessageLog& accessITCHMessageLog() { return myITCHMessageLog; }
     RemovedLimitOrderLog& accessRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
     OrderIndex& accessLimitOrderLookup() { return myLimitOrderLookup; }
 private:
