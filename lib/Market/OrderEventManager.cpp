@@ -264,12 +264,43 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
 }
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
-    // TODO: implement cancel and replace report handling
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
+    }
+    if (report.orderType == Market::OrderType::LIMIT) {
+        const auto& it = fetchLimitOrderIterator(report.orderId);
+        if (it != myActiveLimitOrders.end()) {
+            auto order = it->second;
+            myActiveLimitOrders.erase(it); // remove the old order
+            order->setId(report.newOrderId);
+            order->setQuantity(report.newQuantity);
+            order->setPrice(report.newPrice);
+            order->setOrderState(Market::OrderState::ACTIVE);
+            order->setTimestamp(clockTick());
+            if (order->isAlive())
+                myActiveLimitOrders[order->getId()] = order; // reinsert the updated order
+        } else {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
+        }
+    } else if (report.orderType == Market::OrderType::MARKET) {
+        const auto& it = fetchMarketOrderIterator(report.orderId);
+        if (it != myQueuedMarketOrders.end()) {
+            auto order = it->second;
+            myQueuedMarketOrders.erase(it); // remove the old order
+            order->setId(report.newOrderId);
+            order->setQuantity(report.newQuantity);
+            order->setOrderState(Market::OrderState::ACTIVE);
+            order->setTimestamp(clockTick());
+            if (order->isAlive())
+                myQueuedMarketOrders[order->getId()] = order; // reinsert the updated order
+        } else {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
+        }
+    } else {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in cancel and replace report - orderId = " << report.orderId;
     }
 }
 
