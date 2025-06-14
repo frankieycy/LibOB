@@ -177,6 +177,8 @@ void testMatchingEngineOrderCancelReplace() {
     em.cancelAndReplaceOrder(7, std::nullopt, 103.0);
     em.cancelAndReplaceOrder(8, 0);
     em.cancelAndReplaceOrder(12, 0);
+    em.cancelAndReplaceOrder(4);
+    em.cancelAndReplaceOrder(11);
 }
 
 void testMatchingEngineRandomOrdersSpeedTest() {
