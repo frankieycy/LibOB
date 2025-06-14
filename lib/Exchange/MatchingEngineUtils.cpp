@@ -22,6 +22,7 @@ std::string to_string(const OrderProcessingType& orderProcessingType) {
         case OrderProcessingType::EXECUTE:           return "Execution";
         case OrderProcessingType::SUBMIT:            return "Submission";
         case OrderProcessingType::CANCEL:            return "Cancel";
+        case OrderProcessingType::CANCEL_REPLACE:    return "CancelReplace";
         case OrderProcessingType::MODIFY_PRICE:      return "ModifyPrice";
         case OrderProcessingType::MODIFY_QUANTITY:   return "ModifyQuantity";
         default:                                     return "Null";

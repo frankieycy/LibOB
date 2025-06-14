@@ -36,6 +36,8 @@ std::string to_string(const OrderEventType& orderEventType) {
         case OrderEventType::SUBMIT:          return "Submit";
         case OrderEventType::FILL:            return "Fill";
         case OrderEventType::CANCEL:          return "Cancel";
+        case OrderEventType::PARTIAL_CANCEL:  return "PartialCancel";
+        case OrderEventType::CANCEL_REPLACE:  return "CancelReplace";
         case OrderEventType::MODIFY_PRICE:    return "ModifyPrice";
         case OrderEventType::MODIFY_QUANTITY: return "ModifyQuantity";
         default:                              return "Null";
