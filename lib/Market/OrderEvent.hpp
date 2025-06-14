@@ -123,8 +123,28 @@ public:
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;
     virtual void init() override;
+    virtual std::string getAsJson() const override;
 private:
     uint32_t myCancelQuantity;
+};
+
+class OrderCancelAndReplaceEvent : public OrderEventBase {
+public:
+    OrderCancelAndReplaceEvent();
+    OrderCancelAndReplaceEvent(const OrderCancelAndReplaceEvent& event);
+    OrderCancelAndReplaceEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t newOrderId,
+        const std::optional<uint32_t>& modifiedQuantity = std::nullopt,
+        const std::optional<double>& modifiedPrice = std::nullopt);
+    virtual ~OrderCancelAndReplaceEvent() = default;
+    virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderCancelAndReplaceEvent>(*this); }
+    virtual void applyTo(MarketOrder& order) const override;
+    virtual void applyTo(LimitOrder& order) const override;
+    virtual void init() override;
+    virtual std::string getAsJson() const override;
+private:
+    uint64_t myNewOrderId;
+    std::optional<uint32_t> myModifiedQuantity;
+    std::optional<double> myModifiedPrice;
 };
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);

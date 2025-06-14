@@ -242,12 +242,14 @@ void OrderCancelEvent::init() {
 }
 
 OrderPartialCancelEvent::OrderPartialCancelEvent() :
-    OrderEventBase() {
+    OrderEventBase(),
+    myCancelQuantity(0) {
     init();
 }
 
 OrderPartialCancelEvent::OrderPartialCancelEvent(const OrderPartialCancelEvent& event) :
-    OrderEventBase(event) {
+    OrderEventBase(event),
+    myCancelQuantity(event.myCancelQuantity) {
     init();
 }
 
@@ -277,6 +279,87 @@ void OrderPartialCancelEvent::applyTo(LimitOrder& order) const {
 
 void OrderPartialCancelEvent::init() {
     setEventType(OrderEventType::PARTIAL_CANCEL);
+}
+
+std::string OrderPartialCancelEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"       << getEventId()      << ","
+    "\"OrderId\":"       << getOrderId()      << ","
+    "\"Timestamp\":"     << getTimestamp()    << ","
+    "\"EventType\":\""   << getEventType()    << "\","
+    "\"CancelQuantity\":" << myCancelQuantity;
+    oss << "}";
+    return oss.str();
+}
+
+OrderCancelAndReplaceEvent::OrderCancelAndReplaceEvent() :
+    OrderEventBase(),
+    myNewOrderId(0) {
+    init();
+}
+
+OrderCancelAndReplaceEvent::OrderCancelAndReplaceEvent(const OrderCancelAndReplaceEvent& event) :
+    OrderEventBase(event),
+    myNewOrderId(event.myNewOrderId),
+    myModifiedQuantity(event.myModifiedQuantity),
+    myModifiedPrice(event.myModifiedPrice) {
+    init();
+}
+
+OrderCancelAndReplaceEvent::OrderCancelAndReplaceEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t newOrderId,
+    const std::optional<uint32_t>& modifiedQuantity, const std::optional<double>& modifiedPrice) :
+    OrderEventBase(eventId, orderId, timestamp),
+    myNewOrderId(newOrderId),
+    myModifiedQuantity(modifiedQuantity),
+    myModifiedPrice(modifiedPrice) {
+    init();
+}
+
+void OrderCancelAndReplaceEvent::applyTo(MarketOrder& order) const {
+    order.setId(myNewOrderId);
+    if (myModifiedQuantity) {
+        order.setQuantity(*myModifiedQuantity);
+        order.setOrderState(OrderState::ACTIVE);
+    } else {
+        order.setQuantity(0);
+        order.setOrderState(OrderState::CANCELLED);
+    }
+}
+
+void OrderCancelAndReplaceEvent::applyTo(LimitOrder& order) const {
+    order.setId(myNewOrderId);
+    const bool hasModifiedQuantity = myModifiedQuantity.has_value();
+    const bool hasModifiedPrice = myModifiedPrice.has_value();
+    if (hasModifiedQuantity)
+        order.setQuantity(*myModifiedQuantity);
+    if (hasModifiedPrice)
+        order.setPrice(*myModifiedPrice);
+    if (hasModifiedQuantity || hasModifiedPrice) {
+        order.setOrderState(OrderState::ACTIVE);
+    } else {
+        order.setQuantity(0);
+        order.setOrderState(OrderState::CANCELLED);
+    }
+}
+
+void OrderCancelAndReplaceEvent::init() {
+    if (myModifiedPrice && *myModifiedPrice <= 0)
+        Error::LIB_THROW("[OrderCancelAndReplaceEvent::init] Modified price must be positive.");
+    setEventType(OrderEventType::CANCEL_REPLACE);
+}
+
+std::string OrderCancelAndReplaceEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"       << getEventId()      << ","
+    "\"OrderId\":"       << getOrderId()      << ","
+    "\"Timestamp\":"     << getTimestamp()    << ","
+    "\"EventType\":\""   << getEventType()    << "\","
+    "\"ModifiedQuantity\":" << (myModifiedQuantity ? std::to_string(*myModifiedQuantity) : "null") << ","
+    "\"ModifiedPrice\":" << (myModifiedPrice ? std::to_string(*myModifiedPrice) : "null");
+    oss << "}";
+    return oss.str();
 }
 }
 
