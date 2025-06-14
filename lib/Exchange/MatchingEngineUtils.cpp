@@ -155,14 +155,16 @@ void OrderExecutionReport::dispatchTo(Market::OrderEventManagerBase& orderEventM
     orderEventManager.onOrderProcessingReport(*this);
 }
 
+/* We do NOT infer order submit event from execution report since it has already
+    been accounted for in submit report, otherwise there are duplicate orders. */
 std::shared_ptr<Market::OrderEventBase> OrderExecutionReport::makeEvent() const {
-    std::shared_ptr<Market::OrderBase> order;
-    if (orderType == Market::OrderType::LIMIT)
-        order = std::make_shared<Market::LimitOrder>(orderId, timestamp, orderSide, filledQuantity, filledPrice);
-    else if (orderType == Market::OrderType::MARKET)
-        std::make_shared<Market::MarketOrder>(orderId, timestamp, orderSide, filledQuantity);
-    if (order && !isMakerOrder) // maker orders passively rest on the book; only taker orders imply an order submit event
-        return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order);
+    // std::shared_ptr<Market::OrderBase> order;
+    // if (orderType == Market::OrderType::LIMIT)
+    //     order = std::make_shared<Market::LimitOrder>(orderId, timestamp, orderSide, filledQuantity, filledPrice);
+    // else if (orderType == Market::OrderType::MARKET)
+    //     order = std::make_shared<Market::MarketOrder>(orderId, timestamp, orderSide, filledQuantity);
+    // if (order && !isMakerOrder) // maker orders passively rest on the book; only taker orders imply an order submit event
+    //     return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order);
     return nullptr;
 }
 
