@@ -42,6 +42,17 @@ public:
         OrderBookTopLevelsSnapshot topLevelsSnapshot;
     };
 
+    /* Order book statistics aggregated over all timestamps so far */
+    struct OrderBookAggregateStatistics {
+        size_t aggNumNewOrders = 0;
+        size_t aggNumCancelOrders = 0;
+        size_t aggNumModifyPriceOrders = 0;
+        size_t aggNumModifyQuantityOrders = 0;
+        size_t aggNumTrades = 0;
+        uint32_t aggTradeVolume = 0;
+        double aggTradeNotional = 0.0;
+    };
+
     /* Processing latency measured over an order event */
     struct OrderEventProcessingLatency {
         uint64_t timestamp;
@@ -53,21 +64,15 @@ public:
 
     MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~MatchingEngineMonitor() = default;
-    void startMonitoring() { myMonitoringEnabled = true; };
-    void stopMonitoring() { myMonitoringEnabled = false; };
+    void startMonitoring() { myMonitoringEnabled = true; }
+    void stopMonitoring() { myMonitoringEnabled = false; }
 
 private:
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger;
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
-    // size_t myCumNumNewOrders = 0;
-    // size_t myCumNumCancelOrders = 0;
-    // size_t myCumNumModifyPriceOrders = 0;
-    // size_t myCumNumModifyQuantityOrders = 0;
-    // size_t myCumNumTrades = 0;
-    // uint32_t myCumTradeVolume = 0;
-    // double myCumTradeNotional = 0.0;
+    OrderBookAggregateStatistics myOrderBookAggregateStatistics;
     std::vector<std::shared_ptr<const OrderBookStatisticsByTimestamp>> myOrderBookStatistics;
     std::vector<std::shared_ptr<const OrderEventProcessingLatency>> myOrderEventProcessingLatencies;
 };
