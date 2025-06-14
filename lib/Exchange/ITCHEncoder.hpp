@@ -1,8 +1,10 @@
 #ifndef ITCH_ENCODER_HPP
 #define ITCH_ENCODER_HPP
 #include "Utils/Utils.hpp"
+#include "Market/OrderEvent.hpp"
 
 namespace Exchange {
+using namespace Utils;
 struct OrderExecutionReport;
 struct LimitOrderSubmitReport;
 struct MarketOrderSubmitReport;
@@ -37,6 +39,7 @@ struct ITCHEncoder {
         ITCHMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId) :
             messageId(messageId), timestamp(timestamp), agentId(agentId) {}
         virtual ~ITCHMessage() = default;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const { return nullptr; }
         virtual std::string toString() const = 0;
         MessageType messageType;
         uint64_t messageId;
@@ -51,7 +54,7 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHSystemMessage() = default;
-        virtual std::string toString() const;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::SYSTEM;
         static const std::string ourDescription;
         EventCode eventCode;
@@ -66,7 +69,8 @@ struct ITCHEncoder {
             std::copy(symbol, symbol + 8, this->symbol);
         }
         virtual ~ITCHOrderAddMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_ADD;
         static const std::string ourDescription;
         char symbol[8];
@@ -85,7 +89,8 @@ struct ITCHEncoder {
             std::copy(mpid, mpid + 4, this->mpid);
         }
         virtual ~ITCHOrderAddWithMPIDMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_ADD_WITH_MPID;
         static const std::string ourDescription;
         char mpid[4]; // market participant id, aka. attribution
@@ -100,7 +105,8 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHOrderExecuteMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_EXECUTE;
         static const std::string ourDescription;
         uint64_t orderId;
@@ -116,7 +122,8 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHOrderExecuteWithPriceMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_EXECUTE_WITH_PRICE;
         static const std::string ourDescription;
         uint32_t fillPrice;
@@ -129,7 +136,8 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHOrderDeleteMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_DELETE;
         static const std::string ourDescription;
         uint64_t orderId;
@@ -143,7 +151,8 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHOrderCancelMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_CANCEL;
         static const std::string ourDescription;
         uint32_t cancelQuantity;
@@ -157,7 +166,8 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHOrderReplaceMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_REPLACE;
         static const std::string ourDescription;
         uint64_t oldOrderId;
@@ -175,7 +185,8 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHTradeMessage() = default;
-        virtual std::string toString() const;
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::TRADE;
         static const std::string ourDescription;
     };
@@ -193,7 +204,7 @@ struct ITCHEncoder {
     struct ITCHBrokenTradeMessage : public ITCHMessage {
         ITCHBrokenTradeMessage() = delete;
         virtual ~ITCHBrokenTradeMessage() = default;
-        virtual std::string toString() const;
+        virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::BROKEN_TRADE;
         static const std::string ourDescription;
     };
@@ -211,6 +222,7 @@ std::string to_string(const ITCHEncoder::EventCode& eventCode);
 std::string to_string(const ITCHEncoder::MessageType& messageType);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType);
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::ITCHMessage& message);
 }
 
 #endif

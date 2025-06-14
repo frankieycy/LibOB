@@ -1,6 +1,7 @@
 #ifndef ITCH_ENCODER_CPP
 #define ITCH_ENCODER_CPP
 #include "Utils/Utils.hpp"
+#include "Market/OrderEvent.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/ITCHEncoder.hpp"
 
@@ -48,6 +49,8 @@ std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventC
 
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType) { return out << to_string(messageType); }
 
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::ITCHMessage& message) { return out << message.toString(); }
+
 std::string ITCHEncoder::ITCHSystemMessage::toString() const {
     std::ostringstream oss;
     oss << "S|"
@@ -56,6 +59,10 @@ std::string ITCHEncoder::ITCHSystemMessage::toString() const {
         << agentId   << "|"
         << eventCode;
     return oss.str();
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderAddMessage::makeEvent() const {
+    return nullptr; // TODO
 }
 
 std::string ITCHEncoder::ITCHOrderAddMessage::toString() const {
@@ -70,6 +77,10 @@ std::string ITCHEncoder::ITCHOrderAddMessage::toString() const {
         << quantity               << "|"
         << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price);
     return oss.str();
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderAddWithMPIDMessage::makeEvent() const {
+    return nullptr; // TODO
 }
 
 std::string ITCHEncoder::ITCHOrderAddWithMPIDMessage::toString() const {
@@ -87,6 +98,10 @@ std::string ITCHEncoder::ITCHOrderAddWithMPIDMessage::toString() const {
     return oss.str();
 }
 
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderExecuteMessage::makeEvent() const {
+    return nullptr; // TODO
+}
+
 std::string ITCHEncoder::ITCHOrderExecuteMessage::toString() const {
     std::ostringstream oss;
     oss << "E|"
@@ -97,6 +112,10 @@ std::string ITCHEncoder::ITCHOrderExecuteMessage::toString() const {
         << matchOrderId   << "|"
         << fillQuantity;
     return oss.str();
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderExecuteWithPriceMessage::makeEvent() const {
+    return nullptr; // TODO
 }
 
 std::string ITCHEncoder::ITCHOrderExecuteWithPriceMessage::toString() const {
@@ -112,6 +131,10 @@ std::string ITCHEncoder::ITCHOrderExecuteWithPriceMessage::toString() const {
     return oss.str();
 }
 
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderDeleteMessage::makeEvent() const {
+    return nullptr; // TODO
+}
+
 std::string ITCHEncoder::ITCHOrderDeleteMessage::toString() const {
     std::ostringstream oss;
     oss << "D|"
@@ -120,6 +143,10 @@ std::string ITCHEncoder::ITCHOrderDeleteMessage::toString() const {
         << agentId   << "|"
         << orderId;
     return oss.str();
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderCancelMessage::makeEvent() const {
+    return nullptr; // TODO
 }
 
 std::string ITCHEncoder::ITCHOrderCancelMessage::toString() const {
@@ -133,6 +160,10 @@ std::string ITCHEncoder::ITCHOrderCancelMessage::toString() const {
     return oss.str();
 }
 
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderReplaceMessage::makeEvent() const {
+    return nullptr; // TODO
+}
+
 std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
     std::ostringstream oss;
     oss << "U|"
@@ -144,6 +175,10 @@ std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
         << quantity       << "|"
         << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price);
     return oss.str();
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHTradeMessage::makeEvent() const {
+    return nullptr; // TODO
 }
 
 std::string ITCHEncoder::ITCHTradeMessage::toString() const {
