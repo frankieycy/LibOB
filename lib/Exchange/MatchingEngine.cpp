@@ -232,7 +232,6 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             queue->erase(orderIt);
             LimitQueue& newQueue = order->isBuy() ? myBidBook[newPrice] : myAskBook[newPrice];
             newQueue.push_back(order);
-            it->second = {&newQueue, std::prev(newQueue.end())};
             if (order->isBuy()) {
                 uint32_t& bidBookSizeAtNewPrice = myBidBookSize[newPrice];
                 uint32_t& bidBookSizeAtOldPrice = myBidBookSize[oldPrice];
@@ -253,12 +252,15 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                 }
             }
             if (newId != oldId) { // order gets replaced
+                myLimitOrderLookup.erase(it);
+                myLimitOrderLookup[newId] = {&newQueue, std::prev(newQueue.end())};
                 logOrderProcessingReport(std::make_shared<OrderCancelAndReplaceReport>(generateReportId(), clockTick(), oldId, order->getSide(), Market::OrderType::LIMIT, newId, newQuantity, newPrice, OrderProcessingStatus::SUCCESS));
             } else { // order price/quantity gets modified
+                it->second = {&newQueue, std::prev(newQueue.end())};
                 if (newPrice != oldPrice)
-                    logOrderProcessingReport(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), newId, order->getSide(), newPrice, OrderProcessingStatus::SUCCESS));
+                    logOrderProcessingReport(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), oldId, order->getSide(), newPrice, OrderProcessingStatus::SUCCESS));
                 if (newQuantity != oldQuantity)
-                    logOrderProcessingReport(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), newId, order->getSide(), newQuantity, OrderProcessingStatus::SUCCESS));
+                    logOrderProcessingReport(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), oldId, order->getSide(), newQuantity, OrderProcessingStatus::SUCCESS));
             }
         } else { // order gets cancelled
             myRemovedLimitOrderLog.push_back(order);

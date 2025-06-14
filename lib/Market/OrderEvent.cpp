@@ -317,9 +317,11 @@ OrderCancelAndReplaceEvent::OrderCancelAndReplaceEvent(const uint64_t eventId, c
 }
 
 void OrderCancelAndReplaceEvent::applyTo(MarketOrder& order) const {
-    order.setId(myNewOrderId);
-    if (myModifiedQuantity) {
+    const bool hasModifiedQuantity = myModifiedQuantity.has_value();
+    if (hasModifiedQuantity)
         order.setQuantity(*myModifiedQuantity);
+    if (hasModifiedQuantity && order.isAlive()) {
+        order.setId(myNewOrderId);
         order.setOrderState(OrderState::ACTIVE);
     } else {
         order.setQuantity(0);
@@ -328,7 +330,6 @@ void OrderCancelAndReplaceEvent::applyTo(MarketOrder& order) const {
 }
 
 void OrderCancelAndReplaceEvent::applyTo(LimitOrder& order) const {
-    order.setId(myNewOrderId);
     const bool hasModifiedQuantity = myModifiedQuantity.has_value();
     const bool hasModifiedPrice = myModifiedPrice.has_value();
     if (hasModifiedQuantity)
@@ -336,6 +337,7 @@ void OrderCancelAndReplaceEvent::applyTo(LimitOrder& order) const {
     if (hasModifiedPrice)
         order.setPrice(*myModifiedPrice);
     if ((hasModifiedQuantity || hasModifiedPrice) && order.isAlive()) {
+        order.setId(myNewOrderId);
         order.setOrderState(OrderState::ACTIVE);
     } else {
         order.setQuantity(0);
