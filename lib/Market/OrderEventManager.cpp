@@ -71,7 +71,7 @@ std::shared_ptr<OrderCancelAndReplaceEvent> OrderEventManagerBase::createOrderCa
         return nullptr;
     }
     const auto& roundedModifiedPrice = modifiedPrice ? std::make_optional(Maths::roundPriceToTick(*modifiedPrice, myMinimumPriceTick)) : std::nullopt;
-    return std::make_shared<OrderCancelAndReplaceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), myOrderIdHandler.generateId(), roundedModifiedPrice, modifiedQuantity);
+    return std::make_shared<OrderCancelAndReplaceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), myOrderIdHandler.generateId(), modifiedQuantity, roundedModifiedPrice);
 }
 
 std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice) {
@@ -278,10 +278,11 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelA
             order->setId(report.newOrderId);
             order->setQuantity(report.newQuantity);
             order->setPrice(report.newPrice);
-            order->setOrderState(Market::OrderState::ACTIVE);
             order->setTimestamp(clockTick());
-            if (order->isAlive())
+            if (order->isAlive()) {
+                order->setOrderState(Market::OrderState::ACTIVE);
                 myActiveLimitOrders[order->getId()] = order; // reinsert the updated order
+            }
         } else {
             *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
         }
@@ -292,10 +293,11 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelA
             myQueuedMarketOrders.erase(it); // remove the old order
             order->setId(report.newOrderId);
             order->setQuantity(report.newQuantity);
-            order->setOrderState(Market::OrderState::ACTIVE);
             order->setTimestamp(clockTick());
-            if (order->isAlive())
+            if (order->isAlive()) {
+                order->setOrderState(Market::OrderState::ACTIVE);
                 myQueuedMarketOrders[order->getId()] = order; // reinsert the updated order
+            }
         } else {
             *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
         }
