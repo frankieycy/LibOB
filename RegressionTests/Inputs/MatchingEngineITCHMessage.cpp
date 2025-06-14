@@ -30,7 +30,7 @@ int main() {
     const auto& msg = e->getITCHMessageLog();
     *em.getLogger() << "ITCH messages:";
     for (const auto& m : msg)
-        *em.getLogger() << *m;
+        *em.getLogger() << (m ? m->toString() : "Null ITCH message");
     *em.getLogger() << "Order book state:\n" << *e;
     *em.getLogger() << "Order event manager state:\n" << em;
     return 0;
