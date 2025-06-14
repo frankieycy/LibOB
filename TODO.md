@@ -34,7 +34,9 @@
     - detailed speed profiling for various matching engine operations
 * `Exchange::ITCHMessage`
     - ok, inheritance hierachy of ITCH messages, each as a minimal and compact representation of `OrderProcessingReport`
-    - implement `encodeReport` for each class of `OrderProcessingReport`
+    - implement `encodeReport` for each class of `OrderProcessingReport` (TODO: `OrderModifyPriceReport`, `OrderModifyQuantityReport`)
+* `Market::OrderEventBase`
+    - implement `OrderCancelAndReplaceEvent` compliant with ITCH protocol (alternative to `OrderModifyEvent`)
 * `Market::OrderEventManager`
     - ok, unified interface for order submmit, cancel, modify etc.
     - ok, take in a `TimestampHandlerBase` ptr
