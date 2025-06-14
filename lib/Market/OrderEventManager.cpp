@@ -63,6 +63,17 @@ std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(
     return std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick());
 }
 
+std::shared_ptr<OrderCancelAndReplaceEvent> OrderEventManagerBase::createOrderCancelAndReplaceEvent(const uint64_t orderId,
+    const std::optional<uint32_t>& modifiedQuantity, const std::optional<double>& modifiedPrice) {
+    const auto& order = fetchOrder(orderId);
+    if (!order) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderCancelAndReplaceEvent] Order not found - orderId = " << orderId << ".";
+        return nullptr;
+    }
+    const auto& roundedModifiedPrice = modifiedPrice ? std::make_optional(Maths::roundPriceToTick(*modifiedPrice, myMinimumPriceTick)) : std::nullopt;
+    return std::make_shared<OrderCancelAndReplaceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), myOrderIdHandler.generateId(), roundedModifiedPrice, modifiedQuantity);
+}
+
 std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice) {
     const auto& order = fetchOrder(orderId);
     if (!order) {
@@ -136,6 +147,13 @@ std::shared_ptr<const OrderSubmitEvent> OrderEventManagerBase::submitMarketOrder
 
 std::shared_ptr<const OrderCancelEvent> OrderEventManagerBase::cancelOrder(const uint64_t orderId) {
     const auto& event = createOrderCancelEvent(orderId);
+    submitOrderEventToMatchingEngine(event);
+    return event;
+}
+
+std::shared_ptr<const OrderCancelAndReplaceEvent> OrderEventManagerBase::cancelAndReplaceOrder(const uint64_t orderId,
+    const std::optional<uint32_t>& modifiedQuantity, const std::optional<double>& modifiedPrice) {
+    const auto& event = createOrderCancelAndReplaceEvent(orderId, modifiedQuantity, modifiedPrice);
     submitOrderEventToMatchingEngine(event);
     return event;
 }
@@ -242,6 +260,16 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
         }
     } else {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in cancel report - orderId = " << report.orderId;
+    }
+}
+
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
+    // TODO: implement cancel and replace report handling
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report received: " << report;
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
     }
 }
 

@@ -43,6 +43,9 @@ public:
     std::shared_ptr<const OrderSubmitEvent> submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price);
     std::shared_ptr<const OrderSubmitEvent> submitMarketOrderEvent(const Side side, const uint32_t quantity);
     std::shared_ptr<const OrderCancelEvent> cancelOrder(const uint64_t orderId);
+    std::shared_ptr<const OrderCancelAndReplaceEvent> cancelAndReplaceOrder(const uint64_t orderId,
+        const std::optional<uint32_t>& modifiedQuantity = std::nullopt,
+        const std::optional<double>& modifiedPrice = std::nullopt);
     std::shared_ptr<const OrderModifyPriceEvent> modifyOrderPrice(const uint64_t orderId, const double modifiedPrice);
     std::shared_ptr<const OrderModifyQuantityEvent> modifyOrderQuantity(const uint64_t orderId, const double modifiedQuantity);
     // communicates with matching engine to keep ActiveOrders in sync
@@ -50,6 +53,7 @@ public:
     virtual void onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report);
     virtual void onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderCancelReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
     virtual std::ostream& stateSnapshot(std::ostream& out) const;
@@ -59,6 +63,8 @@ private:
     virtual std::shared_ptr<OrderSubmitEvent> createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price);
     virtual std::shared_ptr<OrderSubmitEvent> createMarketOrderSubmitEvent(const Side side, const uint32_t quantity);
     virtual std::shared_ptr<OrderCancelEvent> createOrderCancelEvent(const uint64_t orderId);
+    virtual std::shared_ptr<OrderCancelAndReplaceEvent> createOrderCancelAndReplaceEvent(const uint64_t orderId,
+        const std::optional<uint32_t>& modifiedQuantity, const std::optional<double>& modifiedPrice);
     virtual std::shared_ptr<OrderModifyPriceEvent> createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice);
     virtual std::shared_ptr<OrderModifyQuantityEvent> createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity);
     virtual std::shared_ptr<OrderBase> fetchOrder(const uint64_t orderId) const;
