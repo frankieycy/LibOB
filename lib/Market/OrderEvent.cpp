@@ -288,7 +288,7 @@ std::string OrderPartialCancelEvent::getAsJson() const {
     "\"OrderId\":"       << getOrderId()      << ","
     "\"Timestamp\":"     << getTimestamp()    << ","
     "\"EventType\":\""   << getEventType()    << "\","
-    "\"CancelQuantity\":" << myCancelQuantity;
+    "\"CancelQuantity\":" << getCancelQuantity();
     oss << "}";
     return oss.str();
 }
@@ -335,7 +335,7 @@ void OrderCancelAndReplaceEvent::applyTo(LimitOrder& order) const {
         order.setQuantity(*myModifiedQuantity);
     if (hasModifiedPrice)
         order.setPrice(*myModifiedPrice);
-    if (hasModifiedQuantity || hasModifiedPrice) {
+    if ((hasModifiedQuantity || hasModifiedPrice) && order.isAlive()) {
         order.setOrderState(OrderState::ACTIVE);
     } else {
         order.setQuantity(0);
@@ -344,8 +344,8 @@ void OrderCancelAndReplaceEvent::applyTo(LimitOrder& order) const {
 }
 
 void OrderCancelAndReplaceEvent::init() {
-    if (myModifiedPrice && *myModifiedPrice <= 0)
-        Error::LIB_THROW("[OrderCancelAndReplaceEvent::init] Modified price must be positive.");
+    if (myModifiedPrice && *myModifiedPrice < 0)
+        Error::LIB_THROW("[OrderCancelAndReplaceEvent::init] Modified price cannot be negative.");
     setEventType(OrderEventType::CANCEL_REPLACE);
 }
 

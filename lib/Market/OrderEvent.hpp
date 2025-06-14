@@ -119,6 +119,8 @@ public:
     OrderPartialCancelEvent(const OrderPartialCancelEvent& event);
     OrderPartialCancelEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint32_t cancelQuantity);
     virtual ~OrderPartialCancelEvent() = default;
+    uint32_t getCancelQuantity() const { return myCancelQuantity; }
+    void setCancelQuantity(const uint32_t cancelQuantity) { myCancelQuantity = cancelQuantity; }
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderPartialCancelEvent>(*this); }
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;
@@ -136,6 +138,12 @@ public:
         const std::optional<uint32_t>& modifiedQuantity = std::nullopt,
         const std::optional<double>& modifiedPrice = std::nullopt);
     virtual ~OrderCancelAndReplaceEvent() = default;
+    uint64_t getNewOrderId() const { return myNewOrderId; }
+    std::optional<uint32_t> getModifiedQuantity() const { return myModifiedQuantity; }
+    std::optional<double> getModifiedPrice() const { return myModifiedPrice; }
+    void setNewOrderId(const uint64_t newOrderId) { myNewOrderId = newOrderId; }
+    void setModifiedQuantity(const std::optional<uint32_t>& modifiedQuantity) { myModifiedQuantity = modifiedQuantity; }
+    void setModifiedPrice(const std::optional<double>& modifiedPrice) { myModifiedPrice = modifiedPrice; }
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<OrderCancelAndReplaceEvent>(*this); }
     virtual void applyTo(MarketOrder& order) const override;
     virtual void applyTo(LimitOrder& order) const override;
