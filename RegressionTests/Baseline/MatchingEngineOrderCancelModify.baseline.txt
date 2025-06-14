@@ -610,7 +610,7 @@
 [LOG] WARNING [OrderEventManagerBase::createOrderCancelEvent] Order not found - orderId = 9.
 [LOG] WARNING [OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":12,"OrderId":2,"Timestamp":49,"EventType":"ModifyPrice","ModifiedPrice":100}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":12,"Timestamp":51,"OrderId":2,"OrderSide":"Buy","ModifiedPrice":100,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":12,"Timestamp":51,"OrderId":2,"OrderSide":"Buy","OrderQuantity":10,"ModifiedPrice":100,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -664,7 +664,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":13,"OrderId":4,"Timestamp":53,"EventType":"ModifyPrice","ModifiedPrice":95}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":13,"Timestamp":55,"OrderId":4,"OrderSide":"Buy","ModifiedPrice":95,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":13,"Timestamp":55,"OrderId":4,"OrderSide":"Buy","OrderQuantity":10,"ModifiedPrice":95,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -718,7 +718,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":14,"OrderId":5,"Timestamp":57,"EventType":"ModifyPrice","ModifiedPrice":102}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":14,"Timestamp":59,"OrderId":5,"OrderSide":"Sell","ModifiedPrice":102,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":14,"Timestamp":59,"OrderId":5,"OrderSide":"Sell","OrderQuantity":10,"ModifiedPrice":102,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -825,7 +825,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":16,"OrderId":7,"Timestamp":63,"EventType":"ModifyPrice","ModifiedPrice":103}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":15,"Timestamp":65,"OrderId":7,"OrderSide":"Sell","ModifiedPrice":103,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: {"ReportId":15,"Timestamp":65,"OrderId":7,"OrderSide":"Sell","OrderQuantity":15,"ModifiedPrice":103,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -883,7 +883,7 @@
 [LOG] WARNING [OrderEventManagerBase::createOrderModifyPriceEvent] Order not found - orderId = 9.
 [LOG] WARNING [OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":17,"OrderId":2,"Timestamp":67,"EventType":"ModifyQuantity","ModifiedQuantity":5}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: {"ReportId":16,"Timestamp":69,"OrderId":2,"OrderSide":"Buy","ModifiedQuantity":5,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: {"ReportId":16,"Timestamp":69,"OrderId":2,"OrderSide":"Buy","OrderPrice":100,"ModifiedQuantity":5,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -938,7 +938,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":18,"OrderId":3,"Timestamp":71,"EventType":"ModifyQuantity","ModifiedQuantity":20}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: {"ReportId":17,"Timestamp":73,"OrderId":3,"OrderSide":"Buy","ModifiedQuantity":20,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: {"ReportId":17,"Timestamp":73,"OrderId":3,"OrderSide":"Buy","OrderPrice":98,"ModifiedQuantity":20,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
