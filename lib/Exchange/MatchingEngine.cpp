@@ -461,17 +461,17 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
 
     if (config.isShowOrderLookup()) {
         out << "======================== Order Lookup Table ============================\n";
-        out << "    Id    |  Timestamp  |    Price    |   Size   |   Side   |   State   \n";
+        out << "    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   \n";
         out << "------------------------------------------------------------------------\n";
         uint level = 1;
         for (const auto& orderPair : myLimitOrderLookup) {
             const auto& order = *orderPair.second.second;
             out << std::setw(8) << order->getId() << "  | "
                 << std::setw(10) << order->getTimestamp() << "  | "
+                << std::setw(7) << order->getSide() << "  | "
                 << std::fixed << std::setprecision(2)
                 << std::setw(10) << order->getPrice() << "  | "
                 << std::setw(7) << order->getQuantity() << "  | "
-                << std::setw(7) << order->getSide() << "  | "
                 << std::setw(8) << order->getOrderState() << "  \n";
             if (++level > config.getOrderLookupLevels())
                 break;
