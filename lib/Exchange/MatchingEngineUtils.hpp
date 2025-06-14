@@ -11,7 +11,7 @@ class OrderEventManagerBase;
 
 namespace Exchange {
 enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NULL_ORDER_MATCHING_STRATEGY };
-enum class OrderProcessingType   { EXECUTE, SUBMIT, CANCEL, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
+enum class OrderProcessingType   { EXECUTE, SUBMIT, CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
 enum class OrderProcessingStatus { SUCCESS, FAILURE, NULL_ORDER_PROCESSING_STATUS };
 enum class OrderExecutionType    { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
 
@@ -208,6 +208,33 @@ struct OrderCancelReport : public OrderProcessingReport {
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
+};
+
+struct OrderCancelAndReplaceReport : public OrderProcessingReport {
+    OrderCancelAndReplaceReport() = delete;
+    OrderCancelAndReplaceReport(
+        const uint64_t reportId,
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const Market::OrderType orderType,
+        const uint64_t newOrderId,
+        const uint32_t newQuantity,
+        const double newPrice,
+        const OrderProcessingStatus status,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::CANCEL_REPLACE, status, latency, message),
+        orderType(orderType), newOrderId(newOrderId), newQuantity(newQuantity), newPrice(newPrice) {}
+    virtual ~OrderCancelAndReplaceReport() = default;
+    virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::string getAsJson() const override;
+    Market::OrderType orderType;
+    uint64_t newOrderId;
+    uint32_t newQuantity;
+    double newPrice;
 };
 
 struct OrderModifyPriceReport : public OrderProcessingReport {
