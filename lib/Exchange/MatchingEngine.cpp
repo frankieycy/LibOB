@@ -220,11 +220,13 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         auto& queue = queueOrderPair.first;
         auto& orderIt = queueOrderPair.second;
         auto order = *orderIt; // owns the order so that erasal in LimitQueue keeps the order existent
+        const uint64_t oldId = order->getId();
         const double oldPrice = order->getPrice();
         const uint32_t oldQuantity = order->getQuantity();
         order->executeOrderEvent(*event);
         order->setTimestamp(clockTick());
-        if (order->isAlive()) {
+        if (order->isAlive()) { // order event is not a cancellation
+            const uint64_t newId = order->getId();
             const double newPrice = order->getPrice();
             const uint32_t newQuantity = order->getQuantity();
             queue->erase(orderIt);
@@ -250,11 +252,15 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                     myAskBook.erase(oldPrice);
                 }
             }
-            if (newPrice != oldPrice)
-                logOrderProcessingReport(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), newPrice, OrderProcessingStatus::SUCCESS));
-            if (newQuantity != oldQuantity)
-                logOrderProcessingReport(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), order->getId(), order->getSide(), newQuantity, OrderProcessingStatus::SUCCESS));
-        } else {
+            if (newId != oldId) { // order gets replaced
+                logOrderProcessingReport(std::make_shared<OrderCancelAndReplaceReport>(generateReportId(), clockTick(), oldId, order->getSide(), Market::OrderType::LIMIT, newId, newQuantity, newPrice, OrderProcessingStatus::SUCCESS));
+            } else { // order price/quantity gets modified
+                if (newPrice != oldPrice)
+                    logOrderProcessingReport(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), newId, order->getSide(), newPrice, OrderProcessingStatus::SUCCESS));
+                if (newQuantity != oldQuantity)
+                    logOrderProcessingReport(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), newId, order->getSide(), newQuantity, OrderProcessingStatus::SUCCESS));
+            }
+        } else { // order gets cancelled
             myRemovedLimitOrderLog.push_back(order);
             myLimitOrderLookup.erase(it);
             queue->erase(orderIt);
