@@ -266,8 +266,8 @@ void testMatchingEngineRandomOrdersSpeedTest() {
 void testMatchingEngineRandomOrdersStressTest() {
     // run market dynamics by bulk submission of orders to stress test the matching engine
     // sample outputs =======================================================
-    // Timing taken for bulk order submission: 10.7403 secs / 10000000 orders
-    // Timing taken for bulk order cancel/modify: 53.3957 secs / 10000000 orders
+    // Time taken for bulk order submission: 10.7403 secs / 10000000 orders
+    // Time taken for bulk order cancel/modify: 53.3957 secs / 10000000 orders
     const int numOrders = 10000000; // 10 million orders
     const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
@@ -294,7 +294,7 @@ void testMatchingEngineRandomOrdersStressTest() {
             }
         }
     });
-    std::cout << "Timing taken for bulk order submission: " << timeOrderSubmit / 1e9 << " secs / " << numOrders << " orders" << std::endl;
+    std::cout << "Time taken for bulk order submission: " << timeOrderSubmit / 1e9 << " secs / " << numOrders << " orders" << std::endl;
     // stress test mixed order cancellation and modification
     const auto timeOrderCancelModify = Utils::Counter::timeOperation<std::chrono::nanoseconds>([&em, &p]() {
         const auto& activeOrders = em.getActiveLimitOrders();
@@ -321,7 +321,7 @@ void testMatchingEngineRandomOrdersStressTest() {
             }
         }
     });
-    std::cout << "Timing taken for bulk order cancel/modify: " << timeOrderCancelModify / 1e9 << " secs / " << numOrders << " orders" << std::endl;
+    std::cout << "Time taken for bulk order cancel/modify: " << timeOrderCancelModify / 1e9 << " secs / " << numOrders << " orders" << std::endl;
     // final order book state
     Utils::IO::printDebugBanner(std::cout);
     auto& config = e->getOrderBookDisplayConfig();
