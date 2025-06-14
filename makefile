@@ -28,7 +28,11 @@ obj/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Regression: build and run all regression tests
-regression: $(REG_EXE)
+regression: regression_build regression_run
+
+regression_build: $(REG_EXE)
+
+regression_run: regression_build
 	@echo "Running regression tests..."
 	@for exe in $(REG_EXE); do \
 		echo "Running $$exe..."; \
@@ -45,3 +49,5 @@ clean:
 
 # Pull in auto-generated header dependencies
 -include $(DEP)
+
+.SECONDARY: $(REG_OBJ)
