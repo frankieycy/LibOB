@@ -213,13 +213,14 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         process(event->getOrder());
         return;
     }
-    const auto& it = myLimitOrderLookup.find(event->getOrderId());
     // limit order events handling
+    const auto& it = myLimitOrderLookup.find(event->getOrderId());
     if (it != myLimitOrderLookup.end()) {
         auto& queueOrderPair = it->second;
         auto& queue = queueOrderPair.first;
         auto& orderIt = queueOrderPair.second;
         auto order = *orderIt; // owns the order so that erasal in LimitQueue keeps the order existent
+        const Market::Side side = order->getSide(); // side must remain invariant for all order events
         const uint64_t oldId = order->getId();
         const double oldPrice = order->getPrice();
         const uint32_t oldQuantity = order->getQuantity();
@@ -254,13 +255,13 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             if (newId != oldId) { // order gets replaced
                 myLimitOrderLookup.erase(it);
                 myLimitOrderLookup[newId] = {&newQueue, std::prev(newQueue.end())};
-                logOrderProcessingReport(std::make_shared<OrderCancelAndReplaceReport>(generateReportId(), clockTick(), oldId, order->getSide(), Market::OrderType::LIMIT, newId, newQuantity, newPrice, OrderProcessingStatus::SUCCESS));
+                logOrderProcessingReport(std::make_shared<OrderCancelAndReplaceReport>(generateReportId(), clockTick(), oldId, side, Market::OrderType::LIMIT, newId, newQuantity, newPrice, OrderProcessingStatus::SUCCESS));
             } else { // order price/quantity gets modified
                 it->second = {&newQueue, std::prev(newQueue.end())};
                 if (newPrice != oldPrice)
-                    logOrderProcessingReport(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), oldId, order->getSide(), newPrice, OrderProcessingStatus::SUCCESS));
+                    logOrderProcessingReport(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), oldId, side, oldQuantity, newPrice, OrderProcessingStatus::SUCCESS));
                 if (newQuantity != oldQuantity)
-                    logOrderProcessingReport(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), oldId, order->getSide(), newQuantity, OrderProcessingStatus::SUCCESS));
+                    logOrderProcessingReport(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), oldId, side, oldPrice, newQuantity, OrderProcessingStatus::SUCCESS));
             }
         } else { // order gets cancelled
             myRemovedLimitOrderLog.push_back(order);
@@ -281,9 +282,10 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                     myAskBook.erase(oldPrice);
                 }
             }
-            logOrderProcessingReport(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), oldId, order->getSide(), Market::OrderType::LIMIT, OrderProcessingStatus::SUCCESS));
+            logOrderProcessingReport(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), oldId, side, Market::OrderType::LIMIT, OrderProcessingStatus::SUCCESS));
         }
     }
+    // TODO: market order events handling
 }
 
 void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {

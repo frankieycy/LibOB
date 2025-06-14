@@ -244,17 +244,19 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
+        const uint32_t orderQuantity,
         const double modifiedPrice,
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
         OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::MODIFY_PRICE, status, latency, message),
-        modifiedPrice(modifiedPrice) {}
+        orderQuantity(orderQuantity), modifiedPrice(modifiedPrice) {}
     virtual ~OrderModifyPriceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
+    uint32_t orderQuantity;
     double modifiedPrice;
 };
 
@@ -265,17 +267,19 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
         const uint64_t timestamp,
         const uint64_t orderId,
         const Market::Side orderSide,
+        const double orderPrice,
         const uint32_t modifiedQuantity,
         const OrderProcessingStatus status = OrderProcessingStatus::NULL_ORDER_PROCESSING_STATUS,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
         OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::MODIFY_QUANTITY, status, latency, message),
-        modifiedQuantity(modifiedQuantity) {}
+        orderPrice(orderPrice), modifiedQuantity(modifiedQuantity) {}
     virtual ~OrderModifyQuantityReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
+    double orderPrice;
     uint32_t modifiedQuantity;
 };
 
