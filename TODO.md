@@ -34,14 +34,16 @@
     - detailed speed profiling for various matching engine operations
 * `Exchange::ITCHMessage`
     - ok, inheritance hierachy of ITCH messages, each as a minimal and compact representation of `OrderProcessingReport`
-    - implement `encodeReport` for each class of `OrderProcessingReport` (TODO: `OrderModifyPriceReport`, `OrderModifyQuantityReport`)
+    - ok, implement `encodeReport` for each class of `OrderProcessingReport`
+    - add `ITCHMessage` reg test
 * `Market::OrderEventBase`
-    - implement `OrderCancelAndReplaceEvent` compliant with ITCH protocol (alternative to `OrderModifyEvent`)
+    - ok, implement `OrderCancelAndReplaceEvent` compliant with ITCH protocol (alternative to `OrderModifyEvent`)
 * `Market::OrderEventManager`
     - ok, unified interface for order submmit, cancel, modify etc.
     - ok, take in a `TimestampHandlerBase` ptr
     - ok, order id handler
     - ok, sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
+    - ok, add order cancel-replace reg test
 * `Analytics::MatchingEngineMonitor`
 * `RegressionTests`
     - ok, cpp files in `Inputs` (small selections from `Tests`) and txt output files in `Baseline` (outputs from running cpp)
