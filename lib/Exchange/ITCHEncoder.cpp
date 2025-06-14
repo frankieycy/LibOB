@@ -236,6 +236,20 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
         report.orderId
     );
 }
+
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelAndReplaceReport& report) {
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
+        return nullptr;
+    return std::make_shared<ITCHOrderReplaceMessage>(
+        report.reportId,
+        report.timestamp,
+        report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
+        report.orderId,
+        report.newOrderId,
+        report.newQuantity,
+        Maths::castDoublePriceAsInt<uint32_t>(report.newPrice)
+    );
+}
 }
 
 #endif

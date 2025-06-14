@@ -9,6 +9,7 @@ struct MarketOrderSubmitReport;
 struct OrderModifyPriceReport;
 struct OrderModifyQuantityReport;
 struct OrderCancelReport;
+struct OrderCancelAndReplaceReport;
 
 struct ITCHEncoder {
     static constexpr uint64_t DEFAULT_AGENT_ID = 0;
@@ -203,6 +204,7 @@ struct ITCHEncoder {
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderModifyPriceReport& report);
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderModifyQuantityReport& report);
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderCancelReport& report);
+    static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderCancelAndReplaceReport& report);
 };
 
 std::string to_string(const ITCHEncoder::EventCode& eventCode);
