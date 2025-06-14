@@ -442,7 +442,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":9,"OrderId":0,"Timestamp":37,"EventType":"Cancel"}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":9,"Timestamp":39,"OrderId":0,"OrderSide":"Buy","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":9,"Timestamp":39,"OrderId":0,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -499,7 +499,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":10,"OrderId":1,"Timestamp":41,"EventType":"Cancel"}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":10,"Timestamp":43,"OrderId":1,"OrderSide":"Buy","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":10,"Timestamp":43,"OrderId":1,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -554,7 +554,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":11,"OrderId":8,"Timestamp":45,"EventType":"Cancel"}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":11,"Timestamp":47,"OrderId":8,"OrderSide":"Sell","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":11,"Timestamp":47,"OrderId":8,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -993,7 +993,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":19,"OrderId":4,"Timestamp":75,"EventType":"ModifyQuantity","ModifiedQuantity":0}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":18,"Timestamp":77,"OrderId":4,"OrderSide":"Buy","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":18,"Timestamp":77,"OrderId":4,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -1046,7 +1046,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":20,"OrderId":6,"Timestamp":79,"EventType":"ModifyQuantity","ModifiedQuantity":0}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":19,"Timestamp":81,"OrderId":6,"OrderSide":"Sell","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":19,"Timestamp":81,"OrderId":6,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
