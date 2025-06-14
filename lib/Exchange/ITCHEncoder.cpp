@@ -218,12 +218,32 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
     return nullptr;
 }
 
-std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderModifyPriceReport& /* report */) {
-    return nullptr; // TODO: ITCH implements a modify order as a cancel + add, different from OrderEvent::OrderModifyPriceEvent
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderModifyPriceReport& report) {
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
+        return nullptr;
+    return std::make_shared<ITCHOrderReplaceMessage>(
+        report.reportId,
+        report.timestamp,
+        report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
+        report.orderId,
+        report.orderId,
+        report.orderQuantity,
+        Maths::castDoublePriceAsInt<uint32_t>(report.modifiedPrice)
+    );
 }
 
-std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderModifyQuantityReport& /* report */) {
-    return nullptr; // TODO: ITCH implements a modify order as a cancel + add, different from OrderEvent::OrderModifyQuantityEvent
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderModifyQuantityReport& report) {
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
+        return nullptr;
+    return std::make_shared<ITCHOrderReplaceMessage>(
+        report.reportId,
+        report.timestamp,
+        report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
+        report.orderId,
+        report.orderId,
+        report.modifiedQuantity,
+        Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice)
+    );
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelReport& report) {
