@@ -107,7 +107,7 @@ OrderFillEvent::OrderFillEvent(const uint64_t eventId, const uint64_t orderId, c
 
 void OrderFillEvent::applyTo(MarketOrder& order) const {
     if (myFillQuantity < order.getQuantity()) {
-        order.setQuantity(order.getQuantity() - myFillQuantity);
+        order.reduceQuantityBy(myFillQuantity);
         order.setOrderState(OrderState::PARTIAL_FILLED);
     } else {
         order.setQuantity(0);
@@ -117,7 +117,7 @@ void OrderFillEvent::applyTo(MarketOrder& order) const {
 
 void OrderFillEvent::applyTo(LimitOrder& order) const {
     if (myFillQuantity < order.getQuantity()) {
-        order.setQuantity(order.getQuantity() - myFillQuantity);
+        order.reduceQuantityBy(myFillQuantity);
         order.setOrderState(OrderState::PARTIAL_FILLED);
     } else {
         order.setQuantity(0);
@@ -271,7 +271,7 @@ OrderPartialCancelEvent::OrderPartialCancelEvent(const uint64_t eventId, const u
 
 void OrderPartialCancelEvent::applyTo(MarketOrder& order) const {
     if (myCancelQuantity < order.getQuantity()) {
-        order.setQuantity(order.getQuantity() - myCancelQuantity);
+        order.reduceQuantityBy(myCancelQuantity);
     } else {
         order.setQuantity(0);
         order.setOrderState(OrderState::CANCELLED);
@@ -280,7 +280,7 @@ void OrderPartialCancelEvent::applyTo(MarketOrder& order) const {
 
 void OrderPartialCancelEvent::applyTo(LimitOrder& order) const {
     if (myCancelQuantity < order.getQuantity()) {
-        order.setQuantity(order.getQuantity() - myCancelQuantity);
+        order.reduceQuantityBy(myCancelQuantity);
     } else {
         order.setQuantity(0);
         order.setOrderState(OrderState::CANCELLED);

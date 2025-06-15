@@ -35,6 +35,7 @@ public:
     void setOrderType(const OrderType orderType) { myOrderType = orderType; }
     void setOrderState(const OrderState orderState) { myOrderState = orderState; }
     void setMetaInfo(const std::shared_ptr<const OrderMetaInfo>& metaInfo) { myMetaInfo = metaInfo; }
+    void reduceQuantityBy(const uint32_t quantity) { myQuantity -= std::min(myQuantity, quantity); }
     virtual std::shared_ptr<OrderBase> clone() const { return std::make_shared<OrderBase>(*this); }
     virtual double getPrice() const { return Utils::Consts::NAN_DOUBLE; }
     virtual void executeOrderEvent(const OrderEventBase& /* event */) {}

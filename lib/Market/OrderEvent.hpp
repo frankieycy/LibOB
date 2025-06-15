@@ -49,6 +49,10 @@ public:
     virtual std::string getAsJson() const override;
 };
 
+/* Note that OrderFillEvent is not a elemental order event that
+    acts on an order, not submitted from the order event manager
+    but rather, derived from the matching engine during order
+    processing. Currently, this is unused anywhere. */
 class OrderFillEvent : public OrderEventBase {
 public:
     OrderFillEvent();
