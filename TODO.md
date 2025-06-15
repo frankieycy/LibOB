@@ -35,7 +35,8 @@
 * `Exchange::ITCHMessage`
     - ok, inheritance hierachy of ITCH messages, each as a minimal and compact representation of `OrderProcessingReport`
     - ok, implement `encodeReport` for each class of `OrderProcessingReport`
-    - add `ITCHMessage` reg test
+    - ok, add `ITCHMessage` reg test
+    - implement `makeEvent` hence `MatchingEngine::build`
 * `Market::OrderEventBase`
     - ok, implement `OrderCancelAndReplaceEvent` compliant with ITCH protocol (alternative to `OrderModifyEvent`)
 * `Market::OrderEventManager`
