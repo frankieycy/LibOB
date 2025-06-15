@@ -106,13 +106,23 @@ OrderFillEvent::OrderFillEvent(const uint64_t eventId, const uint64_t orderId, c
 }
 
 void OrderFillEvent::applyTo(MarketOrder& order) const {
-    order.setQuantity(0);
-    order.setOrderState(OrderState::FILLED);
+    if (myFillQuantity < order.getQuantity()) {
+        order.setQuantity(order.getQuantity() - myFillQuantity);
+        order.setOrderState(OrderState::PARTIAL_FILLED);
+    } else {
+        order.setQuantity(0);
+        order.setOrderState(OrderState::FILLED);
+    }
 }
 
 void OrderFillEvent::applyTo(LimitOrder& order) const {
-    order.setQuantity(0);
-    order.setOrderState(OrderState::FILLED);
+    if (myFillQuantity < order.getQuantity()) {
+        order.setQuantity(order.getQuantity() - myFillQuantity);
+        order.setOrderState(OrderState::PARTIAL_FILLED);
+    } else {
+        order.setQuantity(0);
+        order.setOrderState(OrderState::FILLED);
+    }
 }
 
 void OrderFillEvent::init() {
