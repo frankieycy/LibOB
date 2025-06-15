@@ -458,10 +458,6 @@ void testMatchingEngineGetAsJson() {
     std::cout << "Matching engine Json:\n" << e->getAsJson() << std::endl;
 }
 
-void testMatchingEngineITCHMessage() {
-    // TODO
-}
-
 void testMatchingEngineZeroIntelligence() {
     // TODO
 }

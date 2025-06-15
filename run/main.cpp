@@ -18,6 +18,5 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineSpeedProfiling();
     // Tests::MatchingEngine::testMatchingEngineConstructFromEventsStream();
     // Tests::MatchingEngine::testMatchingEngineGetAsJson();
-    // Tests::MatchingEngine::testMatchingEngineITCHMessage();
     return 0;
 }
