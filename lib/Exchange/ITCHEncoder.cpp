@@ -62,7 +62,9 @@ std::string ITCHEncoder::ITCHSystemMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderAddMessage::makeEvent() const {
-    return nullptr; // TODO
+    const auto metaInfo = std::make_shared<Market::OrderMetaInfo>(symbol, "", std::to_string(agentId), "");
+    const auto order = std::make_shared<Market::LimitOrder>(orderId, timestamp, isBuy ? Market::Side::BUY : Market::Side::SELL, quantity, Maths::castIntPriceAsDouble(price));
+    return std::make_shared<Market::OrderSubmitEvent>(messageId, orderId, timestamp, order);
 }
 
 std::string ITCHEncoder::ITCHOrderAddMessage::toString() const {
@@ -80,7 +82,9 @@ std::string ITCHEncoder::ITCHOrderAddMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderAddWithMPIDMessage::makeEvent() const {
-    return nullptr; // TODO
+    const auto metaInfo = std::make_shared<Market::OrderMetaInfo>(symbol, "", std::to_string(agentId), mpid);
+    const auto order = std::make_shared<Market::LimitOrder>(orderId, timestamp, isBuy ? Market::Side::BUY : Market::Side::SELL, quantity, Maths::castIntPriceAsDouble(price));
+    return std::make_shared<Market::OrderSubmitEvent>(messageId, orderId, timestamp, order);
 }
 
 std::string ITCHEncoder::ITCHOrderAddWithMPIDMessage::toString() const {
@@ -99,7 +103,10 @@ std::string ITCHEncoder::ITCHOrderAddWithMPIDMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderExecuteMessage::makeEvent() const {
-    return nullptr; // TODO
+    // The execute message informs that a maker order on the book was filled by a taker (market) order,
+    // and the message must come with a complementary trade message from which the taker order submit
+    // can be inferred. Thus, we do not create an event here.
+    return nullptr;
 }
 
 std::string ITCHEncoder::ITCHOrderExecuteMessage::toString() const {
@@ -115,7 +122,8 @@ std::string ITCHEncoder::ITCHOrderExecuteMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderExecuteWithPriceMessage::makeEvent() const {
-    return nullptr; // TODO
+    // Same as ITCHOrderExecuteMessage, we do not create an event here.
+    return nullptr;
 }
 
 std::string ITCHEncoder::ITCHOrderExecuteWithPriceMessage::toString() const {
@@ -132,7 +140,7 @@ std::string ITCHEncoder::ITCHOrderExecuteWithPriceMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderDeleteMessage::makeEvent() const {
-    return nullptr; // TODO
+    return std::make_shared<Market::OrderCancelEvent>(messageId, orderId, timestamp);
 }
 
 std::string ITCHEncoder::ITCHOrderDeleteMessage::toString() const {
@@ -146,7 +154,7 @@ std::string ITCHEncoder::ITCHOrderDeleteMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderCancelMessage::makeEvent() const {
-    return nullptr; // TODO
+    return std::make_shared<Market::OrderPartialCancelEvent>(messageId, orderId, timestamp, cancelQuantity);
 }
 
 std::string ITCHEncoder::ITCHOrderCancelMessage::toString() const {
@@ -161,7 +169,7 @@ std::string ITCHEncoder::ITCHOrderCancelMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderReplaceMessage::makeEvent() const {
-    return nullptr; // TODO
+    return std::make_shared<Market::OrderCancelAndReplaceEvent>(messageId, oldOrderId, timestamp, newOrderId, quantity, Maths::castIntPriceAsDouble(price));
 }
 
 std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
