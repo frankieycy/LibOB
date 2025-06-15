@@ -13,6 +13,9 @@
     - ok, write up `Logger` class, use it for debug logging
     - ok, add `LogLevel` to logger to enable `logger << LogLevel::INFO << ...`
     - ok, break Utils.hpp into smaller specific util files when the set of functions becomes big enough
+* `RegressionTests`
+    - ok, cpp files in `Inputs` (small selections from `Tests`) and txt output files in `Baseline` (outputs from running cpp)
+    - add `RegressionTests` and `UpdateBaselines` to makefile
 * `Utils::Counter::TimestampHandlerBase`
     - ok, world clock synchronized over `MatchingEngine` and `OrderEventManager`
     - ok, unified timestamp generation function `tick()`
@@ -46,9 +49,8 @@
     - ok, sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
     - ok, add order cancel-replace reg test
 * `Analytics::MatchingEngineMonitor`
-* `RegressionTests`
-    - ok, cpp files in `Inputs` (small selections from `Tests`) and txt output files in `Baseline` (outputs from running cpp)
-    - add `RegressionTests` and `UpdateBaselines` to makefile
+* `Parser::LobsterDataParser`
+* `Simulator::ZeroIntelligence`
 
 ### Analytics
 
