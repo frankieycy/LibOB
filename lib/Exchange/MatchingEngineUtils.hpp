@@ -97,6 +97,9 @@ struct OrderProcessingReport {
         status(status), latency(latency), message(message) {}
     virtual ~OrderProcessingReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const = 0;
+    // We shall only provide `makeEvent` for order reports that actually act on an order,
+    // such as submit, cancel, modify. Execution reports are out of the list since they are
+    // for information purposes and may be derived from order submits.
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const = 0;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const = 0;
     virtual std::string getAsJson() const = 0;
