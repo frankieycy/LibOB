@@ -60,6 +60,7 @@ struct ITCHEncoder {
         EventCode eventCode;
     };
 
+    /* Limit order addition to the book */
     struct ITCHOrderAddMessage : public ITCHMessage {
         ITCHOrderAddMessage() = delete;
         ITCHOrderAddMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const char symbol[8],
@@ -176,7 +177,8 @@ struct ITCHEncoder {
         uint32_t price;
     };
 
-    /* A new, non-persistent market order that executes immediately against the book */
+    /* A new, non-persistent market order that executes immediately against the book,
+        may be used to infer the market order submit event */
     struct ITCHTradeMessage : public ITCHOrderExecuteWithPriceMessage {
         ITCHTradeMessage() = delete;
         ITCHTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,

@@ -186,7 +186,7 @@ std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHTradeMessage::makeEvent() const {
-    return nullptr; // TODO
+    return nullptr; // TODO: trade message does not contain symbol and side, hence insufficient to construct a market submit event
 }
 
 std::string ITCHEncoder::ITCHTradeMessage::toString() const {
