@@ -229,7 +229,7 @@ std::string ITCHEncoder::ITCHCrossTradeMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHBrokenTradeMessage::makeEvent() const {
-    return nullptr; // TODO
+    return std::make_shared<Market::BrokenTradeEvent>(messageId, 0 /* orderId */, timestamp, tradeId);
 }
 
 std::string ITCHEncoder::ITCHBrokenTradeMessage::toString() const {

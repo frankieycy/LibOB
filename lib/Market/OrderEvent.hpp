@@ -175,7 +175,8 @@ class BrokenTradeEvent : public OrderEventBase {
 public:
     BrokenTradeEvent();
     BrokenTradeEvent(const BrokenTradeEvent& event);
-    BrokenTradeEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t matchOrderId);
+    // tradeId alone is sufficient to locate the broken trade but orderId can be used as confirmation
+    BrokenTradeEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t tradeId);
     virtual ~BrokenTradeEvent() = default;
     uint64_t getTradeId() const { return myTradeId; }
     void setTradeId(const uint64_t tradeId) { myTradeId = tradeId; }
