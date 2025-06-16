@@ -237,7 +237,7 @@ std::string ITCHEncoder::ITCHBrokenTradeMessage::toString() const {
     oss << "B|"
         << messageId      << "|"
         << timestamp      << "|"
-        << matchOrderId;
+        << tradeId;
     return oss.str();
 }
 

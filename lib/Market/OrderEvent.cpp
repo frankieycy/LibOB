@@ -381,13 +381,13 @@ BrokenTradeEvent::BrokenTradeEvent() :
 
 BrokenTradeEvent::BrokenTradeEvent(const BrokenTradeEvent& event) :
     OrderEventBase(event),
-    myMatchOrderId(event.myMatchOrderId) {
+    myTradeId(event.myTradeId) {
     init();
 }
 
-BrokenTradeEvent::BrokenTradeEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t matchOrderId) :
+BrokenTradeEvent::BrokenTradeEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t tradeId) :
     OrderEventBase(eventId, orderId, timestamp),
-    myMatchOrderId(matchOrderId) {
+    myTradeId(tradeId) {
     init();
 }
 
@@ -402,7 +402,7 @@ std::string BrokenTradeEvent::getAsJson() const {
     "\"OrderId\":"       << getOrderId()      << ","
     "\"Timestamp\":"     << getTimestamp()    << ","
     "\"EventType\":\""   << getEventType()    << "\","
-    "\"MatchOrderId\":"  << getMatchOrderId();
+    "\"TradeId\":"       << getTradeId();
     oss << "}";
     return oss.str();
 }

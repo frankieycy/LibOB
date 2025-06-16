@@ -177,13 +177,13 @@ public:
     BrokenTradeEvent(const BrokenTradeEvent& event);
     BrokenTradeEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t matchOrderId);
     virtual ~BrokenTradeEvent() = default;
-    uint64_t getMatchOrderId() const { return myMatchOrderId; }
-    void setMatchOrderId(const uint64_t matchOrderId) { myMatchOrderId = matchOrderId; }
+    uint64_t getTradeId() const { return myTradeId; }
+    void setTradeId(const uint64_t tradeId) { myTradeId = tradeId; }
     virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<BrokenTradeEvent>(*this); }
     virtual void init() override;
     virtual std::string getAsJson() const override;
 private:
-    uint64_t myMatchOrderId;
+    uint64_t myTradeId;
 };
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);

@@ -232,17 +232,16 @@ struct ITCHEncoder {
     /* Trade break message */
     struct ITCHBrokenTradeMessage : public ITCHMessage {
         ITCHBrokenTradeMessage() = delete;
-        ITCHBrokenTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t matchOrderId) :
-            ITCHMessage(messageId, timestamp), matchOrderId(matchOrderId) {
+        ITCHBrokenTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t tradeId) :
+            ITCHMessage(messageId, timestamp), tradeId(tradeId) {
             messageType = ourType;
         }
         virtual ~ITCHBrokenTradeMessage() = default;
-        virtual std::optional<uint64_t> getMatchOrderId() const override { return matchOrderId; }
         virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::BROKEN_TRADE;
         static const std::string ourDescription;
-        uint64_t matchOrderId;
+        uint64_t tradeId;
     };
 
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderExecutionReport& report);
