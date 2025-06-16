@@ -35,11 +35,12 @@
     - when will `OrderProcessingReport` report failure?
     - order book construction from events stream, same for `OrderEventManager`
     - detailed speed profiling for various matching engine operations
+    - deprecate single callback function (e.g. myOrderProcessingCallback) and use callbacks vector instead
 * `Exchange::ITCHMessage`
     - ok, inheritance hierachy of ITCH messages, each as a minimal and compact representation of `OrderProcessingReport`
     - ok, implement `encodeReport` for each class of `OrderProcessingReport`
     - ok, add `ITCHMessage` reg test
-    - implement `makeEvent` hence `MatchingEngine::build`
+    - ok, implement `makeEvent` hence `MatchingEngine::build`
 * `Market::OrderEventBase`
     - ok, implement `OrderCancelAndReplaceEvent` compliant with ITCH protocol (alternative to `OrderModifyEvent`)
 * `Market::OrderEventManager`
