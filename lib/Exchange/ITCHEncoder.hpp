@@ -39,7 +39,11 @@ struct ITCHEncoder {
         ITCHMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId) :
             messageId(messageId), timestamp(timestamp), agentId(agentId) {}
         virtual ~ITCHMessage() = default;
+        // whether the message represents an order operation (add, cancel, modify etc.)
+        virtual bool isOrderOperation() const { return false; }
         virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const { return nullptr; }
+        virtual std::optional<uint64_t> getOrderId() const { return std::nullopt; }
+        virtual std::optional<uint64_t> getMatchOrderId() const { return std::nullopt; }
         virtual std::string toString() const = 0;
         MessageType messageType;
         uint64_t messageId;
@@ -70,7 +74,9 @@ struct ITCHEncoder {
             std::copy(symbol, symbol + 8, this->symbol);
         }
         virtual ~ITCHOrderAddMessage() = default;
+        virtual bool isOrderOperation() const override { return true; }
         virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::optional<uint64_t> getOrderId() const override { return orderId; }
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_ADD;
         static const std::string ourDescription;
@@ -107,6 +113,8 @@ struct ITCHEncoder {
         }
         virtual ~ITCHOrderExecuteMessage() = default;
         virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::optional<uint64_t> getOrderId() const override { return orderId; }
+        virtual std::optional<uint64_t> getMatchOrderId() const override { return matchOrderId; }
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_EXECUTE;
         static const std::string ourDescription;
@@ -137,7 +145,9 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHOrderDeleteMessage() = default;
+        virtual bool isOrderOperation() const override { return true; }
         virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::optional<uint64_t> getOrderId() const override { return orderId; }
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_DELETE;
         static const std::string ourDescription;
@@ -167,7 +177,9 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHOrderReplaceMessage() = default;
+        virtual bool isOrderOperation() const override { return true; }
         virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+        virtual std::optional<uint64_t> getOrderId() const override { return oldOrderId; }
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_REPLACE;
         static const std::string ourDescription;
@@ -187,6 +199,7 @@ struct ITCHEncoder {
             messageType = ourType;
         }
         virtual ~ITCHTradeMessage() = default;
+        virtual bool isOrderOperation() const override { return true; } // this message implies the market order submit event
         virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::TRADE;
