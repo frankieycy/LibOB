@@ -37,8 +37,8 @@ struct ITCHEncoder {
         but each class exposes an interface to cast the structure into a NASDAQ ITCH-compatible format */
     struct ITCHMessage {
         ITCHMessage() = delete;
-        ITCHMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId) :
-            messageId(messageId), timestamp(timestamp), agentId(agentId) {}
+        ITCHMessage(const uint64_t messageId, const uint64_t timestamp) :
+            messageId(messageId), timestamp(timestamp) {}
         virtual ~ITCHMessage() = default;
         // whether the message represents an order operation (add, cancel, modify etc.)
         virtual bool isOrderOperation() const { return false; }
@@ -49,13 +49,12 @@ struct ITCHEncoder {
         MessageType messageType;
         uint64_t messageId;
         uint64_t timestamp;
-        uint64_t agentId; // aka. stock locate
     };
 
     struct ITCHSystemMessage : public ITCHMessage {
         ITCHSystemMessage() = delete;
-        ITCHSystemMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const EventCode eventCode) :
-            ITCHMessage(messageId, timestamp, agentId), eventCode(eventCode) {
+        ITCHSystemMessage(const uint64_t messageId, const uint64_t timestamp, const EventCode eventCode) :
+            ITCHMessage(messageId, timestamp), eventCode(eventCode) {
             messageType = ourType;
         }
         virtual ~ITCHSystemMessage() = default;
@@ -70,7 +69,7 @@ struct ITCHEncoder {
         ITCHOrderAddMessage() = delete;
         ITCHOrderAddMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const char symbol[8],
                             const uint64_t orderId, const bool isBuy, const uint32_t quantity, const uint32_t price) :
-            ITCHMessage(messageId, timestamp, agentId), orderId(orderId), isBuy(isBuy), quantity(quantity), price(price) {
+            ITCHMessage(messageId, timestamp), agentId(agentId), orderId(orderId), isBuy(isBuy), quantity(quantity), price(price) {
             messageType = ourType;
             std::copy(symbol, symbol + 8, this->symbol);
         }
@@ -81,6 +80,7 @@ struct ITCHEncoder {
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_ADD;
         static const std::string ourDescription;
+        uint64_t agentId; // aka. stock locate
         char symbol[8];
         uint64_t orderId;
         bool isBuy; // cast to B or S
@@ -109,7 +109,7 @@ struct ITCHEncoder {
         ITCHOrderExecuteMessage() = delete;
         ITCHOrderExecuteMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId,
                                 const uint64_t matchOrderId, const uint32_t fillQuantity) :
-            ITCHMessage(messageId, timestamp, agentId), orderId(orderId), matchOrderId(matchOrderId), fillQuantity(fillQuantity) {
+            ITCHMessage(messageId, timestamp), agentId(agentId), orderId(orderId), matchOrderId(matchOrderId), fillQuantity(fillQuantity) {
             messageType = ourType;
         }
         virtual ~ITCHOrderExecuteMessage() = default;
@@ -119,6 +119,7 @@ struct ITCHEncoder {
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_EXECUTE;
         static const std::string ourDescription;
+        uint64_t agentId;
         uint64_t orderId;
         uint64_t matchOrderId;
         uint32_t fillQuantity;
@@ -142,7 +143,7 @@ struct ITCHEncoder {
     struct ITCHOrderDeleteMessage : public ITCHMessage {
         ITCHOrderDeleteMessage() = delete;
         ITCHOrderDeleteMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t orderId) :
-            ITCHMessage(messageId, timestamp, agentId), orderId(orderId) {
+            ITCHMessage(messageId, timestamp), agentId(agentId), orderId(orderId) {
             messageType = ourType;
         }
         virtual ~ITCHOrderDeleteMessage() = default;
@@ -152,6 +153,7 @@ struct ITCHEncoder {
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_DELETE;
         static const std::string ourDescription;
+        uint64_t agentId;
         uint64_t orderId;
     };
 
@@ -174,7 +176,7 @@ struct ITCHEncoder {
         ITCHOrderReplaceMessage() = delete;
         ITCHOrderReplaceMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t oldOrderId,
                                 const uint64_t newOrderId, const uint32_t quantity, const uint32_t price) :
-            ITCHMessage(messageId, timestamp, agentId), oldOrderId(oldOrderId), newOrderId(newOrderId), quantity(quantity), price(price) {
+            ITCHMessage(messageId, timestamp), agentId(agentId), oldOrderId(oldOrderId), newOrderId(newOrderId), quantity(quantity), price(price) {
             messageType = ourType;
         }
         virtual ~ITCHOrderReplaceMessage() = default;
@@ -184,6 +186,7 @@ struct ITCHEncoder {
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::ORDER_REPLACE;
         static const std::string ourDescription;
+        uint64_t agentId;
         uint64_t oldOrderId;
         uint64_t newOrderId;
         uint32_t quantity;
@@ -207,12 +210,12 @@ struct ITCHEncoder {
         static const std::string ourDescription;
     };
 
-    /* TODO: open/close crosses message */
+    /* Open/close crosses message */
     struct ITCHCrossTradeMessage : public ITCHMessage {
         ITCHCrossTradeMessage() = delete;
-        ITCHCrossTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const char symbol[8],
+        ITCHCrossTradeMessage(const uint64_t messageId, const uint64_t timestamp, const char symbol[8],
                               const uint32_t crossQuantity, const uint32_t crossPrice, const CrossCode crossCode) :
-            ITCHMessage(messageId, timestamp, agentId), crossQuantity(crossQuantity), crossPrice(crossPrice), crossCode(crossCode) {
+            ITCHMessage(messageId, timestamp), crossQuantity(crossQuantity), crossPrice(crossPrice), crossCode(crossCode) {
             messageType = ourType;
             std::copy(symbol, symbol + 8, this->symbol);
         }
@@ -226,11 +229,11 @@ struct ITCHEncoder {
         CrossCode crossCode;
     };
 
-    /* TODO: trade break message */
+    /* Trade break message */
     struct ITCHBrokenTradeMessage : public ITCHMessage {
         ITCHBrokenTradeMessage() = delete;
-        ITCHBrokenTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t matchOrderId) :
-            ITCHMessage(messageId, timestamp, agentId), matchOrderId(matchOrderId) {
+        ITCHBrokenTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t matchOrderId) :
+            ITCHMessage(messageId, timestamp), matchOrderId(matchOrderId) {
             messageType = ourType;
         }
         virtual ~ITCHBrokenTradeMessage() = default;

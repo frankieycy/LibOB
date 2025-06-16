@@ -68,7 +68,6 @@ std::string ITCHEncoder::ITCHSystemMessage::toString() const {
     oss << "S|"
         << messageId << "|"
         << timestamp << "|"
-        << agentId   << "|"
         << eventCode;
     return oss.str();
 }
@@ -222,7 +221,6 @@ std::string ITCHEncoder::ITCHCrossTradeMessage::toString() const {
     oss << "Q|"
         << messageId           << "|"
         << timestamp           << "|"
-        << agentId             << "|"
         << std::string(symbol) << "|"
         << crossQuantity       << "|"
         << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(crossPrice) << "|"
@@ -239,7 +237,6 @@ std::string ITCHEncoder::ITCHBrokenTradeMessage::toString() const {
     oss << "B|"
         << messageId      << "|"
         << timestamp      << "|"
-        << agentId        << "|"
         << matchOrderId;
     return oss.str();
 }
