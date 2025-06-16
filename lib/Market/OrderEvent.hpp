@@ -20,6 +20,14 @@ public:
     OrderEventType getEventType() const { return myEventType; }
     std::shared_ptr<const OrderBase> getOrder() const { return myOrder; }
     bool isSubmit() const { return myEventType == OrderEventType::SUBMIT; }
+    bool isOrderOperation() const { return
+        myEventType == OrderEventType::SUBMIT ||
+        myEventType == OrderEventType::CANCEL ||
+        myEventType == OrderEventType::PARTIAL_CANCEL ||
+        myEventType == OrderEventType::CANCEL_REPLACE ||
+        myEventType == OrderEventType::MODIFY_PRICE ||
+        myEventType == OrderEventType::MODIFY_QUANTITY;
+    }
     void setEventId(const uint64_t eventId) { myEventId = eventId; }
     void setOrderId(const uint64_t orderId) { myOrderId = orderId; }
     void setTimestamp(const uint64_t timestamp) { myTimestamp = timestamp; }
@@ -157,6 +165,25 @@ private:
     uint64_t myNewOrderId;
     std::optional<uint32_t> myModifiedQuantity;
     std::optional<double> myModifiedPrice;
+};
+
+/* Reverses the effect of a previous trade with the same match order id.
+    Note that we do NOT provide implementations for applyTo(MarketOrder&) etc.
+    since it operates on trades instead of orders. The client has to look up the
+    previous trade with the given orderId and matchOrderId internally. */
+class BrokenTradeEvent : public OrderEventBase {
+public:
+    BrokenTradeEvent();
+    BrokenTradeEvent(const BrokenTradeEvent& event);
+    BrokenTradeEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t matchOrderId);
+    virtual ~BrokenTradeEvent() = default;
+    uint64_t getMatchOrderId() const { return myMatchOrderId; }
+    void setMatchOrderId(const uint64_t matchOrderId) { myMatchOrderId = matchOrderId; }
+    virtual std::shared_ptr<OrderEventBase> clone() const override { return std::make_shared<BrokenTradeEvent>(*this); }
+    virtual void init() override;
+    virtual std::string getAsJson() const override;
+private:
+    uint64_t myMatchOrderId;
 };
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);

@@ -373,6 +373,39 @@ std::string OrderCancelAndReplaceEvent::getAsJson() const {
     oss << "}";
     return oss.str();
 }
+
+BrokenTradeEvent::BrokenTradeEvent() :
+    OrderEventBase() {
+    init();
+}
+
+BrokenTradeEvent::BrokenTradeEvent(const BrokenTradeEvent& event) :
+    OrderEventBase(event),
+    myMatchOrderId(event.myMatchOrderId) {
+    init();
+}
+
+BrokenTradeEvent::BrokenTradeEvent(const uint64_t eventId, const uint64_t orderId, const uint64_t timestamp, const uint64_t matchOrderId) :
+    OrderEventBase(eventId, orderId, timestamp),
+    myMatchOrderId(matchOrderId) {
+    init();
+}
+
+void BrokenTradeEvent::init() {
+    setEventType(OrderEventType::BROKEN_TRADE);
+}
+
+std::string BrokenTradeEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"       << getEventId()      << ","
+    "\"OrderId\":"       << getOrderId()      << ","
+    "\"Timestamp\":"     << getTimestamp()    << ","
+    "\"EventType\":\""   << getEventType()    << "\","
+    "\"MatchOrderId\":"  << getMatchOrderId();
+    oss << "}";
+    return oss.str();
+}
 }
 
 #endif
