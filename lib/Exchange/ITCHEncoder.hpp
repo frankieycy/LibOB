@@ -18,6 +18,7 @@ struct ITCHEncoder {
     static constexpr char DEFAULT_SYMBOL[8] = "0000000";
 
     enum class EventCode { MARKET_OPEN, MARKET_CLOSE };
+    enum class CrossCode { OPENING, CLOSING, HALT, IPO };
     enum class MessageType {
         SYSTEM,
         ORDER_ADD,
@@ -209,19 +210,36 @@ struct ITCHEncoder {
     /* TODO: open/close crosses message */
     struct ITCHCrossTradeMessage : public ITCHMessage {
         ITCHCrossTradeMessage() = delete;
+        ITCHCrossTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const char symbol[8],
+                              const uint32_t crossQuantity, const uint32_t crossPrice, const CrossCode crossCode) :
+            ITCHMessage(messageId, timestamp, agentId), crossQuantity(crossQuantity), crossPrice(crossPrice), crossCode(crossCode) {
+            messageType = ourType;
+            std::copy(symbol, symbol + 8, this->symbol);
+        }
         virtual ~ITCHCrossTradeMessage() = default;
         virtual std::string toString() const;
         static constexpr MessageType ourType = MessageType::CROSS_TRADE;
         static const std::string ourDescription;
+        char symbol[8];
+        uint32_t crossQuantity;
+        uint32_t crossPrice;
+        CrossCode crossCode;
     };
 
     /* TODO: trade break message */
     struct ITCHBrokenTradeMessage : public ITCHMessage {
         ITCHBrokenTradeMessage() = delete;
+        ITCHBrokenTradeMessage(const uint64_t messageId, const uint64_t timestamp, const uint64_t agentId, const uint64_t matchOrderId) :
+            ITCHMessage(messageId, timestamp, agentId), matchOrderId(matchOrderId) {
+            messageType = ourType;
+        }
         virtual ~ITCHBrokenTradeMessage() = default;
+        virtual std::optional<uint64_t> getMatchOrderId() const override { return matchOrderId; }
+        virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
         virtual std::string toString() const override;
         static constexpr MessageType ourType = MessageType::BROKEN_TRADE;
         static const std::string ourDescription;
+        uint64_t matchOrderId;
     };
 
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderExecutionReport& report);
@@ -234,8 +252,10 @@ struct ITCHEncoder {
 };
 
 std::string to_string(const ITCHEncoder::EventCode& eventCode);
+std::string to_string(const ITCHEncoder::CrossCode& crossCode);
 std::string to_string(const ITCHEncoder::MessageType& messageType);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode);
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::CrossCode& crossCode);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::ITCHMessage& message);
 }

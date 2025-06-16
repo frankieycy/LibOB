@@ -28,6 +28,16 @@ std::string to_string(const ITCHEncoder::EventCode& eventCode) {
     }
 }
 
+std::string to_string(const ITCHEncoder::CrossCode& crossCode) {
+    switch (crossCode) {
+        case ITCHEncoder::CrossCode::OPENING: return "O";
+        case ITCHEncoder::CrossCode::CLOSING: return "C";
+        case ITCHEncoder::CrossCode::HALT:    return "H";
+        case ITCHEncoder::CrossCode::IPO:     return "I";
+        default:                              return "!";
+    }
+}
+
 std::string to_string(const ITCHEncoder::MessageType& messageType) {
     switch (messageType) {
         case ITCHEncoder::MessageType::SYSTEM:                  return "S";
@@ -46,6 +56,8 @@ std::string to_string(const ITCHEncoder::MessageType& messageType) {
 }
 
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode) { return out << to_string(eventCode); }
+
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::CrossCode& crossCode) { return out << to_string(crossCode); }
 
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType) { return out << to_string(messageType); }
 
@@ -186,7 +198,10 @@ std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHTradeMessage::makeEvent() const {
-    return nullptr; // TODO: trade message does not contain symbol and side, hence insufficient to construct a market submit event
+    // The trade message does not contain symbol and side, hence insufficient to construct a market submit event.
+    // The client (e.g. order event manger) may identify the trade message by calling isOrderOperation() and getMatchOrderId()
+    // to locate the match order internally stored, then flip the side and copy the symbol to construct the market submit event.
+    return nullptr;
 }
 
 std::string ITCHEncoder::ITCHTradeMessage::toString() const {
@@ -203,11 +218,30 @@ std::string ITCHEncoder::ITCHTradeMessage::toString() const {
 }
 
 std::string ITCHEncoder::ITCHCrossTradeMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "Q|"
+        << messageId           << "|"
+        << timestamp           << "|"
+        << agentId             << "|"
+        << std::string(symbol) << "|"
+        << crossQuantity       << "|"
+        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(crossPrice) << "|"
+        << crossCode;
+    return oss.str();
+}
+
+std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHBrokenTradeMessage::makeEvent() const {
+    return nullptr; // TODO
 }
 
 std::string ITCHEncoder::ITCHBrokenTradeMessage::toString() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "B|"
+        << messageId      << "|"
+        << timestamp      << "|"
+        << agentId        << "|"
+        << matchOrderId;
+    return oss.str();
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderExecutionReport& report) {
