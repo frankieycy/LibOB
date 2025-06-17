@@ -21,8 +21,12 @@ using AscOrderBook = std::map<PriceLevel, LimitQueue>;
 using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>; // permits O(1) order access for cancellation and modification
-using OrderProcessingCallback = std::function<void(const std::shared_ptr<const OrderProcessingReport>&)>; // communicates with OrderEventManager
-using ITCHMessageCallback = std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)>;
+template<typename T>
+using CallbackFunction = std::function<void(const std::shared_ptr<const T>&)>;
+template<typename T> // use shared_ptr for callback function so that clients can manage its lifetime
+using CallbackSharedPtr = std::shared_ptr<CallbackFunction<T>>;
+using OrderProcessingCallback = CallbackFunction<OrderProcessingReport>; // communicates with OrderEventManager
+using ITCHMessageCallback = CallbackFunction<ITCHEncoder::ITCHMessage>;
 
 class IMatchingEngine {
 public:
@@ -76,6 +80,8 @@ public:
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
     virtual void setITCHMessageCallback(std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)> callback) = 0;
+    virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) = 0;
+    virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
     virtual void stateConsistencyCheck() const = 0; // checks the internal state of the matching engine for consistency
     virtual void init() = 0; // state consistency checks and class flags initialization called in every derived constructor
@@ -164,6 +170,8 @@ public:
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
     virtual void setITCHMessageCallback(std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)> callback) override { myITCHMessageCallback = callback; }
+    virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) override { myOrderProcessingCallbacks.push_back(callback); }
+    virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) override { myITCHMessageCallbacks.push_back(callback); }
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
     virtual void reserve(const size_t numOrdersEstimate) override;
     virtual void stateConsistencyCheck() const override;
@@ -200,6 +208,8 @@ private:
     // but the exposed interface must be simple
     OrderProcessingCallback myOrderProcessingCallback;
     ITCHMessageCallback myITCHMessageCallback;
+    std::vector<CallbackSharedPtr<OrderProcessingReport>> myOrderProcessingCallbacks;
+    std::vector<CallbackSharedPtr<ITCHEncoder::ITCHMessage>> myITCHMessageCallbacks;
 };
 
 class MatchingEngineFIFO : public MatchingEngineBase {
