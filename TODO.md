@@ -31,11 +31,11 @@
     - ok, order matching test cases - submit, matching, cancel, modify, callback etc.
     - ok, order book data members size reserve to reduce memory reallocation in STL containers
     - ok, implement constructors for `MatchingEngine` and `OrderEventManager`
+    - ok, deprecate single callback function (e.g. myOrderProcessingCallback) and use callbacks vector instead
     - ASCII order book dynamic display (time evolution of book)
     - when will `OrderProcessingReport` report failure?
     - order book construction from events stream, same for `OrderEventManager`
     - detailed speed profiling for various matching engine operations
-    - deprecate single callback function (e.g. myOrderProcessingCallback) and use callbacks vector instead
 * `Exchange::ITCHMessage`
     - ok, inheritance hierachy of ITCH messages, each as a minimal and compact representation of `OrderProcessingReport`
     - ok, implement `encodeReport` for each class of `OrderProcessingReport`
