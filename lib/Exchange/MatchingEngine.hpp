@@ -78,8 +78,6 @@ public:
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) = 0; // OrderEventManager comminucates with MatchingEngine via this process method
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0; // left pure virtual unless the order matching strategy is defined
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
-    virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) = 0;
-    virtual void setITCHMessageCallback(std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)> callback) = 0;
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) = 0;
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
@@ -127,8 +125,8 @@ public:
     const ITCHMessageLog& getITCHMessageLog() const { return myITCHMessageLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
-    OrderProcessingCallback getOrderProcessingCallback() const { return myOrderProcessingCallback; }
-    ITCHMessageCallback getITCHMessageCallback() const { return myITCHMessageCallback; }
+    std::vector<CallbackSharedPtr<OrderProcessingReport>> getOrderProcessingCallbacks() const { return myOrderProcessingCallbacks; }
+    std::vector<CallbackSharedPtr<ITCHEncoder::ITCHMessage>> getITCHMessageCallbacks() const { return myITCHMessageCallbacks; }
     void setBidBook(const DescOrderBook& bidBook) { myBidBook = bidBook; }
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
     void setMarketQueue(const MarketQueue& marketQueue) { myMarketQueue = marketQueue; }
@@ -168,8 +166,6 @@ public:
     virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
-    virtual void setOrderProcessingCallback(std::function<void(const std::shared_ptr<const OrderProcessingReport>&)> callback) override { myOrderProcessingCallback = callback; }
-    virtual void setITCHMessageCallback(std::function<void(const std::shared_ptr<const ITCHEncoder::ITCHMessage>&)> callback) override { myITCHMessageCallback = callback; }
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) override { myOrderProcessingCallbacks.push_back(callback); }
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) override { myITCHMessageCallbacks.push_back(callback); }
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
@@ -206,8 +202,6 @@ private:
     OrderIndex myLimitOrderLookup;
     // the order processing callback can be as complicated as it gets (e.g. the report routed to various handlers)
     // but the exposed interface must be simple
-    OrderProcessingCallback myOrderProcessingCallback;
-    ITCHMessageCallback myITCHMessageCallback;
     std::vector<CallbackSharedPtr<OrderProcessingReport>> myOrderProcessingCallbacks;
     std::vector<CallbackSharedPtr<ITCHEncoder::ITCHMessage>> myITCHMessageCallbacks;
 };

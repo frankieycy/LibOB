@@ -3,6 +3,7 @@
 #include "Utils/Utils.hpp"
 #include "Market/Order.hpp"
 #include "Market/OrderEvent.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/MatchingEngine.hpp"
 
 namespace Market {
@@ -75,6 +76,7 @@ private:
     Utils::Counter::IdHandlerBase myEventIdHandler = Utils::Counter::IdHandlerBase();
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>();
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
+    Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     LimitOrderIndex myActiveLimitOrders;
     MarketOrderIndex myQueuedMarketOrders; // empty most of the time

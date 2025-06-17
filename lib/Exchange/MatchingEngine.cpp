@@ -757,10 +757,10 @@ void MatchingEngineBase::logOrderProcessingReport(const std::shared_ptr<const Or
     const auto& message = report->makeITCHMessage();
     myOrderProcessingReportLog.push_back(report);
     myITCHMessageLog.push_back(message);
-    if (myOrderProcessingCallback)
-        myOrderProcessingCallback(report);
-    if (myITCHMessageCallback)
-        myITCHMessageCallback(message);
+    for (const auto& callback : myOrderProcessingCallbacks)
+        if (callback && *callback) (*callback)(report);
+    for (const auto& callback : myITCHMessageCallbacks)
+        if (callback && *callback) (*callback)(message);
 }
 
 MatchingEngineFIFO::MatchingEngineFIFO() :
@@ -786,7 +786,6 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
     AscOrderBook& askBook = accessAskBook();
     AscOrderBookSize& askBookSize = accessAskBookSize();
     MarketQueue& marketQueue = accessMarketQueue();
-    OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
     LimitQueue dummyQueue; // avoids the creation of a new queue if the entire order is filled
     uint32_t dummySize = 0;
     logOrderProcessingReport(std::make_shared<LimitOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order->copy(), OrderProcessingStatus::SUCCESS));
@@ -830,7 +829,6 @@ void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder>
     AscOrderBook& askBook = accessAskBook();
     AscOrderBookSize& askBookSize = accessAskBookSize();
     MarketQueue& marketQueue = accessMarketQueue();
-    OrderProcessingCallback orderProcessingCallback = getOrderProcessingCallback();
     logOrderProcessingReport(std::make_shared<MarketOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order->copy(), OrderProcessingStatus::SUCCESS));
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty()) {

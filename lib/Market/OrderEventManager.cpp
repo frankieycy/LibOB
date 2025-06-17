@@ -19,7 +19,11 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
     myMatchingEngine = matchingEngine;
     myWorldClock = matchingEngine->getWorldClock();
     myDebugMode = matchingEngine->isDebugMode();
-    matchingEngine->setOrderProcessingCallback([this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) { report->dispatchTo(*this); });
+    myOrderProcessingCallback = std::make_shared<Exchange::OrderProcessingCallback>(
+        [this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) {
+            report->dispatchTo(*this);
+        });
+    matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
 }
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
