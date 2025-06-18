@@ -3,6 +3,7 @@
 #include "Utils/Utils.hpp"
 #include "Market/Trade.hpp"
 #include "Market/OrderEvent.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/MatchingEngine.hpp"
 
 namespace Analytics {
@@ -20,7 +21,8 @@ public:
 
     /* Order book statistics derived from OrderBookTopLevelsSnapshot */
     struct OrderBookStatisticsByTimestamp {
-        uint64_t timestamp;
+        uint64_t timestampFrom;
+        uint64_t timestampTo;
         size_t cumNumNewOrders = 0;
         size_t cumNumCancelOrders = 0;
         size_t cumNumModifyPriceOrders = 0;
@@ -64,8 +66,23 @@ public:
 
     MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~MatchingEngineMonitor() = default;
-    void startMonitoring() { myMonitoringEnabled = true; }
-    void stopMonitoring() { myMonitoringEnabled = false; }
+    virtual void init();
+    void startMonitoring() {
+        myOrderProcessingCallback = mySharedOrderProcessingCallback;
+        myMonitoringEnabled = true;
+    }
+    void stopMonitoring() {
+        myOrderProcessingCallback = nullptr;
+        myMonitoringEnabled = false;
+    }
+    // communicates with matching engine to keep order book stats in sync
+    virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
+    virtual void onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report);
+    virtual void onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderCancelReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
 
 private:
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
@@ -75,6 +92,8 @@ private:
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
     std::vector<std::shared_ptr<const OrderBookStatisticsByTimestamp>> myOrderBookStatistics;
     std::vector<std::shared_ptr<const OrderEventProcessingLatency>> myOrderEventProcessingLatencies;
+    Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
+    Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()
 };
 }
 

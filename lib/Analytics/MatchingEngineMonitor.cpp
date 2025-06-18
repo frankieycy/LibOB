@@ -11,8 +11,44 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMa
     if (!matchingEngine)
         Error::LIB_THROW("[MatchingEngineMonitor] Matching engine is null.");
     myMatchingEngine = matchingEngine;
-    // TODO: hook into matching engine by setting a callback for order processing reports, but this clashes
-    // with the callback set by OrderEventManagerBase - maybe make it into a vector of function pointers?
+    // add the callback to the matching engine once, and manage its lifetime internally via start/stopMonitoring()
+    matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
+    init();
+}
+
+void MatchingEngineMonitor::init() {
+    mySharedOrderProcessingCallback = std::make_shared<Exchange::OrderProcessingCallback>(
+        [this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) {
+            report->dispatchTo(*this);
+        });
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecutionReport& /* report */) {
+    return; // TODO
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& /* report */) {
+    return; // TODO
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& /* report */) {
+    return; // TODO
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelReport& /* report */) {
+    return; // TODO
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& /* report */) {
+    return; // TODO
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& /* report */) {
+    return; // TODO
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& /* report */) {
+    return; // TODO
 }
 }
 

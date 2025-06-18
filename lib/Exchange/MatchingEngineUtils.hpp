@@ -9,6 +9,10 @@ namespace Market {
 class OrderEventManagerBase;
 }
 
+namespace Analytics {
+class MatchingEngineMonitor;
+}
+
 namespace Exchange {
 enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NULL_ORDER_MATCHING_STRATEGY };
 enum class OrderProcessingType   { EXECUTE, SUBMIT, CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
@@ -97,6 +101,7 @@ struct OrderProcessingReport {
         status(status), latency(latency), message(message) {}
     virtual ~OrderProcessingReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const = 0;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const = 0;
     // We shall only provide `makeEvent` for order reports that actually act on an order,
     // such as submit, cancel, modify. Execution reports are out of the list since they are
     // for information purposes and may be derived from order submits.
@@ -137,6 +142,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
         isMakerOrder(isMakerOrder), orderExecutionType(orderExecutionType), trade(trade) {}
     virtual ~OrderExecutionReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
@@ -165,6 +171,7 @@ struct LimitOrderSubmitReport : public OrderProcessingReport {
         order(order) {}
     virtual ~LimitOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
@@ -186,6 +193,7 @@ struct MarketOrderSubmitReport : public OrderProcessingReport {
         order(order) {}
     virtual ~MarketOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
@@ -207,6 +215,7 @@ struct OrderCancelReport : public OrderProcessingReport {
         orderType(orderType) {}
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
@@ -231,6 +240,7 @@ struct OrderCancelAndReplaceReport : public OrderProcessingReport {
         orderType(orderType), newOrderId(newOrderId), newQuantity(newQuantity), newPrice(newPrice) {}
     virtual ~OrderCancelAndReplaceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
@@ -256,6 +266,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
         orderQuantity(orderQuantity), modifiedPrice(modifiedPrice) {}
     virtual ~OrderModifyPriceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
@@ -279,6 +290,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
         orderPrice(orderPrice), modifiedQuantity(modifiedQuantity) {}
     virtual ~OrderModifyQuantityReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
