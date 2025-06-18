@@ -11,15 +11,23 @@ using namespace Utils;
 
 class MatchingEngineMonitor {
 public:
+    enum class OrderBookStatisticsTimestampStrategy {
+        EACH_ORDER_EVENT,  // log a new statistics entry per each order event (expensive!)
+        EACH_MARKET_ORDER, // log a new statistics entry per each market order event
+        EACH_TRADE,        // log a new statistics entry per each trade event (that almost always happens at top-of-book)
+        TOP_OF_BOOK_TICK,  // log a new statistics entry per each top-of-book tick (order submit/cancel/modify events away from top-of-book are muted)
+    };
+
     /* Order book top-level snapshot fetched directly from the matching engine */
     struct OrderBookTopLevelsSnapshot {
         size_t numLevels = 0;
+        bool isFullBook = false;
         std::shared_ptr<const Market::TradeBase> lastTrade = nullptr;
         Exchange::DescOrderBookSize bidBookTopLevels;
         Exchange::AscOrderBookSize askBookTopLevels;
     };
 
-    /* Order book statistics derived from OrderBookTopLevelsSnapshot */
+    /* Order book statistics between the from-time exclusive to the to-time inclusive derived from OrderBookTopLevelsSnapshot */
     struct OrderBookStatisticsByTimestamp {
         uint64_t timestampFrom;
         uint64_t timestampTo;
