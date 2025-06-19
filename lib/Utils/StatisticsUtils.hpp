@@ -1,6 +1,7 @@
 #ifndef STATISTICS_UTILS_HPP
 #define STATISTICS_UTILS_HPP
 #include <vector>
+#include <deque>
 #include <random>
 
 namespace Utils {
@@ -10,6 +11,22 @@ struct VectorStats {
     double mean;
     double variance;
     double stddev;
+};
+
+template<typename T>
+class TimeSeriesCollector {
+public:
+    void addSample(const std::shared_ptr<const T>& stats) {
+        mySamples.push_back(stats);
+        if (myMaxHistory > 0 && mySamples.size() > myMaxHistory)
+            mySamples.pop_front();
+    }
+    const std::deque<std::shared_ptr<const T>>& getSamples() const { return mySamples; }
+    void setMaxHistory(size_t maxSamples) { myMaxHistory = maxSamples; }
+    void clear() { mySamples.clear(); }
+private:
+    std::deque<std::shared_ptr<const T>> mySamples;
+    size_t myMaxHistory = 0;
 };
 
 std::string to_string(const VectorStats& stats);
