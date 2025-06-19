@@ -12,11 +12,12 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineOrderEventManager();
     // Tests::MatchingEngine::testMatchingEngineRandomOrders();
     // Tests::MatchingEngine::testMatchingEngineOrderCancelModify();
-    Tests::MatchingEngine::testMatchingEngineOrderCancelReplace();
+    // Tests::MatchingEngine::testMatchingEngineOrderCancelReplace();
     // Tests::MatchingEngine::testMatchingEngineRandomOrdersSpeedTest();
     // Tests::MatchingEngine::testMatchingEngineRandomOrdersStressTest();
     // Tests::MatchingEngine::testMatchingEngineSpeedProfiling();
     // Tests::MatchingEngine::testMatchingEngineConstructFromEventsStream();
     // Tests::MatchingEngine::testMatchingEngineGetAsJson();
+    Tests::MatchingEngine::testMatchingEngineMonitor();
     return 0;
 }

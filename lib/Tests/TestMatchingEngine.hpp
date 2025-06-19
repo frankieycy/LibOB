@@ -15,6 +15,7 @@ void testMatchingEngineSpeedProfiling();
 void testMatchingEngineConstructFromEventsStream();
 void testMatchingEngineGetAsJson();
 void testMatchingEngineITCHMessage();
+void testMatchingEngineMonitor();
 void testMatchingEngineZeroIntelligence();
 }
 }
