@@ -48,12 +48,14 @@ public:
         uint32_t bestBidSize = 0;
         uint32_t bestAskSize = 0;
         double lastTradePrice = Utils::Consts::NAN_DOUBLE;
-        uint32_t lastTradeQuantity = 0.0;
+        uint32_t lastTradeQuantity = 0;
         OrderBookTopLevelsSnapshot topLevelsSnapshot;
     };
 
     /* Order book statistics aggregated over all timestamps so far */
     struct OrderBookAggregateStatistics {
+        uint64_t timestampFrom = 0;
+        uint64_t timestampTo = 0;
         size_t aggNumNewOrders = 0;
         size_t aggNumCancelOrders = 0;
         size_t aggNumModifyPriceOrders = 0;
@@ -68,21 +70,37 @@ public:
         uint64_t timestamp;
         uint64_t eventId;
         Market::OrderEventType eventType = Market::OrderEventType::NULL_ORDER_EVENT_TYPE;
-        long long latency = 0; // chronos::microseconds::rep
+        unsigned long long latency = 0; // chronos::microseconds::rep
         std::shared_ptr<const Market::OrderEventBase> event = nullptr;
     };
 
     MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~MatchingEngineMonitor() = default;
+
+    std::shared_ptr<Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
+    std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
+    bool isDebugMode() const { return myDebugMode; }
+    bool isMonitoringEnabled() const { return myMonitoringEnabled; }
+    OrderBookStatisticsTimestampStrategy getOrderBookStatisticsTimestampStrategy() const { return myOrderBookStatisticsTimestampStrategy; }
+    OrderBookAggregateStatistics getOrderBookAggregateStatistics() { return myOrderBookAggregateStatistics; }
+    std::vector<std::shared_ptr<const OrderBookStatisticsByTimestamp>> getOrderBookStatistics() const { return myOrderBookStatistics; }
+    std::vector<std::shared_ptr<const OrderEventProcessingLatency>> getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatencies; }
+
+    void setMatchingEngine(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) { myMatchingEngine = matchingEngine; }
+    void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
+    void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
+    void setOrderBookStatisticsTimestampStrategy(const OrderBookStatisticsTimestampStrategy strategy) { myOrderBookStatisticsTimestampStrategy = strategy; }
+
     virtual void init();
-    void startMonitoring() {
+    virtual void startMonitoring() {
         myOrderProcessingCallback = mySharedOrderProcessingCallback;
         myMonitoringEnabled = true;
     }
-    void stopMonitoring() {
+    virtual void stopMonitoring() {
         myOrderProcessingCallback = nullptr;
         myMonitoringEnabled = false;
     }
+
     // communicates with matching engine to keep order book stats in sync
     virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
     virtual void onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report);
@@ -94,7 +112,7 @@ public:
 
 private:
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
-    std::shared_ptr<Utils::Logger::LoggerBase> myLogger;
+    std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
@@ -102,6 +120,7 @@ private:
     std::vector<std::shared_ptr<const OrderEventProcessingLatency>> myOrderEventProcessingLatencies;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()
+    OrderBookStatisticsTimestampStrategy myOrderBookStatisticsTimestampStrategy = OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK;
 };
 }
 
