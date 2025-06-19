@@ -81,14 +81,22 @@ public:
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
     bool isDebugMode() const { return myDebugMode; }
     bool isMonitoringEnabled() const { return myMonitoringEnabled; }
+    size_t getOrderBookNumLevels() const { return myOrderBookNumLevels; }
+    size_t getTimeSeriesCollectorMaxSize() const { return myTimeSeriesCollectorMaxSize; }
     OrderBookStatisticsTimestampStrategy getOrderBookStatisticsTimestampStrategy() const { return myOrderBookStatisticsTimestampStrategy; }
     OrderBookAggregateStatistics getOrderBookAggregateStatistics() { return myOrderBookAggregateStatistics; }
-    std::vector<std::shared_ptr<const OrderBookStatisticsByTimestamp>> getOrderBookStatistics() const { return myOrderBookStatistics; }
-    std::vector<std::shared_ptr<const OrderEventProcessingLatency>> getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatencies; }
+    const Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
+    const Statistics::TimeSeriesCollector<OrderEventProcessingLatency>& getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatenciesCollector; }
 
     void setMatchingEngine(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
+    void setOrderBookNumLevels(const size_t numLevels) { myOrderBookNumLevels = numLevels; }
+    void setTimeSeriesCollectorMaxSize(const size_t maxSize) {
+        myTimeSeriesCollectorMaxSize = maxSize;
+        myOrderBookStatisticsCollector.setMaxHistory(maxSize);
+        myOrderEventProcessingLatenciesCollector.setMaxHistory(maxSize);
+    }
     void setOrderBookStatisticsTimestampStrategy(const OrderBookStatisticsTimestampStrategy strategy) { myOrderBookStatisticsTimestampStrategy = strategy; }
 
     virtual void init();
@@ -115,9 +123,11 @@ private:
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
+    size_t myOrderBookNumLevels = 10;
+    size_t myTimeSeriesCollectorMaxSize = 10000;
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
-    std::vector<std::shared_ptr<const OrderBookStatisticsByTimestamp>> myOrderBookStatistics;
-    std::vector<std::shared_ptr<const OrderEventProcessingLatency>> myOrderEventProcessingLatencies;
+    Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
+    Statistics::TimeSeriesCollector<OrderEventProcessingLatency> myOrderEventProcessingLatenciesCollector;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()
     OrderBookStatisticsTimestampStrategy myOrderBookStatisticsTimestampStrategy = OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK;

@@ -10,13 +10,15 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMa
     myMatchingEngine(matchingEngine), myDebugMode(matchingEngine->isDebugMode()), myMonitoringEnabled(false) {
     if (!matchingEngine)
         Error::LIB_THROW("[MatchingEngineMonitor] Matching engine is null.");
+    init();
     myMatchingEngine = matchingEngine;
     // add the callback to the matching engine once, and manage its lifetime internally via start/stopMonitoring()
     matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
-    init();
 }
 
 void MatchingEngineMonitor::init() {
+    myOrderBookStatisticsCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
+    myOrderEventProcessingLatenciesCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
     mySharedOrderProcessingCallback = std::make_shared<Exchange::OrderProcessingCallback>(
         [this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) {
             report->dispatchTo(*this);
