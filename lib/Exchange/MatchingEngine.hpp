@@ -136,6 +136,10 @@ public:
     void setITCHMessageLog(const ITCHMessageLog& itchMessageLog) { myITCHMessageLog = itchMessageLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
+    DescOrderBook getBidBook(size_t numLevels) const;
+    AscOrderBook getAskBook(size_t numLevels) const;
+    DescOrderBookSize getBidBookSize(size_t numLevels) const;
+    AscOrderBookSize getAskBookSize(size_t numLevels) const;
     std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const override;
     std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const override;
     std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const override;

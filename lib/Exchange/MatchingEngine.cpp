@@ -89,6 +89,62 @@ MatchingEngineBase::MatchingEngineBase(const OrderProcessingReportLog& orderProc
     init();
 }
 
+DescOrderBook MatchingEngineBase::getBidBook(size_t numLevels) const {
+    DescOrderBook bidBook;
+    if (numLevels == 0 || myBidBook.empty())
+        return bidBook;
+    size_t levels = 0;
+    for (const auto& priceQueuePair : myBidBook) {
+        if (levels >= numLevels)
+            break;
+        bidBook.insert(priceQueuePair);
+        ++levels;
+    }
+    return bidBook;
+}
+
+AscOrderBook MatchingEngineBase::getAskBook(size_t numLevels) const {
+    AscOrderBook askBook;
+    if (numLevels == 0 || myAskBook.empty())
+        return askBook;
+    size_t levels = 0;
+    for (const auto& priceQueuePair : myAskBook) {
+        if (levels >= numLevels)
+            break;
+        askBook.insert(priceQueuePair);
+        ++levels;
+    }
+    return askBook;
+}
+
+DescOrderBookSize MatchingEngineBase::getBidBookSize(size_t numLevels) const {
+    DescOrderBookSize bidBookSize;
+    if (numLevels == 0 || myBidBookSize.empty())
+        return bidBookSize;
+    size_t levels = 0;
+    for (const auto& priceSizePair : myBidBookSize) {
+        if (levels >= numLevels)
+            break;
+        bidBookSize.insert(priceSizePair);
+        ++levels;
+    }
+    return bidBookSize;
+}
+
+AscOrderBookSize MatchingEngineBase::getAskBookSize(size_t numLevels) const {
+    AscOrderBookSize askBookSize;
+    if (numLevels == 0 || myAskBookSize.empty())
+        return askBookSize;
+    size_t levels = 0;
+    for (const auto& priceSizePair : myAskBookSize) {
+        if (levels >= numLevels)
+            break;
+        askBookSize.insert(priceSizePair);
+        ++levels;
+    }
+    return askBookSize;
+}
+
 std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};
