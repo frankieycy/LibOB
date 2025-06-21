@@ -112,6 +112,30 @@ public:
             lastTradeQuantity = matchingEngine->getLastTradeSize();
             topLevelsSnapshot.constructFrom(matchingEngine);
         }
+
+        void clear() {
+            timestampFrom = 0;
+            timestampTo = 0;
+            cumNumNewOrders = 0;
+            cumNumCancelOrders = 0;
+            cumNumModifyPriceOrders = 0;
+            cumNumModifyQuantityOrders = 0;
+            cumNumTrades = 0;
+            cumTradeVolume = 0;
+            cumTradeNotional = 0.0;
+            bestBidPrice = Utils::Consts::NAN_DOUBLE;
+            bestAskPrice = Utils::Consts::NAN_DOUBLE;
+            midPrice = Utils::Consts::NAN_DOUBLE;
+            microPrice = Utils::Consts::NAN_DOUBLE;
+            spread = Utils::Consts::NAN_DOUBLE;
+            halfSpread = Utils::Consts::NAN_DOUBLE;
+            orderImbalance = Utils::Consts::NAN_DOUBLE;
+            bestBidSize = 0;
+            bestAskSize = 0;
+            lastTradePrice = Utils::Consts::NAN_DOUBLE;
+            lastTradeQuantity = 0;
+            topLevelsSnapshot.clear();
+        }
     };
 
     /* Processing latency measured over an order event */
