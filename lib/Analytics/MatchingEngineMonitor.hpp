@@ -25,12 +25,43 @@ public:
         std::shared_ptr<const Market::TradeBase> lastTrade = nullptr;
         Exchange::DescOrderBookSize bidBookTopLevels;
         Exchange::AscOrderBookSize askBookTopLevels;
+
+        OrderBookTopLevelsSnapshot(const size_t numLevels = 0, const bool isFullBook = false) : numLevels(numLevels), isFullBook(isFullBook) {}
+
+        void constructFrom(const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine) {
+            if (!matchingEngine)
+                Error::LIB_THROW("[OrderBookTopLevelsSnapshot] Matching engine is null.");
+            lastTrade = matchingEngine->getLastTrade();
+            bidBookTopLevels = isFullBook ? matchingEngine->getBidBookSize() : matchingEngine->getBidBookSize(numLevels);
+            askBookTopLevels = isFullBook ? matchingEngine->getAskBookSize() : matchingEngine->getAskBookSize(numLevels);
+        }
+
+        void clear() {
+            numLevels = 0;
+            isFullBook = false;
+            lastTrade = nullptr;
+            bidBookTopLevels.clear();
+            askBookTopLevels.clear();
+        }
+    };
+
+    /* Order book statistics aggregated over all timestamps so far */
+    struct OrderBookAggregateStatistics {
+        uint64_t timestampFrom = 0;
+        uint64_t timestampTo = 0;
+        size_t aggNumNewOrders = 0;
+        size_t aggNumCancelOrders = 0;
+        size_t aggNumModifyPriceOrders = 0;
+        size_t aggNumModifyQuantityOrders = 0;
+        size_t aggNumTrades = 0;
+        uint32_t aggTradeVolume = 0;
+        double aggTradeNotional = 0.0;
     };
 
     /* Order book statistics between the from-time exclusive to the to-time inclusive derived from OrderBookTopLevelsSnapshot */
     struct OrderBookStatisticsByTimestamp {
-        uint64_t timestampFrom;
-        uint64_t timestampTo;
+        uint64_t timestampFrom = 0;
+        uint64_t timestampTo = 0;
         size_t cumNumNewOrders = 0;
         size_t cumNumCancelOrders = 0;
         size_t cumNumModifyPriceOrders = 0;
@@ -50,19 +81,37 @@ public:
         double lastTradePrice = Utils::Consts::NAN_DOUBLE;
         uint32_t lastTradeQuantity = 0;
         OrderBookTopLevelsSnapshot topLevelsSnapshot;
-    };
 
-    /* Order book statistics aggregated over all timestamps so far */
-    struct OrderBookAggregateStatistics {
-        uint64_t timestampFrom = 0;
-        uint64_t timestampTo = 0;
-        size_t aggNumNewOrders = 0;
-        size_t aggNumCancelOrders = 0;
-        size_t aggNumModifyPriceOrders = 0;
-        size_t aggNumModifyQuantityOrders = 0;
-        size_t aggNumTrades = 0;
-        uint32_t aggTradeVolume = 0;
-        double aggTradeNotional = 0.0;
+        OrderBookStatisticsByTimestamp(const size_t numLevels = 0, const bool isFullBook = false) : topLevelsSnapshot(numLevels, isFullBook) {}
+
+        void constructFrom(
+            const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine,
+            const OrderBookAggregateStatistics& orderBookAggregateStatistics,
+            const OrderBookAggregateStatistics& orderBookAggregateStatisticsCache) {
+            if (!matchingEngine)
+                Error::LIB_THROW("[OrderBookStatisticsByTimestamp] Matching engine is null.");
+            timestampFrom = orderBookAggregateStatisticsCache.timestampTo; // from-time exclusive
+            timestampTo = orderBookAggregateStatistics.timestampTo; // to-time inclusive
+            cumNumNewOrders = orderBookAggregateStatistics.aggNumNewOrders - orderBookAggregateStatisticsCache.aggNumNewOrders;
+            cumNumCancelOrders = orderBookAggregateStatistics.aggNumCancelOrders - orderBookAggregateStatisticsCache.aggNumCancelOrders;
+            cumNumModifyPriceOrders = orderBookAggregateStatistics.aggNumModifyPriceOrders - orderBookAggregateStatisticsCache.aggNumModifyPriceOrders;
+            cumNumModifyQuantityOrders = orderBookAggregateStatistics.aggNumModifyQuantityOrders - orderBookAggregateStatisticsCache.aggNumModifyQuantityOrders;
+            cumNumTrades = orderBookAggregateStatistics.aggNumTrades - orderBookAggregateStatisticsCache.aggNumTrades;
+            cumTradeVolume = orderBookAggregateStatistics.aggTradeVolume - orderBookAggregateStatisticsCache.aggTradeVolume;
+            cumTradeNotional = orderBookAggregateStatistics.aggTradeNotional - orderBookAggregateStatisticsCache.aggTradeNotional;
+            bestBidPrice = matchingEngine->getBestBidPrice();
+            bestAskPrice = matchingEngine->getBestAskPrice();
+            midPrice = matchingEngine->getMidPrice();
+            microPrice = matchingEngine->getMicroPrice();
+            spread = matchingEngine->getSpread();
+            halfSpread = matchingEngine->getHalfSpread();
+            orderImbalance = matchingEngine->getOrderImbalance();
+            bestBidSize = matchingEngine->getBestBidSize();
+            bestAskSize = matchingEngine->getBestAskSize();
+            lastTradePrice = matchingEngine->getLastTradePrice();
+            lastTradeQuantity = matchingEngine->getLastTradeSize();
+            topLevelsSnapshot.constructFrom(matchingEngine);
+        }
     };
 
     /* Processing latency measured over an order event */
@@ -74,10 +123,10 @@ public:
         std::shared_ptr<const Market::OrderEventBase> event = nullptr;
     };
 
-    MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
+    MatchingEngineMonitor(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine);
     virtual ~MatchingEngineMonitor() = default;
 
-    std::shared_ptr<Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
+    std::shared_ptr<Exchange::MatchingEngineBase> getMatchingEngine() const { return myMatchingEngine; }
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
     bool isDebugMode() const { return myDebugMode; }
     bool isMonitoringEnabled() const { return myMonitoringEnabled; }
@@ -88,7 +137,7 @@ public:
     const Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
     const Statistics::TimeSeriesCollector<OrderEventProcessingLatency>& getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatenciesCollector; }
 
-    void setMatchingEngine(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) { myMatchingEngine = matchingEngine; }
+    void setMatchingEngine(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setOrderBookNumLevels(const size_t numLevels) { myOrderBookNumLevels = numLevels; }
@@ -119,13 +168,14 @@ public:
     virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
 
 private:
-    std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
+    std::shared_ptr<Exchange::MatchingEngineBase> myMatchingEngine;
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
     size_t myOrderBookNumLevels = 10;
     size_t myTimeSeriesCollectorMaxSize = 10000;
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
+    OrderBookAggregateStatistics myOrderBookAggregateStatisticsCache; // caches the last statistics entry
     Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
     Statistics::TimeSeriesCollector<OrderEventProcessingLatency> myOrderEventProcessingLatenciesCollector;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
