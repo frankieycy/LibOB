@@ -51,6 +51,7 @@ public:
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
     uint64_t generateReportId() { return myReportIdHandler.generateId(); }
+    uint64_t getCurrentTimestamp() const { return myWorldClock->getCurrentTimestamp(); }
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     virtual std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const = 0;
     virtual std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const = 0;
