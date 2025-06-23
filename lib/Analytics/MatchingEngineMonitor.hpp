@@ -12,10 +12,10 @@ using namespace Utils;
 class MatchingEngineMonitor {
 public:
     enum class OrderBookStatisticsTimestampStrategy {
+        TOP_OF_BOOK_TICK,  // default: log a new statistics entry per each top-of-book tick (order submit/cancel/modify events away from top-of-book are muted)
         EACH_ORDER_EVENT,  // log a new statistics entry per each order event (expensive!)
         EACH_MARKET_ORDER, // log a new statistics entry per each market order event
         EACH_TRADE,        // log a new statistics entry per each trade event (that almost always happens at top-of-book)
-        TOP_OF_BOOK_TICK,  // log a new statistics entry per each top-of-book tick (order submit/cancel/modify events away from top-of-book are muted)
     };
 
     /* Order book top-level snapshot fetched directly from the matching engine */
@@ -160,6 +160,8 @@ public:
     OrderBookAggregateStatistics getOrderBookAggregateStatistics() { return myOrderBookAggregateStatistics; }
     const Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
     const Statistics::TimeSeriesCollector<OrderEventProcessingLatency>& getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatenciesCollector; }
+    const OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const { return myOrderBookStatisticsCollector.getLastSample()->topLevelsSnapshot; }
+    bool isPriceWithinTopOfBook(const Market::Side side, const double price) const;
 
     void setMatchingEngine(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
@@ -196,8 +198,8 @@ private:
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
-    size_t myOrderBookNumLevels = 10;
-    size_t myTimeSeriesCollectorMaxSize = 10000;
+    size_t myOrderBookNumLevels = 10; // used to detect top-of-book ticks
+    size_t myTimeSeriesCollectorMaxSize = 1000000;
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
     OrderBookAggregateStatistics myOrderBookAggregateStatisticsCache; // caches the last statistics entry
     Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;

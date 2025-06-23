@@ -16,6 +16,14 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::Mat
     matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
 }
 
+bool MatchingEngineMonitor::isPriceWithinTopOfBook(const Market::Side side, const double price) const {
+    const auto& topLevels = getLastOrderBookTopLevelsSnapshot();
+    if (topLevels.isFullBook)
+        return true;
+    return (side == Market::Side::BUY && (topLevels.bidBookTopLevels.empty() || price >= topLevels.bidBookTopLevels.rbegin()->first)) ||
+           (side == Market::Side::SELL && (topLevels.askBookTopLevels.empty() || price <= topLevels.askBookTopLevels.rbegin()->first));
+}
+
 void MatchingEngineMonitor::init() {
     myOrderBookStatisticsCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
     myOrderEventProcessingLatenciesCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
