@@ -59,6 +59,8 @@ public:
     virtual std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestAskTopOrder() const = 0;
     virtual double getBestBidPrice() const = 0;
     virtual double getBestAskPrice() const = 0;
+    virtual double getBidPriceAtLevel(const size_t level) const = 0;
+    virtual double getAskPriceAtLevel(const size_t level) const = 0;
     virtual double getSpread() const = 0;
     virtual double getHalfSpread() const = 0;
     virtual double getMidPrice() const = 0;
@@ -147,6 +149,8 @@ public:
     std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestAskTopOrder() const override;
     double getBestBidPrice() const override;
     double getBestAskPrice() const override;
+    double getBidPriceAtLevel(const size_t level) const override;
+    double getAskPriceAtLevel(const size_t level) const override;
     double getSpread() const override;
     double getHalfSpread() const override;
     double getMidPrice() const override;

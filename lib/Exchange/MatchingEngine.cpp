@@ -183,6 +183,26 @@ double MatchingEngineBase::getBestAskPrice() const {
     return myAskBookSize.begin()->first;
 }
 
+double MatchingEngineBase::getBidPriceAtLevel(const size_t level) const {
+    if (myBidBookSize.empty() || level >= myBidBookSize.size()) {
+        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::getBidPriceAtLevel] Invalid level: " << level;
+        return Consts::NAN_DOUBLE;
+    }
+    auto it = myBidBookSize.begin();
+    std::advance(it, level);
+    return it->first;
+}
+
+double MatchingEngineBase::getAskPriceAtLevel(const size_t level) const {
+    if (myAskBookSize.empty() || level >= myAskBookSize.size()) {
+        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::getAskPriceAtLevel] Invalid level: " << level;
+        return Consts::NAN_DOUBLE;
+    }
+    auto it = myAskBookSize.begin();
+    std::advance(it, level);
+    return it->first;
+}
+
 double MatchingEngineBase::getSpread() const {
     return getBestAskPrice() - getBestBidPrice();
 }
