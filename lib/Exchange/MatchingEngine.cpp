@@ -359,7 +359,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                     myAskBook.erase(oldPrice);
                 }
             }
-            logOrderProcessingReport(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), oldId, side, Market::OrderType::LIMIT, OrderProcessingStatus::SUCCESS));
+            logOrderProcessingReport(std::make_shared<OrderCancelReport>(generateReportId(), clockTick(), oldId, side, Market::OrderType::LIMIT, oldQuantity, oldPrice, OrderProcessingStatus::SUCCESS));
         }
     }
     // TODO: market order events handling

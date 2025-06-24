@@ -208,11 +208,13 @@ struct OrderCancelReport : public OrderProcessingReport {
         const uint64_t orderId,
         const Market::Side orderSide,
         const Market::OrderType orderType,
+        const std::optional<uint32_t>& orderQuantity,
+        const std::optional<double>& orderPrice,
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
         OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message),
-        orderType(orderType) {}
+        orderType(orderType), orderQuantity(orderQuantity), orderPrice(orderPrice) {}
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
@@ -220,6 +222,8 @@ struct OrderCancelReport : public OrderProcessingReport {
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
+    std::optional<uint32_t> orderQuantity;
+    std::optional<double> orderPrice;
 };
 
 struct OrderCancelAndReplaceReport : public OrderProcessingReport {
