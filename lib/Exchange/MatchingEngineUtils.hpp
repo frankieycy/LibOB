@@ -311,7 +311,7 @@ std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMa
 std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProcessingType);
 std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderProcessingStatus);
 std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType);
-std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& event);
+std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& report);
 }
 
 #endif
