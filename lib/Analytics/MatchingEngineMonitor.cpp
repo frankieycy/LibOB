@@ -152,7 +152,7 @@ void MatchingEngineMonitor::stopMonitoring() {
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecutionReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor::onOrderProcessingReport] Order execution report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order execution report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumTrades;
     myOrderBookAggregateStatistics.aggTradeVolume += report.filledQuantity;
@@ -161,28 +161,28 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecuti
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor::onOrderProcessingReport] Order submit report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order submit report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor::onOrderProcessingReport] Order submit report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order submit report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewMarketOrders;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor::onOrderProcessingReport] Order cancel report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor::onOrderProcessingReport] Order cancel and replace report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel and replace report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
@@ -190,14 +190,14 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelA
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor::onOrderProcessingReport] Order modify price report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify price report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyPriceOrders;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor::onOrderProcessingReport] Order modify quantity report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify quantity report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyQuantityOrders;
 }

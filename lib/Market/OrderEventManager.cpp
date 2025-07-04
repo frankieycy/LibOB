@@ -176,7 +176,7 @@ std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrd
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderExecutionReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order execution report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order execution report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order execution report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
@@ -203,7 +203,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderExecuti
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
@@ -220,7 +220,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::LimitOrderSu
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
@@ -237,7 +237,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::MarketOrderS
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
@@ -269,7 +269,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel and replace report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
@@ -312,7 +312,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelA
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order modify price report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify price report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify price report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
@@ -331,7 +331,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyP
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify quantity report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
         *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;

@@ -368,7 +368,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
 void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {
     for (const auto& event : orderEventLog) {
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase::build] Processing order event: " << *event;
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing order event: " << *event;
         if (event)
             process(event);
     }
@@ -377,7 +377,7 @@ void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {
 void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingReportLog) {
     for (const auto& report : orderProcessingReportLog) {
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase::build] Processing order report: " << *report;
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing order report: " << *report;
         if (report)
             process(report->makeEvent());
     }
@@ -386,7 +386,7 @@ void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingRe
 void MatchingEngineBase::build(const ITCHMessageLog& itchMessageLog) {
     for (const auto& message : itchMessageLog) {
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase::build] Processing ITCH message: " << *message;
+            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing ITCH message: " << *message;
         if (message)
             process(message->makeEvent());
     }
