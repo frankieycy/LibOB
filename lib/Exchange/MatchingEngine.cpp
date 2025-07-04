@@ -145,6 +145,22 @@ AscOrderBookSize MatchingEngineBase::getAskBookSize(const size_t numLevels) cons
     return askBookSize;
 }
 
+std::vector<DescOrderBookSize::const_iterator> MatchingEngineBase::getBidBookSizeIterators() const {
+    std::vector<DescOrderBookSize::const_iterator> iters;
+    iters.reserve(myBidBookSize.size());
+    for (auto it = myBidBookSize.begin(); it != myBidBookSize.end(); ++it)
+        iters.push_back(it);
+    return iters;
+}
+
+std::vector<AscOrderBookSize::const_iterator> MatchingEngineBase::getAskBookSizeIterators() const {
+    std::vector<AscOrderBookSize::const_iterator> iters;
+    iters.reserve(myAskBookSize.size());
+    for (auto it = myAskBookSize.begin(); it != myAskBookSize.end(); ++it)
+        iters.push_back(it);
+    return iters;
+}
+
 std::vector<DescOrderBookSize::const_iterator> MatchingEngineBase::getBidBookSizeIterators(const size_t numLevels) const {
     std::vector<DescOrderBookSize::const_iterator> iters;
     iters.reserve(numLevels);

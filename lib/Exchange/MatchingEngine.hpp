@@ -143,6 +143,8 @@ public:
     AscOrderBook getAskBook(const size_t numLevels) const;
     DescOrderBookSize getBidBookSize(const size_t numLevels) const;
     AscOrderBookSize getAskBookSize(const size_t numLevels) const;
+    std::vector<DescOrderBookSize::const_iterator> getBidBookSizeIterators() const;
+    std::vector<AscOrderBookSize::const_iterator> getAskBookSizeIterators() const;
     std::vector<DescOrderBookSize::const_iterator> getBidBookSizeIterators(const size_t numLevels) const;
     std::vector<AscOrderBookSize::const_iterator> getAskBookSizeIterators(const size_t numLevels) const;
     std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const override;
