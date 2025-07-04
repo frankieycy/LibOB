@@ -16,13 +16,14 @@ struct VectorStats {
 template<typename T>
 class TimeSeriesCollector {
 public:
-    void addSample(const std::shared_ptr<const T>& stats) {
+    void addSample(std::shared_ptr<const T> stats) {
         mySamples.push_back(stats);
         if (myMaxHistory > 0 && mySamples.size() > myMaxHistory)
             mySamples.pop_front();
     }
     const std::deque<std::shared_ptr<const T>>& getSamples() const { return mySamples; }
     std::shared_ptr<const T> getLastSample() const { return mySamples.empty() ? nullptr : mySamples.back(); }
+    size_t size() const { return mySamples.size(); }
     void setMaxHistory(size_t maxSamples) { myMaxHistory = maxSamples; }
     void clear() { mySamples.clear(); }
 private:
