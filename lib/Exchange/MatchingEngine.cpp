@@ -89,7 +89,7 @@ MatchingEngineBase::MatchingEngineBase(const OrderProcessingReportLog& orderProc
     init();
 }
 
-DescOrderBook MatchingEngineBase::getBidBook(size_t numLevels) const {
+DescOrderBook MatchingEngineBase::getBidBook(const size_t numLevels) const {
     DescOrderBook bidBook;
     if (numLevels == 0 || myBidBook.empty())
         return bidBook;
@@ -103,7 +103,7 @@ DescOrderBook MatchingEngineBase::getBidBook(size_t numLevels) const {
     return bidBook;
 }
 
-AscOrderBook MatchingEngineBase::getAskBook(size_t numLevels) const {
+AscOrderBook MatchingEngineBase::getAskBook(const size_t numLevels) const {
     AscOrderBook askBook;
     if (numLevels == 0 || myAskBook.empty())
         return askBook;
@@ -117,7 +117,7 @@ AscOrderBook MatchingEngineBase::getAskBook(size_t numLevels) const {
     return askBook;
 }
 
-DescOrderBookSize MatchingEngineBase::getBidBookSize(size_t numLevels) const {
+DescOrderBookSize MatchingEngineBase::getBidBookSize(const size_t numLevels) const {
     DescOrderBookSize bidBookSize;
     if (numLevels == 0 || myBidBookSize.empty())
         return bidBookSize;
@@ -131,7 +131,7 @@ DescOrderBookSize MatchingEngineBase::getBidBookSize(size_t numLevels) const {
     return bidBookSize;
 }
 
-AscOrderBookSize MatchingEngineBase::getAskBookSize(size_t numLevels) const {
+AscOrderBookSize MatchingEngineBase::getAskBookSize(const size_t numLevels) const {
     AscOrderBookSize askBookSize;
     if (numLevels == 0 || myAskBookSize.empty())
         return askBookSize;
@@ -143,6 +143,24 @@ AscOrderBookSize MatchingEngineBase::getAskBookSize(size_t numLevels) const {
         ++levels;
     }
     return askBookSize;
+}
+
+std::vector<DescOrderBookSize::const_iterator> MatchingEngineBase::getBidBookSizeIterators(const size_t numLevels) const {
+    std::vector<DescOrderBookSize::const_iterator> iters;
+    iters.reserve(numLevels);
+    size_t count = 0;
+    for (auto it = myBidBookSize.begin(); it != myBidBookSize.end() && count < numLevels; ++it, ++count)
+        iters.push_back(it);
+    return iters;
+}
+
+std::vector<AscOrderBookSize::const_iterator> MatchingEngineBase::getAskBookSizeIterators(const size_t numLevels) const {
+    std::vector<AscOrderBookSize::const_iterator> iters;
+    iters.reserve(numLevels);
+    size_t count = 0;
+    for (auto it = myAskBookSize.begin(); it != myAskBookSize.end() && count < numLevels; ++it, ++count)
+        iters.push_back(it);
+    return iters;
 }
 
 std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
