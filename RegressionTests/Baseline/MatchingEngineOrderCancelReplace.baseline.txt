@@ -1,7 +1,7 @@
 [LOG] INFO [OrderEventManagerBase::setLoggerLogFile] Logger log file set to: RegressionTests/Baseline/MatchingEngineOrderCancelReplace.baseline.txt
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":0,"OrderId":0,"Timestamp":1,"EventType":"Submit","Order":{"Id":0,"Timestamp":1,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":0,"Timestamp":1,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":0,"Timestamp":2,"OrderId":0,"OrderSide":"Buy","Order":{"Id":0,"Timestamp":1,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":0,"Timestamp":2,"OrderId":0,"OrderSide":"Buy","Order":{"Id":0,"Timestamp":1,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":0,"Timestamp":4,"Side":"Buy","Quantity":15,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -40,7 +40,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":1,"OrderId":1,"Timestamp":5,"EventType":"Submit","Order":{"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":1,"Timestamp":6,"OrderId":1,"OrderSide":"Buy","Order":{"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":1,"Timestamp":6,"OrderId":1,"OrderSide":"Buy","Order":{"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":1,"Timestamp":8,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -81,7 +81,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":2,"OrderId":2,"Timestamp":9,"EventType":"Submit","Order":{"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":2,"Timestamp":10,"OrderId":2,"OrderSide":"Buy","Order":{"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":2,"Timestamp":10,"OrderId":2,"OrderSide":"Buy","Order":{"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":2,"Timestamp":12,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -125,7 +125,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":3,"OrderId":3,"Timestamp":13,"EventType":"Submit","Order":{"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":3,"Timestamp":14,"OrderId":3,"OrderSide":"Buy","Order":{"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":3,"Timestamp":14,"OrderId":3,"OrderSide":"Buy","Order":{"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":3,"Timestamp":16,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -171,7 +171,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":4,"OrderId":4,"Timestamp":17,"EventType":"Submit","Order":{"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":4,"Timestamp":18,"OrderId":4,"OrderSide":"Buy","Order":{"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":4,"Timestamp":18,"OrderId":4,"OrderSide":"Buy","Order":{"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":4,"Timestamp":20,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -220,7 +220,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":5,"OrderId":5,"Timestamp":21,"EventType":"Submit","Order":{"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":5,"Timestamp":22,"OrderId":5,"OrderSide":"Sell","Order":{"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":5,"Timestamp":22,"OrderId":5,"OrderSide":"Sell","Order":{"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":5,"Timestamp":24,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -272,7 +272,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":6,"OrderId":6,"Timestamp":25,"EventType":"Submit","Order":{"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":6,"Timestamp":26,"OrderId":6,"OrderSide":"Sell","Order":{"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":6,"Timestamp":26,"OrderId":6,"OrderSide":"Sell","Order":{"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":6,"Timestamp":28,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -326,7 +326,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":7,"OrderId":7,"Timestamp":29,"EventType":"Submit","Order":{"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":7,"Timestamp":30,"OrderId":7,"OrderSide":"Sell","Order":{"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":7,"Timestamp":30,"OrderId":7,"OrderSide":"Sell","Order":{"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":7,"Timestamp":32,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -383,7 +383,7 @@
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":8,"OrderId":8,"Timestamp":33,"EventType":"Submit","Order":{"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
 [LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order submit report received: {"ReportId":8,"Timestamp":34,"OrderId":8,"OrderSide":"Sell","Order":{"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":8,"Timestamp":34,"OrderId":8,"OrderSide":"Sell","Order":{"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":8,"Timestamp":36,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
@@ -442,7 +442,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":9,"OrderId":0,"Timestamp":37,"EventType":"CancelReplace","ModifiedQuantity":10,"ModifiedPrice":null}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report received: {"ReportId":9,"Timestamp":39,"OrderId":0,"OrderSide":"Buy","OrderType":"Limit","NewOrderId":9,"NewQuantity":10,"NewPrice":99,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel and replace report received: {"ReportId":9,"Timestamp":39,"OrderId":0,"OrderSide":"Buy","OrderType":"Limit","NewOrderId":9,"NewQuantity":10,"NewPrice":99,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -500,7 +500,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":10,"OrderId":1,"Timestamp":41,"EventType":"CancelReplace","ModifiedQuantity":null,"ModifiedPrice":100.000000}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report received: {"ReportId":10,"Timestamp":43,"OrderId":1,"OrderSide":"Buy","OrderType":"Limit","NewOrderId":10,"NewQuantity":5,"NewPrice":100,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel and replace report received: {"ReportId":10,"Timestamp":43,"OrderId":1,"OrderSide":"Buy","OrderType":"Limit","NewOrderId":10,"NewQuantity":5,"NewPrice":100,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -559,7 +559,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":11,"OrderId":2,"Timestamp":45,"EventType":"CancelReplace","ModifiedQuantity":5,"ModifiedPrice":97.000000}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report received: {"ReportId":11,"Timestamp":47,"OrderId":2,"OrderSide":"Buy","OrderType":"Limit","NewOrderId":11,"NewQuantity":5,"NewPrice":97,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel and replace report received: {"ReportId":11,"Timestamp":47,"OrderId":2,"OrderSide":"Buy","OrderType":"Limit","NewOrderId":11,"NewQuantity":5,"NewPrice":97,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -618,7 +618,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":12,"OrderId":7,"Timestamp":49,"EventType":"CancelReplace","ModifiedQuantity":null,"ModifiedPrice":103.000000}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report received: {"ReportId":12,"Timestamp":51,"OrderId":7,"OrderSide":"Sell","OrderType":"Limit","NewOrderId":12,"NewQuantity":15,"NewPrice":103,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel and replace report received: {"ReportId":12,"Timestamp":51,"OrderId":7,"OrderSide":"Sell","OrderType":"Limit","NewOrderId":12,"NewQuantity":15,"NewPrice":103,"OrderProcessingType":"CancelReplace","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -676,7 +676,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":13,"OrderId":8,"Timestamp":53,"EventType":"CancelReplace","ModifiedQuantity":0,"ModifiedPrice":null}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":13,"Timestamp":55,"OrderId":8,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":13,"Timestamp":55,"OrderId":8,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -733,7 +733,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":14,"OrderId":12,"Timestamp":57,"EventType":"CancelReplace","ModifiedQuantity":0,"ModifiedPrice":null}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":14,"Timestamp":59,"OrderId":12,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":14,"Timestamp":59,"OrderId":12,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -788,7 +788,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":15,"OrderId":4,"Timestamp":61,"EventType":"CancelReplace","ModifiedQuantity":null,"ModifiedPrice":null}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":15,"Timestamp":63,"OrderId":4,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":15,"Timestamp":63,"OrderId":4,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
@@ -842,7 +842,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":16,"OrderId":11,"Timestamp":65,"EventType":"CancelReplace","ModifiedQuantity":null,"ModifiedPrice":null}
-[LOG] DEBUG [OrderEventManagerBase::onOrderProcessingReport] Order cancel report received: {"ReportId":16,"Timestamp":67,"OrderId":11,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":16,"Timestamp":67,"OrderId":11,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
