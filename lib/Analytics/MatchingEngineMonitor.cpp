@@ -30,16 +30,16 @@ void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::constructFrom(const std:
     if (!matchingEngine)
         Error::LIB_THROW("[OrderBookTopLevelsSnapshot] Matching engine is null.");
     lastTrade = matchingEngine->getLastTrade();
-    bidBookTopLevels = isFullBook ? matchingEngine->getBidBookSize() : matchingEngine->getBidBookSize(numLevels);
-    askBookTopLevels = isFullBook ? matchingEngine->getAskBookSize() : matchingEngine->getAskBookSize(numLevels);
+    bidBookTopLevelIterators = isFullBook ? matchingEngine->getBidBookSizeIterators() : matchingEngine->getBidBookSizeIterators(numLevels);
+    askBookTopLevelIterators = isFullBook ? matchingEngine->getAskBookSizeIterators() : matchingEngine->getAskBookSizeIterators(numLevels);
 }
 
 void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::clear() {
     numLevels = 0;
     isFullBook = false;
     lastTrade = nullptr;
-    bidBookTopLevels.clear();
-    askBookTopLevels.clear();
+    bidBookTopLevelIterators.clear();
+    askBookTopLevelIterators.clear();
 }
 
 std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const {
@@ -114,7 +114,7 @@ std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsJson() cons
 }
 
 MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine) :
-    myMatchingEngine(matchingEngine), myDebugMode(matchingEngine->isDebugMode()), myMonitoringEnabled(false) {
+    myMatchingEngine(matchingEngine), myDebugMode(matchingEngine->isDebugMode()), myMonitoringEnabled(true) {
     if (!matchingEngine)
         Error::LIB_THROW("[MatchingEngineMonitor] Matching engine is null.");
     init();
@@ -123,12 +123,24 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::Mat
     matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
 }
 
-bool MatchingEngineMonitor::isPriceWithinTopOfBook(const Market::Side side, const double price) const {
+const MatchingEngineMonitor::OrderBookTopLevelsSnapshot& MatchingEngineMonitor::getLastOrderBookTopLevelsSnapshot() const {
+    if (!myOrderBookStatisticsCollector.size())
+        Error::LIB_THROW("[MatchingEngineMonitor::getLastOrderBookTopLevelsSnapshot] No order book top levels snapshot available.");
+    return myOrderBookStatisticsCollector.getLastSample()->topLevelsSnapshot;
+}
+
+bool MatchingEngineMonitor::isPriceWithinTopOfBook(const Market::Side side, const double price, const std::optional<Market::OrderType>& type) const {
+    if (type.has_value()) {
+        if (*type == Market::OrderType::MARKET)
+            return true;
+    }
+    if (!myOrderBookStatisticsCollector.size())
+        return true;
     const auto& topLevels = getLastOrderBookTopLevelsSnapshot();
     if (topLevels.isFullBook)
         return true;
-    return (side == Market::Side::BUY && (topLevels.bidBookTopLevels.empty() || price >= topLevels.bidBookTopLevels.rbegin()->first)) ||
-           (side == Market::Side::SELL && (topLevels.askBookTopLevels.empty() || price <= topLevels.askBookTopLevels.rbegin()->first));
+    return (side == Market::Side::BUY && (topLevels.bidBookTopLevelIterators.empty() || price >= (*topLevels.bidBookTopLevelIterators.rbegin())->first)) ||
+           (side == Market::Side::SELL && (topLevels.askBookTopLevelIterators.empty() || price <= (*topLevels.askBookTopLevelIterators.rbegin())->first));
 }
 
 void MatchingEngineMonitor::init() {
@@ -150,56 +162,128 @@ void MatchingEngineMonitor::stopMonitoring() {
     myMonitoringEnabled = false;
 }
 
+void MatchingEngineMonitor::updateStatistics() {
+    auto orderBookStats = std::make_shared<const OrderBookStatisticsByTimestamp>(); // TODO
+    myOrderBookStatisticsCollector.addSample(orderBookStats);
+    myOrderBookAggregateStatisticsCache = myOrderBookAggregateStatistics;
+}
+
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecutionReport& report) {
+    if (!myMonitoringEnabled)
+        return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order execution report received: " << report;
+    if (myLastTrade && report.tradeId == myLastTrade->getId())
+        return; // avoid double-counting execution reports for the same trade (sent twice from both sides)
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumTrades;
     myOrderBookAggregateStatistics.aggTradeVolume += report.filledQuantity;
     myOrderBookAggregateStatistics.aggTradeNotional += report.filledPrice * report.filledQuantity;
+    myLastTrade = myMatchingEngine->getLastTrade();
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.filledPrice))
+            return;
+        updateStatistics();
+    } else {
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    }
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report) {
+    if (!myMonitoringEnabled)
+        return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order submit report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.order ? report.order->getPrice() : Consts::NAN_DOUBLE, Market::OrderType::LIMIT))
+            return;
+        updateStatistics();
+    } else {
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    }
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report) {
+    if (!myMonitoringEnabled)
+        return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order submit report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewMarketOrders;
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.order ? report.order->getPrice() : Consts::NAN_DOUBLE, Market::OrderType::MARKET))
+            return;
+        updateStatistics();
+    } else {
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    }
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
+    if (!myMonitoringEnabled)
+        return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Consts::NAN_DOUBLE), report.orderType))
+            return;
+        updateStatistics();
+    } else {
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    }
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
+    if (!myMonitoringEnabled)
+        return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel and replace report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.newPrice, report.orderType))
+            return;
+        updateStatistics();
+    } else {
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    }
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report) {
+    if (!myMonitoringEnabled)
+        return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify price report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyPriceOrders;
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.modifiedPrice))
+            return;
+        updateStatistics();
+    } else {
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    }
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report) {
+    if (!myMonitoringEnabled)
+        return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify quantity report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyQuantityOrders;
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice))
+            return;
+        updateStatistics();
+    } else {
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    }
 }
 }
 

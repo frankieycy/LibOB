@@ -23,8 +23,8 @@ public:
         size_t numLevels = 0;
         bool isFullBook = false;
         std::shared_ptr<const Market::TradeBase> lastTrade = nullptr;
-        Exchange::DescOrderBookSize bidBookTopLevels;
-        Exchange::AscOrderBookSize askBookTopLevels;
+        std::vector<Exchange::DescOrderBookSize::const_iterator> bidBookTopLevelIterators;
+        std::vector<Exchange::AscOrderBookSize::const_iterator> askBookTopLevelIterators;
 
         OrderBookTopLevelsSnapshot(const size_t numLevels = 0, const bool isFullBook = false) : numLevels(numLevels), isFullBook(isFullBook) {}
         void constructFrom(const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine);
@@ -104,8 +104,8 @@ public:
     OrderBookAggregateStatistics getOrderBookAggregateStatistics() { return myOrderBookAggregateStatistics; }
     const Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
     const Statistics::TimeSeriesCollector<OrderEventProcessingLatency>& getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatenciesCollector; }
-    const OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const { return myOrderBookStatisticsCollector.getLastSample()->topLevelsSnapshot; }
-    bool isPriceWithinTopOfBook(const Market::Side side, const double price) const;
+    const OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const;
+    bool isPriceWithinTopOfBook(const Market::Side side, const double price, const std::optional<Market::OrderType>& type = std::nullopt) const;
 
     void setMatchingEngine(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
@@ -121,6 +121,7 @@ public:
     virtual void init();
     virtual void startMonitoring();
     virtual void stopMonitoring();
+    virtual void updateStatistics();
 
     // communicates with matching engine to keep order book stats in sync
     virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
@@ -134,6 +135,7 @@ public:
 private:
     std::shared_ptr<Exchange::MatchingEngineBase> myMatchingEngine;
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
+    std::shared_ptr<const Market::TradeBase> myLastTrade; // caches the last trade to uniquely count executions sent from both sides of the trade
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
     size_t myOrderBookNumLevels = 10; // used to detect top-of-book ticks
