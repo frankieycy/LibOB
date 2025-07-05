@@ -27,9 +27,11 @@ public:
         std::vector<Exchange::AscOrderBookSize::const_iterator> askBookTopLevelIterators;
 
         OrderBookTopLevelsSnapshot(const size_t numLevels = 0, const bool isFullBook = false) : numLevels(numLevels), isFullBook(isFullBook) {}
+        // numLevels and isFullBook (configs) are first set before fetching data from matching engine
         void constructFrom(const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine);
         void clear();
         std::string getAsJson() const;
+        std::string getAsCsv() const;
     };
 
     /* Order book statistics aggregated over all timestamps so far */
@@ -45,6 +47,7 @@ public:
         uint32_t aggTradeVolume = 0;
         double aggTradeNotional = 0.0;
         std::string getAsJson() const;
+        std::string getAsCsv() const;
     };
 
     /* Order book statistics between the from-time exclusive to the to-time inclusive derived from OrderBookTopLevelsSnapshot */
@@ -79,6 +82,7 @@ public:
             const OrderBookAggregateStatistics& orderBookAggregateStatisticsCache);
         void clear();
         std::string getAsJson() const;
+        std::string getAsCsv() const;
     };
 
     /* Processing latency measured over an order event */
@@ -89,6 +93,7 @@ public:
         unsigned long long latency = 0; // chronos::microseconds::rep
         std::shared_ptr<const Market::OrderEventBase> event = nullptr;
         std::string getAsJson() const;
+        std::string getAsCsv() const;
     };
 
     MatchingEngineMonitor(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine);
@@ -98,6 +103,7 @@ public:
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
     bool isDebugMode() const { return myDebugMode; }
     bool isMonitoringEnabled() const { return myMonitoringEnabled; }
+    bool isFetchFullOrderBook() const { return myFetchFullOrderBook; }
     size_t getOrderBookNumLevels() const { return myOrderBookNumLevels; }
     size_t getTimeSeriesCollectorMaxSize() const { return myTimeSeriesCollectorMaxSize; }
     OrderBookStatisticsTimestampStrategy getOrderBookStatisticsTimestampStrategy() const { return myOrderBookStatisticsTimestampStrategy; }
@@ -110,6 +116,7 @@ public:
     void setMatchingEngine(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
+    void setFetchFullOrderBook(const bool fetchFullOrderBook) { myFetchFullOrderBook = fetchFullOrderBook; }
     void setOrderBookNumLevels(const size_t numLevels) { myOrderBookNumLevels = numLevels; }
     void setTimeSeriesCollectorMaxSize(const size_t maxSize) {
         myTimeSeriesCollectorMaxSize = maxSize;
@@ -138,6 +145,7 @@ private:
     std::shared_ptr<const Market::TradeBase> myLastTrade; // caches the last trade to uniquely count executions sent from both sides of the trade
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
+    bool myFetchFullOrderBook = false;
     size_t myOrderBookNumLevels = 10; // used to detect top-of-book ticks
     size_t myTimeSeriesCollectorMaxSize = 1000000;
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;

@@ -46,7 +46,15 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const
     return ""; // TODO
 }
 
+std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsCsv() const {
+    return ""; // TODO
+}
+
 std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsJson() const {
+    return ""; // TODO
+}
+
+std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsCsv() const {
     return ""; // TODO
 }
 
@@ -109,7 +117,15 @@ std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsJson() c
     return ""; // TODO
 }
 
+std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsCsv() const {
+    return ""; // TODO
+}
+
 std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsJson() const {
+    return ""; // TODO
+}
+
+std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsCsv() const {
     return ""; // TODO
 }
 
@@ -124,9 +140,9 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::Mat
 }
 
 const MatchingEngineMonitor::OrderBookTopLevelsSnapshot& MatchingEngineMonitor::getLastOrderBookTopLevelsSnapshot() const {
-    if (!myOrderBookStatisticsCollector.size())
-        Error::LIB_THROW("[MatchingEngineMonitor::getLastOrderBookTopLevelsSnapshot] No order book top levels snapshot available.");
-    return myOrderBookStatisticsCollector.getLastSample()->topLevelsSnapshot;
+    static const MatchingEngineMonitor::OrderBookTopLevelsSnapshot emptySnapshot;
+    const auto& lastStats = myOrderBookStatisticsCollector.getLastSample();
+    return lastStats ? lastStats->topLevelsSnapshot : emptySnapshot;
 }
 
 bool MatchingEngineMonitor::isPriceWithinTopOfBook(const Market::Side side, const double price, const std::optional<Market::OrderType>& type) const {
@@ -134,8 +150,6 @@ bool MatchingEngineMonitor::isPriceWithinTopOfBook(const Market::Side side, cons
         if (*type == Market::OrderType::MARKET)
             return true;
     }
-    if (!myOrderBookStatisticsCollector.size())
-        return true;
     const auto& topLevels = getLastOrderBookTopLevelsSnapshot();
     if (topLevels.isFullBook)
         return true;
@@ -163,7 +177,8 @@ void MatchingEngineMonitor::stopMonitoring() {
 }
 
 void MatchingEngineMonitor::updateStatistics() {
-    auto orderBookStats = std::make_shared<const OrderBookStatisticsByTimestamp>(); // TODO
+    auto orderBookStats = std::make_shared<OrderBookStatisticsByTimestamp>(myOrderBookNumLevels, myFetchFullOrderBook);
+    orderBookStats->constructFrom(myMatchingEngine, myOrderBookAggregateStatistics, myOrderBookAggregateStatisticsCache);
     myOrderBookStatisticsCollector.addSample(orderBookStats);
     myOrderBookAggregateStatisticsCache = myOrderBookAggregateStatistics;
 }
