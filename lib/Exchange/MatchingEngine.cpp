@@ -258,7 +258,8 @@ double MatchingEngineBase::getOrderImbalance() const {
 }
 
 double MatchingEngineBase::getLastTradePrice() const {
-    return getLastTrade()->getPrice();
+    const auto& lastTrade = getLastTrade();
+    return lastTrade ? lastTrade->getPrice() : Consts::NAN_DOUBLE;
 }
 
 uint32_t MatchingEngineBase::getBestBidSize() const {
@@ -284,7 +285,8 @@ uint32_t MatchingEngineBase::getAskSize(const PriceLevel& priceLevel) const {
 }
 
 uint32_t MatchingEngineBase::getLastTradeSize() const {
-    return getLastTrade()->getQuantity();
+    const auto& lastTrade = getLastTrade();
+    return lastTrade ? lastTrade->getQuantity() : 0;
 }
 
 size_t MatchingEngineBase::getNumberOfBidPriceLevels() const {
