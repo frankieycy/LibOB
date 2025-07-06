@@ -459,10 +459,10 @@ void testMatchingEngineGetAsJson() {
 }
 
 void testMatchingEngineMonitor() {
-    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>(true);
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
     Analytics::MatchingEngineMonitor m{e};
-    em.setDebugMode(false);
+    m.setDebugMode(true);
     // initial book state
     for (int i = 0; i < 20; ++i) {
         em.submitLimitOrderEvent(Market::Side::BUY, std::min(5 + i, 10), 99.0 - i);
