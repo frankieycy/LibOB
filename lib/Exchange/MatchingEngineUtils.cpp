@@ -22,6 +22,7 @@ std::string to_string(const OrderProcessingType& orderProcessingType) {
     switch (orderProcessingType) {
         case OrderProcessingType::EXECUTE:           return "Execution";
         case OrderProcessingType::SUBMIT:            return "Submission";
+        case OrderProcessingType::PLACEMENT:         return "Placement";
         case OrderProcessingType::CANCEL:            return "Cancel";
         case OrderProcessingType::CANCEL_REPLACE:    return "CancelReplace";
         case OrderProcessingType::MODIFY_PRICE:      return "ModifyPrice";
@@ -224,6 +225,28 @@ std::string LimitOrderSubmitReport::getAsJson() const {
         "\"OrderId\":"               << orderId              << ","
         "\"OrderSide\":\""           << orderSide            << "\","
         "\"Order\":"                 << *order               << ","
+        "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
+        "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
+        "\"Latency\":"               << latency.value_or(0)  << ","
+        "\"Message\":\""             << message.value_or("") << "\"";
+    oss << "}";
+    return oss.str();
+}
+
+void LimitOrderPlacementReport::dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const {
+    matchingEngineMonitor.onOrderProcessingReport(*this);
+}
+
+std::string LimitOrderPlacementReport::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+        "\"ReportId\":"              << reportId             << ","
+        "\"Timestamp\":"             << timestamp            << ","
+        "\"OrderId\":"               << orderId              << ","
+        "\"OrderSide\":\""           << orderSide            << "\","
+        "\"OrderQuantity\":"         << orderQuantity        << ","
+        "\"OrderPrice\":"            << orderPrice           << ","
         "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
         "\"Status\":\""              << status               << "\","
         "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","

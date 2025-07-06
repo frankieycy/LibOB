@@ -890,6 +890,7 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
         *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineFIFO] Add to limit order book: " << *order;
     if (!order->isAlive())
         return;
+    const uint64_t id = order->getId();
     const Market::Side side = order->getSide();
     const PriceLevel price = order->getPrice();
     uint32_t unfilledQuantity = order->getQuantity();
@@ -900,7 +901,7 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
     MarketQueue& marketQueue = accessMarketQueue();
     LimitQueue dummyQueue; // avoids the creation of a new queue if the entire order is filled
     uint32_t dummySize = 0;
-    logOrderProcessingReport(std::make_shared<LimitOrderSubmitReport>(generateReportId(), clockTick(), order->getId(), side, order->copy(), OrderProcessingStatus::SUCCESS));
+    logOrderProcessingReport(std::make_shared<LimitOrderSubmitReport>(generateReportId(), clockTick(), id, side, order->copy(), OrderProcessingStatus::SUCCESS));
     executeAgainstQueuedMarketOrders(order, unfilledQuantity, marketQueue);
     if (side == Market::Side::BUY) {
         while (unfilledQuantity && !askBook.empty() && price >= askBook.begin()->first) {
@@ -927,6 +928,8 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
         else
             placeLimitOrderToLimitOrderBook(order, 0, dummySize, dummyQueue);
     }
+    if (unfilledQuantity)
+        logOrderProcessingReport(std::make_shared<LimitOrderPlacementReport>(generateReportId(), clockTick(), id, side, unfilledQuantity, price, OrderProcessingStatus::SUCCESS));
 }
 
 void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) {

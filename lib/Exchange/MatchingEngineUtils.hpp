@@ -15,7 +15,7 @@ class MatchingEngineMonitor;
 
 namespace Exchange {
 enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NULL_ORDER_MATCHING_STRATEGY };
-enum class OrderProcessingType   { EXECUTE, SUBMIT, CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
+enum class OrderProcessingType   { EXECUTE, SUBMIT, PLACEMENT, CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
 enum class OrderProcessingStatus { SUCCESS, FAILURE, NULL_ORDER_PROCESSING_STATUS };
 enum class OrderExecutionType    { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
 
@@ -156,6 +156,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     std::shared_ptr<const Market::TradeBase> trade = nullptr;
 };
 
+// Order submit report disseminated when the matching engine receives the order without further execution
 struct LimitOrderSubmitReport : public OrderProcessingReport {
     LimitOrderSubmitReport() = delete;
     LimitOrderSubmitReport(
@@ -176,6 +177,31 @@ struct LimitOrderSubmitReport : public OrderProcessingReport {
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::LimitOrder> order = nullptr;
+};
+
+// Order placement report disseminated when the matching engine places the order into the book post submission and execution
+struct LimitOrderPlacementReport : public OrderProcessingReport {
+    LimitOrderPlacementReport() = delete;
+    LimitOrderPlacementReport(
+        const uint64_t reportId,
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const uint32_t orderQuantity,
+        const double orderPrice,
+        const OrderProcessingStatus status,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::PLACEMENT, status, latency, message),
+        orderQuantity(orderQuantity), orderPrice(orderPrice) {}
+    virtual ~LimitOrderPlacementReport() = default;
+    virtual void dispatchTo(Market::OrderEventManagerBase& /* orderEventManager */) const override {}
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override { return nullptr; }
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override { return nullptr; }
+    virtual std::string getAsJson() const override;
+    uint32_t orderQuantity;
+    double orderPrice;
 };
 
 struct MarketOrderSubmitReport : public OrderProcessingReport {
