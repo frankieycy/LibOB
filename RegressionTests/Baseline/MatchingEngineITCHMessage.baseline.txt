@@ -1,22 +1,31 @@
 [LOG] INFO [OrderEventManagerBase::setLoggerLogFile] Logger log file set to: RegressionTests/Baseline/MatchingEngineITCHMessage.baseline.txt
 [LOG] INFO ITCH messages:
 [LOG] INFO A|0|2|0|0000000|0|B|15|99.00
-[LOG] INFO A|1|6|0|0000000|1|B|5|99.00
-[LOG] INFO A|2|10|0|0000000|2|B|10|98.00
-[LOG] INFO A|3|14|0|0000000|3|B|5|98.00
-[LOG] INFO A|4|18|0|0000000|4|B|10|97.00
-[LOG] INFO A|5|22|0|0000000|5|S|10|101.00
-[LOG] INFO A|6|26|0|0000000|6|S|10|101.00
-[LOG] INFO A|7|30|0|0000000|7|S|15|102.00
-[LOG] INFO A|8|34|0|0000000|8|S|10|103.00
-[LOG] INFO U|9|39|0|0|9|10|99.00
-[LOG] INFO U|10|43|0|1|10|5|100.00
-[LOG] INFO U|11|47|0|2|11|5|97.00
-[LOG] INFO U|12|51|0|7|12|15|103.00
-[LOG] INFO D|13|55|0|8
-[LOG] INFO D|14|59|0|12
-[LOG] INFO D|15|63|0|4
-[LOG] INFO D|16|67|0|11
+[LOG] INFO Null ITCH message
+[LOG] INFO A|2|7|0|0000000|1|B|5|99.00
+[LOG] INFO Null ITCH message
+[LOG] INFO A|4|12|0|0000000|2|B|10|98.00
+[LOG] INFO Null ITCH message
+[LOG] INFO A|6|17|0|0000000|3|B|5|98.00
+[LOG] INFO Null ITCH message
+[LOG] INFO A|8|22|0|0000000|4|B|10|97.00
+[LOG] INFO Null ITCH message
+[LOG] INFO A|10|27|0|0000000|5|S|10|101.00
+[LOG] INFO Null ITCH message
+[LOG] INFO A|12|32|0|0000000|6|S|10|101.00
+[LOG] INFO Null ITCH message
+[LOG] INFO A|14|37|0|0000000|7|S|15|102.00
+[LOG] INFO Null ITCH message
+[LOG] INFO A|16|42|0|0000000|8|S|10|103.00
+[LOG] INFO Null ITCH message
+[LOG] INFO U|18|48|0|0|9|10|99.00
+[LOG] INFO U|19|52|0|1|10|5|100.00
+[LOG] INFO U|20|56|0|2|11|5|97.00
+[LOG] INFO U|21|60|0|7|12|15|103.00
+[LOG] INFO D|22|64|0|8
+[LOG] INFO D|23|68|0|12
+[LOG] INFO D|24|72|0|4
+[LOG] INFO D|25|76|0|11
 [LOG] INFO Order book state:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -36,29 +45,29 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      11  |         66  |     Buy  |      97.00  |       0  | Cancelled  
-       4  |         62  |     Buy  |      97.00  |       0  | Cancelled  
-      12  |         58  |    Sell  |     103.00  |       0  | Cancelled  
-       8  |         54  |    Sell  |     103.00  |       0  | Cancelled  
+      11  |         75  |     Buy  |      97.00  |       0  | Cancelled  
+       4  |         71  |     Buy  |      97.00  |       0  | Cancelled  
+      12  |         67  |    Sell  |     103.00  |       0  | Cancelled  
+       8  |         63  |    Sell  |     103.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-      10  |         42  |     Buy  |     100.00  |       5  |   Active  
-       9  |         38  |     Buy  |      99.00  |      10  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
+      10  |         51  |     Buy  |     100.00  |       5  |   Active  
+       9  |         47  |     Buy  |      99.00  |      10  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] INFO Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-      10  |         44  |     Limit  |     Buy  |   100.00  |       5  |   Active  
-       9  |         40  |     Limit  |     Buy  |    99.00  |      10  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+      10  |         53  |     Limit  |     Buy  |   100.00  |       5  |   Active  
+       9  |         49  |     Limit  |     Buy  |    99.00  |      10  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 

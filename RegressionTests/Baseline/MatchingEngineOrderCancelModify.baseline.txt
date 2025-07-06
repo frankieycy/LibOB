@@ -38,15 +38,15 @@
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":1,"OrderId":1,"Timestamp":5,"EventType":"Submit","Order":{"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":1,"Timestamp":6,"OrderId":1,"OrderSide":"Buy","Order":{"Id":1,"Timestamp":5,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":1,"Timestamp":8,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":1,"OrderId":1,"Timestamp":6,"EventType":"Submit","Order":{"Id":1,"Timestamp":6,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":1,"Timestamp":6,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":2,"Timestamp":7,"OrderId":1,"OrderSide":"Buy","Order":{"Id":1,"Timestamp":6,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":1,"Timestamp":9,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
@@ -75,20 +75,20 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":2,"OrderId":2,"Timestamp":9,"EventType":"Submit","Order":{"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":2,"Timestamp":10,"OrderId":2,"OrderSide":"Buy","Order":{"Id":2,"Timestamp":9,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":2,"Timestamp":12,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":2,"OrderId":2,"Timestamp":11,"EventType":"Submit","Order":{"Id":2,"Timestamp":11,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":2,"Timestamp":11,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":4,"Timestamp":12,"OrderId":2,"OrderSide":"Buy","Order":{"Id":2,"Timestamp":11,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":2,"Timestamp":14,"Side":"Buy","Quantity":10,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -96,8 +96,8 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
-     2 ||     98.00 |       10 | (2,12|10) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
+     2 ||     98.00 |       10 | (2,14|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
@@ -118,22 +118,22 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":3,"OrderId":3,"Timestamp":13,"EventType":"Submit","Order":{"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":3,"Timestamp":14,"OrderId":3,"OrderSide":"Buy","Order":{"Id":3,"Timestamp":13,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":3,"Timestamp":16,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":3,"OrderId":3,"Timestamp":16,"EventType":"Submit","Order":{"Id":3,"Timestamp":16,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":3,"Timestamp":16,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":6,"Timestamp":17,"OrderId":3,"OrderSide":"Buy","Order":{"Id":3,"Timestamp":16,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":3,"Timestamp":19,"Side":"Buy","Quantity":5,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -141,8 +141,8 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
-     2 ||     98.00 |       15 | (2,12|10) (3,16|5) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
+     2 ||     98.00 |       15 | (2,14|10) (3,19|5) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
@@ -163,24 +163,24 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":4,"OrderId":4,"Timestamp":17,"EventType":"Submit","Order":{"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":4,"Timestamp":18,"OrderId":4,"OrderSide":"Buy","Order":{"Id":4,"Timestamp":17,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":4,"Timestamp":20,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":4,"OrderId":4,"Timestamp":21,"EventType":"Submit","Order":{"Id":4,"Timestamp":21,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":4,"Timestamp":21,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":8,"Timestamp":22,"OrderId":4,"OrderSide":"Buy","Order":{"Id":4,"Timestamp":21,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":4,"Timestamp":24,"Side":"Buy","Quantity":10,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -188,9 +188,9 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
-     2 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     3 ||     97.00 |       10 | (4,20|10) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
+     2 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     3 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
@@ -211,26 +211,26 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":5,"OrderId":5,"Timestamp":21,"EventType":"Submit","Order":{"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":5,"Timestamp":22,"OrderId":5,"OrderSide":"Sell","Order":{"Id":5,"Timestamp":21,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":5,"Timestamp":24,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":5,"OrderId":5,"Timestamp":26,"EventType":"Submit","Order":{"Id":5,"Timestamp":26,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":5,"Timestamp":26,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":10,"Timestamp":27,"OrderId":5,"OrderSide":"Sell","Order":{"Id":5,"Timestamp":26,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":5,"Timestamp":29,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -238,14 +238,14 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
-     2 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     3 ||     97.00 |       10 | (4,20|10) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
+     2 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     3 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       10 | (5,24|10) 
+     1 ||    101.00 |       10 | (5,29|10) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -262,28 +262,28 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":6,"OrderId":6,"Timestamp":25,"EventType":"Submit","Order":{"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":6,"Timestamp":26,"OrderId":6,"OrderSide":"Sell","Order":{"Id":6,"Timestamp":25,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":6,"Timestamp":28,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":6,"OrderId":6,"Timestamp":31,"EventType":"Submit","Order":{"Id":6,"Timestamp":31,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":6,"Timestamp":31,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":12,"Timestamp":32,"OrderId":6,"OrderSide":"Sell","Order":{"Id":6,"Timestamp":31,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":6,"Timestamp":34,"Side":"Sell","Quantity":10,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -291,14 +291,14 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
-     2 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     3 ||     97.00 |       10 | (4,20|10) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
+     2 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     3 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -315,30 +315,30 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":7,"OrderId":7,"Timestamp":29,"EventType":"Submit","Order":{"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":7,"Timestamp":30,"OrderId":7,"OrderSide":"Sell","Order":{"Id":7,"Timestamp":29,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":7,"Timestamp":32,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":7,"OrderId":7,"Timestamp":36,"EventType":"Submit","Order":{"Id":7,"Timestamp":36,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":7,"Timestamp":36,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":14,"Timestamp":37,"OrderId":7,"OrderSide":"Sell","Order":{"Id":7,"Timestamp":36,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":7,"Timestamp":39,"Side":"Sell","Quantity":15,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -346,15 +346,15 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
-     2 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     3 ||     97.00 |       10 | (4,20|10) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
+     2 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     3 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
-     2 ||    102.00 |       15 | (7,32|15) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
+     2 ||    102.00 |       15 | (7,39|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -371,32 +371,32 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":8,"OrderId":8,"Timestamp":33,"EventType":"Submit","Order":{"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":8,"Timestamp":34,"OrderId":8,"OrderSide":"Sell","Order":{"Id":8,"Timestamp":33,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":8,"Timestamp":36,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":8,"OrderId":8,"Timestamp":41,"EventType":"Submit","Order":{"Id":8,"Timestamp":41,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":8,"Timestamp":41,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":16,"Timestamp":42,"OrderId":8,"OrderSide":"Sell","Order":{"Id":8,"Timestamp":41,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":8,"Timestamp":44,"Side":"Sell","Quantity":10,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       8  |         35  |     Limit  |    Sell  |   103.00  |      10  |   Active  
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       8  |         43  |     Limit  |    Sell  |   103.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
        0  |          3  |     Limit  |     Buy  |    99.00  |      15  |   Active  
 -----------------------------------------------------------------------------------
 
@@ -404,16 +404,16 @@
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |       20 | (0,4|15) (1,8|5) 
-     2 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     3 ||     97.00 |       10 | (4,20|10) 
+     1 ||     99.00 |       20 | (0,4|15) (1,9|5) 
+     2 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     3 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
-     2 ||    102.00 |       15 | (7,32|15) 
-     3 ||    103.00 |       10 | (8,36|10) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
+     2 ||    102.00 |       15 | (7,39|15) 
+     3 ||    103.00 |       10 | (8,44|10) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -430,47 +430,47 @@
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         36  |    Sell  |     103.00  |      10  |   Active  
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       8  |         44  |    Sell  |     103.00  |      10  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
        0  |          4  |     Buy  |      99.00  |      15  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":9,"OrderId":0,"Timestamp":37,"EventType":"Cancel"}
-[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":9,"Timestamp":39,"OrderId":0,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":9,"OrderId":0,"Timestamp":46,"EventType":"Cancel"}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":18,"Timestamp":48,"OrderId":0,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       8  |         35  |     Limit  |    Sell  |   103.00  |      10  |   Active  
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
-       1  |          7  |     Limit  |     Buy  |    99.00  |       5  |   Active  
+       8  |         43  |     Limit  |    Sell  |   103.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       1  |          8  |     Limit  |     Buy  |    99.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     99.00 |        5 | (1,8|5) 
-     2 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     3 ||     97.00 |       10 | (4,20|10) 
+     1 ||     99.00 |        5 | (1,9|5) 
+     2 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     3 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
-     2 ||    102.00 |       15 | (7,32|15) 
-     3 ||    103.00 |       10 | (8,36|10) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
+     2 ||    102.00 |       15 | (7,39|15) 
+     3 ||    103.00 |       10 | (8,44|10) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -483,49 +483,49 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         36  |    Sell  |     103.00  |      10  |   Active  
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
-       1  |          8  |     Buy  |      99.00  |       5  |   Active  
+       8  |         44  |    Sell  |     103.00  |      10  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
+       1  |          9  |     Buy  |      99.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":10,"OrderId":1,"Timestamp":41,"EventType":"Cancel"}
-[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":10,"Timestamp":43,"OrderId":1,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":10,"OrderId":1,"Timestamp":50,"EventType":"Cancel"}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":19,"Timestamp":52,"OrderId":1,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       8  |         35  |     Limit  |    Sell  |   103.00  |      10  |   Active  
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       8  |         43  |     Limit  |    Sell  |   103.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     2 ||     97.00 |       10 | (4,20|10) 
+     1 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     2 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
-     2 ||    102.00 |       15 | (7,32|15) 
-     3 ||    103.00 |       10 | (8,36|10) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
+     2 ||    102.00 |       15 | (7,39|15) 
+     3 ||    103.00 |       10 | (8,44|10) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -538,47 +538,47 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         36  |    Sell  |     103.00  |      10  |   Active  
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       8  |         44  |    Sell  |     103.00  |      10  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":11,"OrderId":8,"Timestamp":45,"EventType":"Cancel"}
-[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":11,"Timestamp":47,"OrderId":8,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":11,"OrderId":8,"Timestamp":54,"EventType":"Cancel"}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":20,"Timestamp":56,"OrderId":8,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         11  |     Limit  |     Buy  |    98.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         13  |     Limit  |     Buy  |    98.00  |      10  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||     98.00 |       15 | (2,12|10) (3,16|5) 
-     2 ||     97.00 |       10 | (4,20|10) 
+     1 ||     98.00 |       15 | (2,14|10) (3,19|5) 
+     2 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
-     2 ||    102.00 |       15 | (7,32|15) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
+     2 ||    102.00 |       15 | (7,39|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -591,51 +591,51 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         12  |     Buy  |      98.00  |      10  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         14  |     Buy  |      98.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] WARNING [OrderEventManagerBase::fetchOrder] Order not found - orderId = 9.
 [LOG] WARNING [OrderEventManagerBase::createOrderCancelEvent] Order not found - orderId = 9.
 [LOG] WARNING [OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":12,"OrderId":2,"Timestamp":49,"EventType":"ModifyPrice","ModifiedPrice":100}
-[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":12,"Timestamp":51,"OrderId":2,"OrderSide":"Buy","OrderQuantity":10,"ModifiedPrice":100,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":12,"OrderId":2,"Timestamp":58,"EventType":"ModifyPrice","ModifiedPrice":100}
+[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":21,"Timestamp":60,"OrderId":2,"OrderSide":"Buy","OrderQuantity":10,"ModifiedPrice":100,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         19  |     Limit  |     Buy  |    97.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         52  |     Limit  |     Buy  |   100.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         23  |     Limit  |     Buy  |    97.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         61  |     Limit  |     Buy  |   100.00  |      10  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |       10 | (2,50|10) 
-     2 ||     98.00 |        5 | (3,16|5) 
-     3 ||     97.00 |       10 | (4,20|10) 
+     1 ||    100.00 |       10 | (2,59|10) 
+     2 ||     98.00 |        5 | (3,19|5) 
+     3 ||     97.00 |       10 | (4,24|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
-     2 ||    102.00 |       15 | (7,32|15) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
+     2 ||    102.00 |       15 | (7,39|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -648,48 +648,48 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         20  |     Buy  |      97.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         50  |     Buy  |     100.00  |      10  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         24  |     Buy  |      97.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         59  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":13,"OrderId":4,"Timestamp":53,"EventType":"ModifyPrice","ModifiedPrice":95}
-[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":13,"Timestamp":55,"OrderId":4,"OrderSide":"Buy","OrderQuantity":10,"ModifiedPrice":95,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":13,"OrderId":4,"Timestamp":62,"EventType":"ModifyPrice","ModifiedPrice":95}
+[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":22,"Timestamp":64,"OrderId":4,"OrderSide":"Buy","OrderQuantity":10,"ModifiedPrice":95,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         23  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       4  |         56  |     Limit  |     Buy  |    95.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         52  |     Limit  |     Buy  |   100.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         28  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       4  |         65  |     Limit  |     Buy  |    95.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         61  |     Limit  |     Buy  |   100.00  |      10  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |       10 | (2,50|10) 
-     2 ||     98.00 |        5 | (3,16|5) 
-     3 ||     95.00 |       10 | (4,54|10) 
+     1 ||    100.00 |       10 | (2,59|10) 
+     2 ||     98.00 |        5 | (3,19|5) 
+     3 ||     95.00 |       10 | (4,63|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       20 | (5,24|10) (6,28|10) 
-     2 ||    102.00 |       15 | (7,32|15) 
+     1 ||    101.00 |       20 | (5,29|10) (6,34|10) 
+     2 ||    102.00 |       15 | (7,39|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -702,48 +702,48 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         24  |    Sell  |     101.00  |      10  |   Active  
-       4  |         54  |     Buy  |      95.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         50  |     Buy  |     100.00  |      10  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         29  |    Sell  |     101.00  |      10  |   Active  
+       4  |         63  |     Buy  |      95.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         59  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":14,"OrderId":5,"Timestamp":57,"EventType":"ModifyPrice","ModifiedPrice":102}
-[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":14,"Timestamp":59,"OrderId":5,"OrderSide":"Sell","OrderQuantity":10,"ModifiedPrice":102,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":14,"OrderId":5,"Timestamp":66,"EventType":"ModifyPrice","ModifiedPrice":102}
+[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":23,"Timestamp":68,"OrderId":5,"OrderSide":"Sell","OrderQuantity":10,"ModifiedPrice":102,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       4  |         56  |     Limit  |     Buy  |    95.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         52  |     Limit  |     Buy  |   100.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       4  |         65  |     Limit  |     Buy  |    95.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         61  |     Limit  |     Buy  |   100.00  |      10  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |       10 | (2,50|10) 
-     2 ||     98.00 |        5 | (3,16|5) 
-     3 ||     95.00 |       10 | (4,54|10) 
+     1 ||    100.00 |       10 | (2,59|10) 
+     2 ||     98.00 |        5 | (3,19|5) 
+     3 ||     95.00 |       10 | (4,63|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       10 | (6,28|10) 
-     2 ||    102.00 |       25 | (7,32|15) (5,58|10) 
+     1 ||    101.00 |       10 | (6,34|10) 
+     2 ||    102.00 |       25 | (7,39|15) (5,67|10) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -756,47 +756,47 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         32  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       4  |         54  |     Buy  |      95.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         50  |     Buy  |     100.00  |      10  |   Active  
+       7  |         39  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       4  |         63  |     Buy  |      95.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         59  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":15,"OrderId":7,"Timestamp":61,"EventType":"ModifyPrice","ModifiedPrice":102}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":15,"OrderId":7,"Timestamp":70,"EventType":"ModifyPrice","ModifiedPrice":102}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         31  |     Limit  |    Sell  |   102.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       4  |         56  |     Limit  |     Buy  |    95.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         52  |     Limit  |     Buy  |   100.00  |      10  |   Active  
+       7  |         38  |     Limit  |    Sell  |   102.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       4  |         65  |     Limit  |     Buy  |    95.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         61  |     Limit  |     Buy  |   100.00  |      10  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |       10 | (2,50|10) 
-     2 ||     98.00 |        5 | (3,16|5) 
-     3 ||     95.00 |       10 | (4,54|10) 
+     1 ||    100.00 |       10 | (2,59|10) 
+     2 ||     98.00 |        5 | (3,19|5) 
+     3 ||     95.00 |       10 | (4,63|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       10 | (6,28|10) 
-     2 ||    102.00 |       25 | (5,58|10) (7,62|15) 
+     1 ||    101.00 |       10 | (6,34|10) 
+     2 ||    102.00 |       25 | (5,67|10) (7,71|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -809,49 +809,49 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         62  |    Sell  |     102.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       4  |         54  |     Buy  |      95.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         50  |     Buy  |     100.00  |      10  |   Active  
+       7  |         71  |    Sell  |     102.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       4  |         63  |     Buy  |      95.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         59  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":16,"OrderId":7,"Timestamp":63,"EventType":"ModifyPrice","ModifiedPrice":103}
-[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":15,"Timestamp":65,"OrderId":7,"OrderSide":"Sell","OrderQuantity":15,"ModifiedPrice":103,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":16,"OrderId":7,"Timestamp":72,"EventType":"ModifyPrice","ModifiedPrice":103}
+[LOG] DEBUG [OrderEventManagerBase] Order modify price report received: {"ReportId":24,"Timestamp":74,"OrderId":7,"OrderSide":"Sell","OrderQuantity":15,"ModifiedPrice":103,"OrderProcessingType":"ModifyPrice","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         66  |     Limit  |    Sell  |   103.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       4  |         56  |     Limit  |     Buy  |    95.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         52  |     Limit  |     Buy  |   100.00  |      10  |   Active  
+       7  |         75  |     Limit  |    Sell  |   103.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       4  |         65  |     Limit  |     Buy  |    95.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         61  |     Limit  |     Buy  |   100.00  |      10  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |       10 | (2,50|10) 
-     2 ||     98.00 |        5 | (3,16|5) 
-     3 ||     95.00 |       10 | (4,54|10) 
+     1 ||    100.00 |       10 | (2,59|10) 
+     2 ||     98.00 |        5 | (3,19|5) 
+     3 ||     95.00 |       10 | (4,63|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       10 | (6,28|10) 
-     2 ||    102.00 |       10 | (5,58|10) 
-     3 ||    103.00 |       15 | (7,64|15) 
+     1 ||    101.00 |       10 | (6,34|10) 
+     2 ||    102.00 |       10 | (5,67|10) 
+     3 ||    103.00 |       15 | (7,73|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -864,52 +864,52 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |    Sell  |     103.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       4  |         54  |     Buy  |      95.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         50  |     Buy  |     100.00  |      10  |   Active  
+       7  |         73  |    Sell  |     103.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       4  |         63  |     Buy  |      95.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         59  |     Buy  |     100.00  |      10  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] WARNING [OrderEventManagerBase::fetchOrder] Order not found - orderId = 9.
 [LOG] WARNING [OrderEventManagerBase::createOrderModifyPriceEvent] Order not found - orderId = 9.
 [LOG] WARNING [OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":17,"OrderId":2,"Timestamp":67,"EventType":"ModifyQuantity","ModifiedQuantity":5}
-[LOG] DEBUG [OrderEventManagerBase] Order modify quantity report received: {"ReportId":16,"Timestamp":69,"OrderId":2,"OrderSide":"Buy","OrderPrice":100,"ModifiedQuantity":5,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":17,"OrderId":2,"Timestamp":76,"EventType":"ModifyQuantity","ModifiedQuantity":5}
+[LOG] DEBUG [OrderEventManagerBase] Order modify quantity report received: {"ReportId":25,"Timestamp":78,"OrderId":2,"OrderSide":"Buy","OrderPrice":100,"ModifiedQuantity":5,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         66  |     Limit  |    Sell  |   103.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       4  |         56  |     Limit  |     Buy  |    95.00  |      10  |   Active  
-       3  |         15  |     Limit  |     Buy  |    98.00  |       5  |   Active  
-       2  |         70  |     Limit  |     Buy  |   100.00  |       5  |   Active  
+       7  |         75  |     Limit  |    Sell  |   103.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       4  |         65  |     Limit  |     Buy  |    95.00  |      10  |   Active  
+       3  |         18  |     Limit  |     Buy  |    98.00  |       5  |   Active  
+       2  |         79  |     Limit  |     Buy  |   100.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |        5 | (2,68|5) 
-     2 ||     98.00 |        5 | (3,16|5) 
-     3 ||     95.00 |       10 | (4,54|10) 
+     1 ||    100.00 |        5 | (2,77|5) 
+     2 ||     98.00 |        5 | (3,19|5) 
+     3 ||     95.00 |       10 | (4,63|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       10 | (6,28|10) 
-     2 ||    102.00 |       10 | (5,58|10) 
-     3 ||    103.00 |       15 | (7,64|15) 
+     1 ||    101.00 |       10 | (6,34|10) 
+     2 ||    102.00 |       10 | (5,67|10) 
+     3 ||    103.00 |       15 | (7,73|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -922,49 +922,49 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |    Sell  |     103.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       4  |         54  |     Buy  |      95.00  |      10  |   Active  
-       3  |         16  |     Buy  |      98.00  |       5  |   Active  
-       2  |         68  |     Buy  |     100.00  |       5  |   Active  
+       7  |         73  |    Sell  |     103.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       4  |         63  |     Buy  |      95.00  |      10  |   Active  
+       3  |         19  |     Buy  |      98.00  |       5  |   Active  
+       2  |         77  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":18,"OrderId":3,"Timestamp":71,"EventType":"ModifyQuantity","ModifiedQuantity":20}
-[LOG] DEBUG [OrderEventManagerBase] Order modify quantity report received: {"ReportId":17,"Timestamp":73,"OrderId":3,"OrderSide":"Buy","OrderPrice":98,"ModifiedQuantity":20,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":18,"OrderId":3,"Timestamp":80,"EventType":"ModifyQuantity","ModifiedQuantity":20}
+[LOG] DEBUG [OrderEventManagerBase] Order modify quantity report received: {"ReportId":26,"Timestamp":82,"OrderId":3,"OrderSide":"Buy","OrderPrice":98,"ModifiedQuantity":20,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         66  |     Limit  |    Sell  |   103.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       4  |         56  |     Limit  |     Buy  |    95.00  |      10  |   Active  
-       3  |         74  |     Limit  |     Buy  |    98.00  |      20  |   Active  
-       2  |         70  |     Limit  |     Buy  |   100.00  |       5  |   Active  
+       7  |         75  |     Limit  |    Sell  |   103.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       4  |         65  |     Limit  |     Buy  |    95.00  |      10  |   Active  
+       3  |         83  |     Limit  |     Buy  |    98.00  |      20  |   Active  
+       2  |         79  |     Limit  |     Buy  |   100.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |        5 | (2,68|5) 
-     2 ||     98.00 |       20 | (3,72|20) 
-     3 ||     95.00 |       10 | (4,54|10) 
+     1 ||    100.00 |        5 | (2,77|5) 
+     2 ||     98.00 |       20 | (3,81|20) 
+     3 ||     95.00 |       10 | (4,63|10) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       10 | (6,28|10) 
-     2 ||    102.00 |       10 | (5,58|10) 
-     3 ||    103.00 |       15 | (7,64|15) 
+     1 ||    101.00 |       10 | (6,34|10) 
+     2 ||    102.00 |       10 | (5,67|10) 
+     3 ||    103.00 |       15 | (7,73|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -977,47 +977,47 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |    Sell  |     103.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       4  |         54  |     Buy  |      95.00  |      10  |   Active  
-       3  |         72  |     Buy  |      98.00  |      20  |   Active  
-       2  |         68  |     Buy  |     100.00  |       5  |   Active  
+       7  |         73  |    Sell  |     103.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       4  |         63  |     Buy  |      95.00  |      10  |   Active  
+       3  |         81  |     Buy  |      98.00  |      20  |   Active  
+       2  |         77  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":19,"OrderId":4,"Timestamp":75,"EventType":"ModifyQuantity","ModifiedQuantity":0}
-[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":18,"Timestamp":77,"OrderId":4,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":19,"OrderId":4,"Timestamp":84,"EventType":"ModifyQuantity","ModifiedQuantity":0}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":27,"Timestamp":86,"OrderId":4,"OrderSide":"Buy","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         66  |     Limit  |    Sell  |   103.00  |      15  |   Active  
-       6  |         27  |     Limit  |    Sell  |   101.00  |      10  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       3  |         74  |     Limit  |     Buy  |    98.00  |      20  |   Active  
-       2  |         70  |     Limit  |     Buy  |   100.00  |       5  |   Active  
+       7  |         75  |     Limit  |    Sell  |   103.00  |      15  |   Active  
+       6  |         33  |     Limit  |    Sell  |   101.00  |      10  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       3  |         83  |     Limit  |     Buy  |    98.00  |      20  |   Active  
+       2  |         79  |     Limit  |     Buy  |   100.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |        5 | (2,68|5) 
-     2 ||     98.00 |       20 | (3,72|20) 
+     1 ||    100.00 |        5 | (2,77|5) 
+     2 ||     98.00 |       20 | (3,81|20) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    101.00 |       10 | (6,28|10) 
-     2 ||    102.00 |       10 | (5,58|10) 
-     3 ||    103.00 |       15 | (7,64|15) 
+     1 ||    101.00 |       10 | (6,34|10) 
+     2 ||    102.00 |       10 | (5,67|10) 
+     3 ||    103.00 |       15 | (7,73|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -1030,45 +1030,45 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       4  |         76  |     Buy  |      95.00  |       0  |   Active  
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       4  |         85  |     Buy  |      95.00  |       0  |   Active  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |    Sell  |     103.00  |      15  |   Active  
-       6  |         28  |    Sell  |     101.00  |      10  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       3  |         72  |     Buy  |      98.00  |      20  |   Active  
-       2  |         68  |     Buy  |     100.00  |       5  |   Active  
+       7  |         73  |    Sell  |     103.00  |      15  |   Active  
+       6  |         34  |    Sell  |     101.00  |      10  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       3  |         81  |     Buy  |      98.00  |      20  |   Active  
+       2  |         77  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":20,"OrderId":6,"Timestamp":79,"EventType":"ModifyQuantity","ModifiedQuantity":0}
-[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":19,"Timestamp":81,"OrderId":6,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":20,"OrderId":6,"Timestamp":88,"EventType":"ModifyQuantity","ModifiedQuantity":0}
+[LOG] DEBUG [OrderEventManagerBase] Order cancel report received: {"ReportId":28,"Timestamp":90,"OrderId":6,"OrderSide":"Sell","OrderType":"Limit","OrderProcessingType":"Cancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       7  |         66  |     Limit  |    Sell  |   103.00  |      15  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       3  |         74  |     Limit  |     Buy  |    98.00  |      20  |   Active  
-       2  |         70  |     Limit  |     Buy  |   100.00  |       5  |   Active  
+       7  |         75  |     Limit  |    Sell  |   103.00  |      15  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       3  |         83  |     Limit  |     Buy  |    98.00  |      20  |   Active  
+       2  |         79  |     Limit  |     Buy  |   100.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |        5 | (2,68|5) 
-     2 ||     98.00 |       20 | (3,72|20) 
+     1 ||    100.00 |        5 | (2,77|5) 
+     2 ||     98.00 |       20 | (3,81|20) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    102.00 |       10 | (5,58|10) 
-     2 ||    103.00 |       15 | (7,64|15) 
+     1 ||    102.00 |       10 | (5,67|10) 
+     2 ||    103.00 |       15 | (7,73|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -1081,48 +1081,48 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       6  |         80  |    Sell  |     101.00  |       0  |   Active  
-       4  |         76  |     Buy  |      95.00  |       0  |   Active  
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       6  |         89  |    Sell  |     101.00  |       0  |   Active  
+       4  |         85  |     Buy  |      95.00  |       0  |   Active  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       7  |         64  |    Sell  |     103.00  |      15  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       3  |         72  |     Buy  |      98.00  |      20  |   Active  
-       2  |         68  |     Buy  |     100.00  |       5  |   Active  
+       7  |         73  |    Sell  |     103.00  |      15  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       3  |         81  |     Buy  |      98.00  |      20  |   Active  
+       2  |         77  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":21,"OrderId":9,"Timestamp":83,"EventType":"Submit","Order":{"Id":9,"Timestamp":83,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
-[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":9,"Timestamp":83,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
-[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":20,"Timestamp":84,"OrderId":9,"OrderSide":"Sell","Order":{"Id":9,"Timestamp":83,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":9,"Timestamp":86,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":21,"OrderId":9,"Timestamp":92,"EventType":"Submit","Order":{"Id":9,"Timestamp":92,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}}
+[LOG] DEBUG [MatchingEngineFIFO] Add to limit order book: {"Id":9,"Timestamp":92,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
+[LOG] DEBUG [OrderEventManagerBase] Order submit report received: {"ReportId":29,"Timestamp":93,"OrderId":9,"OrderSide":"Sell","Order":{"Id":9,"Timestamp":92,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [MatchingEngineBase] Placed order in limit order book: {"Id":9,"Timestamp":95,"Side":"Sell","Quantity":5,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       9  |         85  |     Limit  |    Sell  |   103.00  |       5  |   Active  
-       7  |         66  |     Limit  |    Sell  |   103.00  |      15  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       3  |         74  |     Limit  |     Buy  |    98.00  |      20  |   Active  
-       2  |         70  |     Limit  |     Buy  |   100.00  |       5  |   Active  
+       9  |         94  |     Limit  |    Sell  |   103.00  |       5  |   Active  
+       7  |         75  |     Limit  |    Sell  |   103.00  |      15  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       3  |         83  |     Limit  |     Buy  |    98.00  |      20  |   Active  
+       2  |         79  |     Limit  |     Buy  |   100.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |        5 | (2,68|5) 
-     2 ||     98.00 |       20 | (3,72|20) 
+     1 ||    100.00 |        5 | (2,77|5) 
+     2 ||     98.00 |       20 | (3,81|20) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    102.00 |       10 | (5,58|10) 
-     2 ||    103.00 |       20 | (7,64|15) (9,86|5) 
+     1 ||    102.00 |       10 | (5,67|10) 
+     2 ||    103.00 |       20 | (7,73|15) (9,95|5) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -1135,46 +1135,46 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       6  |         80  |    Sell  |     101.00  |       0  |   Active  
-       4  |         76  |     Buy  |      95.00  |       0  |   Active  
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       6  |         89  |    Sell  |     101.00  |       0  |   Active  
+       4  |         85  |     Buy  |      95.00  |       0  |   Active  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       9  |         86  |    Sell  |     103.00  |       5  |   Active  
-       7  |         64  |    Sell  |     103.00  |      15  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       3  |         72  |     Buy  |      98.00  |      20  |   Active  
-       2  |         68  |     Buy  |     100.00  |       5  |   Active  
+       9  |         95  |    Sell  |     103.00  |       5  |   Active  
+       7  |         73  |    Sell  |     103.00  |      15  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       3  |         81  |     Buy  |      98.00  |      20  |   Active  
+       2  |         77  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
-[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":22,"OrderId":7,"Timestamp":87,"EventType":"ModifyQuantity","ModifiedQuantity":15}
+[LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":22,"OrderId":7,"Timestamp":97,"EventType":"ModifyQuantity","ModifiedQuantity":15}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
 -----------------------------------------------------------------------------------
-       9  |         85  |     Limit  |    Sell  |   103.00  |       5  |   Active  
-       7  |         66  |     Limit  |    Sell  |   103.00  |      15  |   Active  
-       5  |         60  |     Limit  |    Sell  |   102.00  |      10  |   Active  
-       3  |         74  |     Limit  |     Buy  |    98.00  |      20  |   Active  
-       2  |         70  |     Limit  |     Buy  |   100.00  |       5  |   Active  
+       9  |         94  |     Limit  |    Sell  |   103.00  |       5  |   Active  
+       7  |         75  |     Limit  |    Sell  |   103.00  |      15  |   Active  
+       5  |         69  |     Limit  |    Sell  |   102.00  |      10  |   Active  
+       3  |         83  |     Limit  |     Buy  |    98.00  |      20  |   Active  
+       2  |         79  |     Limit  |     Buy  |   100.00  |       5  |   Active  
 -----------------------------------------------------------------------------------
 
 [LOG] DEBUG [OrderEventManagerBase] Order book state:
 ================= Bid Book Snapshot ===================
  Level || BID Price | BID Size | BID Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    100.00 |        5 | (2,68|5) 
-     2 ||     98.00 |       20 | (3,72|20) 
+     1 ||    100.00 |        5 | (2,77|5) 
+     2 ||     98.00 |       20 | (3,81|20) 
 -------------------------------------------------------
 ================= Ask Book Snapshot ===================
  Level || ASK Price | ASK Size | ASK Order (Id,Time|Size)
 -------------------------------------------------------
-     1 ||    102.00 |       10 | (5,58|10) 
-     2 ||    103.00 |       20 | (9,86|5) (7,88|15) 
+     1 ||    102.00 |       10 | (5,67|10) 
+     2 ||    103.00 |       20 | (9,95|5) (7,98|15) 
 -------------------------------------------------------
 ======================= Trade Log =========================
     Id    |  Timestamp  |   Side   |    Price    |   Size  
@@ -1187,20 +1187,20 @@
 ========================== Removed Limit Orders ========================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       6  |         80  |    Sell  |     101.00  |       0  |   Active  
-       4  |         76  |     Buy  |      95.00  |       0  |   Active  
-       8  |         46  |    Sell  |     103.00  |       0  | Cancelled  
-       1  |         42  |     Buy  |      99.00  |       0  | Cancelled  
-       0  |         38  |     Buy  |      99.00  |       0  | Cancelled  
+       6  |         89  |    Sell  |     101.00  |       0  |   Active  
+       4  |         85  |     Buy  |      95.00  |       0  |   Active  
+       8  |         55  |    Sell  |     103.00  |       0  | Cancelled  
+       1  |         51  |     Buy  |      99.00  |       0  | Cancelled  
+       0  |         47  |     Buy  |      99.00  |       0  | Cancelled  
 ------------------------------------------------------------------------
 ======================== Order Lookup Table ============================
     Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
 ------------------------------------------------------------------------
-       9  |         86  |    Sell  |     103.00  |       5  |   Active  
-       7  |         88  |    Sell  |     103.00  |      15  |   Active  
-       5  |         58  |    Sell  |     102.00  |      10  |   Active  
-       3  |         72  |     Buy  |      98.00  |      20  |   Active  
-       2  |         68  |     Buy  |     100.00  |       5  |   Active  
+       9  |         95  |    Sell  |     103.00  |       5  |   Active  
+       7  |         98  |    Sell  |     103.00  |      15  |   Active  
+       5  |         67  |    Sell  |     102.00  |      10  |   Active  
+       3  |         81  |     Buy  |      98.00  |      20  |   Active  
+       2  |         77  |     Buy  |     100.00  |       5  |   Active  
 ------------------------------------------------------------------------
 
 [LOG] WARNING [OrderEventManagerBase::fetchOrder] Order not found - orderId = 10.
