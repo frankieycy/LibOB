@@ -43,7 +43,27 @@ void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::clear() {
 }
 
 std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "{"
+    "\"NumLevels\":"  << numLevels << ","
+    "\"IsFullBook\":" << isFullBook << ","
+    "\"LastTrade\":"  << (lastTrade ? lastTrade->getAsJson() : "null") << ",";
+    oss << "\"BidBookTopLevels\":[";
+    for (size_t i = 0; i < bidBookTopLevelIterators.size(); ++i) {
+        oss << "(" << bidBookTopLevelIterators[i]->first << ","
+            << bidBookTopLevelIterators[i]->second << ")";
+        if (i < bidBookTopLevelIterators.size() - 1)
+            oss << ",";
+    }
+    oss << "],\"AskBookTopLevels\":[";
+    for (size_t i = 0; i < askBookTopLevelIterators.size(); ++i) {
+        oss << "(" << askBookTopLevelIterators[i]->first << ","
+            << askBookTopLevelIterators[i]->second << ")";
+        if (i < askBookTopLevelIterators.size() - 1)
+            oss << ",";
+    }
+    oss << "]}";
+    return oss.str();
 }
 
 std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsCsv() const {
@@ -51,7 +71,20 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsCsv() const 
 }
 
 std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsJson() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "{"
+    "\"TimestampFrom\":"              << timestampFrom              << ","
+    "\"TimestampTo\":"                << timestampTo                << ","
+    "\"AggNumNewLimitOrders\":"       << aggNumNewLimitOrders       << ","
+    "\"AggNumNewMarketOrders\":"      << aggNumNewMarketOrders      << ","
+    "\"AggNumCancelOrders\":"         << aggNumCancelOrders         << ","
+    "\"AggNumModifyPriceOrders\":"    << aggNumModifyPriceOrders    << ","
+    "\"AggNumModifyQuantityOrders\":" << aggNumModifyQuantityOrders << ","
+    "\"AggNumTrades\":"               << aggNumTrades               << ","
+    "\"AggTradeVolume\":"             << aggTradeVolume             << ","
+    "\"AggTradeNotional\":"           << aggTradeNotional;
+    oss << "}";
+    return oss.str();
 }
 
 std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsCsv() const {
@@ -114,7 +147,32 @@ void MatchingEngineMonitor::OrderBookStatisticsByTimestamp::clear() {
 }
 
 std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsJson() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "{"
+    "\"TimestampFrom\":"              << timestampFrom              << ","
+    "\"TimestampTo\":"                << timestampTo                << ","
+    "\"CumNumNewLimitOrders\":"       << cumNumNewLimitOrders       << ","
+    "\"CumNumNewMarketOrders\":"      << cumNumNewMarketOrders      << ","
+    "\"CumNumCancelOrders\":"         << cumNumCancelOrders         << ","
+    "\"CumNumModifyPriceOrders\":"    << cumNumModifyPriceOrders    << ","
+    "\"CumNumModifyQuantityOrders\":" << cumNumModifyQuantityOrders << ","
+    "\"CumNumTrades\":"               << cumNumTrades               << ","
+    "\"CumTradeVolume\":"             << cumTradeVolume             << ","
+    "\"CumTradeNotional\":"           << cumTradeNotional           << ","
+    "\"BestBidPrice\":"               << bestBidPrice               << ","
+    "\"BestAskPrice\":"               << bestAskPrice               << ","
+    "\"MidPrice\":"                   << midPrice                   << ","
+    "\"MicroPrice\":"                 << microPrice                 << ","
+    "\"Spread\":"                     << spread                     << ","
+    "\"HalfSpread\":"                 << halfSpread                 << ","
+    "\"OrderImbalance\":"             << orderImbalance             << ","
+    "\"BestBidSize\":"                << bestBidSize                << ","
+    "\"BestAskSize\":"                << bestAskSize                << ","
+    "\"LastTradePrice\":"             << lastTradePrice             << ","
+    "\"LastTradeQuantity\":"          << lastTradeQuantity          << ","
+    "\"TopLevelsSnapshot\":"          << topLevelsSnapshot.getAsJson();
+    oss << "}";
+    return oss.str();
 }
 
 std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsCsv() const {
