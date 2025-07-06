@@ -133,6 +133,7 @@ public:
     // communicates with matching engine to keep order book stats in sync
     virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
     virtual void onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report);
+    virtual void onOrderProcessingReport(const Exchange::LimitOrderPlacementReport& report);
     virtual void onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderCancelReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report);

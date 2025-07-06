@@ -170,7 +170,7 @@ std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsJson() c
     "\"BestAskSize\":"                << bestAskSize                << ","
     "\"LastTradePrice\":"             << lastTradePrice             << ","
     "\"LastTradeQuantity\":"          << lastTradeQuantity          << ","
-    "\"TopLevelsSnapshot\":"          << topLevelsSnapshot.getAsJson();
+    "\"TopLevelsSnapshot\":"          << topLevelsSnapshot;
     oss << "}";
     return oss.str();
 }
@@ -266,14 +266,23 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecuti
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report) {
+    // note that order submit report does NOT trigger statistics update since it only indicates that the matching engine
+    // received the order but the actual order placement is signaled by the order placement report
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order submit report received: " << report;
+}
+
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderPlacementReport& report) {
+    if (!myMonitoringEnabled)
+        return;
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order placement report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
-        if (!isPriceWithinTopOfBook(report.orderSide, report.order ? report.order->getPrice() : Consts::NAN_DOUBLE, Market::OrderType::LIMIT))
+        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice, Market::OrderType::LIMIT))
             return;
     } else
         Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
