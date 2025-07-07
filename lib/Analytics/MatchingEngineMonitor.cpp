@@ -257,6 +257,8 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecuti
     myOrderBookAggregateStatistics.aggTradeVolume += report.filledQuantity;
     myOrderBookAggregateStatistics.aggTradeNotional += report.filledPrice * report.filledQuantity;
     myLastTrade = myMatchingEngine->getLastTrade();
+    if (!myLastTrade->getIsBuyLimitOrder() || !myLastTrade->getIsSellLimitOrder())
+        ++myOrderBookAggregateStatistics.aggNumNewMarketOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.filledPrice))
             return;
@@ -271,14 +273,14 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderSu
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order submit report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Limit order submit report received: " << report;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderPlacementReport& report) {
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order placement report received: " << report;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Limit order placement report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
@@ -290,18 +292,11 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderPl
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report) {
+    // similar to limit order submit report, no statistics update triggered here
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order submit report received: " << report;
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
-    ++myOrderBookAggregateStatistics.aggNumNewMarketOrders;
-    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
-        if (!isPriceWithinTopOfBook(report.orderSide, report.order ? report.order->getPrice() : Consts::NAN_DOUBLE, Market::OrderType::MARKET))
-            return;
-    } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
-    updateStatistics();
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Market order submit report received: " << report;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
