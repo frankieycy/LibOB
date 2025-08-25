@@ -378,8 +378,8 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             }
         } else { // order gets cancelled
             myRemovedLimitOrderLog.push_back(order);
-            myLimitOrderLookup.erase(it);
             queue->erase(orderIt);
+            myLimitOrderLookup.erase(it);
             if (order->isBuy()) {
                 uint32_t& bidBookSizeAtOldPrice = myBidBookSize[oldPrice];
                 bidBookSizeAtOldPrice -= oldQuantity;

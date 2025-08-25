@@ -22,7 +22,7 @@ void testMatchingEngineSimpleBook() {
     uint8_t orderId = 0;
     uint8_t timestamp = 0;
     Exchange::MatchingEngineFIFO e{true};
-    const std::vector<const std::shared_ptr<Market::OrderBase>> orders{
+    const std::vector<std::shared_ptr<const Market::OrderBase>> orders{
         std::make_shared<Market::LimitOrder>(orderId++, timestamp++, Market::Side::BUY, 15, 99.0),
         std::make_shared<Market::LimitOrder>(orderId++, timestamp++, Market::Side::BUY, 5, 99.0),
         std::make_shared<Market::LimitOrder>(orderId++, timestamp++, Market::Side::BUY, 10, 98.0),
