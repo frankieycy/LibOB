@@ -16,6 +16,7 @@
 * `RegressionTests`
     - ok, cpp files in `Inputs` (small selections from `Tests`) and txt output files in `Baseline` (outputs from running cpp)
     - add `RegressionTests` and `UpdateBaselines` to makefile
+    - add `--regtest-pattern` makefile flag
 * `Utils::Counter::TimestampHandlerBase`
     - ok, world clock synchronized over `MatchingEngine` and `OrderEventManager`
     - ok, unified timestamp generation function `tick()`
@@ -50,6 +51,8 @@
     - ok, sync with `MatchingEngine` via a callback function on `OrderExecutionReport`
     - ok, add order cancel-replace reg test
 * `Analytics::MatchingEngineMonitor`
+    - ok, order book stats snapshot in a more human-readable format
+    - (bug) premature fetching of top levels snapshot before the executed queue is eliminated from book (e.g. market buy eats out entire top ask)
 * `Parser::LobsterDataParser`
 * `Simulator::ZeroIntelligence`
 
