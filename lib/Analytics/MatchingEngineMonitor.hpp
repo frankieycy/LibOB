@@ -32,6 +32,7 @@ public:
         void clear();
         std::string getAsJson() const;
         std::string getAsCsv() const;
+        std::string getAsTable() const;
     };
 
     /* Order book statistics aggregated over all timestamps so far */
@@ -48,6 +49,7 @@ public:
         double aggTradeNotional = 0.0;
         std::string getAsJson() const;
         std::string getAsCsv() const;
+        std::string getAsTable() const;
     };
 
     /* Order book statistics between the from-time exclusive to the to-time inclusive derived from OrderBookTopLevelsSnapshot */
@@ -83,6 +85,7 @@ public:
         void clear();
         std::string getAsJson() const;
         std::string getAsCsv() const;
+        std::string getAsTable() const;
     };
 
     /* Processing latency measured over an order event */
@@ -94,6 +97,7 @@ public:
         std::shared_ptr<const Market::OrderEventBase> event = nullptr;
         std::string getAsJson() const;
         std::string getAsCsv() const;
+        std::string getAsTable() const;
     };
 
     MatchingEngineMonitor(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine);

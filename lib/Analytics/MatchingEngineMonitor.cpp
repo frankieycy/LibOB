@@ -70,6 +70,65 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsCsv() const 
     return ""; // TODO
 }
 
+std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsTable() const {
+    std::ostringstream oss;
+    oss <<
+    "---------------------------------------------------------\n"
+    "|              Order Book Top Levels Snapshot           |\n"
+    "---------------------------------------------------------\n"
+    "| NumLevels                  |" << std::setw(25) << numLevels   << " |\n"
+    "| IsFullBook                 |" << std::setw(25) << isFullBook  << " |\n";
+    if (lastTrade) {
+        oss <<
+        "---------------------------------------------------------\n"
+        "|                    Last Trade Details                 |\n"
+        "---------------------------------------------------------\n"
+        "| Id                         |" << std::setw(25) << lastTrade->getId()               << " |\n"
+        "| Timestamp                  |" << std::setw(25) << lastTrade->getTimestamp()        << " |\n"
+        "| BuyId                      |" << std::setw(25) << lastTrade->getBuyId()            << " |\n"
+        "| SellId                     |" << std::setw(25) << lastTrade->getSellId()           << " |\n"
+        "| Quantity                   |" << std::setw(25) << lastTrade->getQuantity()         << " |\n"
+        "| Price                      |" << std::setw(25) << lastTrade->getPrice()            << " |\n"
+        "| IsBuyLimitOrder            |" << std::setw(25) << lastTrade->getIsBuyLimitOrder()  << " |\n"
+        "| IsSellLimitOrder           |" << std::setw(25) << lastTrade->getIsSellLimitOrder() << " |\n"
+        "| IsBuyInitiated             |" << std::setw(25) << lastTrade->getIsBuyInitiated()     << " |\n";
+    }
+    oss <<
+    "---------------------------------------------------------\n"
+    "|                      Order Book Size                  |\n"
+    "---------------------------------------------------------\n"
+    "| BID Size | BID Price || Level || ASK Price | ASK Size |\n"
+    "---------------------------------------------------------\n";
+    uint level = 1;
+    auto bidIt = bidBookTopLevelIterators.begin();
+    auto askIt = askBookTopLevelIterators.begin();
+    while (bidIt != bidBookTopLevelIterators.end() || askIt != askBookTopLevelIterators.end()) {
+        oss << "|";
+        if (bidIt != bidBookTopLevelIterators.end()) {
+            oss << std::setw(9) << (*bidIt)->second << " | "
+                << std::fixed << std::setprecision(2)
+                << std::setw(9) << (*bidIt)->first << " || "
+                << std::setw(5) << level << " || ";
+            ++bidIt;
+        } else {
+            oss << "          |           || ";
+            oss << std::setw(5) << level << " || ";
+        }
+        if (askIt != askBookTopLevelIterators.end()) {
+            oss << std::fixed << std::setprecision(2)
+                << std::setw(9) << (*askIt)->first << " | "
+                << std::setw(8) << (*askIt)->second << " |\n";
+            ++askIt;
+        } else {
+            oss << "          |          |\n";
+        }
+        if (++level > numLevels && !isFullBook)
+            break;
+    }
+    oss << "---------------------------------------------------------\n";
+    return oss.str();
+}
+
 std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -89,6 +148,26 @@ std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsJson() con
 
 std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsCsv() const {
     return ""; // TODO
+}
+
+std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsTable() const {
+    std::ostringstream oss;
+    oss <<
+    "---------------------------------------------------------\n"
+    "|             Order Book Aggregate Statistics           |\n"
+    "---------------------------------------------------------\n"
+    "| TimestampFrom              |" << std::setw(25) << timestampFrom              << " |\n"
+    "| TimestampTo                |" << std::setw(25) << timestampTo                << " |\n"
+    "| AggNumNewLimitOrders       |" << std::setw(25) << aggNumNewLimitOrders       << " |\n"
+    "| AggNumNewMarketOrders      |" << std::setw(25) << aggNumNewMarketOrders      << " |\n"
+    "| AggNumCancelOrders         |" << std::setw(25) << aggNumCancelOrders         << " |\n"
+    "| AggNumModifyPriceOrders    |" << std::setw(25) << aggNumModifyPriceOrders    << " |\n"
+    "| AggNumModifyQuantityOrders |" << std::setw(25) << aggNumModifyQuantityOrders << " |\n"
+    "| AggNumTrades               |" << std::setw(25) << aggNumTrades               << " |\n"
+    "| AggTradeVolume             |" << std::setw(25) << aggTradeVolume             << " |\n"
+    "| AggTradeNotional           |" << std::setw(25) << aggTradeNotional           << " |\n"
+    "---------------------------------------------------------\n";
+    return oss.str();
 }
 
 void MatchingEngineMonitor::OrderBookStatisticsByTimestamp::constructFrom(
@@ -179,11 +258,47 @@ std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsCsv() co
     return ""; // TODO
 }
 
+std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsTable() const {
+    std::ostringstream oss;
+    oss <<
+    "---------------------------------------------------------\n"
+    "|           Order Book Statistics By Timestamp          |\n"
+    "---------------------------------------------------------\n"
+    "| TimestampFrom              |" << std::setw(25) << timestampFrom              << " |\n"
+    "| TimestampTo                |" << std::setw(25) << timestampTo                << " |\n"
+    "| CumNumNewLimitOrders       |" << std::setw(25) << cumNumNewLimitOrders       << " |\n"
+    "| CumNumNewMarketOrders      |" << std::setw(25) << cumNumNewMarketOrders      << " |\n"
+    "| CumNumCancelOrders         |" << std::setw(25) << cumNumCancelOrders         << " |\n"
+    "| CumNumModifyPriceOrders    |" << std::setw(25) << cumNumModifyPriceOrders    << " |\n"
+    "| CumNumModifyQuantityOrders |" << std::setw(25) << cumNumModifyQuantityOrders << " |\n"
+    "| CumNumTrades               |" << std::setw(25) << cumNumTrades               << " |\n"
+    "| CumTradeVolume             |" << std::setw(25) << cumTradeVolume             << " |\n"
+    "| CumTradeNotional           |" << std::setw(25) << cumTradeNotional           << " |\n"
+    "| BestBidPrice               |" << std::setw(25) << bestBidPrice               << " |\n"
+    "| BestAskPrice               |" << std::setw(25) << bestAskPrice               << " |\n"
+    "| MidPrice                   |" << std::setw(25) << midPrice                   << " |\n"
+    "| MicroPrice                 |" << std::setw(25) << microPrice                 << " |\n"
+    "| Spread                     |" << std::setw(25) << spread                     << " |\n"
+    "| HalfSpread                 |" << std::setw(25) << halfSpread                 << " |\n"
+    "| OrderImbalance             |" << std::setw(25) << orderImbalance             << " |\n"
+    "| BestBidSize                |" << std::setw(25) << bestBidSize                << " |\n"
+    "| BestAskSize                |" << std::setw(25) << bestAskSize                << " |\n"
+    "| LastTradePrice             |" << std::setw(25) << lastTradePrice             << " |\n"
+    "| LastTradeQuantity          |" << std::setw(25) << lastTradeQuantity          << " |\n"
+    "---------------------------------------------------------\n";
+    oss << topLevelsSnapshot.getAsTable();
+    return oss.str();
+}
+
 std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsJson() const {
     return ""; // TODO
 }
 
 std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsCsv() const {
+    return ""; // TODO
+}
+
+std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsTable() const {
     return ""; // TODO
 }
 
@@ -240,8 +355,8 @@ void MatchingEngineMonitor::updateStatistics() {
     myOrderBookStatisticsCollector.addSample(orderBookStats);
     myOrderBookAggregateStatisticsCache = myOrderBookAggregateStatistics;
     if (myDebugMode) {
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Added new order book statistics snapshot: " << *orderBookStats;
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Updated order book aggregate statistics: " << myOrderBookAggregateStatistics;
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Added new order book statistics snapshot:\n" << orderBookStats->getAsTable();
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Updated order book aggregate statistics:\n" << myOrderBookAggregateStatistics.getAsTable();
     }
 }
 
