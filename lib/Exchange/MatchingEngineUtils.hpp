@@ -107,6 +107,7 @@ struct OrderProcessingReport {
     // for information purposes and may be derived from order submits.
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const = 0;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const = 0;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const = 0;
     virtual std::string getAsJson() const = 0;
     uint64_t reportId;
     uint64_t timestamp;
@@ -145,6 +146,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderExecutionReport>(*this); }
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
     uint64_t matchOrderId;
@@ -175,6 +177,7 @@ struct LimitOrderSubmitReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<LimitOrderSubmitReport>(*this); }
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::LimitOrder> order = nullptr;
 };
@@ -199,6 +202,7 @@ struct LimitOrderPlacementReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override { return nullptr; }
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override { return nullptr; }
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<LimitOrderPlacementReport>(*this); }
     virtual std::string getAsJson() const override;
     uint32_t orderQuantity;
     double orderPrice;
@@ -222,6 +226,7 @@ struct MarketOrderSubmitReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<MarketOrderSubmitReport>(*this); }
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::MarketOrder> order = nullptr;
 };
@@ -246,6 +251,7 @@ struct OrderCancelReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderCancelReport>(*this); }
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
     std::optional<uint32_t> orderQuantity;
@@ -273,6 +279,7 @@ struct OrderCancelAndReplaceReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderCancelAndReplaceReport>(*this); }
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
     uint64_t newOrderId;
@@ -299,6 +306,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderModifyPriceReport>(*this); }
     virtual std::string getAsJson() const override;
     uint32_t orderQuantity;
     double modifiedPrice;
@@ -323,6 +331,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderModifyQuantityReport>(*this); }
     virtual std::string getAsJson() const override;
     double orderPrice;
     uint32_t modifiedQuantity;
