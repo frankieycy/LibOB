@@ -175,8 +175,9 @@ public:
     virtual void build(const OrderEventLog& orderEventLog); // builds the book given some user-input order events stream
     virtual void build(const OrderProcessingReportLog& orderProcessingReportLog);
     virtual void build(const ITCHMessageLog& itchMessageLog);
-    virtual void executeAgainstQueuedMarketOrders(const std::shared_ptr<Market::LimitOrder>& order, uint32_t& unfilledQuantity, MarketQueue& marketQueue);
-    virtual void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, uint32_t& matchSizeTotal, LimitQueue& matchQueue);
+    template<typename OrderBookType, typename OrderBookSizeType>
+    void fillOrderByMatchingTopLimitQueue(const std::shared_ptr<Market::OrderBase>& order, uint32_t& unfilledQuantity, OrderBookType& orderBook, OrderBookSizeType& orderBookSize);
+    void executeAgainstQueuedMarketOrders(const std::shared_ptr<Market::LimitOrder>& order, uint32_t& unfilledQuantity, MarketQueue& marketQueue);
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) override { myOrderProcessingCallbacks.push_back(callback); }
