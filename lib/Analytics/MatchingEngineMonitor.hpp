@@ -5,9 +5,11 @@
 #include "Market/OrderEvent.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/MatchingEngine.hpp"
+#include "Parser/LobsterDataParser.hpp"
 
 namespace Analytics {
 using namespace Utils;
+using namespace Parser;
 
 class MatchingEngineMonitor {
 public:
@@ -132,7 +134,7 @@ public:
     virtual void init();
     virtual void startMonitoring();
     virtual void stopMonitoring();
-    virtual void updateStatistics();
+    virtual void updateStatistics(const Exchange::OrderProcessingReport& report);
 
     // communicates with matching engine to keep order book stats in sync
     virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
@@ -157,6 +159,7 @@ private:
     OrderBookAggregateStatistics myOrderBookAggregateStatisticsCache; // caches the last statistics entry
     Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
     Statistics::TimeSeriesCollector<OrderEventProcessingLatency> myOrderEventProcessingLatenciesCollector;
+    Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> myOrderProcessingReportsCollector;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()
     OrderBookStatisticsTimestampStrategy myOrderBookStatisticsTimestampStrategy = OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK;

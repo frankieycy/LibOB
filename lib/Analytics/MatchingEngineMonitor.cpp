@@ -385,10 +385,11 @@ void MatchingEngineMonitor::stopMonitoring() {
     myMonitoringEnabled = false;
 }
 
-void MatchingEngineMonitor::updateStatistics() {
+void MatchingEngineMonitor::updateStatistics(const Exchange::OrderProcessingReport& report) {
     auto orderBookStats = std::make_shared<OrderBookStatisticsByTimestamp>(myOrderBookNumLevels, myFetchFullOrderBook);
     orderBookStats->constructFrom(myMatchingEngine, myOrderBookAggregateStatistics, myOrderBookAggregateStatisticsCache);
     myOrderBookStatisticsCollector.addSample(orderBookStats);
+    myOrderProcessingReportsCollector.addSample(report.clone());
     myOrderBookAggregateStatisticsCache = myOrderBookAggregateStatistics;
     if (myDebugMode) {
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Added new order book statistics snapshot:\n" << orderBookStats->getAsTable();
@@ -415,7 +416,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecuti
             return;
     } else
         Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
-    updateStatistics();
+    updateStatistics(report);
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report) {
@@ -439,7 +440,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderPl
             return;
     } else
         Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
-    updateStatistics();
+    updateStatistics(report);
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report) {
@@ -462,7 +463,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelR
             return;
     } else
         Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
-    updateStatistics();
+    updateStatistics(report);
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
@@ -478,7 +479,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelA
             return;
     } else
         Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
-    updateStatistics();
+    updateStatistics(report);
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report) {
@@ -493,7 +494,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyP
             return;
     } else
         Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
-    updateStatistics();
+    updateStatistics(report);
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report) {
@@ -508,7 +509,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyQ
             return;
     } else
         Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
-    updateStatistics();
+    updateStatistics(report);
 }
 }
 
