@@ -35,8 +35,11 @@ regression_build: $(REG_EXE)
 regression_run: regression_build
 	@echo "Running regression tests..."
 	@for exe in $(REG_EXE); do \
-		echo "Running $$exe..."; \
-		./$$exe || echo "Test failed: $$exe"; \
+		name=$$(basename $$exe); \
+		if [ -z "$(FILTER)" ] || echo $$name | grep -q "$(FILTER)"; then \
+			echo "Running $$exe..."; \
+			./$$exe || echo "Test failed: $$exe"; \
+		fi \
 	done
 
 # Rule to build each regression test executable from its object file
