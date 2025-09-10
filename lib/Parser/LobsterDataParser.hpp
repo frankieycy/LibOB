@@ -4,6 +4,7 @@
 
 namespace Parser {
 class LobsterDataParser {
+public:
     enum class MessageType {
         ORDER_ADD,
         ORDER_CANCEL,
