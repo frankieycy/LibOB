@@ -147,7 +147,19 @@ std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsJson() con
 }
 
 std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsCsv() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss <<
+    timestampFrom              << "," <<
+    timestampTo                << "," <<
+    aggNumNewLimitOrders       << "," <<
+    aggNumNewMarketOrders      << "," <<
+    aggNumCancelOrders         << "," <<
+    aggNumModifyPriceOrders    << "," <<
+    aggNumModifyQuantityOrders << "," <<
+    aggNumTrades               << "," <<
+    aggTradeVolume             << "," <<
+    aggTradeNotional;
+    return oss.str();
 }
 
 std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsTable() const {
@@ -255,7 +267,31 @@ std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsJson() c
 }
 
 std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsCsv() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss <<
+    timestampFrom              << "," <<
+    timestampTo                << "," <<
+    cumNumNewLimitOrders       << "," <<
+    cumNumNewMarketOrders      << "," <<
+    cumNumCancelOrders         << "," <<
+    cumNumModifyPriceOrders    << "," <<
+    cumNumModifyQuantityOrders << "," <<
+    cumNumTrades               << "," <<
+    cumTradeVolume             << "," <<
+    cumTradeNotional           << "," <<
+    bestBidPrice               << "," <<
+    bestAskPrice               << "," <<
+    midPrice                   << "," <<
+    microPrice                 << "," <<
+    spread                     << "," <<
+    halfSpread                 << "," <<
+    orderImbalance             << "," <<
+    bestBidSize                << "," <<
+    bestAskSize                << "," <<
+    lastTradePrice             << "," <<
+    lastTradeQuantity          << "," <<
+    topLevelsSnapshot.getAsCsv();
+    return oss.str();
 }
 
 std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsTable() const {
