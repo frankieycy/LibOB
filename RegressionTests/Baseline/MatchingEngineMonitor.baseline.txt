@@ -1,84 +1,1234 @@
 [LOG] INFO [OrderEventManagerBase::setLoggerLogFile] Logger log file set to: RegressionTests/Baseline/MatchingEngineMonitor.baseline.txt
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":0,"Timestamp":2,"OrderId":0,"OrderSide":"Buy","Order":{"Id":0,"Timestamp":1,"Side":"Buy","Quantity":5,"Price":99,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":1,"Timestamp":5,"OrderId":0,"OrderSide":"Buy","OrderQuantity":5,"OrderPrice":99,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":0,"TimestampTo":5,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":nan,"MidPrice":nan,"MicroPrice":nan,"Spread":nan,"HalfSpread":nan,"OrderImbalance":1,"BestBidSize":5,"BestAskSize":0,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5)],"AskBookTopLevels":[]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":5,"AggNumNewLimitOrders":1,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                        5 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      nan |
+| MidPrice                   |                      nan |
+| MicroPrice                 |                      nan |
+| Spread                     |                      nan |
+| HalfSpread                 |                      nan |
+| OrderImbalance             |                        1 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        0 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                        5 |
+| AggNumNewLimitOrders       |                        1 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":2,"Timestamp":7,"OrderId":1,"OrderSide":"Sell","Order":{"Id":1,"Timestamp":6,"Side":"Sell","Quantity":5,"Price":101,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":3,"Timestamp":10,"OrderId":1,"OrderSide":"Sell","OrderQuantity":5,"OrderPrice":101,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":5,"TimestampTo":10,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5)],"AskBookTopLevels":[(101,5)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":10,"AggNumNewLimitOrders":2,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                        5 |
+| TimestampTo                |                       10 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       10 |
+| AggNumNewLimitOrders       |                        2 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":4,"Timestamp":12,"OrderId":2,"OrderSide":"Buy","Order":{"Id":2,"Timestamp":11,"Side":"Buy","Quantity":6,"Price":98,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":5,"Timestamp":15,"OrderId":2,"OrderSide":"Buy","OrderQuantity":6,"OrderPrice":98,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":10,"TimestampTo":15,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6)],"AskBookTopLevels":[(101,5)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":15,"AggNumNewLimitOrders":3,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       10 |
+| TimestampTo                |                       15 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       15 |
+| AggNumNewLimitOrders       |                        3 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":6,"Timestamp":17,"OrderId":3,"OrderSide":"Sell","Order":{"Id":3,"Timestamp":16,"Side":"Sell","Quantity":6,"Price":102,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":7,"Timestamp":20,"OrderId":3,"OrderSide":"Sell","OrderQuantity":6,"OrderPrice":102,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":15,"TimestampTo":20,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6)],"AskBookTopLevels":[(101,5),(102,6)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":20,"AggNumNewLimitOrders":4,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       15 |
+| TimestampTo                |                       20 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       20 |
+| AggNumNewLimitOrders       |                        4 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":8,"Timestamp":22,"OrderId":4,"OrderSide":"Buy","Order":{"Id":4,"Timestamp":21,"Side":"Buy","Quantity":7,"Price":97,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":9,"Timestamp":25,"OrderId":4,"OrderSide":"Buy","OrderQuantity":7,"OrderPrice":97,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":20,"TimestampTo":25,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7)],"AskBookTopLevels":[(101,5),(102,6)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":25,"AggNumNewLimitOrders":5,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       20 |
+| TimestampTo                |                       25 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       25 |
+| AggNumNewLimitOrders       |                        5 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":10,"Timestamp":27,"OrderId":5,"OrderSide":"Sell","Order":{"Id":5,"Timestamp":26,"Side":"Sell","Quantity":7,"Price":103,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":11,"Timestamp":30,"OrderId":5,"OrderSide":"Sell","OrderQuantity":7,"OrderPrice":103,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":25,"TimestampTo":30,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7)],"AskBookTopLevels":[(101,5),(102,6),(103,7)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":30,"AggNumNewLimitOrders":6,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       25 |
+| TimestampTo                |                       30 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       30 |
+| AggNumNewLimitOrders       |                        6 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":12,"Timestamp":32,"OrderId":6,"OrderSide":"Buy","Order":{"Id":6,"Timestamp":31,"Side":"Buy","Quantity":8,"Price":96,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":13,"Timestamp":35,"OrderId":6,"OrderSide":"Buy","OrderQuantity":8,"OrderPrice":96,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":30,"TimestampTo":35,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8)],"AskBookTopLevels":[(101,5),(102,6),(103,7)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":35,"AggNumNewLimitOrders":7,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       30 |
+| TimestampTo                |                       35 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       35 |
+| AggNumNewLimitOrders       |                        7 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":14,"Timestamp":37,"OrderId":7,"OrderSide":"Sell","Order":{"Id":7,"Timestamp":36,"Side":"Sell","Quantity":8,"Price":104,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":15,"Timestamp":40,"OrderId":7,"OrderSide":"Sell","OrderQuantity":8,"OrderPrice":104,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":35,"TimestampTo":40,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":40,"AggNumNewLimitOrders":8,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       35 |
+| TimestampTo                |                       40 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       40 |
+| AggNumNewLimitOrders       |                        8 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":16,"Timestamp":42,"OrderId":8,"OrderSide":"Buy","Order":{"Id":8,"Timestamp":41,"Side":"Buy","Quantity":9,"Price":95,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":17,"Timestamp":45,"OrderId":8,"OrderSide":"Buy","OrderQuantity":9,"OrderPrice":95,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":40,"TimestampTo":45,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":45,"AggNumNewLimitOrders":9,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       40 |
+| TimestampTo                |                       45 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       45 |
+| AggNumNewLimitOrders       |                        9 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":18,"Timestamp":47,"OrderId":9,"OrderSide":"Sell","Order":{"Id":9,"Timestamp":46,"Side":"Sell","Quantity":9,"Price":105,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":19,"Timestamp":50,"OrderId":9,"OrderSide":"Sell","OrderQuantity":9,"OrderPrice":105,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":45,"TimestampTo":50,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":50,"AggNumNewLimitOrders":10,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       45 |
+| TimestampTo                |                       50 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       50 |
+| AggNumNewLimitOrders       |                       10 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":20,"Timestamp":52,"OrderId":10,"OrderSide":"Buy","Order":{"Id":10,"Timestamp":51,"Side":"Buy","Quantity":10,"Price":94,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":21,"Timestamp":55,"OrderId":10,"OrderSide":"Buy","OrderQuantity":10,"OrderPrice":94,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":50,"TimestampTo":55,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":55,"AggNumNewLimitOrders":11,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       50 |
+| TimestampTo                |                       55 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       55 |
+| AggNumNewLimitOrders       |                       11 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":22,"Timestamp":57,"OrderId":11,"OrderSide":"Sell","Order":{"Id":11,"Timestamp":56,"Side":"Sell","Quantity":10,"Price":106,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":23,"Timestamp":60,"OrderId":11,"OrderSide":"Sell","OrderQuantity":10,"OrderPrice":106,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":55,"TimestampTo":60,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":60,"AggNumNewLimitOrders":12,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       55 |
+| TimestampTo                |                       60 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       60 |
+| AggNumNewLimitOrders       |                       12 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":24,"Timestamp":62,"OrderId":12,"OrderSide":"Buy","Order":{"Id":12,"Timestamp":61,"Side":"Buy","Quantity":10,"Price":93,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":25,"Timestamp":65,"OrderId":12,"OrderSide":"Buy","OrderQuantity":10,"OrderPrice":93,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":60,"TimestampTo":65,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":65,"AggNumNewLimitOrders":13,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       60 |
+| TimestampTo                |                       65 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       65 |
+| AggNumNewLimitOrders       |                       13 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":26,"Timestamp":67,"OrderId":13,"OrderSide":"Sell","Order":{"Id":13,"Timestamp":66,"Side":"Sell","Quantity":10,"Price":107,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":27,"Timestamp":70,"OrderId":13,"OrderSide":"Sell","OrderQuantity":10,"OrderPrice":107,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":65,"TimestampTo":70,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":70,"AggNumNewLimitOrders":14,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       65 |
+| TimestampTo                |                       70 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       70 |
+| AggNumNewLimitOrders       |                       14 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":28,"Timestamp":72,"OrderId":14,"OrderSide":"Buy","Order":{"Id":14,"Timestamp":71,"Side":"Buy","Quantity":10,"Price":92,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":29,"Timestamp":75,"OrderId":14,"OrderSide":"Buy","OrderQuantity":10,"OrderPrice":92,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":70,"TimestampTo":75,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":75,"AggNumNewLimitOrders":15,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       70 |
+| TimestampTo                |                       75 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       75 |
+| AggNumNewLimitOrders       |                       15 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":30,"Timestamp":77,"OrderId":15,"OrderSide":"Sell","Order":{"Id":15,"Timestamp":76,"Side":"Sell","Quantity":10,"Price":108,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":31,"Timestamp":80,"OrderId":15,"OrderSide":"Sell","OrderQuantity":10,"OrderPrice":108,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":75,"TimestampTo":80,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":80,"AggNumNewLimitOrders":16,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       75 |
+| TimestampTo                |                       80 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||    108.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       80 |
+| AggNumNewLimitOrders       |                       16 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":32,"Timestamp":82,"OrderId":16,"OrderSide":"Buy","Order":{"Id":16,"Timestamp":81,"Side":"Buy","Quantity":10,"Price":91,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":33,"Timestamp":85,"OrderId":16,"OrderSide":"Buy","OrderQuantity":10,"OrderPrice":91,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":80,"TimestampTo":85,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":85,"AggNumNewLimitOrders":17,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       80 |
+| TimestampTo                |                       85 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||    108.00 |       10 |
+|       10 |     91.00 ||     9 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       85 |
+| AggNumNewLimitOrders       |                       17 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":34,"Timestamp":87,"OrderId":17,"OrderSide":"Sell","Order":{"Id":17,"Timestamp":86,"Side":"Sell","Quantity":10,"Price":109,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":35,"Timestamp":90,"OrderId":17,"OrderSide":"Sell","OrderQuantity":10,"OrderPrice":109,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":85,"TimestampTo":90,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":90,"AggNumNewLimitOrders":18,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       85 |
+| TimestampTo                |                       90 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||    108.00 |       10 |
+|       10 |     91.00 ||     9 ||    109.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       90 |
+| AggNumNewLimitOrders       |                       18 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":36,"Timestamp":92,"OrderId":18,"OrderSide":"Buy","Order":{"Id":18,"Timestamp":91,"Side":"Buy","Quantity":10,"Price":90,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":37,"Timestamp":95,"OrderId":18,"OrderSide":"Buy","OrderQuantity":10,"OrderPrice":90,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":90,"TimestampTo":95,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10),(90,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":95,"AggNumNewLimitOrders":19,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       90 |
+| TimestampTo                |                       95 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||    108.00 |       10 |
+|       10 |     91.00 ||     9 ||    109.00 |       10 |
+|       10 |     90.00 ||    10 ||           |          |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                       95 |
+| AggNumNewLimitOrders       |                       19 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":38,"Timestamp":97,"OrderId":19,"OrderSide":"Sell","Order":{"Id":19,"Timestamp":96,"Side":"Sell","Quantity":10,"Price":110,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":39,"Timestamp":100,"OrderId":19,"OrderSide":"Sell","OrderQuantity":10,"OrderPrice":110,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":95,"TimestampTo":100,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":5,"LastTradePrice":nan,"LastTradeQuantity":0,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":null,"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10),(90,10)],"AskBookTopLevels":[(101,5),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10),(110,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":100,"AggNumNewLimitOrders":20,"AggNumNewMarketOrders":0,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":0,"AggTradeVolume":0,"AggTradeNotional":0}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                       95 |
+| TimestampTo                |                      100 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                      100 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        5 |
+| LastTradePrice             |                      nan |
+| LastTradeQuantity          |                        0 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        5 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||    108.00 |       10 |
+|       10 |     91.00 ||     9 ||    109.00 |       10 |
+|       10 |     90.00 ||    10 ||    110.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      100 |
+| AggNumNewLimitOrders       |                       20 |
+| AggNumNewMarketOrders      |                        0 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        0 |
+| AggTradeVolume             |                        0 |
+| AggTradeNotional           |                        0 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":40,"Timestamp":102,"OrderId":20,"OrderSide":"Buy","Order":{"Id":20,"Timestamp":101,"Side":"Buy","Quantity":10,"Price":89,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":41,"Timestamp":105,"OrderId":20,"OrderSide":"Buy","OrderQuantity":10,"OrderPrice":89,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":42,"Timestamp":107,"OrderId":21,"OrderSide":"Sell","Order":{"Id":21,"Timestamp":106,"Side":"Sell","Quantity":10,"Price":111,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
@@ -121,45 +1271,785 @@
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":79,"Timestamp":200,"OrderId":39,"OrderSide":"Sell","OrderQuantity":10,"OrderPrice":120,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Market order submit report received: {"ReportId":80,"Timestamp":202,"OrderId":40,"OrderSide":"Buy","Order":{"Id":40,"Timestamp":201,"Side":"Buy","Quantity":3,"OrderType":"Market","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":81,"Timestamp":205,"OrderId":40,"OrderType":"Market","OrderSide":"Buy","MatchOrderId":1,"TradeId":0,"FilledQuantity":3,"FilledPrice":101,"IsMakerOrder":0,"OrderExecutionType":"Filled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":100,"TimestampTo":205,"CumNumNewLimitOrders":20,"CumNumNewMarketOrders":1,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":1,"CumTradeVolume":3,"CumTradeNotional":303,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100.429,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":2,"LastTradePrice":101,"LastTradeQuantity":3,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":0,"Timestamp":204,"BuyId":40,"SellId":1,"Quantity":3,"Price":101,"IsBuyLimitOrder":0,"IsSellLimitOrder":1,"IsBuyInitiated":1,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10),(90,10)],"AskBookTopLevels":[(101,2),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10),(110,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":205,"AggNumNewLimitOrders":40,"AggNumNewMarketOrders":1,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":1,"AggTradeVolume":3,"AggTradeNotional":303}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      100 |
+| TimestampTo                |                      205 |
+| CumNumNewLimitOrders       |                       20 |
+| CumNumNewMarketOrders      |                        1 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        1 |
+| CumTradeVolume             |                        3 |
+| CumTradeNotional           |                      303 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                  100.429 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        2 |
+| LastTradePrice             |                      101 |
+| LastTradeQuantity          |                        3 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        0 |
+| Timestamp                  |                      204 |
+| BuyId                      |                       40 |
+| SellId                     |                        1 |
+| Quantity                   |                        3 |
+| Price                      |                      101 |
+| IsBuyLimitOrder            |                        0 |
+| IsSellLimitOrder           |                        1 |
+| IsBuyInitiated             |                        1 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        2 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||    108.00 |       10 |
+|       10 |     91.00 ||     9 ||    109.00 |       10 |
+|       10 |     90.00 ||    10 ||    110.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      205 |
+| AggNumNewLimitOrders       |                       40 |
+| AggNumNewMarketOrders      |                        1 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        1 |
+| AggTradeVolume             |                        3 |
+| AggTradeNotional           |                      303 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":82,"Timestamp":206,"OrderId":1,"OrderType":"Limit","OrderSide":"Sell","MatchOrderId":40,"TradeId":0,"FilledQuantity":3,"FilledPrice":101,"IsMakerOrder":1,"OrderExecutionType":"PartialFilled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Market order submit report received: {"ReportId":83,"Timestamp":209,"OrderId":41,"OrderSide":"Buy","Order":{"Id":41,"Timestamp":208,"Side":"Buy","Quantity":1,"OrderType":"Market","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":84,"Timestamp":212,"OrderId":41,"OrderType":"Market","OrderSide":"Buy","MatchOrderId":1,"TradeId":1,"FilledQuantity":1,"FilledPrice":101,"IsMakerOrder":0,"OrderExecutionType":"Filled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":205,"TimestampTo":212,"CumNumNewLimitOrders":0,"CumNumNewMarketOrders":1,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":1,"CumTradeVolume":1,"CumTradeNotional":101,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100.667,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":1,"LastTradePrice":101,"LastTradeQuantity":1,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":1,"Timestamp":211,"BuyId":41,"SellId":1,"Quantity":1,"Price":101,"IsBuyLimitOrder":0,"IsSellLimitOrder":1,"IsBuyInitiated":1,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,5),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10),(90,10)],"AskBookTopLevels":[(101,1),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10),(110,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":212,"AggNumNewLimitOrders":40,"AggNumNewMarketOrders":2,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":2,"AggTradeVolume":4,"AggTradeNotional":404}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      205 |
+| TimestampTo                |                      212 |
+| CumNumNewLimitOrders       |                        0 |
+| CumNumNewMarketOrders      |                        1 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        1 |
+| CumTradeVolume             |                        1 |
+| CumTradeNotional           |                      101 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                  100.667 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        1 |
+| LastTradePrice             |                      101 |
+| LastTradeQuantity          |                        1 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        1 |
+| Timestamp                  |                      211 |
+| BuyId                      |                       41 |
+| SellId                     |                        1 |
+| Quantity                   |                        1 |
+| Price                      |                      101 |
+| IsBuyLimitOrder            |                        0 |
+| IsSellLimitOrder           |                        1 |
+| IsBuyInitiated             |                        1 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        1 |
+|        6 |     98.00 ||     2 ||    102.00 |        6 |
+|        7 |     97.00 ||     3 ||    103.00 |        7 |
+|        8 |     96.00 ||     4 ||    104.00 |        8 |
+|        9 |     95.00 ||     5 ||    105.00 |        9 |
+|       10 |     94.00 ||     6 ||    106.00 |       10 |
+|       10 |     93.00 ||     7 ||    107.00 |       10 |
+|       10 |     92.00 ||     8 ||    108.00 |       10 |
+|       10 |     91.00 ||     9 ||    109.00 |       10 |
+|       10 |     90.00 ||    10 ||    110.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      212 |
+| AggNumNewLimitOrders       |                       40 |
+| AggNumNewMarketOrders      |                        2 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        2 |
+| AggTradeVolume             |                        4 |
+| AggTradeNotional           |                      404 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":85,"Timestamp":213,"OrderId":1,"OrderType":"Limit","OrderSide":"Sell","MatchOrderId":41,"TradeId":1,"FilledQuantity":1,"FilledPrice":101,"IsMakerOrder":1,"OrderExecutionType":"PartialFilled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":86,"Timestamp":216,"OrderId":42,"OrderSide":"Buy","Order":{"Id":42,"Timestamp":215,"Side":"Buy","Quantity":1,"Price":98.6,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":87,"Timestamp":219,"OrderId":42,"OrderSide":"Buy","OrderQuantity":1,"OrderPrice":98.6,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":212,"TimestampTo":219,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":101,"MidPrice":100,"MicroPrice":100.667,"Spread":2,"HalfSpread":1,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":1,"LastTradePrice":101,"LastTradeQuantity":1,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":1,"Timestamp":211,"BuyId":41,"SellId":1,"Quantity":1,"Price":101,"IsBuyLimitOrder":0,"IsSellLimitOrder":1,"IsBuyInitiated":1,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,5),(98.6,1),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10)],"AskBookTopLevels":[(101,1),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10),(110,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":219,"AggNumNewLimitOrders":41,"AggNumNewMarketOrders":2,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":2,"AggTradeVolume":4,"AggTradeNotional":404}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      212 |
+| TimestampTo                |                      219 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      101 |
+| MidPrice                   |                      100 |
+| MicroPrice                 |                  100.667 |
+| Spread                     |                        2 |
+| HalfSpread                 |                        1 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        1 |
+| LastTradePrice             |                      101 |
+| LastTradeQuantity          |                        1 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        1 |
+| Timestamp                  |                      211 |
+| BuyId                      |                       41 |
+| SellId                     |                        1 |
+| Quantity                   |                        1 |
+| Price                      |                      101 |
+| IsBuyLimitOrder            |                        0 |
+| IsSellLimitOrder           |                        1 |
+| IsBuyInitiated             |                        1 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    101.00 |        1 |
+|        1 |     98.60 ||     2 ||    102.00 |        6 |
+|        6 |     98.00 ||     3 ||    103.00 |        7 |
+|        7 |     97.00 ||     4 ||    104.00 |        8 |
+|        8 |     96.00 ||     5 ||    105.00 |        9 |
+|        9 |     95.00 ||     6 ||    106.00 |       10 |
+|       10 |     94.00 ||     7 ||    107.00 |       10 |
+|       10 |     93.00 ||     8 ||    108.00 |       10 |
+|       10 |     92.00 ||     9 ||    109.00 |       10 |
+|       10 |     91.00 ||    10 ||    110.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      219 |
+| AggNumNewLimitOrders       |                       41 |
+| AggNumNewMarketOrders      |                        2 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        2 |
+| AggTradeVolume             |                        4 |
+| AggTradeNotional           |                      404 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":88,"Timestamp":221,"OrderId":43,"OrderSide":"Sell","Order":{"Id":43,"Timestamp":220,"Side":"Sell","Quantity":3,"Price":100,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":89,"Timestamp":224,"OrderId":43,"OrderSide":"Sell","OrderQuantity":3,"OrderPrice":100,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":219,"TimestampTo":224,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":100,"MidPrice":99.5,"MicroPrice":99.625,"Spread":1,"HalfSpread":0.5,"OrderImbalance":0,"BestBidSize":5,"BestAskSize":3,"LastTradePrice":101,"LastTradeQuantity":1,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":1,"Timestamp":211,"BuyId":41,"SellId":1,"Quantity":1,"Price":101,"IsBuyLimitOrder":0,"IsSellLimitOrder":1,"IsBuyInitiated":1,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,5),(98.6,1),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10)],"AskBookTopLevels":[(100,3),(101,1),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":224,"AggNumNewLimitOrders":42,"AggNumNewMarketOrders":2,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":2,"AggTradeVolume":4,"AggTradeNotional":404}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      219 |
+| TimestampTo                |                      224 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      100 |
+| MidPrice                   |                     99.5 |
+| MicroPrice                 |                   99.625 |
+| Spread                     |                        1 |
+| HalfSpread                 |                      0.5 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        5 |
+| BestAskSize                |                        3 |
+| LastTradePrice             |                      101 |
+| LastTradeQuantity          |                        1 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        1 |
+| Timestamp                  |                      211 |
+| BuyId                      |                       41 |
+| SellId                     |                        1 |
+| Quantity                   |                        1 |
+| Price                      |                      101 |
+| IsBuyLimitOrder            |                        0 |
+| IsSellLimitOrder           |                        1 |
+| IsBuyInitiated             |                        1 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        5 |     99.00 ||     1 ||    100.00 |        3 |
+|        1 |     98.60 ||     2 ||    101.00 |        1 |
+|        6 |     98.00 ||     3 ||    102.00 |        6 |
+|        7 |     97.00 ||     4 ||    103.00 |        7 |
+|        8 |     96.00 ||     5 ||    104.00 |        8 |
+|        9 |     95.00 ||     6 ||    105.00 |        9 |
+|       10 |     94.00 ||     7 ||    106.00 |       10 |
+|       10 |     93.00 ||     8 ||    107.00 |       10 |
+|       10 |     92.00 ||     9 ||    108.00 |       10 |
+|       10 |     91.00 ||    10 ||    109.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      224 |
+| AggNumNewLimitOrders       |                       42 |
+| AggNumNewMarketOrders      |                        2 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        2 |
+| AggTradeVolume             |                        4 |
+| AggTradeNotional           |                      404 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Market order submit report received: {"ReportId":90,"Timestamp":226,"OrderId":44,"OrderSide":"Sell","Order":{"Id":44,"Timestamp":225,"Side":"Sell","Quantity":2,"OrderType":"Market","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":91,"Timestamp":229,"OrderId":44,"OrderType":"Market","OrderSide":"Sell","MatchOrderId":0,"TradeId":2,"FilledQuantity":2,"FilledPrice":99,"IsMakerOrder":0,"OrderExecutionType":"Filled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":224,"TimestampTo":229,"CumNumNewLimitOrders":0,"CumNumNewMarketOrders":1,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":1,"CumTradeVolume":2,"CumTradeNotional":198,"BestBidPrice":99,"BestAskPrice":100,"MidPrice":99.5,"MicroPrice":99.5,"Spread":1,"HalfSpread":0.5,"OrderImbalance":0,"BestBidSize":3,"BestAskSize":3,"LastTradePrice":99,"LastTradeQuantity":2,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":2,"Timestamp":228,"BuyId":0,"SellId":44,"Quantity":2,"Price":99,"IsBuyLimitOrder":1,"IsSellLimitOrder":0,"IsBuyInitiated":0,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,3),(98.6,1),(98,6),(97,7),(96,8),(95,9),(94,10),(93,10),(92,10),(91,10)],"AskBookTopLevels":[(100,3),(101,1),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":229,"AggNumNewLimitOrders":42,"AggNumNewMarketOrders":3,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":3,"AggTradeVolume":6,"AggTradeNotional":602}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      224 |
+| TimestampTo                |                      229 |
+| CumNumNewLimitOrders       |                        0 |
+| CumNumNewMarketOrders      |                        1 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        1 |
+| CumTradeVolume             |                        2 |
+| CumTradeNotional           |                      198 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      100 |
+| MidPrice                   |                     99.5 |
+| MicroPrice                 |                     99.5 |
+| Spread                     |                        1 |
+| HalfSpread                 |                      0.5 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        3 |
+| BestAskSize                |                        3 |
+| LastTradePrice             |                       99 |
+| LastTradeQuantity          |                        2 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        2 |
+| Timestamp                  |                      228 |
+| BuyId                      |                        0 |
+| SellId                     |                       44 |
+| Quantity                   |                        2 |
+| Price                      |                       99 |
+| IsBuyLimitOrder            |                        1 |
+| IsSellLimitOrder           |                        0 |
+| IsBuyInitiated             |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        3 |     99.00 ||     1 ||    100.00 |        3 |
+|        1 |     98.60 ||     2 ||    101.00 |        1 |
+|        6 |     98.00 ||     3 ||    102.00 |        6 |
+|        7 |     97.00 ||     4 ||    103.00 |        7 |
+|        8 |     96.00 ||     5 ||    104.00 |        8 |
+|        9 |     95.00 ||     6 ||    105.00 |        9 |
+|       10 |     94.00 ||     7 ||    106.00 |       10 |
+|       10 |     93.00 ||     8 ||    107.00 |       10 |
+|       10 |     92.00 ||     9 ||    108.00 |       10 |
+|       10 |     91.00 ||    10 ||    109.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      229 |
+| AggNumNewLimitOrders       |                       42 |
+| AggNumNewMarketOrders      |                        3 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        3 |
+| AggTradeVolume             |                        6 |
+| AggTradeNotional           |                      602 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":92,"Timestamp":230,"OrderId":0,"OrderType":"Limit","OrderSide":"Buy","MatchOrderId":44,"TradeId":2,"FilledQuantity":2,"FilledPrice":99,"IsMakerOrder":1,"OrderExecutionType":"PartialFilled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":93,"Timestamp":233,"OrderId":45,"OrderSide":"Buy","Order":{"Id":45,"Timestamp":232,"Side":"Buy","Quantity":2,"Price":96.6,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":94,"Timestamp":236,"OrderId":45,"OrderSide":"Buy","OrderQuantity":2,"OrderPrice":96.6,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":229,"TimestampTo":236,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":100,"MidPrice":99.5,"MicroPrice":99.5,"Spread":1,"HalfSpread":0.5,"OrderImbalance":0,"BestBidSize":3,"BestAskSize":3,"LastTradePrice":99,"LastTradeQuantity":2,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":2,"Timestamp":228,"BuyId":0,"SellId":44,"Quantity":2,"Price":99,"IsBuyLimitOrder":1,"IsSellLimitOrder":0,"IsBuyInitiated":0,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,3),(98.6,1),(98,6),(97,7),(96.6,2),(96,8),(95,9),(94,10),(93,10),(92,10)],"AskBookTopLevels":[(100,3),(101,1),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10),(109,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":236,"AggNumNewLimitOrders":43,"AggNumNewMarketOrders":3,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":3,"AggTradeVolume":6,"AggTradeNotional":602}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      229 |
+| TimestampTo                |                      236 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      100 |
+| MidPrice                   |                     99.5 |
+| MicroPrice                 |                     99.5 |
+| Spread                     |                        1 |
+| HalfSpread                 |                      0.5 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        3 |
+| BestAskSize                |                        3 |
+| LastTradePrice             |                       99 |
+| LastTradeQuantity          |                        2 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        2 |
+| Timestamp                  |                      228 |
+| BuyId                      |                        0 |
+| SellId                     |                       44 |
+| Quantity                   |                        2 |
+| Price                      |                       99 |
+| IsBuyLimitOrder            |                        1 |
+| IsSellLimitOrder           |                        0 |
+| IsBuyInitiated             |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        3 |     99.00 ||     1 ||    100.00 |        3 |
+|        1 |     98.60 ||     2 ||    101.00 |        1 |
+|        6 |     98.00 ||     3 ||    102.00 |        6 |
+|        7 |     97.00 ||     4 ||    103.00 |        7 |
+|        2 |     96.60 ||     5 ||    104.00 |        8 |
+|        8 |     96.00 ||     6 ||    105.00 |        9 |
+|        9 |     95.00 ||     7 ||    106.00 |       10 |
+|       10 |     94.00 ||     8 ||    107.00 |       10 |
+|       10 |     93.00 ||     9 ||    108.00 |       10 |
+|       10 |     92.00 ||    10 ||    109.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      236 |
+| AggNumNewLimitOrders       |                       43 |
+| AggNumNewMarketOrders      |                        3 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        3 |
+| AggTradeVolume             |                        6 |
+| AggTradeNotional           |                      602 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":95,"Timestamp":238,"OrderId":46,"OrderSide":"Sell","Order":{"Id":46,"Timestamp":237,"Side":"Sell","Quantity":1,"Price":100.36,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":96,"Timestamp":241,"OrderId":46,"OrderSide":"Sell","OrderQuantity":1,"OrderPrice":100.36,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":236,"TimestampTo":241,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":100,"MidPrice":99.5,"MicroPrice":99.5,"Spread":1,"HalfSpread":0.5,"OrderImbalance":0,"BestBidSize":3,"BestAskSize":3,"LastTradePrice":99,"LastTradeQuantity":2,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":2,"Timestamp":228,"BuyId":0,"SellId":44,"Quantity":2,"Price":99,"IsBuyLimitOrder":1,"IsSellLimitOrder":0,"IsBuyInitiated":0,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,3),(98.6,1),(98,6),(97,7),(96.6,2),(96,8),(95,9),(94,10),(93,10),(92,10)],"AskBookTopLevels":[(100,3),(100.36,1),(101,1),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":241,"AggNumNewLimitOrders":44,"AggNumNewMarketOrders":3,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":3,"AggTradeVolume":6,"AggTradeNotional":602}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      236 |
+| TimestampTo                |                      241 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                      100 |
+| MidPrice                   |                     99.5 |
+| MicroPrice                 |                     99.5 |
+| Spread                     |                        1 |
+| HalfSpread                 |                      0.5 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        3 |
+| BestAskSize                |                        3 |
+| LastTradePrice             |                       99 |
+| LastTradeQuantity          |                        2 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        2 |
+| Timestamp                  |                      228 |
+| BuyId                      |                        0 |
+| SellId                     |                       44 |
+| Quantity                   |                        2 |
+| Price                      |                       99 |
+| IsBuyLimitOrder            |                        1 |
+| IsSellLimitOrder           |                        0 |
+| IsBuyInitiated             |                        0 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        3 |     99.00 ||     1 ||    100.00 |        3 |
+|        1 |     98.60 ||     2 ||    100.36 |        1 |
+|        6 |     98.00 ||     3 ||    101.00 |        1 |
+|        7 |     97.00 ||     4 ||    102.00 |        6 |
+|        2 |     96.60 ||     5 ||    103.00 |        7 |
+|        8 |     96.00 ||     6 ||    104.00 |        8 |
+|        9 |     95.00 ||     7 ||    105.00 |        9 |
+|       10 |     94.00 ||     8 ||    106.00 |       10 |
+|       10 |     93.00 ||     9 ||    107.00 |       10 |
+|       10 |     92.00 ||    10 ||    108.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      241 |
+| AggNumNewLimitOrders       |                       44 |
+| AggNumNewMarketOrders      |                        3 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        3 |
+| AggTradeVolume             |                        6 |
+| AggTradeNotional           |                      602 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Market order submit report received: {"ReportId":97,"Timestamp":243,"OrderId":47,"OrderSide":"Buy","Order":{"Id":47,"Timestamp":242,"Side":"Buy","Quantity":3,"OrderType":"Market","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":98,"Timestamp":246,"OrderId":47,"OrderType":"Market","OrderSide":"Buy","MatchOrderId":43,"TradeId":3,"FilledQuantity":3,"FilledPrice":100,"IsMakerOrder":0,"OrderExecutionType":"Filled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":241,"TimestampTo":246,"CumNumNewLimitOrders":0,"CumNumNewMarketOrders":1,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":1,"CumTradeVolume":3,"CumTradeNotional":300,"BestBidPrice":99,"BestAskPrice":100,"MidPrice":99.5,"MicroPrice":100,"Spread":1,"HalfSpread":0.5,"OrderImbalance":1,"BestBidSize":3,"BestAskSize":0,"LastTradePrice":100,"LastTradeQuantity":3,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":3,"Timestamp":245,"BuyId":47,"SellId":43,"Quantity":3,"Price":100,"IsBuyLimitOrder":0,"IsSellLimitOrder":1,"IsBuyInitiated":1,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,3),(98.6,1),(98,6),(97,7),(96.6,2),(96,8),(95,9),(94,10),(93,10),(92,10)],"AskBookTopLevels":[(100,0),(100.36,1),(101,1),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":246,"AggNumNewLimitOrders":44,"AggNumNewMarketOrders":4,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":4,"AggTradeVolume":9,"AggTradeNotional":902}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      241 |
+| TimestampTo                |                      246 |
+| CumNumNewLimitOrders       |                        0 |
+| CumNumNewMarketOrders      |                        1 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        1 |
+| CumTradeVolume             |                        3 |
+| CumTradeNotional           |                      300 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                   100.36 |
+| MidPrice                   |                    99.68 |
+| MicroPrice                 |                   100.02 |
+| Spread                     |                     1.36 |
+| HalfSpread                 |                     0.68 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        3 |
+| BestAskSize                |                        1 |
+| LastTradePrice             |                      100 |
+| LastTradeQuantity          |                        3 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        3 |
+| Timestamp                  |                      245 |
+| BuyId                      |                       47 |
+| SellId                     |                       43 |
+| Quantity                   |                        3 |
+| Price                      |                      100 |
+| IsBuyLimitOrder            |                        0 |
+| IsSellLimitOrder           |                        1 |
+| IsBuyInitiated             |                        1 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        3 |     99.00 ||     1 ||    100.36 |        1 |
+|        1 |     98.60 ||     2 ||    101.00 |        1 |
+|        6 |     98.00 ||     3 ||    102.00 |        6 |
+|        7 |     97.00 ||     4 ||    103.00 |        7 |
+|        2 |     96.60 ||     5 ||    104.00 |        8 |
+|        8 |     96.00 ||     6 ||    105.00 |        9 |
+|        9 |     95.00 ||     7 ||    106.00 |       10 |
+|       10 |     94.00 ||     8 ||    107.00 |       10 |
+|       10 |     93.00 ||     9 ||    108.00 |       10 |
+|       10 |     92.00 ||    10 ||    109.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      246 |
+| AggNumNewLimitOrders       |                       44 |
+| AggNumNewMarketOrders      |                        4 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        4 |
+| AggTradeVolume             |                        9 |
+| AggTradeNotional           |                      902 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Order execution report received: {"ReportId":99,"Timestamp":247,"OrderId":43,"OrderType":"Limit","OrderSide":"Sell","MatchOrderId":47,"TradeId":3,"FilledQuantity":3,"FilledPrice":100,"IsMakerOrder":1,"OrderExecutionType":"Filled","OrderProcessingType":"Execution","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":100,"Timestamp":250,"OrderId":48,"OrderSide":"Sell","Order":{"Id":48,"Timestamp":249,"Side":"Sell","Quantity":3,"Price":101.8,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":101,"Timestamp":253,"OrderId":48,"OrderSide":"Sell","OrderQuantity":3,"OrderPrice":101.8,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":246,"TimestampTo":253,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":100.36,"MidPrice":99.68,"MicroPrice":100.02,"Spread":1.36,"HalfSpread":0.68,"OrderImbalance":0,"BestBidSize":3,"BestAskSize":1,"LastTradePrice":100,"LastTradeQuantity":3,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":3,"Timestamp":245,"BuyId":47,"SellId":43,"Quantity":3,"Price":100,"IsBuyLimitOrder":0,"IsSellLimitOrder":1,"IsBuyInitiated":1,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,3),(98.6,1),(98,6),(97,7),(96.6,2),(96,8),(95,9),(94,10),(93,10),(92,10)],"AskBookTopLevels":[(100.36,1),(101,1),(101.8,3),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10),(108,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":253,"AggNumNewLimitOrders":45,"AggNumNewMarketOrders":4,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":4,"AggTradeVolume":9,"AggTradeNotional":902}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      246 |
+| TimestampTo                |                      253 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                   100.36 |
+| MidPrice                   |                    99.68 |
+| MicroPrice                 |                   100.02 |
+| Spread                     |                     1.36 |
+| HalfSpread                 |                     0.68 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        3 |
+| BestAskSize                |                        1 |
+| LastTradePrice             |                      100 |
+| LastTradeQuantity          |                        3 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        3 |
+| Timestamp                  |                      245 |
+| BuyId                      |                       47 |
+| SellId                     |                       43 |
+| Quantity                   |                        3 |
+| Price                      |                      100 |
+| IsBuyLimitOrder            |                        0 |
+| IsSellLimitOrder           |                        1 |
+| IsBuyInitiated             |                        1 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        3 |     99.00 ||     1 ||    100.36 |        1 |
+|        1 |     98.60 ||     2 ||    101.00 |        1 |
+|        6 |     98.00 ||     3 ||    101.80 |        3 |
+|        7 |     97.00 ||     4 ||    102.00 |        6 |
+|        2 |     96.60 ||     5 ||    103.00 |        7 |
+|        8 |     96.00 ||     6 ||    104.00 |        8 |
+|        9 |     95.00 ||     7 ||    105.00 |        9 |
+|       10 |     94.00 ||     8 ||    106.00 |       10 |
+|       10 |     93.00 ||     9 ||    107.00 |       10 |
+|       10 |     92.00 ||    10 ||    108.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      253 |
+| AggNumNewLimitOrders       |                       45 |
+| AggNumNewMarketOrders      |                        4 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        4 |
+| AggTradeVolume             |                        9 |
+| AggTradeNotional           |                      902 |
+---------------------------------------------------------
+
 [LOG] DEBUG [MatchingEngineMonitor] Limit order submit report received: {"ReportId":102,"Timestamp":255,"OrderId":49,"OrderSide":"Sell","Order":{"Id":49,"Timestamp":254,"Side":"Sell","Quantity":2,"Price":101.54,"OrderType":"Limit","OrderState":"Active","MetaInfo":{}},"OrderProcessingType":"Submission","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [MatchingEngineMonitor] Limit order placement report received: {"ReportId":103,"Timestamp":258,"OrderId":49,"OrderSide":"Sell","OrderQuantity":2,"OrderPrice":101.54,"OrderProcessingType":"Placement","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
-[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot: {"TimestampFrom":253,"TimestampTo":258,"CumNumNewLimitOrders":1,"CumNumNewMarketOrders":0,"CumNumCancelOrders":0,"CumNumModifyPriceOrders":0,"CumNumModifyQuantityOrders":0,"CumNumTrades":0,"CumTradeVolume":0,"CumTradeNotional":0,"BestBidPrice":99,"BestAskPrice":100.36,"MidPrice":99.68,"MicroPrice":100.02,"Spread":1.36,"HalfSpread":0.68,"OrderImbalance":0,"BestBidSize":3,"BestAskSize":1,"LastTradePrice":100,"LastTradeQuantity":3,"TopLevelsSnapshot":{"NumLevels":10,"IsFullBook":0,"LastTrade":{"Id":3,"Timestamp":245,"BuyId":47,"SellId":43,"Quantity":3,"Price":100,"IsBuyLimitOrder":0,"IsSellLimitOrder":1,"IsBuyInitiated":1,"Symbol":"","ExchangeId":""},"BidBookTopLevels":[(99,3),(98.6,1),(98,6),(97,7),(96.6,2),(96,8),(95,9),(94,10),(93,10),(92,10)],"AskBookTopLevels":[(100.36,1),(101,1),(101.54,2),(101.8,3),(102,6),(103,7),(104,8),(105,9),(106,10),(107,10)]}}
-[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics: {"TimestampFrom":0,"TimestampTo":258,"AggNumNewLimitOrders":46,"AggNumNewMarketOrders":4,"AggNumCancelOrders":0,"AggNumModifyPriceOrders":0,"AggNumModifyQuantityOrders":0,"AggNumTrades":4,"AggTradeVolume":9,"AggTradeNotional":902}
+[LOG] DEBUG [MatchingEngineMonitor] Added new order book statistics snapshot:
+---------------------------------------------------------
+|           Order Book Statistics By Timestamp          |
+---------------------------------------------------------
+| TimestampFrom              |                      253 |
+| TimestampTo                |                      258 |
+| CumNumNewLimitOrders       |                        1 |
+| CumNumNewMarketOrders      |                        0 |
+| CumNumCancelOrders         |                        0 |
+| CumNumModifyPriceOrders    |                        0 |
+| CumNumModifyQuantityOrders |                        0 |
+| CumNumTrades               |                        0 |
+| CumTradeVolume             |                        0 |
+| CumTradeNotional           |                        0 |
+| BestBidPrice               |                       99 |
+| BestAskPrice               |                   100.36 |
+| MidPrice                   |                    99.68 |
+| MicroPrice                 |                   100.02 |
+| Spread                     |                     1.36 |
+| HalfSpread                 |                     0.68 |
+| OrderImbalance             |                        0 |
+| BestBidSize                |                        3 |
+| BestAskSize                |                        1 |
+| LastTradePrice             |                      100 |
+| LastTradeQuantity          |                        3 |
+---------------------------------------------------------
+---------------------------------------------------------
+|              Order Book Top Levels Snapshot           |
+---------------------------------------------------------
+| NumLevels                  |                       10 |
+| IsFullBook                 |                        0 |
+---------------------------------------------------------
+|                    Last Trade Details                 |
+---------------------------------------------------------
+| Id                         |                        3 |
+| Timestamp                  |                      245 |
+| BuyId                      |                       47 |
+| SellId                     |                       43 |
+| Quantity                   |                        3 |
+| Price                      |                      100 |
+| IsBuyLimitOrder            |                        0 |
+| IsSellLimitOrder           |                        1 |
+| IsBuyInitiated             |                        1 |
+---------------------------------------------------------
+|                      Order Book Size                  |
+---------------------------------------------------------
+| BID Size | BID Price || Level || ASK Price | ASK Size |
+---------------------------------------------------------
+|        3 |     99.00 ||     1 ||    100.36 |        1 |
+|        1 |     98.60 ||     2 ||    101.00 |        1 |
+|        6 |     98.00 ||     3 ||    101.54 |        2 |
+|        7 |     97.00 ||     4 ||    101.80 |        3 |
+|        2 |     96.60 ||     5 ||    102.00 |        6 |
+|        8 |     96.00 ||     6 ||    103.00 |        7 |
+|        9 |     95.00 ||     7 ||    104.00 |        8 |
+|       10 |     94.00 ||     8 ||    105.00 |        9 |
+|       10 |     93.00 ||     9 ||    106.00 |       10 |
+|       10 |     92.00 ||    10 ||    107.00 |       10 |
+---------------------------------------------------------
+
+[LOG] DEBUG [MatchingEngineMonitor] Updated order book aggregate statistics:
+---------------------------------------------------------
+|             Order Book Aggregate Statistics           |
+---------------------------------------------------------
+| TimestampFrom              |                        0 |
+| TimestampTo                |                      258 |
+| AggNumNewLimitOrders       |                       46 |
+| AggNumNewMarketOrders      |                        4 |
+| AggNumCancelOrders         |                        0 |
+| AggNumModifyPriceOrders    |                        0 |
+| AggNumModifyQuantityOrders |                        0 |
+| AggNumTrades               |                        4 |
+| AggTradeVolume             |                        9 |
+| AggTradeNotional           |                      902 |
+---------------------------------------------------------
+
