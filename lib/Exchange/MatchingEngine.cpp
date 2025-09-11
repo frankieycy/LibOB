@@ -179,6 +179,106 @@ std::vector<AscOrderBookSize::const_iterator> MatchingEngineBase::getAskBookSize
     return iters;
 }
 
+std::vector<PriceLevel> MatchingEngineBase::getBidBookPriceVector() const {
+    std::vector<PriceLevel> prices;
+    if (myBidBookSize.empty())
+        return prices;
+    prices.reserve(myBidBookSize.size());
+    for (const auto& priceSizePair : myBidBookSize)
+        prices.push_back(priceSizePair.first);
+    return prices;
+}
+
+std::vector<PriceLevel> MatchingEngineBase::getAskBookPriceVector() const {
+    std::vector<PriceLevel> prices;
+    if (myAskBookSize.empty())
+        return prices;
+    prices.reserve(myAskBookSize.size());
+    for (const auto& priceSizePair : myAskBookSize)
+        prices.push_back(priceSizePair.first);
+    return prices;
+}
+
+std::vector<uint32_t> MatchingEngineBase::getBidBookSizeVector() const {
+    std::vector<uint32_t> sizes;
+    if (myBidBookSize.empty())
+        return sizes;
+    sizes.reserve(myBidBookSize.size());
+    for (const auto& priceSizePair : myBidBookSize)
+        sizes.push_back(priceSizePair.second);
+    return sizes;
+}
+
+std::vector<uint32_t> MatchingEngineBase::getAskBookSizeVector() const {
+    std::vector<uint32_t> sizes;
+    if (myAskBookSize.empty())
+        return sizes;
+    sizes.reserve(myAskBookSize.size());
+    for (const auto& priceSizePair : myAskBookSize)
+        sizes.push_back(priceSizePair.second);
+    return sizes;
+}
+
+std::vector<PriceLevel> MatchingEngineBase::getBidBookPriceVector(const size_t numLevels) const {
+    std::vector<PriceLevel> prices;
+    if (numLevels == 0 || myBidBookSize.empty())
+        return prices;
+    prices.reserve(std::min(numLevels, myBidBookSize.size()));
+    size_t levels = 0;
+    for (const auto& priceSizePair : myBidBookSize) {
+        if (levels >= numLevels)
+            break;
+        prices.push_back(priceSizePair.first);
+        ++levels;
+    }
+    return prices;
+}
+
+std::vector<PriceLevel> MatchingEngineBase::getAskBookPriceVector(const size_t numLevels) const {
+    std::vector<PriceLevel> prices;
+    if (numLevels == 0 || myAskBookSize.empty())
+        return prices;
+    prices.reserve(std::min(numLevels, myAskBookSize.size()));
+    size_t levels = 0;
+    for (const auto& priceSizePair : myAskBookSize) {
+        if (levels >= numLevels)
+            break;
+        prices.push_back(priceSizePair.first);
+        ++levels;
+    }
+    return prices;
+}
+
+std::vector<uint32_t> MatchingEngineBase::getBidBookSizeVector(const size_t numLevels) const {
+    std::vector<uint32_t> sizes;
+    if (numLevels == 0 || myBidBookSize.empty())
+        return sizes;
+    sizes.reserve(std::min(numLevels, myBidBookSize.size()));
+    size_t levels = 0;
+    for (const auto& priceSizePair : myBidBookSize) {
+        if (levels >= numLevels)
+            break;
+        sizes.push_back(priceSizePair.second);
+        ++levels;
+    }
+    return sizes;
+}
+
+std::vector<uint32_t> MatchingEngineBase::getAskBookSizeVector(const size_t numLevels) const {
+    std::vector<uint32_t> sizes;
+    if (numLevels == 0 || myAskBookSize.empty())
+        return sizes;
+    sizes.reserve(std::min(numLevels, myAskBookSize.size()));
+    size_t levels = 0;
+    for (const auto& priceSizePair : myAskBookSize) {
+        if (levels >= numLevels)
+            break;
+        sizes.push_back(priceSizePair.second);
+        ++levels;
+    }
+    return sizes;
+}
+
 std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};

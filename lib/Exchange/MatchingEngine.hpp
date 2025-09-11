@@ -53,6 +53,14 @@ public:
     uint64_t generateReportId() { return myReportIdHandler.generateId(); }
     uint64_t getCurrentTimestamp() const { return myWorldClock->getCurrentTimestamp(); }
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
+    virtual std::vector<PriceLevel> getBidBookPriceVector() const = 0;
+    virtual std::vector<PriceLevel> getAskBookPriceVector() const = 0;
+    virtual std::vector<uint32_t> getBidBookSizeVector() const = 0;
+    virtual std::vector<uint32_t> getAskBookSizeVector() const = 0;
+    virtual std::vector<PriceLevel> getBidBookPriceVector(const size_t numLevels) const = 0;
+    virtual std::vector<PriceLevel> getAskBookPriceVector(const size_t numLevels) const = 0;
+    virtual std::vector<uint32_t> getBidBookSizeVector(const size_t numLevels) const = 0;
+    virtual std::vector<uint32_t> getAskBookSizeVector(const size_t numLevels) const = 0;
     virtual std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const = 0;
     virtual std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const = 0;
     virtual std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const = 0;
@@ -147,6 +155,14 @@ public:
     std::vector<AscOrderBookSize::const_iterator> getAskBookSizeIterators() const;
     std::vector<DescOrderBookSize::const_iterator> getBidBookSizeIterators(const size_t numLevels) const;
     std::vector<AscOrderBookSize::const_iterator> getAskBookSizeIterators(const size_t numLevels) const;
+    std::vector<PriceLevel> getBidBookPriceVector() const override;
+    std::vector<PriceLevel> getAskBookPriceVector() const override;
+    std::vector<uint32_t> getBidBookSizeVector() const override;
+    std::vector<uint32_t> getAskBookSizeVector() const override;
+    std::vector<PriceLevel> getBidBookPriceVector(const size_t numLevels) const override;
+    std::vector<PriceLevel> getAskBookPriceVector(const size_t numLevels) const override;
+    std::vector<uint32_t> getBidBookSizeVector(const size_t numLevels) const override;
+    std::vector<uint32_t> getAskBookSizeVector(const size_t numLevels) const override;
     std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const override;
     std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const override;
     std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const override;
