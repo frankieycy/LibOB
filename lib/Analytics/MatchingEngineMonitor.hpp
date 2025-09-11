@@ -25,8 +25,10 @@ public:
         size_t numLevels = 0;
         bool isFullBook = false;
         std::shared_ptr<const Market::TradeBase> lastTrade = nullptr;
-        std::vector<Exchange::DescOrderBookSize::const_iterator> bidBookTopLevelIterators;
-        std::vector<Exchange::AscOrderBookSize::const_iterator> askBookTopLevelIterators;
+        std::vector<Exchange::PriceLevel> bidBookTopPrices;
+        std::vector<Exchange::PriceLevel> askBookTopPrices;
+        std::vector<uint32_t> bidBookTopSizes;
+        std::vector<uint32_t> askBookTopSizes;
 
         OrderBookTopLevelsSnapshot(const size_t numLevels = 0, const bool isFullBook = false) : numLevels(numLevels), isFullBook(isFullBook) {}
         // numLevels and isFullBook (configs) are first set before fetching data from matching engine

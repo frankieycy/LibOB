@@ -30,16 +30,20 @@ void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::constructFrom(const std:
     if (!matchingEngine)
         Error::LIB_THROW("[OrderBookTopLevelsSnapshot] Matching engine is null.");
     lastTrade = matchingEngine->getLastTrade();
-    bidBookTopLevelIterators = isFullBook ? matchingEngine->getBidBookSizeIterators() : matchingEngine->getBidBookSizeIterators(numLevels);
-    askBookTopLevelIterators = isFullBook ? matchingEngine->getAskBookSizeIterators() : matchingEngine->getAskBookSizeIterators(numLevels);
+    bidBookTopPrices = isFullBook ? matchingEngine->getBidBookPriceVector() : matchingEngine->getBidBookPriceVector(numLevels);
+    askBookTopPrices = isFullBook ? matchingEngine->getAskBookPriceVector() : matchingEngine->getAskBookPriceVector(numLevels);
+    bidBookTopSizes = isFullBook ? matchingEngine->getBidBookSizeVector() : matchingEngine->getBidBookSizeVector(numLevels);
+    askBookTopSizes = isFullBook ? matchingEngine->getAskBookSizeVector() : matchingEngine->getAskBookSizeVector(numLevels);
 }
 
 void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::clear() {
     numLevels = 0;
     isFullBook = false;
     lastTrade = nullptr;
-    bidBookTopLevelIterators.clear();
-    askBookTopLevelIterators.clear();
+    bidBookTopPrices.clear();
+    askBookTopPrices.clear();
+    bidBookTopSizes.clear();
+    askBookTopSizes.clear();
 }
 
 std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const {
@@ -49,17 +53,15 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const
     "\"IsFullBook\":" << isFullBook << ","
     "\"LastTrade\":"  << (lastTrade ? lastTrade->getAsJson() : "null") << ",";
     oss << "\"BidBookTopLevels\":[";
-    for (size_t i = 0; i < bidBookTopLevelIterators.size(); ++i) {
-        oss << "(" << bidBookTopLevelIterators[i]->first << ","
-            << bidBookTopLevelIterators[i]->second << ")";
-        if (i < bidBookTopLevelIterators.size() - 1)
+    for (size_t i = 0; i < bidBookTopPrices.size(); ++i) {
+        oss << "(" << bidBookTopPrices[i] << "," << bidBookTopSizes[i] << ")";
+        if (i < bidBookTopPrices.size() - 1)
             oss << ",";
     }
     oss << "],\"AskBookTopLevels\":[";
-    for (size_t i = 0; i < askBookTopLevelIterators.size(); ++i) {
-        oss << "(" << askBookTopLevelIterators[i]->first << ","
-            << askBookTopLevelIterators[i]->second << ")";
-        if (i < askBookTopLevelIterators.size() - 1)
+    for (size_t i = 0; i < askBookTopPrices.size(); ++i) {
+        oss << "(" << askBookTopPrices[i] << "," << askBookTopSizes[i] << ")";
+        if (i < askBookTopPrices.size() - 1)
             oss << ",";
     }
     oss << "]}";
@@ -100,25 +102,21 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsTable() cons
     "| BID Size | BID Price || Level || ASK Price | ASK Size |\n"
     "---------------------------------------------------------\n";
     uint level = 1;
-    auto bidIt = bidBookTopLevelIterators.begin();
-    auto askIt = askBookTopLevelIterators.begin();
-    while (bidIt != bidBookTopLevelIterators.end() || askIt != askBookTopLevelIterators.end()) {
+    for (size_t i = 0; i < std::max(bidBookTopPrices.size(), askBookTopPrices.size()); ++i) {
         oss << "|";
-        if (bidIt != bidBookTopLevelIterators.end()) {
-            oss << std::setw(9) << (*bidIt)->second << " | "
+        if (i < bidBookTopPrices.size()) {
+            oss << std::setw(9) << bidBookTopSizes[i] << " | "
                 << std::fixed << std::setprecision(2)
-                << std::setw(9) << (*bidIt)->first << " || "
+                << std::setw(9) << bidBookTopPrices[i] << " || "
                 << std::setw(5) << level << " || ";
-            ++bidIt;
         } else {
             oss << "          |           || ";
             oss << std::setw(5) << level << " || ";
         }
-        if (askIt != askBookTopLevelIterators.end()) {
+        if (i < askBookTopPrices.size()) {
             oss << std::fixed << std::setprecision(2)
-                << std::setw(9) << (*askIt)->first << " | "
-                << std::setw(8) << (*askIt)->second << " |\n";
-            ++askIt;
+                << std::setw(9) << askBookTopPrices[i] << " | "
+                << std::setw(8) << askBookTopSizes[i] << " |\n";
         } else {
             oss << "          |          |\n";
         }
@@ -362,8 +360,8 @@ bool MatchingEngineMonitor::isPriceWithinTopOfBook(const Market::Side side, cons
     const auto& topLevels = getLastOrderBookTopLevelsSnapshot();
     if (topLevels.isFullBook)
         return true;
-    return (side == Market::Side::BUY && (topLevels.bidBookTopLevelIterators.empty() || topLevels.bidBookTopLevelIterators.size() < myOrderBookNumLevels || price >= (*topLevels.bidBookTopLevelIterators.rbegin())->first)) ||
-           (side == Market::Side::SELL && (topLevels.askBookTopLevelIterators.empty() || topLevels.askBookTopLevelIterators.size() < myOrderBookNumLevels || price <= (*topLevels.askBookTopLevelIterators.rbegin())->first));
+    return (side == Market::Side::BUY && (topLevels.bidBookTopPrices.empty() || topLevels.bidBookTopPrices.size() < myOrderBookNumLevels || price >= topLevels.bidBookTopPrices.back())) ||
+           (side == Market::Side::SELL && (topLevels.askBookTopPrices.empty() || topLevels.askBookTopPrices.size() < myOrderBookNumLevels || price <= topLevels.askBookTopPrices.back()));
 }
 
 void MatchingEngineMonitor::init() {
