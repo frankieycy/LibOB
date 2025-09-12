@@ -2,6 +2,16 @@
 #define LOBSTER_DATA_PARSER_HPP
 #include "Utils/Utils.hpp"
 
+namespace Exchange {
+struct OrderExecutionReport;
+struct LimitOrderSubmitReport;
+struct MarketOrderSubmitReport;
+struct OrderModifyPriceReport;
+struct OrderModifyQuantityReport;
+struct OrderCancelReport;
+struct OrderCancelAndReplaceReport;
+}
+
 namespace Parser {
 using namespace Utils;
 
@@ -29,6 +39,13 @@ public:
         OrderBookMessage(const uint64_t timestamp, const MessageType messageType, const uint64_t orderId,
                          const uint32_t quantity, const uint32_t price, const bool isBuy) :
             timestamp(timestamp), messageType(messageType), orderId(orderId), quantity(quantity), price(price), isBuy(isBuy) {}
+        OrderBookMessage(const Exchange::OrderExecutionReport& report);
+        OrderBookMessage(const Exchange::LimitOrderSubmitReport& report);
+        OrderBookMessage(const Exchange::MarketOrderSubmitReport& report);
+        OrderBookMessage(const Exchange::OrderModifyPriceReport& report);
+        OrderBookMessage(const Exchange::OrderModifyQuantityReport& report);
+        OrderBookMessage(const Exchange::OrderCancelReport& report);
+        OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& report);
         std::string getAsCsv() const;
     };
 
