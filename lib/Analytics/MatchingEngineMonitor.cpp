@@ -2,6 +2,7 @@
 #define MATCHING_ENGINE_MONITOR_CPP
 #include "Exchange/MatchingEngine.hpp"
 #include "Analytics/MatchingEngineMonitor.hpp"
+#include "Parser/LobsterDataParser.hpp"
 
 namespace Analytics {
 using namespace Utils;
@@ -392,6 +393,34 @@ void MatchingEngineMonitor::updateStatistics(const Exchange::OrderProcessingRepo
     if (myDebugMode) {
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Added new order book statistics snapshot:\n" << orderBookStats->getAsTable();
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Updated order book aggregate statistics:\n" << myOrderBookAggregateStatistics.getAsTable();
+    }
+}
+
+void MatchingEngineMonitor::exportToLobsterDataParser(Parser::LobsterDataParser& parser) const {
+    if (myOrderProcessingReportsCollector.size() != myOrderBookStatisticsCollector.size())
+        Error::LIB_THROW("[MatchingEngineMonitor::exportToLobsterDataParser] Mismatched number of order processing reports (" +
+            std::to_string(myOrderProcessingReportsCollector.size()) + ") and order book statistics (" +
+            std::to_string(myOrderBookStatisticsCollector.size()) + ").");
+    const auto& reports = myOrderProcessingReportsCollector.getSamples();
+    const auto& stats = myOrderBookStatisticsCollector.getSamples();
+    auto reportsIt = reports.begin();
+    auto statsIt = stats.begin();
+    for (; reportsIt != reports.end() && statsIt != stats.end(); ++reportsIt, ++statsIt) {
+        const auto& topLevelsSnapshot = (*statsIt)->topLevelsSnapshot;
+        auto message = (*reportsIt)->makeLobsterMessage();
+        std::vector<uint32_t> bidPricesInt((*statsIt)->topLevelsSnapshot.bidBookTopPrices.size());
+        std::vector<uint32_t> askPricesInt((*statsIt)->topLevelsSnapshot.askBookTopPrices.size());
+        std::transform(
+            (*statsIt)->topLevelsSnapshot.bidBookTopPrices.begin(),
+            (*statsIt)->topLevelsSnapshot.bidBookTopPrices.end(),
+            bidPricesInt.begin(), [](double p){ return Maths::castDoublePriceAsInt<uint32_t>(p); });
+        std::transform(
+            (*statsIt)->topLevelsSnapshot.askBookTopPrices.begin(),
+            (*statsIt)->topLevelsSnapshot.askBookTopPrices.end(),
+            askPricesInt.begin(), [](double p){ return Maths::castDoublePriceAsInt<uint32_t>(p); });
+        auto snapshot = std::make_shared<const Parser::LobsterDataParser::OrderBookSnapshot>(
+            bidPricesInt, askPricesInt, topLevelsSnapshot.bidBookTopSizes, topLevelsSnapshot.askBookTopSizes);
+        parser.addOrderBookMessageAndSnapshot(message, snapshot);
     }
 }
 

@@ -138,6 +138,8 @@ public:
     virtual void stopMonitoring();
     virtual void updateStatistics(const Exchange::OrderProcessingReport& report);
 
+    virtual void exportToLobsterDataParser(Parser::LobsterDataParser& parser) const;
+
     // communicates with matching engine to keep order book stats in sync
     virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
     virtual void onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report);
