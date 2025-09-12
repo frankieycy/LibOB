@@ -4,6 +4,7 @@
 #include "Market/OrderEventManager.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 #include "Exchange/ITCHEncoder.hpp"
+#include "Parser/LobsterDataParser.hpp"
 #include "Analytics/MatchingEngineMonitor.hpp"
 
 namespace Exchange {
@@ -178,6 +179,10 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> OrderExecutionReport::makeITCHMessage(
     return ITCHEncoder::encodeReport(*this);
 }
 
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> OrderExecutionReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
+}
+
 std::string OrderExecutionReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -215,6 +220,10 @@ std::shared_ptr<Market::OrderEventBase> LimitOrderSubmitReport::makeEvent() cons
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> LimitOrderSubmitReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
+}
+
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> LimitOrderSubmitReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
 }
 
 std::string LimitOrderSubmitReport::getAsJson() const {
@@ -272,6 +281,10 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> MarketOrderSubmitReport::makeITCHMessa
     return ITCHEncoder::encodeReport(*this);
 }
 
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> MarketOrderSubmitReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
+}
+
 std::string MarketOrderSubmitReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -305,6 +318,10 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> OrderCancelReport::makeITCHMessage() c
     return ITCHEncoder::encodeReport(*this);
 }
 
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> OrderCancelReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
+}
+
 std::string OrderCancelReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -336,6 +353,10 @@ std::shared_ptr<Market::OrderEventBase> OrderCancelAndReplaceReport::makeEvent()
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> OrderCancelAndReplaceReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
+}
+
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> OrderCancelAndReplaceReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
 }
 
 std::string OrderCancelAndReplaceReport::getAsJson() const {
@@ -374,6 +395,10 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> OrderModifyPriceReport::makeITCHMessag
     return ITCHEncoder::encodeReport(*this);
 }
 
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> OrderModifyPriceReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
+}
+
 std::string OrderModifyPriceReport::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
@@ -406,6 +431,10 @@ std::shared_ptr<Market::OrderEventBase> OrderModifyQuantityReport::makeEvent() c
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> OrderModifyQuantityReport::makeITCHMessage() const {
     return ITCHEncoder::encodeReport(*this);
+}
+
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> OrderModifyQuantityReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
 }
 
 std::string OrderModifyQuantityReport::getAsJson() const {

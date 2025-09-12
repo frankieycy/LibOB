@@ -148,7 +148,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderExecutionReport>(*this); }
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
@@ -180,7 +180,7 @@ struct LimitOrderSubmitReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<LimitOrderSubmitReport>(*this); }
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::LimitOrder> order = nullptr;
@@ -206,7 +206,7 @@ struct LimitOrderPlacementReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override { return nullptr; }
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override { return nullptr; }
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; }
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<LimitOrderPlacementReport>(*this); }
     virtual std::string getAsJson() const override;
     uint32_t orderQuantity;
@@ -231,7 +231,7 @@ struct MarketOrderSubmitReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<MarketOrderSubmitReport>(*this); }
     virtual std::string getAsJson() const override;
     std::shared_ptr<const Market::MarketOrder> order = nullptr;
@@ -257,7 +257,7 @@ struct OrderCancelReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderCancelReport>(*this); }
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
@@ -286,7 +286,7 @@ struct OrderCancelAndReplaceReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderCancelAndReplaceReport>(*this); }
     virtual std::string getAsJson() const override;
     Market::OrderType orderType;
@@ -314,7 +314,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderModifyPriceReport>(*this); }
     virtual std::string getAsJson() const override;
     uint32_t orderQuantity;
@@ -340,7 +340,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
-    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override { return nullptr; } // TODO
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
     virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderModifyQuantityReport>(*this); }
     virtual std::string getAsJson() const override;
     double orderPrice;
