@@ -11,6 +11,7 @@ struct MarketOrderSubmitReport;
 struct OrderModifyPriceReport;
 struct OrderModifyQuantityReport;
 struct OrderCancelReport;
+struct OrderPartialCancelReport;
 struct OrderCancelAndReplaceReport;
 
 struct ITCHEncoder {
@@ -250,6 +251,7 @@ struct ITCHEncoder {
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderModifyPriceReport& report);
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderModifyQuantityReport& report);
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderCancelReport& report);
+    static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderPartialCancelReport& report);
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderCancelAndReplaceReport& report);
 };
 

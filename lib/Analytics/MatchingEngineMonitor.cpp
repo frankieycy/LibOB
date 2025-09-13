@@ -493,6 +493,10 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelR
     updateStatistics(report);
 }
 
+void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& report) {
+    // TODO
+}
+
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
     if (!myMonitoringEnabled)
         return;

@@ -339,6 +339,44 @@ std::string OrderCancelReport::getAsJson() const {
     return oss.str();
 }
 
+void OrderPartialCancelReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
+    orderEventManager.onOrderProcessingReport(*this);
+}
+
+void OrderPartialCancelReport::dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const {
+    matchingEngineMonitor.onOrderProcessingReport(*this);
+}
+
+std::shared_ptr<Market::OrderEventBase> OrderPartialCancelReport::makeEvent() const {
+    return std::make_shared<Market::OrderPartialCancelEvent>(reportId, orderId, timestamp, cancelQuantity);
+}
+
+std::shared_ptr<ITCHEncoder::ITCHMessage> OrderPartialCancelReport::makeITCHMessage() const {
+    return ITCHEncoder::encodeReport(*this);
+}
+
+std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> OrderPartialCancelReport::makeLobsterMessage() const {
+    return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
+}
+
+std::string OrderPartialCancelReport::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+        "\"ReportId\":"              << reportId             << ","
+        "\"Timestamp\":"             << timestamp            << ","
+        "\"OrderId\":"               << orderId              << ","
+        "\"OrderSide\":\""           << orderSide            << "\","
+        "\"OrderType\":\""           << orderType            << "\","
+        "\"CancelQuantity\":"        << cancelQuantity       << ","
+        "\"OrderProcessingType\":\"" << orderProcessingType  << "\","
+        "\"Status\":\""              << status               << "\","
+        "\"AgentIdHash\":"           << agentIdHash.value_or(0) << ","
+        "\"Latency\":"               << latency.value_or(0)  << ","
+        "\"Message\":\""             << message.value_or("") << "\"";
+    oss << "}";
+    return oss.str();
+}
+
 void OrderCancelAndReplaceReport::dispatchTo(Market::OrderEventManagerBase& orderEventManager) const {
     orderEventManager.onOrderProcessingReport(*this);
 }

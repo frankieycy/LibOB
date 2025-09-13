@@ -16,7 +16,7 @@ class MatchingEngineMonitor;
 
 namespace Exchange {
 enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NULL_ORDER_MATCHING_STRATEGY };
-enum class OrderProcessingType   { EXECUTE, SUBMIT, PLACEMENT, CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
+enum class OrderProcessingType   { EXECUTE, SUBMIT, PLACEMENT, CANCEL, PARTIAL_CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
 enum class OrderProcessingStatus { SUCCESS, FAILURE, NULL_ORDER_PROCESSING_STATUS };
 enum class OrderExecutionType    { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
 
@@ -263,6 +263,36 @@ struct OrderCancelReport : public OrderProcessingReport {
     Market::OrderType orderType;
     std::optional<uint32_t> orderQuantity;
     std::optional<double> orderPrice;
+};
+
+struct OrderPartialCancelReport : public OrderProcessingReport {
+    OrderPartialCancelReport() = delete;
+    OrderPartialCancelReport(
+        const uint64_t reportId,
+        const uint64_t timestamp,
+        const uint64_t orderId,
+        const Market::Side orderSide,
+        const Market::OrderType orderType,
+        const std::optional<uint32_t>& orderQuantity,
+        const std::optional<double>& orderPrice,
+        const uint32_t cancelQuantity,
+        const OrderProcessingStatus status,
+        const std::optional<uint64_t> latency = std::nullopt,
+        const std::optional<std::string> message = std::nullopt) :
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message),
+        orderType(orderType), orderQuantity(orderQuantity), orderPrice(orderPrice), cancelQuantity(cancelQuantity) {}
+    virtual ~OrderPartialCancelReport() = default;
+    virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
+    virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
+    virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
+    virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
+    virtual std::shared_ptr<OrderProcessingReport> clone() const override { return std::make_shared<OrderPartialCancelReport>(*this); }
+    virtual std::string getAsJson() const override;
+    Market::OrderType orderType;
+    std::optional<uint32_t> orderQuantity;
+    std::optional<double> orderPrice;
+    uint32_t cancelQuantity;
 };
 
 struct OrderCancelAndReplaceReport : public OrderProcessingReport {

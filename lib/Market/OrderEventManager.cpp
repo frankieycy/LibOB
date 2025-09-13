@@ -267,6 +267,10 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
     }
 }
 
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& /* report */) {
+    // TODO
+}
+
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel and replace report received: " << report;

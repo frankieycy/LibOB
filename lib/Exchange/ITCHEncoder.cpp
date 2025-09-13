@@ -331,6 +331,10 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
     );
 }
 
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderPartialCancelReport& /* report */) {
+    return nullptr; // TODO
+}
+
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelAndReplaceReport& report) {
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
         return nullptr;

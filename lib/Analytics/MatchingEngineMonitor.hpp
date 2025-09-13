@@ -146,6 +146,7 @@ public:
     virtual void onOrderProcessingReport(const Exchange::LimitOrderPlacementReport& report);
     virtual void onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderCancelReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderPartialCancelReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report);
     virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
