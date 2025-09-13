@@ -473,7 +473,9 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
                 it->second = {&newQueue, std::prev(newQueue.end())};
                 if (newPrice != oldPrice)
                     logOrderProcessingReport(std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), oldId, side, oldQuantity, newPrice, OrderProcessingStatus::SUCCESS));
-                if (newQuantity != oldQuantity)
+                if (newQuantity < oldQuantity)
+                    logOrderProcessingReport(std::make_shared<OrderPartialCancelReport>(generateReportId(), clockTick(), oldId, side, Market::OrderType::LIMIT, oldPrice, oldQuantity, oldQuantity - newQuantity, OrderProcessingStatus::SUCCESS));
+                else if (newQuantity > oldQuantity)
                     logOrderProcessingReport(std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), oldId, side, oldPrice, newQuantity, OrderProcessingStatus::SUCCESS));
             }
         } else { // order gets cancelled
