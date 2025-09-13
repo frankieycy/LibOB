@@ -883,7 +883,7 @@
 [LOG] WARNING [OrderEventManagerBase::createOrderModifyPriceEvent] Order not found - orderId = 9.
 [LOG] WARNING [OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.
 [LOG] DEBUG [OrderEventManagerBase] Order event submitted: {"EventId":17,"OrderId":2,"Timestamp":76,"EventType":"ModifyQuantity","ModifiedQuantity":5}
-[LOG] DEBUG [OrderEventManagerBase] Order modify quantity report received: {"ReportId":25,"Timestamp":78,"OrderId":2,"OrderSide":"Buy","OrderPrice":100,"ModifiedQuantity":5,"OrderProcessingType":"ModifyQuantity","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
+[LOG] DEBUG [OrderEventManagerBase] Order partial cancel report received: {"ReportId":25,"Timestamp":78,"OrderId":2,"OrderSide":"Buy","OrderType":"Limit","CancelQuantity":5,"OrderProcessingType":"PartialCancel","Status":"Success","AgentIdHash":0,"Latency":0,"Message":""}
 [LOG] DEBUG [OrderEventManagerBase] Order event manager state:
 ============================== Active Orders Snapshot =============================
     Id    |  Timestamp  |    Type    |   Side   |   Price   |   Size   |   State   
