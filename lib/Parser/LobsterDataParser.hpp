@@ -9,6 +9,7 @@ struct MarketOrderSubmitReport;
 struct OrderModifyPriceReport;
 struct OrderModifyQuantityReport;
 struct OrderCancelReport;
+struct OrderPartialCancelReport;
 struct OrderCancelAndReplaceReport;
 }
 
@@ -17,23 +18,23 @@ using namespace Utils;
 
 class LobsterDataParser {
 public:
-    enum class MessageType {
-        ORDER_ADD,
-        ORDER_CANCEL,
-        ORDER_DELETE,
-        ORDER_EXECUTE_VISIBLE,
-        ORDER_EXECUTE_HIDDEN,
-        TRADING_HALT,
-        NULL_MESSAGE_TYPE
+    enum class MessageType : uint8_t {
+        ORDER_ADD = 1,                // 1: Submission of a new limit order
+        ORDER_CANCEL = 2,             // 2. Cancellation (Partial deletion of a limit order)
+        ORDER_DELETE = 3,             // 3. Deletion (Total deletion of a limit order)
+        ORDER_EXECUTE_VISIBLE = 4,    // 4. Execution of a visible limit order
+        ORDER_EXECUTE_HIDDEN = 5,     // 5. Execution of a hidden limit order
+        TRADING_HALT = 7,             // 7. Trading halt indicator
+        NULL_MESSAGE_TYPE = 0
     };
 
     struct OrderBookMessage {
-        uint64_t timestamp;
-        MessageType messageType;
-        uint64_t orderId;
-        uint32_t quantity;
-        uint32_t price;
-        bool isBuy;
+        uint64_t timestamp = 0;
+        MessageType messageType = MessageType::NULL_MESSAGE_TYPE;
+        uint64_t orderId = 0;
+        uint32_t quantity = 0;
+        uint32_t price = 0;
+        bool isBuy = true;
 
         OrderBookMessage() = delete;
         OrderBookMessage(const uint64_t timestamp, const MessageType messageType, const uint64_t orderId,
@@ -45,7 +46,9 @@ public:
         OrderBookMessage(const Exchange::OrderModifyPriceReport& report);
         OrderBookMessage(const Exchange::OrderModifyQuantityReport& report);
         OrderBookMessage(const Exchange::OrderCancelReport& report);
+        OrderBookMessage(const Exchange::OrderPartialCancelReport& report);
         OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& report);
+        bool isValid() const { return messageType != MessageType::NULL_MESSAGE_TYPE; }
         std::string getAsCsv() const;
     };
 
