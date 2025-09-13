@@ -267,8 +267,46 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
     }
 }
 
-void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& /* report */) {
-    // TODO
+void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& report) {
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order partial cancel report received: " << report;
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order partial cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        return;
+    }
+    if (report.orderType == Market::OrderType::LIMIT) {
+        const auto& it = fetchLimitOrderIterator(report.orderId);
+        if (it != myActiveLimitOrders.end()) {
+            auto order = it->second;
+            order->setTimestamp(clockTick());
+            if (report.cancelQuantity < order->getQuantity()) {
+                order->reduceQuantityBy(report.cancelQuantity);
+            } else {
+                order->setQuantity(0);
+                order->setOrderState(Market::OrderState::CANCELLED);
+                myActiveLimitOrders.erase(it);
+            }
+        } else {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
+        }
+    } else if (report.orderType == Market::OrderType::MARKET) {
+        const auto& it = fetchMarketOrderIterator(report.orderId);
+        if (it != myQueuedMarketOrders.end()) {
+            auto order = it->second;
+            order->setTimestamp(clockTick());
+            if (report.cancelQuantity < order->getQuantity()) {
+                order->reduceQuantityBy(report.cancelQuantity);
+            } else {
+                order->setQuantity(0);
+                order->setOrderState(Market::OrderState::CANCELLED);
+                myQueuedMarketOrders.erase(it);
+            }
+        } else {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
+        }
+    } else {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in partial cancel report - orderId = " << report.orderId;
+    }
 }
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {

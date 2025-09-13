@@ -331,8 +331,16 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
     );
 }
 
-std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderPartialCancelReport& /* report */) {
-    return nullptr; // TODO
+std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderPartialCancelReport& report) {
+    if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
+        return nullptr;
+    return std::make_shared<ITCHOrderCancelMessage>(
+        report.reportId,
+        report.timestamp,
+        report.agentIdHash.value_or(ITCHEncoder::DEFAULT_AGENT_ID),
+        report.orderId,
+        report.cancelQuantity
+    );
 }
 
 std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchange::OrderCancelAndReplaceReport& report) {

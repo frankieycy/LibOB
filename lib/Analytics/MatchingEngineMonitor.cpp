@@ -494,7 +494,18 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelR
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& report) {
-    // TODO
+    if (!myMonitoringEnabled)
+        return;
+    if (myDebugMode)
+        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order partial cancel report received: " << report;
+    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    ++myOrderBookAggregateStatistics.aggNumModifyQuantityOrders; // partial cancel represented as a modify quantity order
+    if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
+        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Consts::NAN_DOUBLE), report.orderType))
+            return;
+    } else
+        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + to_string(myOrderBookStatisticsTimestampStrategy));
+    updateStatistics(report);
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
