@@ -25,6 +25,7 @@ std::string to_string(const OrderProcessingType& orderProcessingType) {
         case OrderProcessingType::SUBMIT:            return "Submission";
         case OrderProcessingType::PLACEMENT:         return "Placement";
         case OrderProcessingType::CANCEL:            return "Cancel";
+        case OrderProcessingType::PARTIAL_CANCEL:    return "PartialCancel";
         case OrderProcessingType::CANCEL_REPLACE:    return "CancelReplace";
         case OrderProcessingType::MODIFY_PRICE:      return "ModifyPrice";
         case OrderProcessingType::MODIFY_QUANTITY:   return "ModifyQuantity";

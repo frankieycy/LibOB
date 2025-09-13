@@ -279,7 +279,7 @@ struct OrderPartialCancelReport : public OrderProcessingReport {
         const OrderProcessingStatus status,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
-        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::CANCEL, status, latency, message),
+        OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::PARTIAL_CANCEL, status, latency, message),
         orderType(orderType), orderQuantity(orderQuantity), orderPrice(orderPrice), cancelQuantity(cancelQuantity) {}
     virtual ~OrderPartialCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
