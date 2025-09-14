@@ -420,7 +420,11 @@ void MatchingEngineMonitor::exportToLobsterDataParser(Parser::LobsterDataParser&
             askPricesInt.begin(), [](double p){ return Maths::castDoublePriceAsInt<uint32_t>(p); });
         auto snapshot = std::make_shared<const Parser::LobsterDataParser::OrderBookSnapshot>(
             bidPricesInt, askPricesInt, topLevelsSnapshot.bidBookTopSizes, topLevelsSnapshot.askBookTopSizes);
-        parser.addOrderBookMessageAndSnapshot(message, snapshot);
+        if (message->isValid()) {
+            parser.addOrderBookMessageAndSnapshot(message, snapshot);
+        } else if (message->toSplitIntoDeleteAndAdd()) {
+            // TODO: split order modify and cancel/replace report into delete and add messages, with the same book snapshot
+        }
     }
 }
 
