@@ -29,14 +29,17 @@ public:
     };
 
     struct OrderBookMessage {
-        uint64_t timestamp = 0;
-        MessageType messageType = MessageType::NULL_MESSAGE_TYPE;
-        uint64_t orderId = 0;
-        uint32_t quantity = 0;
-        uint32_t price = 0;
-        bool isBuy = true;
+        uint64_t timestamp;
+        MessageType messageType;
+        uint64_t orderId;
+        uint32_t quantity;
+        uint32_t price;
+        bool isBuy;
+        bool isOrderDeleteAndAdd;
 
-        OrderBookMessage() = delete;
+        OrderBookMessage(bool isOrderDeleteAndAdd = false) :
+            timestamp(0), messageType(MessageType::NULL_MESSAGE_TYPE), orderId(0), quantity(0), price(0), isBuy(true),
+            isOrderDeleteAndAdd(isOrderDeleteAndAdd) {}
         OrderBookMessage(const uint64_t timestamp, const MessageType messageType, const uint64_t orderId,
                          const uint32_t quantity, const uint32_t price, const bool isBuy) :
             timestamp(timestamp), messageType(messageType), orderId(orderId), quantity(quantity), price(price), isBuy(isBuy) {}
@@ -49,6 +52,7 @@ public:
         OrderBookMessage(const Exchange::OrderPartialCancelReport& report);
         OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& report);
         bool isValid() const { return messageType != MessageType::NULL_MESSAGE_TYPE; }
+        bool toSplitIntoDeleteAndAdd() const { return isOrderDeleteAndAdd; }
         std::string getAsCsv() const;
     };
 

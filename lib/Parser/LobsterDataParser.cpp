@@ -23,7 +23,7 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::LimitOrder
         return;
     const auto& order = report.order;
     if (!order)
-        Error::LIB_THROW("ITCHEncoder::encodeReport: LimitOrderSubmitReport order is null");
+        Error::LIB_THROW("[ITCHEncoder::encodeReport] LimitOrderSubmitReport order is null.");
     timestamp = report.timestamp;
     messageType = MessageType::ORDER_ADD;
     orderId = order->getId();
@@ -32,11 +32,14 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::LimitOrder
     isBuy = order->isBuy();
 }
 
-LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::MarketOrderSubmitReport& /* report */) {} // TODO
+// market order submit implies immediate execution, and execution report must appear afterwards
+LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::MarketOrderSubmitReport& /* report */) : OrderBookMessage() {}
 
-LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderModifyPriceReport& /* report */) {} // TODO
+// represented as delete + add in Lobster format
+LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderModifyPriceReport& /* report */) : OrderBookMessage(true) {}
 
-LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderModifyQuantityReport& /* report */) {} // TODO
+// represented as delete + add in Lobster format
+LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderModifyQuantityReport& /* report */) : OrderBookMessage(true) {}
 
 LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderCancelReport& report) {
     // cancel report indicates the total deletion of an order
@@ -61,7 +64,8 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderParti
     isBuy = report.orderSide == Market::Side::BUY;
 }
 
-LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& /* report */) {} // TODO
+// represented as delete + add in Lobster format
+LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& /* report */) : OrderBookMessage(true) {}
 
 std::string LobsterDataParser::OrderBookMessage::getAsCsv() const {
     return ""; // TODO
