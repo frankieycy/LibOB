@@ -5,6 +5,7 @@
 namespace Exchange {
 struct OrderExecutionReport;
 struct LimitOrderSubmitReport;
+struct LimitOrderPlacementReport;
 struct MarketOrderSubmitReport;
 struct OrderModifyPriceReport;
 struct OrderModifyQuantityReport;
@@ -41,10 +42,12 @@ public:
             timestamp(0), messageType(MessageType::NULL_MESSAGE_TYPE), orderId(0), quantity(0), price(0), isBuy(true),
             isOrderDeleteAndAdd(isOrderDeleteAndAdd) {}
         OrderBookMessage(const uint64_t timestamp, const MessageType messageType, const uint64_t orderId,
-                         const uint32_t quantity, const uint32_t price, const bool isBuy) :
-            timestamp(timestamp), messageType(messageType), orderId(orderId), quantity(quantity), price(price), isBuy(isBuy) {}
+                         const uint32_t quantity, const uint32_t price, const bool isBuy, const bool isOrderDeleteAndAdd = false) :
+            timestamp(timestamp), messageType(messageType), orderId(orderId), quantity(quantity), price(price), isBuy(isBuy),
+            isOrderDeleteAndAdd(isOrderDeleteAndAdd) {}
         OrderBookMessage(const Exchange::OrderExecutionReport& report);
         OrderBookMessage(const Exchange::LimitOrderSubmitReport& report);
+        OrderBookMessage(const Exchange::LimitOrderPlacementReport& report);
         OrderBookMessage(const Exchange::MarketOrderSubmitReport& report);
         OrderBookMessage(const Exchange::OrderModifyPriceReport& report);
         OrderBookMessage(const Exchange::OrderModifyQuantityReport& report);

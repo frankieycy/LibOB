@@ -18,18 +18,18 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderExecu
     }
 }
 
-LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::LimitOrderSubmitReport& report) {
+// limit order submit only indicates the reception of the order, and placement report must appear afterwards
+LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::LimitOrderSubmitReport& /* report */) : OrderBookMessage() {}
+
+LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::LimitOrderPlacementReport& report) {
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
         return;
-    const auto& order = report.order;
-    if (!order)
-        Error::LIB_THROW("[ITCHEncoder::encodeReport] LimitOrderSubmitReport order is null.");
     timestamp = report.timestamp;
     messageType = MessageType::ORDER_ADD;
-    orderId = order->getId();
-    quantity = order->getQuantity();
-    price = order->getIntPrice();
-    isBuy = order->isBuy();
+    orderId = report.orderId;
+    quantity = report.orderQuantity;
+    price = Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice);
+    isBuy = report.orderSide == Market::Side::BUY;
 }
 
 // market order submit implies immediate execution, and execution report must appear afterwards
