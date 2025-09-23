@@ -407,7 +407,7 @@ void MatchingEngineMonitor::exportToLobsterDataParser(Parser::LobsterDataParser&
     auto statsIt = stats.begin();
     for (; reportsIt != reports.end() && statsIt != stats.end(); ++reportsIt, ++statsIt) {
         const auto& topLevelsSnapshot = (*statsIt)->topLevelsSnapshot;
-        auto message = (*reportsIt)->makeLobsterMessage();
+        const auto message = (*reportsIt)->makeLobsterMessage();
         std::vector<uint32_t> bidPricesInt((*statsIt)->topLevelsSnapshot.bidBookTopPrices.size());
         std::vector<uint32_t> askPricesInt((*statsIt)->topLevelsSnapshot.askBookTopPrices.size());
         std::transform(
@@ -423,7 +423,16 @@ void MatchingEngineMonitor::exportToLobsterDataParser(Parser::LobsterDataParser&
         if (message->isValid()) {
             parser.addOrderBookMessageAndSnapshot(message, snapshot);
         } else if (message->toSplitIntoDeleteAndAdd()) {
-            // TODO: split order modify and cancel/replace report into delete and add messages, with the same book snapshot
+            // split order modify and cancel/replace report into atomic delete and add messages
+            const auto atomMessages = (*reportsIt)->decomposeIntoAtomicReports();
+            if (atomMessages.size() == 2 &&
+                atomMessages[0]->orderProcessingType == Exchange::OrderProcessingType::CANCEL &&
+                atomMessages[1]->orderProcessingType == Exchange::OrderProcessingType::SUBMIT) {
+                const auto messageDel = atomMessages[0]->makeLobsterMessage();
+                const auto messageAdd = atomMessages[1]->makeLobsterMessage();
+                parser.addOrderBookMessageAndSnapshot(messageDel, nullptr);
+                parser.addOrderBookMessageAndSnapshot(messageAdd, snapshot);
+            }
         }
     }
 }
