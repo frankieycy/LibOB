@@ -8,14 +8,12 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderExecu
     // assume only visible executions for now
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS)
         return;
-    if (report.orderType == Market::OrderType::LIMIT) {
-        timestamp = report.timestamp;
-        messageType = MessageType::ORDER_EXECUTE_VISIBLE;
-        orderId = report.orderId;
-        quantity = report.filledQuantity;
-        price = Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice);
-        isBuy = report.orderSide == Market::Side::BUY;
-    }
+    timestamp = report.timestamp;
+    messageType = MessageType::ORDER_EXECUTE_VISIBLE;
+    orderId = report.orderId;
+    quantity = report.filledQuantity;
+    price = Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice);
+    isBuy = report.orderSide == Market::Side::BUY;
 }
 
 // limit order submit only indicates the reception of the order, and placement report must appear afterwards
