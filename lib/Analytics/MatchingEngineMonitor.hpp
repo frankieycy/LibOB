@@ -32,7 +32,7 @@ public:
 
         OrderBookTopLevelsSnapshot(const size_t numLevels = 0, const bool isFullBook = false) : numLevels(numLevels), isFullBook(isFullBook) {}
         // numLevels and isFullBook (configs) are first set before fetching data from matching engine
-        void constructFrom(const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine);
+        void constructFrom(const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine);
         void clear();
         std::string getAsJson() const;
         std::string getAsCsv() const;
@@ -83,7 +83,7 @@ public:
 
         OrderBookStatisticsByTimestamp(const size_t numLevels = 0, const bool isFullBook = false) : topLevelsSnapshot(numLevels, isFullBook) {}
         void constructFrom(
-            const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine,
+            const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine,
             const OrderBookAggregateStatistics& orderBookAggregateStatistics,
             const OrderBookAggregateStatistics& orderBookAggregateStatisticsCache);
         void clear();
@@ -104,10 +104,10 @@ public:
         std::string getAsTable() const;
     };
 
-    MatchingEngineMonitor(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine);
+    MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~MatchingEngineMonitor() = default;
 
-    std::shared_ptr<Exchange::MatchingEngineBase> getMatchingEngine() const { return myMatchingEngine; }
+    std::shared_ptr<Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
     bool isDebugMode() const { return myDebugMode; }
     bool isMonitoringEnabled() const { return myMonitoringEnabled; }
@@ -121,7 +121,7 @@ public:
     const OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const;
     bool isPriceWithinTopOfBook(const Market::Side side, const double price, const std::optional<Market::OrderType>& type = std::nullopt) const;
 
-    void setMatchingEngine(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine) { myMatchingEngine = matchingEngine; }
+    void setMatchingEngine(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setFetchFullOrderBook(const bool fetchFullOrderBook) { myFetchFullOrderBook = fetchFullOrderBook; }
@@ -152,7 +152,7 @@ public:
     virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
 
 private:
-    std::shared_ptr<Exchange::MatchingEngineBase> myMatchingEngine;
+    std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
     std::shared_ptr<const Market::TradeBase> myLastTrade; // caches the last trade to uniquely count executions sent from both sides of the trade
     bool myDebugMode = false;

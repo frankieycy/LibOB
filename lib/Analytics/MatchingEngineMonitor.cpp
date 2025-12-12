@@ -27,7 +27,7 @@ std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderBo
 
 std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderEventProcessingLatency& latency) { return out << latency.getAsJson(); }
 
-void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::constructFrom(const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine) {
+void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::constructFrom(const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine) {
     if (!matchingEngine)
         Error::LIB_THROW("[OrderBookTopLevelsSnapshot] Matching engine is null.");
     lastTrade = matchingEngine->getLastTrade();
@@ -197,7 +197,7 @@ std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsTable() co
 }
 
 void MatchingEngineMonitor::OrderBookStatisticsByTimestamp::constructFrom(
-    const std::shared_ptr<const Exchange::MatchingEngineBase>& matchingEngine,
+    const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine,
     const OrderBookAggregateStatistics& orderBookAggregateStatistics,
     const OrderBookAggregateStatistics& orderBookAggregateStatisticsCache) {
     if (!matchingEngine)
@@ -352,7 +352,7 @@ std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsTable() con
     return ""; // TODO
 }
 
-MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::MatchingEngineBase>& matchingEngine) :
+MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) :
     myMatchingEngine(matchingEngine), myDebugMode(matchingEngine->isDebugMode()), myMonitoringEnabled(true) {
     if (!matchingEngine)
         Error::LIB_THROW("[MatchingEngineMonitor] Matching engine is null.");
