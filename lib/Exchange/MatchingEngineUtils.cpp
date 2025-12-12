@@ -391,7 +391,12 @@ void OrderCancelAndReplaceReport::dispatchTo(Analytics::MatchingEngineMonitor& m
 }
 
 std::vector<std::shared_ptr<const OrderProcessingReport>> OrderCancelAndReplaceReport::decomposeIntoAtomicReports() const {
-    return {}; // TODO
+    return {
+        std::make_shared<OrderCancelReport>(reportId, timestamp, orderId, orderSide, Market::OrderType::LIMIT, std::nullopt, std::nullopt, status),
+        std::make_shared<LimitOrderSubmitReport>(reportId, timestamp, orderId, orderSide,
+            std::make_shared<Market::LimitOrder>(newOrderId, timestamp, orderSide, newQuantity, newPrice),
+            status)
+    };
 }
 
 std::shared_ptr<Market::OrderEventBase> OrderCancelAndReplaceReport::makeEvent() const {
@@ -435,7 +440,12 @@ void OrderModifyPriceReport::dispatchTo(Analytics::MatchingEngineMonitor& matchi
 }
 
 std::vector<std::shared_ptr<const OrderProcessingReport>> OrderModifyPriceReport::decomposeIntoAtomicReports() const {
-    return {}; // TODO
+    return {
+        std::make_shared<OrderCancelReport>(reportId, timestamp, orderId, orderSide, Market::OrderType::LIMIT, std::nullopt, std::nullopt, status),
+        std::make_shared<LimitOrderSubmitReport>(reportId, timestamp, orderId, orderSide,
+            std::make_shared<Market::LimitOrder>(orderId, timestamp, orderSide, orderQuantity, modifiedPrice),
+            status)
+    };
 }
 
 std::shared_ptr<Market::OrderEventBase> OrderModifyPriceReport::makeEvent() const {
@@ -477,7 +487,12 @@ void OrderModifyQuantityReport::dispatchTo(Analytics::MatchingEngineMonitor& mat
 }
 
 std::vector<std::shared_ptr<const OrderProcessingReport>> OrderModifyQuantityReport::decomposeIntoAtomicReports() const {
-    return {}; // TODO
+    return {
+        std::make_shared<OrderCancelReport>(reportId, timestamp, orderId, orderSide, Market::OrderType::LIMIT, std::nullopt, std::nullopt, status),
+        std::make_shared<LimitOrderSubmitReport>(reportId, timestamp, orderId, orderSide,
+            std::make_shared<Market::LimitOrder>(orderId, timestamp, orderSide, modifiedQuantity, orderPrice),
+            status)
+    };
 }
 
 std::shared_ptr<Market::OrderEventBase> OrderModifyQuantityReport::makeEvent() const {
