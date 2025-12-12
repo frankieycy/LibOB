@@ -4,6 +4,7 @@
 #include "Market/OrderEventManager.hpp"
 #include "Exchange/MatchingEngine.hpp"
 #include "Analytics/MatchingEngineMonitor.hpp"
+#include "Parser/LobsterDataParser.hpp"
 #include "Tests/TestMatchingEngine.hpp"
 
 namespace Tests {
@@ -492,6 +493,7 @@ void testMatchingEngineMonitorLobsterOutput() {
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};
     Analytics::MatchingEngineMonitor m{e};
+    Parser::LobsterDataParser p;
     // initial book state
     for (int i = 0; i < 20; ++i) {
         em.submitLimitOrderEvent(Market::Side::BUY, std::min(5 + i, 10), 99.0 - i);
@@ -515,6 +517,11 @@ void testMatchingEngineMonitorLobsterOutput() {
                 em.submitMarketOrderEvent(Market::Side::SELL, qty);
         }
     }
+    // export data in lobster format
+    m.exportToLobsterDataParser(p);
+    const auto data = p.getOrderBookMessagesAndSnapshotsAsCsv(5, true);
+    std::cout << "Lobster messages:\n" << data.first << std::endl;
+    std::cout << "Lobster snapshots:\n" << data.second << std::endl;
 }
 
 void testMatchingEngineZeroIntelligence() {
