@@ -70,7 +70,22 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const
 }
 
 std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsCsv() const {
-    return ""; // TODO
+    // format: BidNumLevels,AskNumLevels,BidPrice1,BidSize1,...,AskPrice1,AskSize1,...
+    // note that the last trade information is omitted
+    std::ostringstream oss;
+    oss << bidBookTopPrices.size() << "," << askBookTopPrices.size() << ",";
+    for (size_t i = 0; i < bidBookTopPrices.size(); ++i) {
+        oss << bidBookTopPrices[i] << "," << bidBookTopSizes[i];
+        if (i < bidBookTopPrices.size() - 1)
+            oss << ",";
+    }
+    oss << ",";
+    for (size_t i = 0; i < askBookTopPrices.size(); ++i) {
+        oss << askBookTopPrices[i] << "," << askBookTopSizes[i];
+        if (i < askBookTopPrices.size() - 1)
+            oss << ",";
+    }
+    return oss.str();
 }
 
 std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsTable() const {
