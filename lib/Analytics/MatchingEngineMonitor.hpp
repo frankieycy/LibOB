@@ -11,6 +11,8 @@ namespace Analytics {
 using namespace Utils;
 using namespace Parser;
 
+/* This monitor class is hefty as each tick detection logs a deep copy of the order book up to some level cutoff,
+    with memory size linear in the number of tick detections */
 class MatchingEngineMonitor {
 public:
     enum class OrderBookStatisticsTimestampStrategy {

@@ -34,6 +34,7 @@ public:
         if (myOrderEventManager)
             myOrderEventManager->setMinimumPriceTick(minimumPriceTick);
     }
+    void setMinimumLotSize(uint32_t minimumLotSize) { myMinimumLotSize = minimumLotSize; }
 
 private:
     bool myDebugMode = false;
