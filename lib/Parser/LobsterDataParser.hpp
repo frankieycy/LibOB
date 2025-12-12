@@ -56,7 +56,7 @@ public:
         OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& report);
         bool isValid() const { return messageType != MessageType::NULL_MESSAGE_TYPE; }
         bool toSplitIntoDeleteAndAdd() const { return isOrderDeleteAndAdd; }
-        std::string getAsCsv() const;
+        std::string getAsCsv(bool aligned = false) const;
     };
 
     struct OrderBookSnapshot {
@@ -71,7 +71,7 @@ public:
         OrderBookSnapshot(const std::vector<uint32_t>& bidPrice, const std::vector<uint32_t>& askPrice,
                           const std::vector<uint32_t>& bidSize, const std::vector<uint32_t>& askSize) :
             bidPrice(bidPrice), askPrice(askPrice), bidSize(bidSize), askSize(askSize) {}
-        std::string getAsCsv() const;
+        std::string getAsCsv(size_t levels, bool aligned = false) const;
     };
 
     bool isDebugMode() const { return myDebugMode; }
@@ -82,6 +82,16 @@ public:
         const std::shared_ptr<const OrderBookSnapshot>& snapshot) {
         myOrderBookMessagesCollector.addSample(message);
         myOrderBookSnapshotsCollector.addSample(snapshot);
+    }
+
+    std::pair<std::string, std::string> getOrderBookMessagesAndSnapshotsAsCsv(size_t snapshotLevels, bool aligned = false) const {
+        std::ostringstream messagesOss;
+        for (const auto& message : myOrderBookMessagesCollector.getSamples())
+            messagesOss << message->getAsCsv(aligned) << "\n";
+        std::ostringstream snapshotsOss;
+        for (const auto& snapshot : myOrderBookSnapshotsCollector.getSamples())
+            snapshotsOss << snapshot->getAsCsv(snapshotLevels, aligned) << "\n";
+        return {messagesOss.str(), snapshotsOss.str()};
     }
 
 private:

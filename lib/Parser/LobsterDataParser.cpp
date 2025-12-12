@@ -67,12 +67,56 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderParti
 // represented as delete + add in Lobster format
 LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& /* report */) : OrderBookMessage(true) {}
 
-std::string LobsterDataParser::OrderBookMessage::getAsCsv() const {
-    return ""; // TODO
+std::string LobsterDataParser::OrderBookMessage::getAsCsv(bool aligned) const {
+    std::ostringstream oss;
+    if (aligned) {
+        oss << std::setw(8) << timestamp << ","
+            << std::setw(8) << +static_cast<uint8_t>(messageType) << ","
+            << std::setw(8) << orderId << ","
+            << std::setw(8) << quantity << ","
+            << std::setw(8) << price << ","
+            << std::setw(8) << (isBuy ? 1 : -1);
+    } else {
+        oss << timestamp << ","
+            << +static_cast<uint8_t>(messageType) << ","
+            << orderId << ","
+            << quantity << ","
+            << price << ","
+            << (isBuy ? 1 : -1);
+    }
+    return oss.str();
 }
 
-std::string LobsterDataParser::OrderBookSnapshot::getAsCsv() const {
-    return ""; // TODO
+std::string LobsterDataParser::OrderBookSnapshot::getAsCsv(size_t levels, bool aligned) const {
+    std::ostringstream oss;
+    if (aligned) {
+        for (size_t i = 0; i < levels; ++i) {
+            if (i < askPrice.size())
+                oss << std::setw(8) << askPrice[i] << "," << std::setw(8) << askSize[i] << ",";
+            else
+                oss << std::setw(8) << "" << "," << std::setw(8) << "" << ",";
+            if (i < bidPrice.size())
+                oss << std::setw(8) << bidPrice[i] << "," << std::setw(8) << bidSize[i];
+            else
+                oss << std::setw(8) << "" << "," << std::setw(8) << "";
+            if (i != levels - 1)
+                oss << ",";
+        }
+    } else {
+        for (size_t i = 0; i < levels; ++i) {
+            if (i < askPrice.size())
+                oss << askPrice[i] << "," << askSize[i] << ",";
+            else
+                oss << ",,";
+            if (i < bidPrice.size())
+                oss << bidPrice[i] << "," << bidSize[i];
+            else
+                oss << ",";
+            if (i != levels - 1)
+                oss << ",";
+        }
+    }
+    return oss.str();
 }
 }
 
