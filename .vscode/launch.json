@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "preLaunchTask": "build", // Runs the Makefile before debugging
-            "program": "${workspaceFolder}/exe/main", // Path to the compiled executable
+            "program": "${workspaceFolder}/Exe/main", // Path to the compiled executable
             "args": [], // Arguments to pass to the program (if any)
             "cwd": "${workspaceFolder}", // Working directory
             "stopAtEntry": false, // Do not stop at the program's entry point
