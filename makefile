@@ -1,18 +1,18 @@
 CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g -Ilib -MMD -MP
+CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g -ILib -MMD -MP
 
 # --------------------------------------------------------------------
 # Source discovery (recursive)
-SRC := $(shell find run lib -name '*.cpp')
-OBJ := $(patsubst %.cpp, obj/%.o, $(SRC))
+SRC := $(shell find Run Lib -name '*.cpp')
+OBJ := $(patsubst %.cpp, Obj/%.o, $(SRC))
 DEP := $(OBJ:.o=.d)
 
-TARGET = exe/main
+TARGET = Exe/main
 # --------------------------------------------------------------------
 # Regression test setup
 REG_SRC := $(shell find RegressionTests/Inputs -name '*.cpp')
-REG_OBJ := $(patsubst %.cpp, obj/%.o, $(REG_SRC))
-REG_EXE := $(patsubst RegressionTests/Inputs/%.cpp, exe/RegressionTests/%, $(REG_SRC))
+REG_OBJ := $(patsubst %.cpp, Obj/%.o, $(REG_SRC))
+REG_EXE := $(patsubst RegressionTests/Inputs/%.cpp, Exe/RegressionTests/%, $(REG_SRC))
 # --------------------------------------------------------------------
 
 all: $(TARGET)
@@ -22,8 +22,8 @@ $(TARGET): $(OBJ)
 	@mkdir -p $(@D)
 	$(CXX) $^ -o $@
 
-# Compile (obj/Utils/Utils.o from lib/Utils/Utils.cpp, etc.)
-obj/%.o: %.cpp
+# Compile (Obj/Utils/Utils.o from Lib/Utils/Utils.cpp, etc.)
+Obj/%.o: %.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -43,12 +43,12 @@ regression_run: regression_build
 	done
 
 # Rule to build each regression test executable from its object file
-exe/RegressionTests/%: obj/RegressionTests/Inputs/%.o $(filter-out obj/run/%.o, $(OBJ))
+Exe/RegressionTests/%: Obj/RegressionTests/Inputs/%.o $(filter-out Obj/Run/%.o, $(OBJ))
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -rf obj exe
+	rm -rf Obj Exe
 
 # Pull in auto-generated header dependencies
 -include $(DEP)
