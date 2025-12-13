@@ -16,7 +16,14 @@ void IExchangeSimulator::init() {
     myOrderEventManager = std::make_shared<Market::OrderEventManagerBase>(myMatchingEngine);
     myMatchingEngineMonitor = std::make_shared<Analytics::MatchingEngineMonitor>(myMatchingEngine);
     myMatchingEngineMonitor->setOrderBookNumLevels(myOrderBookNumLevelsMonitored);
-    myMinimumPriceTick = myOrderEventManager->getMinimumPriceTick();
+    myOrderBookGridConstraints.minPriceTick = myOrderEventManager->getMinimumPriceTick();
+}
+
+void IExchangeSimulator::reset() {
+    // empties out the matching engine and re-initializes the simulator
+    if (myMatchingEngine)
+        myMatchingEngine->reset();
+    init();
 }
 }
 
