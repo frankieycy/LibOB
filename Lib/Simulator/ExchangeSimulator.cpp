@@ -12,11 +12,11 @@ using namespace Utils;
 void IExchangeSimulator::init() {
     if (!myMatchingEngine)
         Error::LIB_THROW("[IExchangeSimulator] Matching engine is null during simulator initialization.");
-    myDebugMode = myMatchingEngine->isDebugMode();
     myOrderEventManager = std::make_shared<Market::OrderEventManagerBase>(myMatchingEngine);
     myMatchingEngineMonitor = std::make_shared<Analytics::MatchingEngineMonitor>(myMatchingEngine);
-    myMatchingEngineMonitor->setOrderBookNumLevels(myOrderBookNumLevelsMonitored);
-    myOrderBookGridDefinition.minPriceTick = myOrderEventManager->getMinimumPriceTick();
+    myMatchingEngine->setDebugMode(myConfig.debugMode);
+    myMatchingEngineMonitor->setOrderBookNumLevels(myConfig.monitoredLevels);
+    myOrderEventManager->setMinimumPriceTick(myConfig.grid.minPriceTick);
 }
 
 void IExchangeSimulator::reset() {
@@ -24,6 +24,13 @@ void IExchangeSimulator::reset() {
     if (myMatchingEngine)
         myMatchingEngine->reset();
     init();
+}
+
+void IExchangeSimulator::setConfig(const ExchangeSimulatorConfig& config) {
+    myConfig = config;
+    myMatchingEngine->setDebugMode(myConfig.debugMode);
+    myMatchingEngineMonitor->setOrderBookNumLevels(myConfig.monitoredLevels);
+    myOrderEventManager->setMinimumPriceTick(myConfig.grid.minPriceTick);
 }
 }
 
