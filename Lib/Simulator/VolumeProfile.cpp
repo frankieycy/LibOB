@@ -4,7 +4,7 @@
 #include "Simulator/VolumeProfile.hpp"
 
 namespace Simulator {
-uint32_t LinearVolumeInterpolator::volumeAt(const uint32_t dist) const noexcept {
+uint32_t LinearVolumeInterpolator::volumeAt(const uint32_t dist) const {
     if (dist <= getInterpDistanceStart())
         return myVolumeStart;
     if (dist >= getInterpDistanceEnd())
@@ -12,7 +12,7 @@ uint32_t LinearVolumeInterpolator::volumeAt(const uint32_t dist) const noexcept 
     return static_cast<uint32_t>(std::round(myVolumeStart + myVolumeSlope * (dist - getInterpDistanceStart())));
 }
 
-uint32_t PiecewiseConstantVolumeInterpolator::volumeAt(uint32_t dist) const noexcept {
+uint32_t PiecewiseConstantVolumeInterpolator::volumeAt(uint32_t dist) const {
     auto hi = myKnots.lower_bound(dist);
     if (hi == myKnots.begin())
         return hi->second;
@@ -22,7 +22,7 @@ uint32_t PiecewiseConstantVolumeInterpolator::volumeAt(uint32_t dist) const noex
     return lo->second;
 }
 
-uint32_t PiecewiseLinearVolumeInterpolator::volumeAt(uint32_t dist) const noexcept{
+uint32_t PiecewiseLinearVolumeInterpolator::volumeAt(uint32_t dist) const {
     auto hi = myKnots.lower_bound(dist);
     if (hi == myKnots.begin())
         return hi->second;
