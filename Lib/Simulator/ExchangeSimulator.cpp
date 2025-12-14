@@ -32,7 +32,12 @@ void IExchangeSimulator::reset() {
         Error::LIB_THROW("[IExchangeSimulator] Cannot reset simulator while it is running.");
     if (myMatchingEngine)
         myMatchingEngine->reset();
+    mySimulationClock->reset();
     init();
+}
+
+void IExchangeSimulator::initOrderBookBuilding(const VolumeProfile& bidVolumeProfile, const VolumeProfile& askVolumeProfile) {
+    // TODO
 }
 }
 
