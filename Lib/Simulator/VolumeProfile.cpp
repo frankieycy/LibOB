@@ -1,0 +1,4 @@
+#ifndef VOLUME_PROFILE_CPP
+#define VOLUME_PROFILE_CPP
+
+#endif
