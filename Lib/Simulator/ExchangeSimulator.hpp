@@ -54,7 +54,7 @@ public:
 
     virtual void init();
     virtual void reset();
-    virtual void initOrderBookBuilding(const VolumeProfile& bidVolumeProfile, const VolumeProfile& askVolumeProfile);
+    virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) = 0;
     virtual void advanceByEvent() = 0; // advance by one event (tick in event time)
     virtual void advanceToTimestamp(const Timestamp timestamp) = 0; // advance to timestamp (tick in wall-clock time)
     virtual void simulateByEvent(const uint64_t numEvents) = 0;
@@ -70,6 +70,17 @@ private:
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> mySimulationClock = std::make_shared<Utils::Counter::TimestampHandlerBase>();
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
 };
+
+// class ExchangeSimulatorBase : public IExchangeSimulator {
+// public:
+//     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) override;
+//     virtual void advanceByEvent() override;
+//     virtual void advanceToTimestamp(const Timestamp timestamp) override;
+//     virtual void simulateByEvent(const uint64_t numEvents) override;
+//     virtual void simulateUntilTimestamp(const Timestamp timestamp) override;
+// private:
+//     virtual void buildSide(const Market::Side side, const VolumeProfile& volumeProfile);
+// };
 }
 
 #endif
