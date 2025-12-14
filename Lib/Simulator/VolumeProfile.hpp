@@ -41,13 +41,7 @@ class LinearVolumeInterpolator final : public IVolumeInterpolator {
         IVolumeInterpolator(interpDistStart, interpDistEnd), myVolumeStart(volumeStart), myVolumeEnd(volumeEnd) {
         myVolumeSlope = double(myVolumeEnd - myVolumeStart) / double(interpDistEnd - interpDistStart);
     }
-    uint32_t volumeAt(const uint32_t dist) const noexcept override {
-        if (dist <= getInterpDistanceStart())
-            return myVolumeStart;
-        if (dist >= getInterpDistanceEnd())
-            return myVolumeEnd;
-        return static_cast<uint32_t>(std::round(myVolumeStart + myVolumeSlope * (dist - getInterpDistanceStart())));
-    }
+    uint32_t volumeAt(const uint32_t dist) const noexcept override;
 private:
     double myVolumeSlope;
     uint32_t myVolumeStart;
@@ -59,9 +53,7 @@ public:
     CustomInputVolumeInterpolator(std::map<uint32_t, uint32_t> inputVolumes) :
         IVolumeInterpolator(inputVolumes.begin()->first, inputVolumes.rbegin()->first), myInputVolumes(std::move(inputVolumes)) {}
     uint32_t volumeAt(const uint32_t dist) const noexcept override {
-        if (myInputVolumes.find(dist) != myInputVolumes.end())
-            return myInputVolumes.at(dist);
-        return 0;
+        return myInputVolumes.find(dist) != myInputVolumes.end() ? myInputVolumes.at(dist) : 0;
     }
 private:
     std::map<uint32_t, uint32_t> myInputVolumes;
@@ -69,17 +61,9 @@ private:
 
 class PiecewiseConstantVolumeInterpolator final : public IVolumeInterpolator {
 public:
-PiecewiseConstantVolumeInterpolator(std::map<uint32_t, uint32_t> knots) :
+    PiecewiseConstantVolumeInterpolator(std::map<uint32_t, uint32_t> knots) :
         IVolumeInterpolator(knots.begin()->first, knots.rbegin()->first), myKnots(std::move(knots)) {}
-    uint32_t volumeAt(uint32_t dist) const noexcept override {
-        auto hi = myKnots.lower_bound(dist);
-        if (hi == myKnots.begin())
-            return hi->second;
-        if (hi == myKnots.end())
-            return std::prev(hi)->second;
-        auto lo = std::prev(hi);
-        return lo->second;
-    }
+    uint32_t volumeAt(uint32_t dist) const noexcept override;
 private:
     std::map<uint32_t, uint32_t> myKnots;
 };
@@ -88,16 +72,7 @@ class PiecewiseLinearVolumeInterpolator final : public IVolumeInterpolator {
 public:
     PiecewiseLinearVolumeInterpolator(std::map<uint32_t, uint32_t> knots) :
         IVolumeInterpolator(knots.begin()->first, knots.rbegin()->first), myKnots(std::move(knots)) {}
-    uint32_t volumeAt(uint32_t dist) const noexcept override {
-        auto hi = myKnots.lower_bound(dist);
-        if (hi == myKnots.begin())
-            return hi->second;
-        if (hi == myKnots.end())
-            return std::prev(hi)->second;
-        auto lo = std::prev(hi);
-        double slope = double(hi->second - lo->second) / double(hi->first - lo->first);
-        return static_cast<uint32_t>(lo->second + slope * (dist - lo->first));
-    }
+    uint32_t volumeAt(uint32_t dist) const noexcept override;
 private:
     std::map<uint32_t, uint32_t> myKnots;
 };
@@ -126,13 +101,10 @@ private:
 
 class VolumeProfile {
 public:
-    VolumeProfile(std::unique_ptr<IVolumeInterpolator> interp, std::unique_ptr<IVolumeExtrapolator> extrap, uint32_t interpEnd) :
+    VolumeProfile(std::unique_ptr<IVolumeInterpolator> interp, std::unique_ptr<IVolumeExtrapolator> extrap, const uint32_t interpEnd) :
         myInterpolator(std::move(interp)), myExtrapolator(std::move(extrap)), myInterpEnd(interpEnd) {}
-    uint32_t operator()(uint32_t dist) const {
-        if (dist <= myInterpEnd)
-            return (*myInterpolator)(dist);
-        else
-            return (*myExtrapolator)(dist);
+    uint32_t operator()(const uint32_t dist) const {
+        return dist <= myInterpEnd ? (*myInterpolator)(dist) : (*myExtrapolator)(dist);
     }
 private:
     std::unique_ptr<IVolumeInterpolator> myInterpolator;
