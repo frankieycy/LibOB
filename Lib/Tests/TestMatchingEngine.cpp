@@ -1,3 +1,5 @@
+#ifndef TEST_MATCHING_ENGINE_CPP
+#define TEST_MATCHING_ENGINE_CPP
 #include "Utils/Utils.hpp"
 #include "Market/OrderUtils.hpp"
 #include "Market/Order.hpp"
@@ -529,3 +531,5 @@ void testMatchingEngineZeroIntelligence() {
 }
 }
 }
+
+#endif
