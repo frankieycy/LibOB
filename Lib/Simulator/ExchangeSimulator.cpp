@@ -51,6 +51,10 @@ void ExchangeSimulatorBase::initOrderBookBuilding(const VolumeProfile& bidProfil
     buildSide(Market::Side::SELL, askProfile);
 }
 
+void ExchangeSimulatorBase::submit(const OrderEventBase& orderEvent) {
+    orderEvent.submitTo(*myOrderEventManager);
+}
+
 void ExchangeSimulatorBase::advanceByEvent() {
     // TODO
 }

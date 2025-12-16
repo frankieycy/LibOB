@@ -29,11 +29,13 @@ public:
     virtual void reset() = 0;
     virtual void setConfig(const ExchangeSimulatorConfig& config) { myConfig = config; }
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) = 0;
+    virtual void submit(const OrderEventBase& orderEvent) = 0;
     virtual void advanceByEvent() = 0; // advance by one event (tick in event time)
     virtual void advanceToTimestamp(const uint64_t timestamp) = 0; // advance to timestamp (tick in wall-clock time)
     virtual void advanceByDuration(const uint64_t duration) { advanceToTimestamp(getCurrentTimestamp() + duration); }
     virtual void simulateByEvent(const uint64_t numEvents) = 0;
     virtual void simulateUntilTimestamp(const uint64_t timestamp) = 0;
+    static constexpr ExchangeSimulatorType ourType = ExchangeSimulatorType::NULL_EXCHANGE_SIMULATOR_TYPE;
 private:
     ExchangeSimulatorConfig myConfig = ExchangeSimulatorConfig();
     ExchangeSimulatorState myState = ExchangeSimulatorState::UNINITIALIZED;
@@ -54,6 +56,7 @@ public:
     virtual void reset() override;
     virtual void setConfig(const ExchangeSimulatorConfig& config) override;
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) override;
+    virtual void submit(const OrderEventBase& orderEvent) override;
     virtual void advanceByEvent() override;
     virtual void advanceToTimestamp(const uint64_t timestamp) override;
     virtual void simulateByEvent(const uint64_t numEvents) override;
