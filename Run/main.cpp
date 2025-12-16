@@ -1,5 +1,6 @@
 #include "Utils/Utils.hpp"
 #include "Tests/TestMatchingEngine.hpp"
+#include "Tests/TestExchangeSimulator.hpp"
 
 namespace {
 inline void printProgramOpening() { Utils::IO::printLibOBBanner(std::cout); }
@@ -19,6 +20,8 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineConstructFromEventsStream();
     // Tests::MatchingEngine::testMatchingEngineGetAsJson();
     // Tests::MatchingEngine::testMatchingEngineMonitor();
-    Tests::MatchingEngine::testMatchingEngineMonitorLobsterOutput();
+    // Tests::MatchingEngine::testMatchingEngineMonitorLobsterOutput();
+    Tests::Simulator::testInitExchangeSimulatorBase();
+    // Tests::Simulator::testInitZeroIntelligenceSimulator();
     return 0;
 }
