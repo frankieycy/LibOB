@@ -67,6 +67,15 @@ std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(
     return std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick());
 }
 
+std::shared_ptr<OrderPartialCancelEvent> OrderEventManagerBase::createOrderPartialCancelEvent(const uint64_t orderId, const uint32_t cancelQuantity) {
+    const auto& order = fetchOrder(orderId);
+    if (!order) {
+        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderPartialCancelEvent] Order not found - orderId = " << orderId << ".";
+        return nullptr;
+    }
+    return std::make_shared<OrderPartialCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), cancelQuantity);
+}
+
 std::shared_ptr<OrderCancelAndReplaceEvent> OrderEventManagerBase::createOrderCancelAndReplaceEvent(const uint64_t orderId,
     const std::optional<uint32_t>& modifiedQuantity, const std::optional<double>& modifiedPrice) {
     const auto& order = fetchOrder(orderId);
@@ -153,6 +162,36 @@ std::shared_ptr<const OrderCancelEvent> OrderEventManagerBase::cancelOrder(const
     const auto& event = createOrderCancelEvent(orderId);
     submitOrderEventToMatchingEngine(event);
     return event;
+}
+
+std::shared_ptr<const OrderPartialCancelEvent> OrderEventManagerBase::partialCancelOrder(const uint64_t orderId, const uint32_t cancelQuantity) {
+    const auto& event = createOrderPartialCancelEvent(orderId, cancelQuantity);
+    submitOrderEventToMatchingEngine(event);
+    return event;
+}
+
+std::vector<std::shared_ptr<const OrderEventBase>> OrderEventManagerBase::cancelOrders(const Side side, const uint32_t quantity, const double price) {
+    const std::vector<uint64_t> orderIdsToCancel = side == Side::BUY ? myMatchingEngine->getBidOrderIdsAt(price, quantity) : myMatchingEngine->getAskOrderIdsAt(price, quantity);
+    uint32_t remainingQuantity = quantity;
+    std::vector<std::shared_ptr<const OrderEventBase>> cancelEvents;
+    for (const uint64_t orderId : orderIdsToCancel) {
+        const auto order = fetchOrder(orderId);
+        if (!order) {
+            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::cancelOrders] Order not found in active limit orders - orderId = " << orderId;
+            continue;
+        }
+        const uint32_t orderQuantity = order->getQuantity();
+        if (remainingQuantity >= orderQuantity) {
+            cancelEvents.push_back(cancelOrder(orderId));
+            remainingQuantity -= orderQuantity;
+        } else {
+            cancelEvents.push_back(partialCancelOrder(orderId, remainingQuantity));
+            remainingQuantity = 0;
+        }
+        if (!remainingQuantity)
+            break;
+    }
+    return cancelEvents;
 }
 
 std::shared_ptr<const OrderCancelAndReplaceEvent> OrderEventManagerBase::cancelAndReplaceOrder(const uint64_t orderId,

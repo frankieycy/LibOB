@@ -44,6 +44,8 @@ public:
     std::shared_ptr<const OrderSubmitEvent> submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price);
     std::shared_ptr<const OrderSubmitEvent> submitMarketOrderEvent(const Side side, const uint32_t quantity);
     std::shared_ptr<const OrderCancelEvent> cancelOrder(const uint64_t orderId);
+    std::shared_ptr<const OrderPartialCancelEvent> partialCancelOrder(const uint64_t orderId, const uint32_t cancelQuantity);
+    std::vector<std::shared_ptr<const OrderEventBase>> cancelOrders(const Side side, const uint32_t quantity, const double price);
     std::shared_ptr<const OrderCancelAndReplaceEvent> cancelAndReplaceOrder(const uint64_t orderId,
         const std::optional<uint32_t>& modifiedQuantity = std::nullopt,
         const std::optional<double>& modifiedPrice = std::nullopt);
@@ -65,6 +67,7 @@ private:
     virtual std::shared_ptr<OrderSubmitEvent> createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price);
     virtual std::shared_ptr<OrderSubmitEvent> createMarketOrderSubmitEvent(const Side side, const uint32_t quantity);
     virtual std::shared_ptr<OrderCancelEvent> createOrderCancelEvent(const uint64_t orderId);
+    virtual std::shared_ptr<OrderPartialCancelEvent> createOrderPartialCancelEvent(const uint64_t orderId, const uint32_t cancelQuantity);
     virtual std::shared_ptr<OrderCancelAndReplaceEvent> createOrderCancelAndReplaceEvent(const uint64_t orderId,
         const std::optional<uint32_t>& modifiedQuantity, const std::optional<double>& modifiedPrice);
     virtual std::shared_ptr<OrderModifyPriceEvent> createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice);
