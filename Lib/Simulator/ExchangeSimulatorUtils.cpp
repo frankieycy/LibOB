@@ -25,6 +25,17 @@ std::string toString(const ExchangeSimulatorType type) {
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state) { return out << toString(state); }
 
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type) { return out << toString(type); }
+
+std::optional<OrderEventBase> PerEventScheduler::nextEvent(uint64_t currentTimestamp) {
+    return myGenerator(currentTimestamp);
+}
+
+std::optional<OrderEventBase> PoissonEventScheduler::nextEvent(uint64_t currentTimestamp) {
+    double u = myUniform(myRng);
+    if (u < myLambda)
+        return myGenerator(currentTimestamp);
+    return std::nullopt;
+}
 }
 
 #endif

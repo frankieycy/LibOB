@@ -82,6 +82,29 @@ public:
     virtual std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) = 0;
 };
 
+class PerEventScheduler : public IEventScheduler {
+public:
+    explicit PerEventScheduler(std::function<OrderEventBase(uint64_t)> generator) :
+        myGenerator(std::move(generator)) {}
+    std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) override;
+private:
+    std::function<OrderEventBase(uint64_t)> myGenerator;
+};
+
+class PoissonEventScheduler : public IEventScheduler {
+public:
+    explicit PoissonEventScheduler(std::function<OrderEventBase(uint64_t)> generator, double lambda, uint64_t seed = 42) :
+        myLambda(lambda), myGenerator(std::move(generator)), myRng(seed), myUniform(0.0, 1.0) {}
+    std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) override;
+private:
+    double myLambda;
+    std::function<OrderEventBase(uint64_t)> myGenerator;
+    std::mt19937_64 myRng;
+    std::uniform_real_distribution<double> myUniform;
+};
+
+class TimeDependentPoissonEventScheduler : public IEventScheduler {};
+
 std::string toString(const ExchangeSimulatorState state);
 std::string toString(const ExchangeSimulatorType type);
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state);
