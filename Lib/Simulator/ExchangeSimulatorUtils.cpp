@@ -26,8 +26,12 @@ std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state) 
 
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type) { return out << toString(type); }
 
-std::optional<OrderEventBase> PerEventScheduler::nextEvent(uint64_t currentTimestamp) {
-    return myGenerator(currentTimestamp);
+bool ExchangeSimulatorStopCondition::check(const IExchangeSimulator& /* simulator */) const {
+    return false; // TODO
+}
+
+std::optional<OrderEventBase> PerEventScheduler::nextEvent(uint64_t /* currentTimestamp */) {
+    return myGenerator();
 }
 
 std::optional<OrderEventBase> PoissonEventScheduler::nextEvent(uint64_t currentTimestamp) {

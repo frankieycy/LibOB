@@ -6,6 +6,7 @@
 
 namespace Simulator {
 using namespace Utils;
+class IExchangeSimulator;
 
 enum class ExchangeSimulatorState { UNINITIALIZED, READY, RUNNING, FINISHED };
 enum class ExchangeSimulatorType { ZERO_INTELLIGENCE, MINIMAL_INTELLIGENCE, NULL_EXCHANGE_SIMULATOR_TYPE };
@@ -76,6 +77,12 @@ struct ExchangeSimulatorConfig {
     OrderBookGridDefinition grid;
 };
 
+struct ExchangeSimulatorStopCondition {
+    std::optional<uint32_t> maxNumEvents;
+    std::optional<uint64_t> maxTimestamp;
+    bool check(const IExchangeSimulator& simulator) const;
+};
+
 class IEventScheduler {
 public:
     virtual ~IEventScheduler() = default;
@@ -84,11 +91,11 @@ public:
 
 class PerEventScheduler : public IEventScheduler {
 public:
-    explicit PerEventScheduler(std::function<OrderEventBase(uint64_t)> generator) :
+    explicit PerEventScheduler(std::function<OrderEventBase()> generator) :
         myGenerator(std::move(generator)) {}
     std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) override;
 private:
-    std::function<OrderEventBase(uint64_t)> myGenerator;
+    std::function<OrderEventBase()> myGenerator;
 };
 
 class PoissonEventScheduler : public IEventScheduler {
