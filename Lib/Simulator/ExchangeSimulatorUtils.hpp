@@ -11,6 +11,26 @@ class IExchangeSimulator;
 enum class ExchangeSimulatorState { UNINITIALIZED, READY, RUNNING, FINISHED };
 enum class ExchangeSimulatorType { ZERO_INTELLIGENCE, MINIMAL_INTELLIGENCE, NULL_EXCHANGE_SIMULATOR_TYPE };
 
+struct OrderBookGridDefinition {
+    double anchorPrice = Consts::NAN_DOUBLE; // defines a small- or large-tick stock
+    double minPriceTick = 0.01; // passes down to order event manager
+    uint32_t minLotSize = 1;
+    uint32_t numGrids = 10000; // total number of price grids on one side of the book for initial book building
+};
+
+struct ExchangeSimulatorConfig {
+    bool debugMode = false; // passes down to matching engine
+    size_t monitoredLevels = 100; // passes down to matching engine monitor
+    uint64_t randomSeed = 42;
+    OrderBookGridDefinition grid;
+};
+
+struct ExchangeSimulatorStopCondition {
+    std::optional<uint32_t> maxNumEvents;
+    std::optional<uint64_t> maxTimestamp;
+    bool check(const IExchangeSimulator& simulator) const;
+};
+
 struct OrderEventBase {
     virtual void submitTo(Market::OrderEventManagerBase& /* orderEventManager */) const {
         Error::LIB_THROW("No implementation for OrderEventBase::submitTo().");
@@ -63,26 +83,6 @@ struct OrderCancelAndReplaceEvent : public OrderEventBase {
     std::optional<double> modifiedPrice;
 };
 
-struct OrderBookGridDefinition {
-    double anchorPrice = Consts::NAN_DOUBLE; // defines a small- or large-tick stock
-    double minPriceTick = 0.01; // passes down to order event manager
-    uint32_t minLotSize = 1;
-    uint32_t numGrids = 10000; // total number of price grids on one side of the book for initial book building
-};
-
-struct ExchangeSimulatorConfig {
-    bool debugMode = false; // passes down to matching engine
-    size_t monitoredLevels = 100; // passes down to matching engine monitor
-    uint64_t randomSeed = 42;
-    OrderBookGridDefinition grid;
-};
-
-struct ExchangeSimulatorStopCondition {
-    std::optional<uint32_t> maxNumEvents;
-    std::optional<uint64_t> maxTimestamp;
-    bool check(const IExchangeSimulator& simulator) const;
-};
-
 class IEventScheduler {
 public:
     virtual ~IEventScheduler() = default;
@@ -94,7 +94,7 @@ class PerEventScheduler : public IEventScheduler {
 public:
     explicit PerEventScheduler(std::function<OrderEventBase()> generator) :
         myGenerator(std::move(generator)) {}
-    std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) override;
+    std::optional<OrderEventBase> nextEvent(uint64_t /* currentTimestamp */) override;
 private:
     std::function<OrderEventBase()> myGenerator;
 };

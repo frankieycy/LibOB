@@ -65,6 +65,8 @@ public:
     std::shared_ptr<const Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
     std::shared_ptr<const Market::OrderEventManagerBase> getOrderEventManager() const { return myOrderEventManager; }
     std::shared_ptr<const Analytics::MatchingEngineMonitor> getMatchingEngineMonitor() const { return myMatchingEngineMonitor; }
+    std::shared_ptr<const IEventScheduler> getEventScheduler() const { return myEventScheduler; }
+    void setEventScheduler(const std::shared_ptr<IEventScheduler>& eventScheduler) { myEventScheduler = eventScheduler; }
     virtual void init() override;
     virtual void reset() override;
     virtual void setConfig(const ExchangeSimulatorConfig& config) override;

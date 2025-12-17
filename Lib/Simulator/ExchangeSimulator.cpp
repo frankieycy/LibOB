@@ -31,11 +31,12 @@ void ExchangeSimulatorBase::init() {
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
     setState(ExchangeSimulatorState::READY);
     *getLogger() << Logger::LogLevel::INFO << "[ExchangeSimulatorBase] Simulator initialization complete with monitored levels "
-                << getConfig().monitoredLevels << " and minimum price tick " << getConfig().grid.minPriceTick << ".";
+                 << getConfig().monitoredLevels << " and minimum price tick " << getConfig().grid.minPriceTick << ".";
 }
 
 void ExchangeSimulatorBase::reset() {
     // empties out the matching engine and re-initializes the simulator
+    // TODO: reset order event manager and matching engine monitor states
     Error::LIB_ASSERT(getState() != ExchangeSimulatorState::RUNNING,
         "[ExchangeSimulatorBase] Cannot reset simulator while it is running.");
     if (myMatchingEngine)
@@ -47,7 +48,6 @@ void ExchangeSimulatorBase::reset() {
 
 void ExchangeSimulatorBase::setConfig(const ExchangeSimulatorConfig& config) {
     IExchangeSimulator::setConfig(config);
-    myMatchingEngine->setDebugMode(isDebugMode());
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
 }
