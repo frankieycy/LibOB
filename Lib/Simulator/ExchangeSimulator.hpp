@@ -75,6 +75,7 @@ private:
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     std::shared_ptr<Market::OrderEventManagerBase> myOrderEventManager;
     std::shared_ptr<Analytics::MatchingEngineMonitor> myMatchingEngineMonitor;
+    std::shared_ptr<IEventScheduler> myEventScheduler;
 };
 }
 

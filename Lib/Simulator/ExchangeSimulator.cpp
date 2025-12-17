@@ -62,11 +62,15 @@ void ExchangeSimulatorBase::submit(const OrderEventBase& orderEvent) {
 }
 
 void ExchangeSimulatorBase::advanceByEvent() {
-    // TODO
+    if (auto nextEvent = myEventScheduler->nextEvent(clockTick()))
+        submit(*nextEvent);
 }
 
-void ExchangeSimulatorBase::advanceToTimestamp(const uint64_t /* timestamp */) {
-    // TODO
+void ExchangeSimulatorBase::advanceToTimestamp(const uint64_t timestamp) {
+    while (getCurrentTimestamp() < timestamp) {
+        if (auto nextEvent = myEventScheduler->nextEvent(clockTick()))
+            submit(*nextEvent);
+    }
 }
 
 void ExchangeSimulatorBase::simulateByEvent(const uint64_t /* numEvents */) {
