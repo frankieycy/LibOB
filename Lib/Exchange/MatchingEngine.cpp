@@ -279,6 +279,48 @@ std::vector<uint32_t> MatchingEngineBase::getAskBookSizeVector(const size_t numL
     return sizes;
 }
 
+std::vector<uint64_t> MatchingEngineBase::getBidOrderIdsAt(const PriceLevel price, const std::optional<uint32_t>& totalSize) const {
+    std::vector<uint64_t> orderIds;
+    const auto it = myBidBook.find(price);
+    if (it != myBidBook.end()) {
+        const LimitQueue& limitQueue = it->second;
+        if (totalSize.has_value()) {
+            uint32_t cumSize = 0;
+            for (const auto& order : limitQueue) {
+                orderIds.push_back(order->getId());
+                cumSize += order->getQuantity();
+                if (cumSize >= *totalSize)
+                    break;
+            }
+        } else {
+            for (const auto& order : limitQueue)
+                orderIds.push_back(order->getId());
+        }
+    }
+    return orderIds;
+}
+
+std::vector<uint64_t> MatchingEngineBase::getAskOrderIdsAt(const PriceLevel price, const std::optional<uint32_t>& totalSize) const {
+    std::vector<uint64_t> orderIds;
+    const auto it = myAskBook.find(price);
+    if (it != myAskBook.end()) {
+        const LimitQueue& limitQueue = it->second;
+        if (totalSize.has_value()) {
+            uint32_t cumSize = 0;
+            for (const auto& order : limitQueue) {
+                orderIds.push_back(order->getId());
+                cumSize += order->getQuantity();
+                if (cumSize >= *totalSize)
+                    break;
+            }
+        } else {
+            for (const auto& order : limitQueue)
+                orderIds.push_back(order->getId());
+        }
+    }
+    return orderIds;
+}
+
 std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
         return {Consts::NAN_DOUBLE, 0};

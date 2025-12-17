@@ -61,6 +61,8 @@ public:
     virtual std::vector<PriceLevel> getAskBookPriceVector(const size_t numLevels) const = 0;
     virtual std::vector<uint32_t> getBidBookSizeVector(const size_t numLevels) const = 0;
     virtual std::vector<uint32_t> getAskBookSizeVector(const size_t numLevels) const = 0;
+    virtual std::vector<uint64_t> getBidOrderIdsAt(const PriceLevel price, const std::optional<uint32_t>& totalSize = std::nullopt) const = 0;
+    virtual std::vector<uint64_t> getAskOrderIdsAt(const PriceLevel price, const std::optional<uint32_t>& totalSize = std::nullopt) const = 0;
     virtual std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const = 0;
     virtual std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const = 0;
     virtual std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const = 0;
@@ -163,6 +165,8 @@ public:
     std::vector<PriceLevel> getAskBookPriceVector(const size_t numLevels) const override;
     std::vector<uint32_t> getBidBookSizeVector(const size_t numLevels) const override;
     std::vector<uint32_t> getAskBookSizeVector(const size_t numLevels) const override;
+    std::vector<uint64_t> getBidOrderIdsAt(const PriceLevel price, const std::optional<uint32_t>& totalSize = std::nullopt) const override;
+    std::vector<uint64_t> getAskOrderIdsAt(const PriceLevel price, const std::optional<uint32_t>& totalSize = std::nullopt) const override;
     std::pair<const PriceLevel, uint32_t> getBestBidPriceAndSize() const override;
     std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const override;
     std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const override;
