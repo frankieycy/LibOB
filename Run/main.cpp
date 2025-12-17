@@ -21,7 +21,7 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineGetAsJson();
     // Tests::MatchingEngine::testMatchingEngineMonitor();
     // Tests::MatchingEngine::testMatchingEngineMonitorLobsterOutput();
-    Tests::Simulator::testInitExchangeSimulatorBase();
-    // Tests::Simulator::testInitZeroIntelligenceSimulator();
+    Tests::ExchangeSimulator::testInitExchangeSimulatorBase();
+    // Tests::ExchangeSimulator::testInitZeroIntelligenceSimulator();
     return 0;
 }
