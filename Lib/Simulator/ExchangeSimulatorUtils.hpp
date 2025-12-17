@@ -32,6 +32,7 @@ struct ExchangeSimulatorStopCondition {
 };
 
 struct OrderEventBase {
+    virtual ~OrderEventBase() = default;
     virtual void submitTo(Market::OrderEventManagerBase& /* orderEventManager */) const {
         Error::LIB_THROW("No implementation for OrderEventBase::submitTo().");
     }
@@ -86,27 +87,27 @@ struct OrderCancelAndReplaceEvent : public OrderEventBase {
 class IEventScheduler {
 public:
     virtual ~IEventScheduler() = default;
-    virtual std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) = 0;
+    virtual std::shared_ptr<OrderEventBase> nextEvent(uint64_t currentTimestamp) = 0;
     virtual bool isExhausted() const { return false; } // TODO: exhaustion check
 };
 
 class PerEventScheduler : public IEventScheduler {
 public:
-    explicit PerEventScheduler(std::function<OrderEventBase()> generator) :
+    PerEventScheduler(std::function<std::shared_ptr<OrderEventBase>()> generator) :
         myGenerator(std::move(generator)) {}
-    std::optional<OrderEventBase> nextEvent(uint64_t /* currentTimestamp */) override;
+    std::shared_ptr<OrderEventBase> nextEvent(uint64_t /* currentTimestamp */) override;
 private:
-    std::function<OrderEventBase()> myGenerator;
+    std::function<std::shared_ptr<OrderEventBase>()> myGenerator;
 };
 
 class PoissonEventScheduler : public IEventScheduler {
 public:
-    explicit PoissonEventScheduler(std::function<OrderEventBase(uint64_t)> generator, double lambda, uint64_t seed = 42) :
+    PoissonEventScheduler(std::function<std::shared_ptr<OrderEventBase>(uint64_t)> generator, double lambda, uint64_t seed = 42) :
         myLambda(lambda), myGenerator(std::move(generator)), myRng(seed), myUniform(0.0, 1.0) {}
-    std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) override;
+    std::shared_ptr<OrderEventBase> nextEvent(uint64_t currentTimestamp) override;
 private:
     double myLambda;
-    std::function<OrderEventBase(uint64_t)> myGenerator;
+    std::function<std::shared_ptr<OrderEventBase>(uint64_t)> myGenerator;
     std::mt19937_64 myRng;
     std::uniform_real_distribution<double> myUniform;
 };

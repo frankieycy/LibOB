@@ -30,15 +30,15 @@ bool ExchangeSimulatorStopCondition::check(const IExchangeSimulator& /* simulato
     return false; // TODO
 }
 
-std::optional<OrderEventBase> PerEventScheduler::nextEvent(uint64_t /* currentTimestamp */) {
+std::shared_ptr<OrderEventBase> PerEventScheduler::nextEvent(uint64_t /* currentTimestamp */) {
     return myGenerator();
 }
 
-std::optional<OrderEventBase> PoissonEventScheduler::nextEvent(uint64_t currentTimestamp) {
+std::shared_ptr<OrderEventBase> PoissonEventScheduler::nextEvent(uint64_t currentTimestamp) {
     double u = myUniform(myRng);
     if (u < myLambda)
         return myGenerator(currentTimestamp);
-    return std::nullopt;
+    return nullptr;
 }
 }
 
