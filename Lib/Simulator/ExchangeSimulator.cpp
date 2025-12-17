@@ -61,24 +61,42 @@ void ExchangeSimulatorBase::submit(const OrderEventBase& orderEvent) {
     orderEvent.submitTo(*myOrderEventManager);
 }
 
-void ExchangeSimulatorBase::advanceByEvent() {
-    if (auto nextEvent = myEventScheduler->nextEvent(clockTick()))
+bool ExchangeSimulatorBase::stepOneTick() {
+    if (auto nextEvent = myEventScheduler->nextEvent(clockTick())) {
         submit(*nextEvent);
+        return true;
+    }
+    return false;
 }
 
-void ExchangeSimulatorBase::advanceToTimestamp(const uint64_t timestamp) {
-    while (getCurrentTimestamp() < timestamp) {
-        if (auto nextEvent = myEventScheduler->nextEvent(clockTick()))
+void ExchangeSimulatorBase::stepOneEvent() {
+    while (true) {
+        if (auto nextEvent = myEventScheduler->nextEvent(clockTick())) {
             submit(*nextEvent);
+            return;
+        }
+        if (myEventScheduler->isExhausted()) { // avoid infinite loop
+            setState(ExchangeSimulatorState::FINISHED);
+            return;
+        }
     }
 }
 
-void ExchangeSimulatorBase::simulateByEvent(const uint64_t /* numEvents */) {
-    // TODO
+void ExchangeSimulatorBase::advanceToTimestamp(const uint64_t timestamp) {
+    while (getCurrentTimestamp() < timestamp)
+        stepOneTick();
 }
 
-void ExchangeSimulatorBase::simulateUntilTimestamp(const uint64_t /* timestamp */) {
-    // TODO
+void ExchangeSimulatorBase::simulate() {
+    Error::LIB_ASSERT(getState() == ExchangeSimulatorState::READY,
+        "[ExchangeSimulatorBase] Simulator state is not ready to start simulation.");
+    setState(ExchangeSimulatorState::RUNNING);
+    while (true) {
+        if (checkStopCondition())
+            break;
+        stepOneTick(); // wall-clock tick
+    }
+    setState(ExchangeSimulatorState::FINISHED);
 }
 
 void ExchangeSimulatorBase::buildSide(const Market::Side side, const VolumeProfile& profile) {

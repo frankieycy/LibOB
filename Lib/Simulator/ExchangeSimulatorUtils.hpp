@@ -87,6 +87,7 @@ class IEventScheduler {
 public:
     virtual ~IEventScheduler() = default;
     virtual std::optional<OrderEventBase> nextEvent(uint64_t currentTimestamp) = 0;
+    virtual bool isExhausted() const { return false; } // TODO: exhaustion check
 };
 
 class PerEventScheduler : public IEventScheduler {
