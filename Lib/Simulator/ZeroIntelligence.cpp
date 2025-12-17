@@ -8,6 +8,7 @@ using namespace Utils;
 
 ZeroIntelligenceSimulator::ZeroIntelligenceSimulator(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) :
     ExchangeSimulatorBase(matchingEngine) {
+    // the base class init has been called inside the base constructor
     init();
 }
 
@@ -17,7 +18,15 @@ void ZeroIntelligenceSimulator::init() {
 }
 
 std::shared_ptr<IEventScheduler> ZeroIntelligenceSimulator::makeEventScheduler() const {
-    return nullptr; // TODO: construct event scheduler based on config
+    // simulation in event time so that each tick corresponds to one order event (e.g. limit submit or cancel, market submit)
+    return std::make_shared<PerEventScheduler>([this]() -> std::shared_ptr<OrderEventBase> {
+        return this->generateNextOrderEvent();
+    });
+}
+
+std::shared_ptr<OrderEventBase> ZeroIntelligenceSimulator::generateNextOrderEvent() const {
+    // TODO: zero intelligence event generation logic
+    return std::make_shared<OrderEventBase>();
 }
 }
 

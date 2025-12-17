@@ -19,6 +19,7 @@ public:
     void setZIConfig(const ZeroIntelligenceConfig& config) { myZIConfig = config; }
 private:
     std::shared_ptr<IEventScheduler> makeEventScheduler() const override;
+    std::shared_ptr<OrderEventBase> generateNextOrderEvent() const;
     ZeroIntelligenceConfig myZIConfig = ZeroIntelligenceConfig();
 };
 }
