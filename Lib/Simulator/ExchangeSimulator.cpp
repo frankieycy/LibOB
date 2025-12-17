@@ -21,6 +21,8 @@ ExchangeSimulatorBase::ExchangeSimulatorBase(const std::shared_ptr<Exchange::IMa
 }
 
 void ExchangeSimulatorBase::init() {
+    // myEventScheduler is not initialized here as it relies on the implementation details of the derived classes,
+    // whose init function shall call setEventScheduler(makeEventScheduler()).
     Error::LIB_ASSERT(getState() == ExchangeSimulatorState::UNINITIALIZED,
         "[ExchangeSimulatorBase] Simulator state is not uninitialized.");
     if (!myMatchingEngine)

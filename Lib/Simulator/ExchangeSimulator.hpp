@@ -78,6 +78,7 @@ public:
     virtual void simulate() override;
 private:
     virtual void buildSide(const Market::Side side, const VolumeProfile& profile);
+    virtual std::shared_ptr<IEventScheduler> makeEventScheduler() const { return nullptr; };
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     std::shared_ptr<Market::OrderEventManagerBase> myOrderEventManager;
     std::shared_ptr<Analytics::MatchingEngineMonitor> myMatchingEngineMonitor;
