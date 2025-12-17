@@ -4,6 +4,33 @@
 #include "Simulator/VolumeProfile.hpp"
 
 namespace Simulator {
+std::string toString(const VolumeInterpolationStrategy strategy) {
+    switch (strategy) {
+        case VolumeInterpolationStrategy::FLAT:                 return "Flat";
+        case VolumeInterpolationStrategy::LINEAR:               return "Linear";
+        case VolumeInterpolationStrategy::EXPONENTIAL:          return "Exponential";
+        case VolumeInterpolationStrategy::POWER_LAW:            return "PowerLaw";
+        case VolumeInterpolationStrategy::CUSTOM_INPUT:         return "CustomInput";
+        case VolumeInterpolationStrategy::PIECEWISE_CONSTANT:   return "PiecewiseConstant";
+        case VolumeInterpolationStrategy::PIECEWISE_LINEAR:     return "PiecewiseLinear";
+        default:                                                return "Null";
+    }
+}
+
+std::string toString(const VolumeExtrapolationStrategy strategy) {
+    switch (strategy) {
+        case VolumeExtrapolationStrategy::FLAT:         return "Flat";
+        case VolumeExtrapolationStrategy::LINEAR:       return "Linear";
+        case VolumeExtrapolationStrategy::EXPONENTIAL:  return "Exponential";
+        case VolumeExtrapolationStrategy::POWER_LAW:    return "PowerLaw";
+        default:                                        return "Null";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const VolumeInterpolationStrategy strategy) { return out << toString(strategy); }
+
+std::ostream& operator<<(std::ostream& out, const VolumeExtrapolationStrategy strategy) { return out << toString(strategy); }
+
 uint32_t LinearVolumeInterpolator::volumeAt(const uint32_t dist) const {
     if (dist <= getInterpDistanceStart())
         return myVolumeStart;

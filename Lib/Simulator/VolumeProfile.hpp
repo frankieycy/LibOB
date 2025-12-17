@@ -5,7 +5,7 @@
 namespace Simulator {
 using namespace Utils;
 
-enum class VolumeInterpolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, NULL_VOLUME_INTERPOLATION_STRATEGY };
+enum class VolumeInterpolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, CUSTOM_INPUT, PIECEWISE_CONSTANT, PIECEWISE_LINEAR, NULL_VOLUME_INTERPOLATION_STRATEGY };
 enum class VolumeExtrapolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, NULL_VOLUME_EXTRAPOLATION_STRATEGY };
 
 class IVolumeInterpolator {
@@ -20,6 +20,7 @@ public:
     uint32_t getInterpDistanceEnd() const { return myInterpDistanceEnd; }
     uint32_t operator()(const uint32_t dist) const { return volumeAt(dist); }
     virtual uint32_t volumeAt(const uint32_t dist) const = 0;
+    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::NULL_VOLUME_INTERPOLATION_STRATEGY;
 private:
     uint32_t myInterpDistanceStart;
     uint32_t myInterpDistanceEnd;
@@ -32,6 +33,7 @@ public:
     uint32_t volumeAt(const uint32_t /* dist */) const override {
         return myFlatVolume;
     }
+    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::FLAT;
 private:
     uint32_t myFlatVolume;
 };
@@ -42,6 +44,7 @@ class LinearVolumeInterpolator final : public IVolumeInterpolator {
         myVolumeSlope = double(myVolumeEnd - myVolumeStart) / double(interpDistEnd - interpDistStart);
     }
     uint32_t volumeAt(const uint32_t dist) const override;
+    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::LINEAR;
 private:
     double myVolumeSlope;
     uint32_t myVolumeStart;
@@ -55,6 +58,7 @@ public:
     uint32_t volumeAt(const uint32_t dist) const override {
         return myInputVolumes.find(dist) != myInputVolumes.end() ? myInputVolumes.at(dist) : 0;
     }
+    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::CUSTOM_INPUT;
 private:
     std::map<uint32_t, uint32_t> myInputVolumes;
 };
@@ -64,6 +68,7 @@ public:
     PiecewiseConstantVolumeInterpolator(std::map<uint32_t, uint32_t> knots) :
         IVolumeInterpolator(knots.begin()->first, knots.rbegin()->first), myKnots(std::move(knots)) {}
     uint32_t volumeAt(uint32_t dist) const override;
+    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::PIECEWISE_CONSTANT;
 private:
     std::map<uint32_t, uint32_t> myKnots;
 };
@@ -73,6 +78,7 @@ public:
     PiecewiseLinearVolumeInterpolator(std::map<uint32_t, uint32_t> knots) :
         IVolumeInterpolator(knots.begin()->first, knots.rbegin()->first), myKnots(std::move(knots)) {}
     uint32_t volumeAt(uint32_t dist) const override;
+    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::PIECEWISE_LINEAR;
 private:
     std::map<uint32_t, uint32_t> myKnots;
 };
@@ -84,6 +90,7 @@ public:
     uint32_t getExtrapDistance() const { return myExtrapDistance; }
     uint32_t operator()(const uint32_t dist) const { return volumeAt(dist); }
     virtual uint32_t volumeAt(const uint32_t dist) const = 0;
+    static constexpr VolumeExtrapolationStrategy ourType = VolumeExtrapolationStrategy::NULL_VOLUME_EXTRAPOLATION_STRATEGY;
 private:
     uint32_t myExtrapDistance;
 };
@@ -95,6 +102,7 @@ public:
     uint32_t volumeAt(const uint32_t /* dist */) const override {
         return myFlatVolume;
     }
+    static constexpr VolumeExtrapolationStrategy ourType = VolumeExtrapolationStrategy::FLAT;
 private:
     uint32_t myFlatVolume;
 };
@@ -111,6 +119,11 @@ private:
     std::unique_ptr<IVolumeExtrapolator> myExtrapolator;
     uint32_t myInterpEnd;
 };
+
+std::string toString(const VolumeInterpolationStrategy strategy);
+std::string toString(const VolumeExtrapolationStrategy strategy);
+std::ostream& operator<<(std::ostream& out, const VolumeInterpolationStrategy strategy);
+std::ostream& operator<<(std::ostream& out, const VolumeExtrapolationStrategy strategy);
 }
 
 #endif
