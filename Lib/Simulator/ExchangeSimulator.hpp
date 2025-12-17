@@ -16,17 +16,26 @@ public:
     ExchangeSimulatorState getState() const { return myState; }
     const ExchangeSimulatorConfig& getConfig() const { return myConfig; }
     bool isDebugMode() const { return myConfig.debugMode; }
+    double getAnchorPrice() const { return myConfig.grid.anchorPrice; }
+    double getMinPriceTick() const { return myConfig.grid.minPriceTick; }
+    uint32_t getNumGrids() const { return myConfig.grid.numGrids; }
     uint64_t getRandomSeed() const { return myConfig.randomSeed; }
     uint64_t getCurrentTimestamp() const { return mySimulationClock->getCurrentTimestamp(); }
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return mySimulationClock->tick(elapsedTimeUnit); }
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> getSimulationClock() const { return mySimulationClock; }
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
-    void setState(const ExchangeSimulatorState state) { myState = state; }
+    void setState(const ExchangeSimulatorState state);
+    void setAnchorPrice(const double anchorPrice) { myConfig.grid.anchorPrice = anchorPrice; }
+    void setMinPriceTick(const double minPriceTick) { myConfig.grid.minPriceTick = minPriceTick; }
+    void setNumGrids(const uint32_t numGrids) { myConfig.grid.numGrids = numGrids; }
     void setRandomSeed(const uint64_t seed) { myConfig.randomSeed = seed; }
     void setSimulationClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& simulationClock) { mySimulationClock = simulationClock; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     virtual void init() = 0;
     virtual void reset() = 0;
+    // debug mode is not passed down into matching engine and others to avoid messages log bloats,
+    // and simulator manages its own debug messages log.
+    virtual void setDebugMode(const bool debugMode) { myConfig.debugMode = debugMode; }
     virtual void setConfig(const ExchangeSimulatorConfig& config) { myConfig = config; }
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) = 0;
     virtual void submit(const OrderEventBase& orderEvent) = 0;

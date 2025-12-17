@@ -10,6 +10,11 @@
 namespace Simulator {
 using namespace Utils;
 
+void IExchangeSimulator::setState(const ExchangeSimulatorState state) {
+    myState = state;
+    *myLogger << Logger::LogLevel::INFO << "[IExchangeSimulator] Simulator state set to " << myState << ".";
+}
+
 ExchangeSimulatorBase::ExchangeSimulatorBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) :
     myMatchingEngine(matchingEngine) {
     init();
@@ -22,10 +27,11 @@ void ExchangeSimulatorBase::init() {
         Error::LIB_THROW("[ExchangeSimulatorBase] Matching engine is null during simulator initialization.");
     myOrderEventManager = std::make_shared<Market::OrderEventManagerBase>(myMatchingEngine);
     myMatchingEngineMonitor = std::make_shared<Analytics::MatchingEngineMonitor>(myMatchingEngine);
-    myMatchingEngine->setDebugMode(isDebugMode());
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
     setState(ExchangeSimulatorState::READY);
+    *getLogger() << Logger::LogLevel::INFO << "[ExchangeSimulatorBase] Simulator initialization complete with monitored levels "
+                << getConfig().monitoredLevels << " and minimum price tick " << getConfig().grid.minPriceTick << ".";
 }
 
 void ExchangeSimulatorBase::reset() {
@@ -71,8 +77,13 @@ void ExchangeSimulatorBase::simulateUntilTimestamp(const uint64_t /* timestamp *
     // TODO
 }
 
-void ExchangeSimulatorBase::buildSide(const Market::Side /* side */, const VolumeProfile& /* profile */) {
-    // TODO
+void ExchangeSimulatorBase::buildSide(const Market::Side side, const VolumeProfile& profile) {
+    const double sign = side == Market::Side::BUY ? -1.0 : 1.0;
+    for (size_t i = 0; i < getNumGrids(); ++i) {
+        const double price = getAnchorPrice() + sign * i * getMinPriceTick();
+        const uint32_t quantity = profile(i);
+        myOrderEventManager->submitLimitOrderEvent(side, quantity, price);
+    }
 }
 }
 
