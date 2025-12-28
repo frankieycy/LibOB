@@ -9,6 +9,8 @@
 #include "Simulator/VolumeProfile.hpp"
 
 namespace Simulator {
+using OrderEventLog = std::vector<std::shared_ptr<const OrderEventBase>>;
+
 class IExchangeSimulator {
 public:
     IExchangeSimulator() = default;
@@ -33,7 +35,9 @@ public:
     void setSimulationClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& simulationClock) { mySimulationClock = simulationClock; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     virtual void init() = 0;
-    virtual void reset() = 0;
+    virtual void reset();
+    virtual uint32_t getCurrentNumEvents() const = 0;
+    virtual std::shared_ptr<const OrderEventBase> getLastEvent() const = 0;
     // debug mode is not passed down into matching engine and others to avoid messages log bloats,
     // and simulator manages its own debug messages log.
     virtual void setDebugMode(const bool debugMode) { myConfig.debugMode = debugMode; }
@@ -47,6 +51,7 @@ public:
     virtual void advanceToTimestamp(const uint64_t timestamp) = 0; // keep stepping one tick from the current timestamp to the target timestamp
     virtual void advanceByDuration(const uint64_t duration) { advanceToTimestamp(getCurrentTimestamp() + duration); }
     virtual void simulate() = 0; // simulate in wall-clock time until stop condition is met (may be imposed upon the number of events or timestamp)
+    virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
     static constexpr ExchangeSimulatorType ourType = ExchangeSimulatorType::NULL_EXCHANGE_SIMULATOR_TYPE;
 private:
     ExchangeSimulatorConfig myConfig = ExchangeSimulatorConfig();
@@ -62,6 +67,7 @@ public:
     ExchangeSimulatorBase() = default;
     ExchangeSimulatorBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~ExchangeSimulatorBase() = default;
+    const OrderEventLog& getOrderEventLog() const { return myOrderEventLog; }
     std::shared_ptr<const Exchange::IMatchingEngine> getMatchingEngine() const { return myMatchingEngine; }
     std::shared_ptr<const Market::OrderEventManagerBase> getOrderEventManager() const { return myOrderEventManager; }
     std::shared_ptr<const Analytics::MatchingEngineMonitor> getMatchingEngineMonitor() const { return myMatchingEngineMonitor; }
@@ -69,6 +75,8 @@ public:
     void setEventScheduler(const std::shared_ptr<IEventScheduler>& eventScheduler) { myEventScheduler = eventScheduler; }
     virtual void init() override;
     virtual void reset() override;
+    virtual uint32_t getCurrentNumEvents() const override { return myOrderEventLog.size(); }
+    virtual std::shared_ptr<const OrderEventBase> getLastEvent() const override { return myOrderEventLog.empty() ? nullptr : myOrderEventLog.back(); }
     virtual void setConfig(const ExchangeSimulatorConfig& config) override;
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) override;
     virtual void submit(const OrderEventBase& orderEvent) override;
@@ -76,9 +84,11 @@ public:
     virtual void stepOneEvent() override;
     virtual void advanceToTimestamp(const uint64_t timestamp) override;
     virtual void simulate() override;
+    virtual std::ostream& orderBookSnapshot(std::ostream& out) const override { return myMatchingEngine->orderBookSnapshot(out); }
 private:
     virtual void buildSide(const Market::Side side, const VolumeProfile& profile);
-    virtual std::shared_ptr<IEventScheduler> makeEventScheduler() const { return nullptr; };
+    virtual std::shared_ptr<IEventScheduler> makeEventScheduler() const { return nullptr; }
+    OrderEventLog myOrderEventLog;
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     std::shared_ptr<Market::OrderEventManagerBase> myOrderEventManager;
     std::shared_ptr<Analytics::MatchingEngineMonitor> myMatchingEngineMonitor;

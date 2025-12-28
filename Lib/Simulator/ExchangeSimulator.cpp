@@ -15,6 +15,11 @@ void IExchangeSimulator::setState(const ExchangeSimulatorState state) {
     *myLogger << Logger::LogLevel::INFO << "[IExchangeSimulator] Simulator state set to " << myState << ".";
 }
 
+void IExchangeSimulator::reset() {
+    mySimulationClock->reset();
+    myState = ExchangeSimulatorState::UNINITIALIZED;
+}
+
 ExchangeSimulatorBase::ExchangeSimulatorBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) :
     myMatchingEngine(matchingEngine) {
     init();
@@ -43,9 +48,11 @@ void ExchangeSimulatorBase::reset() {
         "[ExchangeSimulatorBase] Cannot reset simulator while it is running.");
     if (myMatchingEngine)
         myMatchingEngine->reset();
-    getSimulationClock()->reset();
-    setState(ExchangeSimulatorState::UNINITIALIZED);
-    init();
+    if (myOrderEventManager)
+        myOrderEventManager->reset();
+    if (myMatchingEngineMonitor)
+        myMatchingEngineMonitor->reset();
+    IExchangeSimulator::reset();
 }
 
 void ExchangeSimulatorBase::setConfig(const ExchangeSimulatorConfig& config) {
@@ -66,6 +73,7 @@ void ExchangeSimulatorBase::submit(const OrderEventBase& orderEvent) {
 bool ExchangeSimulatorBase::stepOneTick() {
     if (auto nextEvent = myEventScheduler->nextEvent(clockTick())) {
         submit(*nextEvent);
+        myOrderEventLog.push_back(nextEvent);
         return true;
     }
     return false;
@@ -75,6 +83,7 @@ void ExchangeSimulatorBase::stepOneEvent() {
     while (true) {
         if (auto nextEvent = myEventScheduler->nextEvent(clockTick())) {
             submit(*nextEvent);
+            myOrderEventLog.push_back(nextEvent);
             return;
         }
         if (myEventScheduler->isExhausted()) { // avoid infinite loop
