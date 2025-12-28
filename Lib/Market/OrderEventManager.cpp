@@ -463,6 +463,13 @@ void OrderEventManagerBase::reserve(const size_t numOrdersEstimate) {
     myActiveLimitOrders.reserve(numOrdersEstimate);
     myQueuedMarketOrders.reserve(numOrdersEstimate);
 }
+
+void OrderEventManagerBase::reset() {
+    myOrderIdHandler.reset();
+    myEventIdHandler.reset();
+    myActiveLimitOrders.clear();
+    myQueuedMarketOrders.clear();
+}
 }
 
 #endif

@@ -62,6 +62,7 @@ public:
     virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
     virtual std::ostream& stateSnapshot(std::ostream& out) const;
     virtual void reserve(const size_t numOrdersEstimate);
+    virtual void reset();
 private:
     void submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event);
     virtual std::shared_ptr<OrderSubmitEvent> createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price);
