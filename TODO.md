@@ -57,9 +57,14 @@
     - export order book time evolution as lobster csv format using `TimeSeriesCollector` members
 * `Parser::LobsterDataParser`
 * `Simulator::ZeroIntelligence`
+    - ok, implement the `advance` and `simulate` functions in `ExchangeSimulatorBase`
+    - implement the next-event generator in `ZeroIntelligenceExchangeSimulator`
+    - test the behaviors of the engine, order manager and monitor for small books
 
 ### Analytics
 
 ### GUI
 
 ### Modeling
+
+### References
