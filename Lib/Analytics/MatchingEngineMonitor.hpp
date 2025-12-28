@@ -136,6 +136,7 @@ public:
     void setOrderBookStatisticsTimestampStrategy(const OrderBookStatisticsTimestampStrategy strategy) { myOrderBookStatisticsTimestampStrategy = strategy; }
 
     virtual void init();
+    virtual void reset();
     virtual void startMonitoring();
     virtual void stopMonitoring();
     virtual void updateStatistics(const Exchange::OrderProcessingReport& report);

@@ -389,6 +389,15 @@ void MatchingEngineMonitor::init() {
         });
 }
 
+void MatchingEngineMonitor::reset() {
+    myLastTrade = nullptr;
+    myOrderBookAggregateStatistics = OrderBookAggregateStatistics();
+    myOrderBookAggregateStatisticsCache = OrderBookAggregateStatistics();
+    myOrderBookStatisticsCollector.clear();
+    myOrderEventProcessingLatenciesCollector.clear();
+    myOrderProcessingReportsCollector.clear();
+}
+
 void MatchingEngineMonitor::startMonitoring() {
     myOrderProcessingCallback = mySharedOrderProcessingCallback;
     myMonitoringEnabled = true;
