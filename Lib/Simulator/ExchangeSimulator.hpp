@@ -62,6 +62,13 @@ private:
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
 };
 
+/* Exchange simulator implementation with a matching engine at its core, upon which
+   an order event manager and a matching engine monitor are hooked (they are constructed
+   from the matching engine). The simulator order event is generated from the event scheduler
+   according to some defined process, which may tick in event time or stochastic wall-clock
+   time, then sent to the order event manager for processing. The class provides the basic
+   interface for time-stepping and simulation but leaves the event scheduler un-initialized,
+   which shall be defined in its concrete implementation via makeEventScheduler(). */
 class ExchangeSimulatorBase : public IExchangeSimulator {
 public:
     ExchangeSimulatorBase() = default;

@@ -81,11 +81,8 @@ bool ExchangeSimulatorBase::stepOneTick() {
 
 void ExchangeSimulatorBase::stepOneEvent() {
     while (true) {
-        if (auto nextEvent = myEventScheduler->nextEvent(clockTick())) {
-            submit(*nextEvent);
-            myOrderEventLog.push_back(nextEvent);
+        if (stepOneTick()) // ends when the next tick yields an event
             return;
-        }
         if (myEventScheduler->isExhausted()) { // avoid infinite loop
             setState(ExchangeSimulatorState::FINISHED);
             return;
