@@ -32,9 +32,11 @@ std::ostream& operator<<(std::ostream& out, const VolumeInterpolationStrategy st
 std::ostream& operator<<(std::ostream& out, const VolumeExtrapolationStrategy strategy) { return out << toString(strategy); }
 
 uint32_t LinearVolumeInterpolator::volumeAt(const uint32_t dist) const {
-    if (dist <= getInterpDistanceStart())
+    if (dist < getInterpDistanceStart())
+        return 0;
+    else if (dist == getInterpDistanceStart())
         return myVolumeStart;
-    if (dist >= getInterpDistanceEnd())
+    else if (dist >= getInterpDistanceEnd())
         return myVolumeEnd;
     return static_cast<uint32_t>(std::round(myVolumeStart + myVolumeSlope * (dist - getInterpDistanceStart())));
 }
@@ -42,8 +44,8 @@ uint32_t LinearVolumeInterpolator::volumeAt(const uint32_t dist) const {
 uint32_t PiecewiseConstantVolumeInterpolator::volumeAt(uint32_t dist) const {
     auto hi = myKnots.lower_bound(dist);
     if (hi == myKnots.begin())
-        return hi->second;
-    if (hi == myKnots.end())
+        return dist < hi->second ? 0 : hi->second;
+    else if (hi == myKnots.end())
         return std::prev(hi)->second;
     auto lo = std::prev(hi);
     return lo->second;
@@ -52,8 +54,8 @@ uint32_t PiecewiseConstantVolumeInterpolator::volumeAt(uint32_t dist) const {
 uint32_t PiecewiseLinearVolumeInterpolator::volumeAt(uint32_t dist) const {
     auto hi = myKnots.lower_bound(dist);
     if (hi == myKnots.begin())
-        return hi->second;
-    if (hi == myKnots.end())
+        return dist < hi->second ? 0 : hi->second;
+    else if (hi == myKnots.end())
         return std::prev(hi)->second;
     auto lo = std::prev(hi);
     double slope = double(hi->second - lo->second) / double(hi->first - lo->first);

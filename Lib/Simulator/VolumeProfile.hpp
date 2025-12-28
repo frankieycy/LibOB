@@ -39,6 +39,7 @@ private:
 };
 
 class LinearVolumeInterpolator final : public IVolumeInterpolator {
+public:
     LinearVolumeInterpolator(const uint32_t interpDistStart, const uint32_t interpDistEnd, const uint32_t volumeStart, const uint32_t volumeEnd) :
         IVolumeInterpolator(interpDistStart, interpDistEnd), myVolumeStart(volumeStart), myVolumeEnd(volumeEnd) {
         myVolumeSlope = double(myVolumeEnd - myVolumeStart) / double(interpDistEnd - interpDistStart);
