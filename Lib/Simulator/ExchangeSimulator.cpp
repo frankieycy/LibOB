@@ -116,7 +116,8 @@ void ExchangeSimulatorBase::buildSide(const Market::Side side, const VolumeProfi
     for (size_t i = 0; i < getNumGrids(); ++i) {
         const double price = getAnchorPrice() + sign * i * getMinPriceTick();
         const uint32_t quantity = profile(i);
-        myOrderEventManager->submitLimitOrderEvent(side, quantity, price);
+        if (quantity > 0 && price > 0.0)
+            myOrderEventManager->submitLimitOrderEvent(side, quantity, price);
     }
 }
 }
