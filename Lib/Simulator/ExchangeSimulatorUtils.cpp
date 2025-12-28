@@ -2,6 +2,7 @@
 #define EXCHANGE_SIMULATOR_UTILS_CPP
 #include "Utils/Utils.hpp"
 #include "Simulator/ExchangeSimulatorUtils.hpp"
+#include "Simulator/ExchangeSimulator.hpp"
 
 namespace Simulator {
 std::string toString(const ExchangeSimulatorState state) {
@@ -22,12 +23,101 @@ std::string toString(const ExchangeSimulatorType type) {
     }
 }
 
+std::string toString(const OrderEventType type) {
+    switch (type) {
+        case OrderEventType::LIMIT_SUBMIT:      return "LimitSubmit";
+        case OrderEventType::MARKET_SUBMIT:     return "MarketSubmit";
+        case OrderEventType::CANCEL:            return "Cancel";
+        case OrderEventType::CANCEL_ID:         return "CancelById";
+        case OrderEventType::CANCEL_REPLACE:    return "CancelReplace";
+        default:                                return "Null";
+    }
+}
+
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state) { return out << toString(state); }
 
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type) { return out << toString(type); }
 
-bool ExchangeSimulatorStopCondition::check(const IExchangeSimulator& /* simulator */) const {
-    return false; // TODO
+std::ostream& operator<<(std::ostream& out, const OrderEventType type) { return out << toString(type); }
+
+bool ExchangeSimulatorStopCondition::check(const IExchangeSimulator& simulator) const {
+    if (maxNumEvents && simulator.getCurrentNumEvents() >= *maxNumEvents)
+        return true;
+    if (maxTimestamp && simulator.getCurrentTimestamp() >= *maxTimestamp)
+        return true;
+    return false;
+}
+
+std::string OrderEventBase::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"     << eventId   << ","
+    "\"Timestamp\":"   << timestamp << ","
+    "\"EventType\":\"" << eventType << "\"";
+    oss << "}";
+    return oss.str();
+}
+
+std::string LimitOrderSubmitEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"     << eventId   << ","
+    "\"Timestamp\":"   << timestamp << ","
+    "\"EventType\":\"" << eventType << "\","
+    "\"Side\":\""      << side      << "\","
+    "\"Quantity\":"    << quantity  << ","
+    "\"Price\":"       << price;
+    oss << "}";
+    return oss.str();
+}
+
+std::string MarketOrderSubmitEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"     << eventId   << ","
+    "\"Timestamp\":"   << timestamp << ","
+    "\"EventType\":\"" << eventType << "\","
+    "\"Side\":\""      << side      << "\","
+    "\"Quantity\":"    << quantity;
+    oss << "}";
+    return oss.str();
+}
+
+std::string OrderCancelEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"     << eventId   << ","
+    "\"Timestamp\":"   << timestamp << ","
+    "\"EventType\":\"" << eventType << "\","
+    "\"Side\":\""      << side      << "\","
+    "\"Quantity\":"    << quantity  << ","
+    "\"Price\":"       << price;
+    oss << "}";
+    return oss.str();
+}
+
+std::string OrderCancelByIdEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"     << eventId   << ","
+    "\"Timestamp\":"   << timestamp << ","
+    "\"EventType\":\"" << eventType << "\","
+    "\"OrderId\":"     << orderId;
+    oss << "}";
+    return oss.str();
+}
+
+std::string OrderCancelAndReplaceEvent::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{"
+    "\"EventId\":"          << eventId   << ","
+    "\"Timestamp\":"        << timestamp << ","
+    "\"EventType\":\""      << eventType << "\","
+    "\"OrderId\":"          << orderId   << ","
+    "\"ModifiedQuantity\":" << (modifiedQuantity ? std::to_string(*modifiedQuantity) : "null") << ","
+    "\"ModifiedPrice\":"    << (modifiedPrice ? std::to_string(*modifiedPrice) : "null");
+    oss << "}";
+    return oss.str();
 }
 
 std::shared_ptr<OrderEventBase> PerEventScheduler::nextEvent(uint64_t /* currentTimestamp */) {

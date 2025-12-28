@@ -43,7 +43,6 @@ void ExchangeSimulatorBase::init() {
 
 void ExchangeSimulatorBase::reset() {
     // empties out the matching engine and re-initializes the simulator
-    // TODO: reset order event manager and matching engine monitor states
     Error::LIB_ASSERT(getState() != ExchangeSimulatorState::RUNNING,
         "[ExchangeSimulatorBase] Cannot reset simulator while it is running.");
     if (myMatchingEngine)

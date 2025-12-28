@@ -10,6 +10,9 @@ class IExchangeSimulator;
 
 enum class ExchangeSimulatorState { UNINITIALIZED, READY, RUNNING, FINISHED };
 enum class ExchangeSimulatorType { ZERO_INTELLIGENCE, MINIMAL_INTELLIGENCE, NULL_EXCHANGE_SIMULATOR_TYPE };
+// types of order events that can be scheduled in the simulator - note the difference between these and Market::OrderEventType,
+// the latter being used inside the matching engine to represent actual order events processed by the engine.
+enum class OrderEventType { LIMIT_SUBMIT, MARKET_SUBMIT, CANCEL, CANCEL_ID, CANCEL_REPLACE, NULL_ORDER_EVENT_TYPE };
 
 struct OrderBookGridDefinition {
     double anchorPrice = Consts::NAN_DOUBLE; // defines a small- or large-tick stock
@@ -31,57 +34,87 @@ struct ExchangeSimulatorStopCondition {
     bool check(const IExchangeSimulator& simulator) const;
 };
 
+// order event definitions used in the simulator's event scheduler
 struct OrderEventBase {
+    OrderEventBase() : eventId(0), timestamp(0) {};
+    OrderEventBase(const uint64_t eventId, const uint64_t timestamp) :
+        eventId(eventId), timestamp(timestamp) {}
     virtual ~OrderEventBase() = default;
+    virtual std::string getAsJson() const;
     virtual void submitTo(Market::OrderEventManagerBase& /* orderEventManager */) const {
         Error::LIB_THROW("No implementation for OrderEventBase::submitTo().");
     }
-    std::optional<uint64_t> eventId;
-    std::optional<uint64_t> orderId;
+    uint64_t eventId;
     uint64_t timestamp;
-    Market::OrderEventType eventType;
+    static constexpr OrderEventType eventType = OrderEventType::NULL_ORDER_EVENT_TYPE;
 };
 
 struct LimitOrderSubmitEvent : public OrderEventBase {
+    LimitOrderSubmitEvent() = delete;
+    LimitOrderSubmitEvent(const uint64_t eventId, const uint64_t timestamp, const Market::Side side, const uint32_t quantity, const double price) :
+        OrderEventBase(eventId, timestamp), side(side), quantity(quantity), price(price) {}
+    virtual std::string getAsJson() const override;
     virtual void submitTo(Market::OrderEventManagerBase& orderEventManager) const override {
         orderEventManager.submitLimitOrderEvent(side, quantity, price);
     }
     Market::Side side;
     uint32_t quantity;
     double price;
+    static constexpr OrderEventType eventType = OrderEventType::LIMIT_SUBMIT;
 };
 
 struct MarketOrderSubmitEvent : public OrderEventBase {
+    MarketOrderSubmitEvent() = delete;
+    MarketOrderSubmitEvent(const uint64_t eventId, const uint64_t timestamp, const Market::Side side, const uint32_t quantity) :
+        OrderEventBase(eventId, timestamp), side(side), quantity(quantity) {}
+    virtual std::string getAsJson() const override;
     virtual void submitTo(Market::OrderEventManagerBase& orderEventManager) const override {
         orderEventManager.submitMarketOrderEvent(side, quantity);
     }
     Market::Side side;
     uint32_t quantity;
+    static constexpr OrderEventType eventType = OrderEventType::MARKET_SUBMIT;
 };
 
 struct OrderCancelEvent : public OrderEventBase {
+    OrderCancelEvent() = delete;
+    OrderCancelEvent(const uint64_t eventId, const uint64_t timestamp, const Market::Side side, const uint32_t quantity, const double price) :
+        OrderEventBase(eventId, timestamp), side(side), quantity(quantity), price(price) {}
+    virtual std::string getAsJson() const override;
     virtual void submitTo(Market::OrderEventManagerBase& orderEventManager) const override {
         orderEventManager.cancelOrders(side, quantity, price);
     }
     Market::Side side;
     uint32_t quantity;
     double price;
+    static constexpr OrderEventType eventType = OrderEventType::CANCEL;
 };
 
 struct OrderCancelByIdEvent : public OrderEventBase {
+    OrderCancelByIdEvent() = delete;
+    OrderCancelByIdEvent(const uint64_t eventId, const uint64_t timestamp, const uint64_t orderId) :
+        OrderEventBase(eventId, timestamp), orderId(orderId) {}
+    virtual std::string getAsJson() const override;
     virtual void submitTo(Market::OrderEventManagerBase& orderEventManager) const override {
         orderEventManager.cancelOrder(orderId);
     }
     uint64_t orderId;
+    static constexpr OrderEventType eventType = OrderEventType::CANCEL_ID;
 };
 
 struct OrderCancelAndReplaceEvent : public OrderEventBase {
+    OrderCancelAndReplaceEvent() = delete;
+    OrderCancelAndReplaceEvent(const uint64_t eventId, const uint64_t timestamp, const uint64_t orderId,
+        const std::optional<uint32_t>& modifiedQuantity = std::nullopt, const std::optional<double>& modifiedPrice = std::nullopt) :
+        OrderEventBase(eventId, timestamp), orderId(orderId), modifiedQuantity(modifiedQuantity), modifiedPrice(modifiedPrice) {}
+    virtual std::string getAsJson() const override;
     virtual void submitTo(Market::OrderEventManagerBase& orderEventManager) const override {
         orderEventManager.cancelAndReplaceOrder(orderId, modifiedQuantity, modifiedPrice);
     }
     uint64_t orderId;
     std::optional<uint32_t> modifiedQuantity;
     std::optional<double> modifiedPrice;
+    static constexpr OrderEventType eventType = OrderEventType::CANCEL_REPLACE;
 };
 
 class IEventScheduler {
@@ -116,8 +149,10 @@ class TimeDependentPoissonEventScheduler : public IEventScheduler {};
 
 std::string toString(const ExchangeSimulatorState state);
 std::string toString(const ExchangeSimulatorType type);
+std::string toString(const OrderEventType type);
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state);
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type);
+std::ostream& operator<<(std::ostream& out, const OrderEventType type);
 }
 
 #endif
