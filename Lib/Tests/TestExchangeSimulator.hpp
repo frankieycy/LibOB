@@ -3,8 +3,8 @@
 
 namespace Tests {
 namespace ExchangeSimulator {
-void testInitExchangeSimulatorBase();
 void testInitZeroIntelligenceSimulator();
+void testZeroIntelligenceSimulatorRandomOrders();
 }
 }
 
