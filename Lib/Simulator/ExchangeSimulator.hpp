@@ -29,7 +29,6 @@ public:
     std::shared_ptr<Utils::Logger::LoggerBase> getLogger() const { return myLogger; }
     void setState(const ExchangeSimulatorState state);
     void setAnchorPrice(const double anchorPrice) { myConfig.grid.anchorPrice = anchorPrice; }
-    void setMinPriceTick(const double minPriceTick) { myConfig.grid.minPriceTick = minPriceTick; }
     void setNumGrids(const uint32_t numGrids) { myConfig.grid.numGrids = numGrids; }
     void setRandomSeed(const uint64_t seed) { myConfig.randomSeed = seed; }
     void setSimulationClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& simulationClock) { mySimulationClock = simulationClock; }
@@ -42,6 +41,7 @@ public:
     // and simulator manages its own debug messages log.
     virtual void setDebugMode(const bool debugMode) { myConfig.debugMode = debugMode; }
     virtual void setConfig(const ExchangeSimulatorConfig& config) { myConfig = config; }
+    virtual void setMinPriceTick(const double minPriceTick) { myConfig.grid.minPriceTick = minPriceTick; }
     virtual void setStopCondition(const ExchangeSimulatorStopCondition& stopCondition) { myStopCondition = stopCondition; }
     virtual bool checkStopCondition() const { return myStopCondition.check(*this); }
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) = 0;
@@ -85,6 +85,7 @@ public:
     virtual uint32_t getCurrentNumEvents() const override { return myOrderEventLog.size(); }
     virtual std::shared_ptr<const OrderEventBase> getLastEvent() const override { return myOrderEventLog.empty() ? nullptr : myOrderEventLog.back(); }
     virtual void setConfig(const ExchangeSimulatorConfig& config) override;
+    virtual void setMinPriceTick(const double minPriceTick) override;
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) override;
     virtual void submit(const OrderEventBase& orderEvent) override;
     virtual bool stepOneTick() override;

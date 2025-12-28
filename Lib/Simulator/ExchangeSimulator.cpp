@@ -60,6 +60,11 @@ void ExchangeSimulatorBase::setConfig(const ExchangeSimulatorConfig& config) {
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
 }
 
+void ExchangeSimulatorBase::setMinPriceTick(const double minPriceTick) {
+    IExchangeSimulator::setMinPriceTick(minPriceTick);
+    myOrderEventManager->setMinimumPriceTick(minPriceTick);
+}
+
 void ExchangeSimulatorBase::initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) {
     buildSide(Market::Side::BUY, bidProfile);
     buildSide(Market::Side::SELL, askProfile);

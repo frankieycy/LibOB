@@ -18,7 +18,7 @@ struct OrderBookGridDefinition {
     double anchorPrice = Consts::NAN_DOUBLE; // defines a small- or large-tick stock
     double minPriceTick = 0.01; // passes down to order event manager
     uint32_t minLotSize = 1;
-    uint32_t numGrids = 10000; // total number of price grids on one side of the book for initial book building
+    uint32_t numGrids = 10000; // total number of price grids on one side of the book for initial book building, spanning $100 around the anchor price by default
 };
 
 struct ExchangeSimulatorConfig {
@@ -145,7 +145,7 @@ private:
     std::uniform_real_distribution<double> myUniform;
 };
 
-class TimeDependentPoissonEventScheduler : public IEventScheduler {};
+class TimeDependentPoissonEventScheduler : public IEventScheduler {}; // TODO
 
 std::string toString(const ExchangeSimulatorState state);
 std::string toString(const ExchangeSimulatorType type);
