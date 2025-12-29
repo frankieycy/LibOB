@@ -29,6 +29,10 @@ struct ExchangeSimulatorConfig {
 };
 
 struct ExchangeSimulatorStopCondition {
+    ExchangeSimulatorStopCondition(
+        const std::optional<uint32_t>& maxNumEvents = std::nullopt,
+        const std::optional<uint64_t>& maxTimestamp = std::nullopt) :
+        maxNumEvents(maxNumEvents), maxTimestamp(maxTimestamp) {}
     std::optional<uint32_t> maxNumEvents;
     std::optional<uint64_t> maxTimestamp;
     bool check(const IExchangeSimulator& simulator) const;
