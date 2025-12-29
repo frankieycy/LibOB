@@ -43,13 +43,13 @@ public:
     virtual uint32_t sample(Market::Side side) const = 0;
 };
 
-class ConstantOrderSizeSampler : public IOrderSizeSampler {
+class NullOrderSizeSampler : public IOrderSizeSampler {
 public:
-    ConstantOrderSizeSampler(const uint32_t size) : mySize(size) {}
-    virtual ~ConstantOrderSizeSampler() = default;
-    virtual uint32_t sample(Market::Side /* side */) const override { return mySize; }
-private:
-    uint32_t mySize;
+    virtual ~NullOrderSizeSampler() = default;
+    virtual uint32_t sample(Market::Side /* side */) const override {
+        Error::LIB_THROW("[NullOrderSizeSampler] sample() cannot be called.");
+        return 0;
+    }
 };
 
 class IOrderPricePlacementSampler {
@@ -58,13 +58,13 @@ public:
     virtual double sample(Market::Side side) const = 0;
 };
 
-class ConstantOrderPricePlacementSampler : public IOrderPricePlacementSampler {
+class NullOrderPricePlacementSampler : public IOrderPricePlacementSampler {
 public:
-    ConstantOrderPricePlacementSampler(const double price) : myPrice(price) {}
-    virtual ~ConstantOrderPricePlacementSampler() = default;
-    virtual double sample(Market::Side /* side */) const override { return myPrice; }
-private:
-    double myPrice;
+    virtual ~NullOrderPricePlacementSampler() = default;
+    virtual double sample(Market::Side /* side */) const override {
+        Error::LIB_THROW("[NullOrderPricePlacementSampler] sample() cannot be called.");
+        return Utils::Consts::NAN_DOUBLE;
+    }
 };
 
 struct OrderCancelSpec {
@@ -78,9 +78,9 @@ public:
     virtual std::optional<OrderCancelSpec> sample(Market::Side side) const = 0; // optional to allow for empty book
 };
 
-class NoOrderCancellationSampler : public IOrderCancellationSampler {
+class NullOrderCancellationSampler : public IOrderCancellationSampler {
 public:
-    virtual ~NoOrderCancellationSampler() = default;
+    virtual ~NullOrderCancellationSampler() = default;
     virtual std::optional<OrderCancelSpec> sample(Market::Side /* side */) const override { return std::nullopt; }
 };
 }

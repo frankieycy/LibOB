@@ -11,16 +11,16 @@ struct ZeroIntelligenceConfig {
     // samplers for market order submit event
     std::shared_ptr<IOrderEventRateSampler> marketOrderRateSampler = std::make_shared<ConstantOrderEventRateSampler>(0.0);
     std::shared_ptr<IOrderSideSampler> marketSideSampler = std::make_shared<UniformOrderSideSampler>();
-    std::shared_ptr<IOrderSizeSampler> marketSizeSampler = std::make_shared<ConstantOrderSizeSampler>(0);
+    std::shared_ptr<IOrderSizeSampler> marketSizeSampler = std::make_shared<NullOrderSizeSampler>();
     // samplers for limit order submit event
     std::shared_ptr<IOrderEventRateSampler> limitOrderRateSampler = std::make_shared<ConstantOrderEventRateSampler>(0.0);
     std::shared_ptr<IOrderSideSampler> limitSideSampler = std::make_shared<UniformOrderSideSampler>();
-    std::shared_ptr<IOrderSizeSampler> limitSizeSampler = std::make_shared<ConstantOrderSizeSampler>(0);
-    std::shared_ptr<IOrderPricePlacementSampler> limitPriceSampler = std::make_shared<ConstantOrderPricePlacementSampler>(Consts::NAN_DOUBLE);
+    std::shared_ptr<IOrderSizeSampler> limitSizeSampler = std::make_shared<NullOrderSizeSampler>();
+    std::shared_ptr<IOrderPricePlacementSampler> limitPriceSampler = std::make_shared<NullOrderPricePlacementSampler>();
     // samplers for limit order cancel event
     std::shared_ptr<IOrderEventRateSampler> cancelRateSampler = std::make_shared<ConstantOrderEventRateSampler>(0.0);
     std::shared_ptr<IOrderSideSampler> cancelSideSampler = std::make_shared<UniformOrderSideSampler>();
-    std::shared_ptr<IOrderCancellationSampler> cancelSampler = std::make_shared<NoOrderCancellationSampler>();
+    std::shared_ptr<IOrderCancellationSampler> cancelSampler = std::make_shared<NullOrderCancellationSampler>();
 };
 
 class ZeroIntelligenceSimulator : public ExchangeSimulatorBase {
