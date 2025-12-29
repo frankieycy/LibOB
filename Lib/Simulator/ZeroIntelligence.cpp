@@ -37,21 +37,22 @@ std::shared_ptr<OrderEventBase> ZeroIntelligenceSimulator::generateNextOrderEven
     if (marketOrderRate + limitOrderRate + cancelRate == 0.0)
         return nullptr; // no events to generate
     const std::vector<double> orderEventRates = { marketOrderRate, limitOrderRate, cancelRate };
+    // next tick must have one of the events happening, hence conditional sampling
     const size_t eventIndex = Statistics::drawIndexWithRelativeProbabilities(orderEventRates, true);
     if (eventIndex == 0) { // market order submit event
         const Market::Side side = myZIConfig.marketSideSampler->sample();
         const uint32_t size = myZIConfig.marketSizeSampler->sample(side);
-        return std::make_shared<MarketOrderSubmitEvent>(getCurrentTimestamp(), getCurrentTimestamp(), side, size);
+        return std::make_shared<MarketOrderSubmitEvent>(getCurrentTimestamp() /* eventId */, getCurrentTimestamp(), side, size);
     } else if (eventIndex == 1) { // limit order submit event
         const Market::Side side = myZIConfig.limitSideSampler->sample();
         const uint32_t size = myZIConfig.limitSizeSampler->sample(side);
         const double price = myZIConfig.limitPriceSampler->sample(side);
-        return std::make_shared<LimitOrderSubmitEvent>(getCurrentTimestamp(), getCurrentTimestamp(), side, size, price);
+        return std::make_shared<LimitOrderSubmitEvent>(getCurrentTimestamp() /* eventId */, getCurrentTimestamp(), side, size, price);
     } else if (eventIndex == 2) { // limit order cancel event
         const Market::Side side = myZIConfig.cancelSideSampler->sample();
         const std::optional<OrderCancelSpec> cancelSpec = myZIConfig.cancelSampler->sample(side);
         if (cancelSpec)
-            return std::make_shared<OrderCancelEvent>(getCurrentTimestamp(), getCurrentTimestamp(), side, cancelSpec->quantity, cancelSpec->price);
+            return std::make_shared<OrderCancelEvent>(getCurrentTimestamp() /* eventId */, getCurrentTimestamp(), side, cancelSpec->quantity, cancelSpec->price);
     }
     return nullptr;
 }

@@ -43,10 +43,28 @@ public:
     virtual uint32_t sample(Market::Side side) const = 0;
 };
 
+class ConstantOrderSizeSampler : public IOrderSizeSampler {
+public:
+    ConstantOrderSizeSampler(const uint32_t size) : mySize(size) {}
+    virtual ~ConstantOrderSizeSampler() = default;
+    virtual uint32_t sample(Market::Side /* side */) const override { return mySize; }
+private:
+    uint32_t mySize;
+};
+
 class IOrderPricePlacementSampler {
 public:
     virtual ~IOrderPricePlacementSampler() = default;
     virtual double sample(Market::Side side) const = 0;
+};
+
+class ConstantOrderPricePlacementSampler : public IOrderPricePlacementSampler {
+public:
+    ConstantOrderPricePlacementSampler(const double price) : myPrice(price) {}
+    virtual ~ConstantOrderPricePlacementSampler() = default;
+    virtual double sample(Market::Side /* side */) const override { return myPrice; }
+private:
+    double myPrice;
 };
 
 struct OrderCancelSpec {
@@ -58,6 +76,12 @@ class IOrderCancellationSampler {
 public:
     virtual ~IOrderCancellationSampler() = default;
     virtual std::optional<OrderCancelSpec> sample(Market::Side side) const = 0; // optional to allow for empty book
+};
+
+class NoOrderCancellationSampler : public IOrderCancellationSampler {
+public:
+    virtual ~NoOrderCancellationSampler() = default;
+    virtual std::optional<OrderCancelSpec> sample(Market::Side /* side */) const override { return std::nullopt; }
 };
 }
 
