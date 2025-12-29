@@ -2,12 +2,25 @@
 #define ZERO_INTELLIGENCE_HPP
 #include "Utils/Utils.hpp"
 #include "Simulator/ExchangeSimulator.hpp"
+#include "Simulator/ZeroIntelligenceUtils.hpp"
 
 namespace Simulator {
 using namespace Utils;
 
 struct ZeroIntelligenceConfig {
-    // TODO
+    // samplers for market order submit event
+    std::shared_ptr<IOrderEventRateSampler> marketOrderRateSampler;
+    std::shared_ptr<IOrderSideSampler> marketSideSampler;
+    std::shared_ptr<IOrderSizeSampler> marketSizeSampler;
+    // samplers for limit order submit event
+    std::shared_ptr<IOrderEventRateSampler> limitOrderRateSampler;
+    std::shared_ptr<IOrderSideSampler> limitSideSampler;
+    std::shared_ptr<IOrderSizeSampler> limitSizeSampler;
+    std::shared_ptr<IOrderPricePlacementSampler> limitPriceSampler;
+    // samplers for limit order cancel event
+    std::shared_ptr<IOrderEventRateSampler> cancelRateSampler;
+    std::shared_ptr<IOrderSideSampler> cancelSideSampler;
+    std::shared_ptr<IOrderCancellationSampler> cancelSampler;
 };
 
 class ZeroIntelligenceSimulator : public ExchangeSimulatorBase {
