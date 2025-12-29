@@ -10,8 +10,8 @@
 namespace Tests {
 namespace ExchangeSimulator {
 void testInitZeroIntelligenceSimulator() {
-    std::shared_ptr<Exchange::IMatchingEngine> e = std::make_shared<Exchange::MatchingEngineFIFO>();
-    std::shared_ptr<Simulator::IExchangeSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
+    std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
     Simulator::VolumeProfile v0(
         std::make_unique<Simulator::LinearVolumeInterpolator>(1, 20, 2, 40), // linear interp from 2 @ 1 tick ($0.01) to 40 @ 20 ticks ($0.20)
         std::make_unique<Simulator::FlatVolumeExtrapolator>(20, 40), // flat extrap at 40 beyond 20 ticks
@@ -26,8 +26,8 @@ void testInitZeroIntelligenceSimulator() {
 }
 
 void testZeroIntelligenceSimulatorRandomOrders() {
-    std::shared_ptr<Exchange::IMatchingEngine> e = std::make_shared<Exchange::MatchingEngineFIFO>();
-    std::shared_ptr<Simulator::IExchangeSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
+    std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
+    std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
     Simulator::ExchangeSimulatorStopCondition stopCondition(10);
     Simulator::VolumeProfile v0(
         std::make_unique<Simulator::LinearVolumeInterpolator>(1, 20, 2, 40), // linear interp from 2 @ 1 tick ($0.01) to 40 @ 20 ticks ($0.20)
