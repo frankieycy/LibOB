@@ -117,12 +117,15 @@ void ExchangeSimulatorBase::advanceToTimestamp(const uint64_t timestamp) {
 void ExchangeSimulatorBase::simulate() {
     Error::LIB_ASSERT(getState() == ExchangeSimulatorState::READY,
         "[ExchangeSimulatorBase] Simulator state is not ready to start simulation.");
+    const bool showOrderBookPerEvent = isDebugMode() && getConfig().debugShowOrderBookPerEvent;
+    if (showOrderBookPerEvent)
+        *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at initialization:\n" << *myMatchingEngine;
     setState(ExchangeSimulatorState::RUNNING);
     while (true) {
         if (checkStopCondition())
             break;
         stepOneTick(); // wall-clock tick
-        if (isDebugMode() && getConfig().debugShowOrderBookPerEvent)
+        if (showOrderBookPerEvent)
             *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at timestamp " << getCurrentTimestamp() << ":\n" << *myMatchingEngine;
     }
     setState(ExchangeSimulatorState::FINISHED);

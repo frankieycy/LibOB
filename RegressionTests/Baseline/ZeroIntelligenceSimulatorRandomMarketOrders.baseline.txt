@@ -1,4 +1,41 @@
 [LOG] INFO [IExchangeSimulator::setLoggerLogFile] Logger log file set to: RegressionTests/Baseline/ZeroIntelligenceSimulatorRandomMarketOrders.baseline.txt
+[LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at initialization:
+================= Order Book Snapshot ===================
+  BID Size | BID Price || Level || ASK Price | ASK Size  
+---------------------------------------------------------
+        2  |     9.99  ||     1 ||    10.01  |        2  
+        4  |     9.98  ||     2 ||    10.02  |        4  
+        6  |     9.97  ||     3 ||    10.03  |        6  
+        8  |     9.96  ||     4 ||    10.04  |        8  
+       10  |     9.95  ||     5 ||    10.05  |       10  
+---------------------------------------------------------
+======================= Trade Log =========================
+    Id    |  Timestamp  |   Side   |    Price    |   Size  
+-----------------------------------------------------------
+-----------------------------------------------------------
+================ Market Queue ===============
+    Id    |  Timestamp  |   Side   |   Size  
+---------------------------------------------
+---------------------------------------------
+========================== Removed Limit Orders ========================
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+======================== Order Lookup Table ============================
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
+------------------------------------------------------------------------
+   10997  |      54989  |    Sell  |     109.99  |      40  |   Active  
+   10996  |      54984  |    Sell  |     109.98  |      40  |   Active  
+   10995  |      54979  |    Sell  |     109.97  |      40  |   Active  
+   10994  |      54974  |    Sell  |     109.96  |      40  |   Active  
+   10993  |      54969  |    Sell  |     109.95  |      40  |   Active  
+   10992  |      54964  |    Sell  |     109.94  |      40  |   Active  
+   10991  |      54959  |    Sell  |     109.93  |      40  |   Active  
+   10990  |      54954  |    Sell  |     109.92  |      40  |   Active  
+   10989  |      54949  |    Sell  |     109.91  |      40  |   Active  
+   10988  |      54944  |    Sell  |     109.90  |      40  |   Active  
+------------------------------------------------------------------------
+
 [LOG] DEBUG [IExchangeSimulator] Simulator state set to Running.
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":1,"Timestamp":1,"EventType":"MarketSubmit","Side":"Buy","Quantity":8}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 1:
