@@ -15,7 +15,8 @@ ZeroIntelligenceSimulator::ZeroIntelligenceSimulator(const std::shared_ptr<Excha
 
 void ZeroIntelligenceSimulator::init() {
     setEventScheduler(makeEventScheduler());
-    *getLogger() << Logger::LogLevel::INFO << "[ZeroIntelligenceSimulator] Zero Intelligence simulator initialization complete.";
+    if (isDebugMode())
+        *getLogger() << Logger::LogLevel::DEBUG << "[ZeroIntelligenceSimulator] Zero Intelligence simulator initialization complete.";
 }
 
 std::shared_ptr<IEventScheduler> ZeroIntelligenceSimulator::makeEventScheduler() const {
