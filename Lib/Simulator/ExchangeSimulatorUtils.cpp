@@ -40,6 +40,8 @@ std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type) { 
 
 std::ostream& operator<<(std::ostream& out, const OrderEventType type) { return out << toString(type); }
 
+std::ostream& operator<<(std::ostream& out, const OrderEventBase& event) { return out << event.getAsJson(); }
+
 bool ExchangeSimulatorStopCondition::check(const IExchangeSimulator& simulator) const {
     if (maxTimestamp && simulator.getCurrentTimestamp() >= *maxTimestamp)
         return true;

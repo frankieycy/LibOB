@@ -23,6 +23,7 @@ struct OrderBookGridDefinition {
 
 struct ExchangeSimulatorConfig {
     bool debugMode = false; // passes down to matching engine
+    bool debugShowOrderBookPerEvent = false;
     size_t monitoredLevels = 100; // passes down to matching engine monitor
     uint64_t randomSeed = 42;
     OrderBookGridDefinition grid;
@@ -157,6 +158,7 @@ std::string toString(const OrderEventType type);
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state);
 std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type);
 std::ostream& operator<<(std::ostream& out, const OrderEventType type);
+std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);
 }
 
 #endif

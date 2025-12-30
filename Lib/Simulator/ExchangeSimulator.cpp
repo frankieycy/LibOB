@@ -107,6 +107,8 @@ void ExchangeSimulatorBase::simulate() {
         if (checkStopCondition())
             break;
         stepOneTick(); // wall-clock tick
+        if (isDebugMode() && getConfig().debugShowOrderBookPerEvent)
+            *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at timestamp " << getCurrentTimestamp() << ":\n" << *myMatchingEngine;
     }
     setState(ExchangeSimulatorState::FINISHED);
 }
