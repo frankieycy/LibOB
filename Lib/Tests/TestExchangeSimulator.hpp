@@ -5,6 +5,7 @@ namespace Tests {
 namespace ExchangeSimulator {
 void testInitZeroIntelligenceSimulator();
 void testZeroIntelligenceSimulatorRandomMarketOrders();
+void testZeroIntelligenceSimulatorRandomMarketAndLimitOrders();
 }
 }
 
