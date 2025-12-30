@@ -94,13 +94,20 @@ public:
         std::string getAsTable() const;
     };
 
-    /* Processing latency measured over an order event */
+    /* Processing latency in real-world wall-clock time (nanoseconds) measured over an order event */
     struct OrderEventProcessingLatency {
         uint64_t timestamp;
         uint64_t eventId;
-        uint64_t latency = 0; // chrono::nanoseconds::rep
+        std::chrono::nanoseconds::rep latency = 0;
         Market::OrderEventType eventType = Market::OrderEventType::NULL_ORDER_EVENT_TYPE;
         std::shared_ptr<const Market::OrderEventBase> event = nullptr;
+
+        OrderEventProcessingLatency(const std::shared_ptr<const Exchange::OrderEventLatency>& latency) :
+            timestamp(latency->second->getTimestamp()),
+            eventId(latency->second->getEventId()),
+            latency(latency->first),
+            eventType(latency->second->getEventType()),
+            event(latency->second) {}
         std::string getAsJson() const;
         std::string getAsCsv() const;
         std::string getAsTable() const;
@@ -170,6 +177,7 @@ private:
     Statistics::TimeSeriesCollector<OrderEventProcessingLatency> myOrderEventProcessingLatenciesCollector;
     Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> myOrderProcessingReportsCollector;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
+    Exchange::CallbackSharedPtr<Exchange::OrderEventLatency> myOrderEventLatencyCallback;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()
     OrderBookStatisticsTimestampStrategy myOrderBookStatisticsTimestampStrategy = OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK;
 };

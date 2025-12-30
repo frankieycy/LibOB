@@ -360,6 +360,7 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMa
     myMatchingEngine = matchingEngine;
     // add the callback to the matching engine once, and manage its lifetime internally via start/stopMonitoring()
     matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
+    matchingEngine->addOrderEventLatencyCallback(myOrderEventLatencyCallback);
 }
 
 const MatchingEngineMonitor::OrderBookTopLevelsSnapshot& MatchingEngineMonitor::getLastOrderBookTopLevelsSnapshot() const {
@@ -386,6 +387,10 @@ void MatchingEngineMonitor::init() {
     myOrderProcessingCallback = mySharedOrderProcessingCallback = std::make_shared<Exchange::OrderProcessingCallback>(
         [this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) {
             report->dispatchTo(*this);
+        });
+    myOrderEventLatencyCallback = std::make_shared<Exchange::OrderEventLatencyCallback>(
+        [this](const std::shared_ptr<const Exchange::OrderEventLatency>& latency) {
+            myOrderEventProcessingLatenciesCollector.addSample(std::make_shared<OrderEventProcessingLatency>(latency));
         });
 }
 
