@@ -85,6 +85,14 @@ std::string LobsterDataParser::OrderBookMessage::getAsCsv(bool aligned) const {
     return oss.str();
 }
 
+std::string LobsterDataParser::OrderBookMessage::getHeaderCsv(bool aligned) {
+    if (aligned) {
+        return std::string("    time,    type,     oid,     qty,      px,     dir");
+    } else {
+        return std::string("time,type,oid,qty,px,dir");
+    }
+}
+
 std::string LobsterDataParser::OrderBookSnapshot::getAsCsv(size_t levels, bool aligned) const {
     std::ostringstream oss;
     if (aligned) {
@@ -113,6 +121,24 @@ std::string LobsterDataParser::OrderBookSnapshot::getAsCsv(size_t levels, bool a
             if (i != levels - 1)
                 oss << ",";
         }
+    }
+    return oss.str();
+}
+
+std::string LobsterDataParser::OrderBookSnapshot::getHeaderCsv(size_t levels, bool aligned) {
+    std::ostringstream oss;
+    for (size_t i = 0; i < levels; ++i) {
+        if (aligned) {
+            oss << "   ap"  << std::setfill('0') << std::setw(3) << i + 1;
+            oss << ",   as" << std::setfill('0') << std::setw(3) << i + 1;
+            oss << ",   bp" << std::setfill('0') << std::setw(3) << i + 1;
+            oss << ",   bs" << std::setfill('0') << std::setw(3) << i + 1;
+        } else {
+            oss << "ap" << i + 1 << ",as" << i + 1 << ",";
+            oss << "bp" << i + 1 << ",bs" << i + 1;
+        }
+        if (i != levels - 1)
+            oss << ",";
     }
     return oss.str();
 }
