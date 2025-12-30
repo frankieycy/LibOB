@@ -58,8 +58,9 @@
 * `Parser::LobsterDataParser`
 * `Simulator::ZeroIntelligence`
     - ok, implement the `advance` and `simulate` functions in `ExchangeSimulatorBase`
-    - implement the next-event generator in `ZeroIntelligenceExchangeSimulator`
-    - test the behaviors of the engine, order manager and monitor for small books
+    - ok, implement the next-event generator in `ZeroIntelligenceExchangeSimulator`
+    - ok, test the behaviors of the engine, order manager and monitor for small books
+    - Santa Fe simulation experiments, appropriate choice of price/size/cancel sampling functors
 
 ### Analytics
 
