@@ -26,7 +26,7 @@ void testInitZeroIntelligenceSimulator() {
     std::cout << *e << std::endl;
 }
 
-void testZeroIntelligenceSimulatorRandomOrders() {
+void testZeroIntelligenceSimulatorRandomMarketOrders() {
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
     Simulator::ExchangeSimulatorStopCondition stopCondition(10 /* maxTimestamp */);

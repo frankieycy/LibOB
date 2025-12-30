@@ -22,6 +22,6 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineMonitor();
     // Tests::MatchingEngine::testMatchingEngineMonitorLobsterOutput();
     // Tests::ExchangeSimulator::testInitZeroIntelligenceSimulator();
-    Tests::ExchangeSimulator::testZeroIntelligenceSimulatorRandomOrders();
+    Tests::ExchangeSimulator::testZeroIntelligenceSimulatorRandomMarketOrders();
     return 0;
 }
