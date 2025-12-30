@@ -1,5 +1,6 @@
 [LOG] INFO [OrderEventManagerBase::setLoggerLogFile] Logger log file set to: RegressionTests/Baseline/MatchingEngineMonitorLobsterOutput.baseline.txt
 [LOG] INFO Lobster messages:
+    time,    type,     oid,     qty,      px,     dir
        5,       1,       0,       5,  990000,       1
       10,       1,       1,       5, 1010000,      -1
       15,       1,       2,       6,  980000,       1
@@ -32,6 +33,7 @@
      258,       1,      49,       2, 1015400,      -1
 
 [LOG] INFO Lobster snapshots:
+   ap001,   as001,   bp001,   bs001,   ap002,   as002,   bp002,   bs002,   ap003,   as003,   bp003,   bs003,   ap004,   as004,   bp004,   bs004,   ap005,   as005,   bp005,   bs005
         ,        ,  990000,       5,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        
  1010000,       5,  990000,       5,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        
  1010000,       5,  990000,       5,        ,        ,  980000,       6,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        ,        
