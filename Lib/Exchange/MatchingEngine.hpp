@@ -21,11 +21,14 @@ using AscOrderBook = std::map<PriceLevel, LimitQueue>;
 using DescOrderBookSize = std::map<PriceLevel, uint32_t, std::greater<double>>;
 using AscOrderBookSize = std::map<PriceLevel, uint32_t>;
 using OrderIndex = std::unordered_map<uint64_t, std::pair<LimitQueue*, LimitQueue::iterator>>; // permits O(1) order access for cancellation and modification
+using OrderEventLatency = std::pair<std::chrono::nanoseconds::rep, std::shared_ptr<const Market::OrderEventBase>>;
+using OrderEventLatencyLog = std::vector<std::shared_ptr<const OrderEventLatency>>;
 template<typename T>
 using CallbackFunction = std::function<void(const std::shared_ptr<const T>&)>;
 template<typename T> // use shared_ptr for callback function so that clients can manage its lifetime
 using CallbackSharedPtr = std::shared_ptr<CallbackFunction<T>>;
 using OrderProcessingCallback = CallbackFunction<OrderProcessingReport>; // communicates with OrderEventManager
+using OrderEventLatencyCallback = CallbackFunction<OrderEventLatency>; // communicates with MatchingEngineMonitor
 using ITCHMessageCallback = CallbackFunction<ITCHEncoder::ITCHMessage>;
 
 class IMatchingEngine {
@@ -92,6 +95,7 @@ public:
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0; // left pure virtual unless the order matching strategy is defined
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) = 0;
+    virtual void addOrderEventLatencyCallback(const CallbackSharedPtr<OrderEventLatency>& callback) = 0;
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
     virtual void stateConsistencyCheck() const = 0; // checks the internal state of the matching engine for consistency
@@ -135,10 +139,12 @@ public:
     const TradeLog& getTradeLog() const { return myTradeLog; }
     const OrderEventLog& getOrderEventLog() const { return myOrderEventLog; }
     const OrderProcessingReportLog& getOrderProcessingReportLog() const { return myOrderProcessingReportLog; }
+    const OrderEventLatencyLog& getOrderEventLatencyLog() const { return myOrderEventLatencyLog; }
     const ITCHMessageLog& getITCHMessageLog() const { return myITCHMessageLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
     const OrderIndex& getLimitOrderLookup() const { return myLimitOrderLookup; }
     std::vector<CallbackSharedPtr<OrderProcessingReport>> getOrderProcessingCallbacks() const { return myOrderProcessingCallbacks; }
+    std::vector<CallbackSharedPtr<OrderEventLatency>> getOrderEventLatencyCallbacks() const { return myOrderEventLatencyCallbacks; }
     std::vector<CallbackSharedPtr<ITCHEncoder::ITCHMessage>> getITCHMessageCallbacks() const { return myITCHMessageCallbacks; }
     void setBidBook(const DescOrderBook& bidBook) { myBidBook = bidBook; }
     void setAskBook(const AscOrderBook& askBook) { myAskBook = askBook; }
@@ -146,6 +152,7 @@ public:
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
     void setOrderEventLog(const OrderEventLog& orderEventLog) { myOrderEventLog = orderEventLog; }
     void setOrderProcessingReportLog(const OrderProcessingReportLog& orderProcessingReportLog) { myOrderProcessingReportLog = orderProcessingReportLog; }
+    void setOrderEventLatencyLog(const OrderEventLatencyLog& orderEventLatencyLog) { myOrderEventLatencyLog = orderEventLatencyLog; }
     void setITCHMessageLog(const ITCHMessageLog& itchMessageLog) { myITCHMessageLog = itchMessageLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
     void setLimitOrderLookup(const OrderIndex& limitOrderLookup) { myLimitOrderLookup = limitOrderLookup; }
@@ -201,8 +208,10 @@ public:
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) override { myOrderProcessingCallbacks.push_back(callback); }
+    virtual void addOrderEventLatencyCallback(const CallbackSharedPtr<OrderEventLatency>& callback) override { myOrderEventLatencyCallbacks.push_back(callback); }
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) override { myITCHMessageCallbacks.push_back(callback); }
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
+    virtual void logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& latency);
     virtual void reserve(const size_t numOrdersEstimate) override;
     virtual void stateConsistencyCheck() const override;
     virtual void init() override;
@@ -218,6 +227,7 @@ protected:
     TradeLog& accessTradeLog() { return myTradeLog; }
     OrderEventLog& accessOrderEventLog() { return myOrderEventLog; }
     OrderProcessingReportLog& accessOrderProcessingReportLog() { return myOrderProcessingReportLog; }
+    OrderEventLatencyLog& accessOrderEventLatencyLog() { return myOrderEventLatencyLog; }
     ITCHMessageLog& accessITCHMessageLog() { return myITCHMessageLog; }
     RemovedLimitOrderLog& accessRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
     OrderIndex& accessLimitOrderLookup() { return myLimitOrderLookup; }
@@ -231,12 +241,14 @@ private:
     TradeLog myTradeLog;
     OrderEventLog myOrderEventLog;
     OrderProcessingReportLog myOrderProcessingReportLog;
+    OrderEventLatencyLog myOrderEventLatencyLog;
     ITCHMessageLog myITCHMessageLog; // another equivalent representation of the order processing report, trimmed and standardized
     RemovedLimitOrderLog myRemovedLimitOrderLog;
     OrderIndex myLimitOrderLookup;
     // the order processing callback can be as complicated as it gets (e.g. the report routed to various handlers)
     // but the exposed interface must be simple
     std::vector<CallbackSharedPtr<OrderProcessingReport>> myOrderProcessingCallbacks;
+    std::vector<CallbackSharedPtr<OrderEventLatency>> myOrderEventLatencyCallbacks;
     std::vector<CallbackSharedPtr<ITCHEncoder::ITCHMessage>> myITCHMessageCallbacks;
 };
 

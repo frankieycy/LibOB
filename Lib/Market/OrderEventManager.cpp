@@ -36,7 +36,7 @@ void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_p
     if (myMillisecondsToPauseBeforeEventSubmit > 0)
         std::this_thread::sleep_for(std::chrono::milliseconds(myMillisecondsToPauseBeforeEventSubmit));
     if (myTimeEngineOrderEventsProcessing) {
-        const auto& duration = Counter::timeOperation<std::chrono::nanoseconds>([this, event]() { myMatchingEngine->process(event); }); // typical timescale of NASDAQ engine is in milliseconds
+        const auto& duration = Counter::timeOperation<std::chrono::nanoseconds>([this, event]() { myMatchingEngine->process(event); }); // typical timescale of NASDAQ engine is in nanoseconds
         *myLogger << Logger::LogLevel::INFO << "[OrderEventManagerBase] Matching engine order event processing time: " << duration << " nanoseconds. Note that IO operations are also counted in.";
     } else {
         myMatchingEngine->process(event);

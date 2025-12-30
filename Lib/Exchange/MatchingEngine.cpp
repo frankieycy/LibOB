@@ -459,6 +459,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderBase>&
 
 void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventBase>& event) {
     // the hardcore order processing engine that interacts with external order event streams
+    auto start = std::chrono::high_resolution_clock::now();
     if (!event) {
         *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order event is null.";
         return;
@@ -466,6 +467,8 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
     myOrderEventLog.push_back(event);
     if (event->isSubmit()) {
         process(event->getOrder());
+        auto end = std::chrono::high_resolution_clock::now();
+        logOrderEventLatency(std::make_shared<OrderEventLatency>(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count(), event));
         return;
     }
     // limit order events handling
@@ -543,6 +546,8 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
         }
     }
     // TODO: market order events handling
+    auto end = std::chrono::high_resolution_clock::now();
+    logOrderEventLatency(std::make_shared<OrderEventLatency>(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count(), event));
 }
 
 void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {
@@ -1024,6 +1029,12 @@ void MatchingEngineBase::logOrderProcessingReport(const std::shared_ptr<const Or
         if (callback && *callback) (*callback)(report);
     for (const auto& callback : myITCHMessageCallbacks)
         if (callback && *callback) (*callback)(message);
+}
+
+void MatchingEngineBase::logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& latency) {
+    myOrderEventLatencyLog.push_back(latency);
+    for (const auto& callback : myOrderEventLatencyCallbacks)
+        if (callback && *callback) (*callback)(latency);
 }
 
 MatchingEngineFIFO::MatchingEngineFIFO() :
