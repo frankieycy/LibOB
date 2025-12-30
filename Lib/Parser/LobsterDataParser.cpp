@@ -129,13 +129,13 @@ std::string LobsterDataParser::OrderBookSnapshot::getHeaderCsv(size_t levels, bo
     std::ostringstream oss;
     for (size_t i = 0; i < levels; ++i) {
         if (aligned) {
-            oss << "   ap"  << std::setfill('0') << std::setw(3) << i + 1;
-            oss << ",   as" << std::setfill('0') << std::setw(3) << i + 1;
-            oss << ",   bp" << std::setfill('0') << std::setw(3) << i + 1;
-            oss << ",   bs" << std::setfill('0') << std::setw(3) << i + 1;
+            oss << "   ap"  << std::setfill('0') << std::setw(3) << i + 1
+                << ",   as" << std::setfill('0') << std::setw(3) << i + 1
+                << ",   bp" << std::setfill('0') << std::setw(3) << i + 1
+                << ",   bs" << std::setfill('0') << std::setw(3) << i + 1;
         } else {
-            oss << "ap" << i + 1 << ",as" << i + 1 << ",";
-            oss << "bp" << i + 1 << ",bs" << i + 1;
+            oss << "ap"  << i + 1 << ",as" << i + 1
+                << ",bp" << i + 1 << ",bs" << i + 1;
         }
         if (i != levels - 1)
             oss << ",";
