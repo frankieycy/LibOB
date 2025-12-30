@@ -52,6 +52,19 @@ public:
     }
 };
 
+class UniformOrderSizeSampler : public IOrderSizeSampler {
+public:
+    UniformOrderSizeSampler(const uint32_t minSize, const uint32_t maxSize) :
+        myMinSize(minSize), myMaxSize(maxSize) {}
+    virtual ~UniformOrderSizeSampler() = default;
+    virtual uint32_t sample(Market::Side /* side */) const override {
+        return Statistics::getRandomUniformInt(myMinSize, myMaxSize, true);
+    }
+private:
+    uint32_t myMinSize;
+    uint32_t myMaxSize;
+};
+
 class IOrderPricePlacementSampler {
 public:
     virtual ~IOrderPricePlacementSampler() = default;
