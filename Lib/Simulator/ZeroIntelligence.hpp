@@ -29,6 +29,7 @@ public:
     ZeroIntelligenceSimulator(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~ZeroIntelligenceSimulator() = default;
     virtual void init() override;
+    ZeroIntelligenceConfig& getZIConfig() { return myZIConfig; }
     const ZeroIntelligenceConfig& getZIConfig() const { return myZIConfig; }
     void setZIConfig(const ZeroIntelligenceConfig& config) { myZIConfig = config; }
 private:

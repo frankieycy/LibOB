@@ -10,11 +10,11 @@ int main() {
     zi->setLoggerLogFile(Utils::RegressionTests::getBaselineFileName(TEST_NAME), false, false);
     Simulator::ExchangeSimulatorStopCondition stopCondition(10 /* maxTimestamp */);
     // simulator-level config
-    Simulator::ExchangeSimulatorConfig simConfig(zi->getConfig());
+    auto& simConfig = zi->getConfig();
     simConfig.debugMode = true;
     simConfig.debugShowOrderBookPerEvent = true;
     // zero-intelligence config
-    Simulator::ZeroIntelligenceConfig ziConfig(zi->getZIConfig());
+    auto& ziConfig = zi->getZIConfig();
     ziConfig.marketOrderRateSampler = std::make_shared<Simulator::ConstantOrderEventRateSampler>(1.0);
     ziConfig.marketSizeSampler = std::make_shared<Simulator::UniformOrderSizeSampler>(1, 10);
     // initial volume profile
@@ -22,8 +22,6 @@ int main() {
         std::make_unique<Simulator::LinearVolumeInterpolator>(1, 20, 2, 40), // linear interp from 2 @ 1 tick ($0.01) to 40 @ 20 ticks ($0.20)
         std::make_unique<Simulator::FlatVolumeExtrapolator>(20, 40), // flat extrap at 40 beyond 20 ticks
         40);
-    zi->setConfig(simConfig); // set the general configs first before altering the specifics with an exposed interface
-    zi->setZIConfig(ziConfig);
     zi->setAnchorPrice(10.00);
     zi->setMinPriceTick(0.01);
     zi->setStopCondition(stopCondition);

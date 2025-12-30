@@ -16,6 +16,7 @@ public:
     IExchangeSimulator() = default;
     virtual ~IExchangeSimulator() = default;
     ExchangeSimulatorState getState() const { return myState; }
+    ExchangeSimulatorConfig& getConfig() { return myConfig; }
     const ExchangeSimulatorConfig& getConfig() const { return myConfig; }
     const ExchangeSimulatorStopCondition& getStopCondition() const { return myStopCondition; }
     bool isDebugMode() const { return myConfig.debugMode; }
