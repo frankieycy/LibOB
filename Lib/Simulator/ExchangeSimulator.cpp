@@ -12,7 +12,17 @@ using namespace Utils;
 
 void IExchangeSimulator::setState(const ExchangeSimulatorState state) {
     myState = state;
-    *myLogger << Logger::LogLevel::INFO << "[IExchangeSimulator] Simulator state set to " << myState << ".";
+    if (isDebugMode())
+        *myLogger << Logger::LogLevel::DEBUG << "[IExchangeSimulator] Simulator state set to " << myState << ".";
+}
+
+void IExchangeSimulator::setLoggerLogFile(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) {
+    if (logFileName.empty()) {
+        *myLogger << Logger::LogLevel::WARNING << "[IExchangeSimulator::setLoggerLogFile] Log file name is empty, logger will not log to file.";
+        return;
+    }
+    myLogger->setLogFile(logFileName, logToConsole, showLogTimestamp);
+    *myLogger << Logger::LogLevel::INFO << "[IExchangeSimulator::setLoggerLogFile] Logger log file set to: " << logFileName;
 }
 
 void IExchangeSimulator::reset() {
@@ -37,20 +47,18 @@ void ExchangeSimulatorBase::init() {
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
     setState(ExchangeSimulatorState::READY);
-    *getLogger() << Logger::LogLevel::INFO << "[ExchangeSimulatorBase] Simulator initialization complete with monitored levels "
-                 << getConfig().monitoredLevels << " and minimum price tick " << getConfig().grid.minPriceTick << ".";
+    if (isDebugMode())
+        *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Simulator initialization complete with monitored levels "
+                     << getConfig().monitoredLevels << " and minimum price tick " << getConfig().grid.minPriceTick << ".";
 }
 
 void ExchangeSimulatorBase::reset() {
     // empties out the matching engine and re-initializes the simulator
     Error::LIB_ASSERT(getState() != ExchangeSimulatorState::RUNNING,
         "[ExchangeSimulatorBase] Cannot reset simulator while it is running.");
-    if (myMatchingEngine)
-        myMatchingEngine->reset();
-    if (myOrderEventManager)
-        myOrderEventManager->reset();
-    if (myMatchingEngineMonitor)
-        myMatchingEngineMonitor->reset();
+    myMatchingEngine->reset();
+    myOrderEventManager->reset();
+    myMatchingEngineMonitor->reset();
     IExchangeSimulator::reset();
 }
 
@@ -63,6 +71,13 @@ void ExchangeSimulatorBase::setConfig(const ExchangeSimulatorConfig& config) {
 void ExchangeSimulatorBase::setMinPriceTick(const double minPriceTick) {
     IExchangeSimulator::setMinPriceTick(minPriceTick);
     myOrderEventManager->setMinimumPriceTick(minPriceTick);
+}
+
+void ExchangeSimulatorBase::setLoggerLogFile(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) {
+    IExchangeSimulator::setLoggerLogFile(logFileName, logToConsole, showLogTimestamp);
+    myMatchingEngine->setLogger(getLogger());
+    myOrderEventManager->setLogger(getLogger());
+    myMatchingEngineMonitor->setLogger(getLogger());
 }
 
 void ExchangeSimulatorBase::initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) {

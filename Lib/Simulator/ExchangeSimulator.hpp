@@ -43,6 +43,7 @@ public:
     virtual void setConfig(const ExchangeSimulatorConfig& config) { myConfig = config; }
     virtual void setMinPriceTick(const double minPriceTick) { myConfig.grid.minPriceTick = minPriceTick; }
     virtual void setStopCondition(const ExchangeSimulatorStopCondition& stopCondition) { myStopCondition = stopCondition; }
+    virtual void setLoggerLogFile(const std::string& logFileName, const bool logToConsole = false, const bool showLogTimestamp = true);
     virtual bool checkStopCondition() const { return myStopCondition.check(*this); }
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) = 0;
     virtual void submit(const OrderEventBase& orderEvent) = 0;
@@ -71,7 +72,7 @@ private:
    which shall be defined in its concrete implementation via makeEventScheduler(). */
 class ExchangeSimulatorBase : public IExchangeSimulator {
 public:
-    ExchangeSimulatorBase() = default;
+    ExchangeSimulatorBase() = delete;
     ExchangeSimulatorBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~ExchangeSimulatorBase() = default;
     const OrderEventLog& getOrderEventLog() const { return myOrderEventLog; }
@@ -86,6 +87,7 @@ public:
     virtual std::shared_ptr<const OrderEventBase> getLastEvent() const override { return myOrderEventLog.empty() ? nullptr : myOrderEventLog.back(); }
     virtual void setConfig(const ExchangeSimulatorConfig& config) override;
     virtual void setMinPriceTick(const double minPriceTick) override;
+    virtual void setLoggerLogFile(const std::string& logFileName, const bool logToConsole = false, const bool showLogTimestamp = true) override;
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) override;
     virtual void submit(const OrderEventBase& orderEvent) override;
     virtual bool stepOneTick() override;
