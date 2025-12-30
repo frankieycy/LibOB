@@ -1,0 +1,62 @@
+[LOG] INFO [IExchangeSimulator::setLoggerLogFile] Logger log file set to: RegressionTests/Baseline/ZeroIntelligenceSimulatorInitialization.baseline.txt
+[LOG] INFO ===============================================================================================================================
+                                        (Size | Price) BID | Level | ASK (Price | Size)                                        
+-------------------------------------------------------------------------------------------------------------------------------
+                                      oo      2 |     9.99 |     1 | 10.01    | 2      oo                                      
+                                    oooo      4 |     9.98 |     2 | 10.02    | 4      oooo                                    
+                                  oooooo      6 |     9.97 |     3 | 10.03    | 6      oooooo                                  
+                                oooooooo      8 |     9.96 |     4 | 10.04    | 8      oooooooo                                
+                              oooooooooo     10 |     9.95 |     5 | 10.05    | 10     oooooooooo                              
+                            oooooooooooo     12 |     9.94 |     6 | 10.06    | 12     oooooooooooo                            
+                          oooooooooooooo     14 |     9.93 |     7 | 10.07    | 14     oooooooooooooo                          
+                        oooooooooooooooo     16 |     9.92 |     8 | 10.08    | 16     oooooooooooooooo                        
+                      oooooooooooooooooo     18 |     9.91 |     9 | 10.09    | 18     oooooooooooooooooo                      
+                    oooooooooooooooooooo     20 |     9.90 |    10 | 10.10    | 20     oooooooooooooooooooo                    
+                  oooooooooooooooooooooo     22 |     9.89 |    11 | 10.11    | 22     oooooooooooooooooooooo                  
+                oooooooooooooooooooooooo     24 |     9.88 |    12 | 10.12    | 24     oooooooooooooooooooooooo                
+              oooooooooooooooooooooooooo     26 |     9.87 |    13 | 10.13    | 26     oooooooooooooooooooooooooo              
+            oooooooooooooooooooooooooooo     28 |     9.86 |    14 | 10.14    | 28     oooooooooooooooooooooooooooo            
+          oooooooooooooooooooooooooooooo     30 |     9.85 |    15 | 10.15    | 30     oooooooooooooooooooooooooooooo          
+        oooooooooooooooooooooooooooooooo     32 |     9.84 |    16 | 10.16    | 32     oooooooooooooooooooooooooooooooo        
+      oooooooooooooooooooooooooooooooooo     34 |     9.83 |    17 | 10.17    | 34     oooooooooooooooooooooooooooooooooo      
+    oooooooooooooooooooooooooooooooooooo     36 |     9.82 |    18 | 10.18    | 36     oooooooooooooooooooooooooooooooooooo    
+  oooooooooooooooooooooooooooooooooooooo     38 |     9.81 |    19 | 10.19    | 38     oooooooooooooooooooooooooooooooooooooo  
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.80 |    20 | 10.20    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.79 |    21 | 10.21    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.78 |    22 | 10.22    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.77 |    23 | 10.23    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.76 |    24 | 10.24    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.75 |    25 | 10.25    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.74 |    26 | 10.26    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.73 |    27 | 10.27    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.72 |    28 | 10.28    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.71 |    29 | 10.29    | 40     oooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooooooooooooo     40 |     9.70 |    30 | 10.30    | 40     oooooooooooooooooooooooooooooooooooooooo
+===============================================================================================================================
+======================= Trade Log =========================
+    Id    |  Timestamp  |   Side   |    Price    |   Size  
+-----------------------------------------------------------
+-----------------------------------------------------------
+================ Market Queue ===============
+    Id    |  Timestamp  |   Side   |   Size  
+---------------------------------------------
+---------------------------------------------
+========================== Removed Limit Orders ========================
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+======================== Order Lookup Table ============================
+    Id    |  Timestamp  |   Side   |    Price    |   Size   |   State   
+------------------------------------------------------------------------
+   10997  |      54989  |    Sell  |     109.99  |      40  |   Active  
+   10996  |      54984  |    Sell  |     109.98  |      40  |   Active  
+   10995  |      54979  |    Sell  |     109.97  |      40  |   Active  
+   10994  |      54974  |    Sell  |     109.96  |      40  |   Active  
+   10993  |      54969  |    Sell  |     109.95  |      40  |   Active  
+   10992  |      54964  |    Sell  |     109.94  |      40  |   Active  
+   10991  |      54959  |    Sell  |     109.93  |      40  |   Active  
+   10990  |      54954  |    Sell  |     109.92  |      40  |   Active  
+   10989  |      54949  |    Sell  |     109.91  |      40  |   Active  
+   10988  |      54944  |    Sell  |     109.90  |      40  |   Active  
+------------------------------------------------------------------------
+
