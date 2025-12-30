@@ -54,7 +54,8 @@
     - ok, order book stats snapshot in a more human-readable format
     - ok, (bug) premature fetching of top levels snapshot before the executed queue is eliminated from book (e.g. market buy eats out entire top ask)
     - ok, (bug) `OrderBookTopLevelsSnapshot` iterators point to the order book subject to modifications later on, need to deep-copy the levels
-    - export order book time evolution as lobster csv format using `TimeSeriesCollector` members
+    - ok, export order book time evolution as lobster csv format using `TimeSeriesCollector` members
+    - ok, order event processing latency measurement
 * `Parser::LobsterDataParser`
 * `Simulator::ZeroIntelligence`
     - ok, implement the `advance` and `simulate` functions in `ExchangeSimulatorBase`
