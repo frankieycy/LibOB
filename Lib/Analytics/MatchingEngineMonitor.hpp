@@ -98,8 +98,8 @@ public:
     struct OrderEventProcessingLatency {
         uint64_t timestamp;
         uint64_t eventId;
+        uint64_t latency = 0; // chrono::nanoseconds::rep
         Market::OrderEventType eventType = Market::OrderEventType::NULL_ORDER_EVENT_TYPE;
-        unsigned long long latency = 0; // chronos::microseconds::rep
         std::shared_ptr<const Market::OrderEventBase> event = nullptr;
         std::string getAsJson() const;
         std::string getAsCsv() const;

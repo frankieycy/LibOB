@@ -34,7 +34,7 @@ private:
     uint64_t myCurrentTimestamp = 0;
 };
 
-template<typename Duration = std::chrono::microseconds, typename Func>
+template<typename Duration = std::chrono::nanoseconds, typename Func>
 auto timeOperation(Func&& func) -> typename Duration::rep {
     auto start = std::chrono::high_resolution_clock::now();
     func();
