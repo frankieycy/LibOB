@@ -12,7 +12,7 @@ using MarketOrderIndex = std::unordered_map<uint64_t, std::shared_ptr<Market::Ma
 
 class OrderEventManagerBase {
 public:
-    OrderEventManagerBase() = default;
+    OrderEventManagerBase() = delete; // only permits construction from matching engine
     OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~OrderEventManagerBase() = default;
     const Utils::Counter::IdHandlerBase& getOrderIdHandler() const { return myOrderIdHandler; }

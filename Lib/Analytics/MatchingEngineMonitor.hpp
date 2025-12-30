@@ -106,6 +106,7 @@ public:
         std::string getAsTable() const;
     };
 
+    MatchingEngineMonitor() = delete; // only permits construction from matching engine
     MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine);
     virtual ~MatchingEngineMonitor() = default;
 
