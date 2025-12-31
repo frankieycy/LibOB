@@ -102,7 +102,7 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModel() {
     ziConfig.limitOrderRateSampler = std::make_shared<Simulator::ConstantOrderEventRateSampler>(1.0);
     ziConfig.limitSizeSampler = std::make_shared<Simulator::ConstantOrderSizeSampler>(1);
     ziConfig.limitPriceSampler = std::make_shared<Simulator::OrderPricePlacementSamplerUniformFromOppositeBest>(1, 10, zi->getMatchingEngineMonitor());
-    ziConfig.cancelRateSampler = std::make_shared<Simulator::OrderEventRateSamplerProportionalTotalSizeFromOppositeBest>(0.1, 1, 10, zi->getMatchingEngineMonitor());
+    ziConfig.cancelRateSampler = std::make_shared<Simulator::OrderEventRateSamplerProportionalTotalSizeFromOppositeBest>(0.02, 1, 10, zi->getMatchingEngineMonitor());
     ziConfig.cancelSideSampler = std::make_shared<Simulator::OrderSideSamplerProportionalTotalSizeFromOppositeBest>(1, 10, zi->getMatchingEngineMonitor());
     ziConfig.cancelSampler = std::make_shared<Simulator::OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest>(1, 1, 10, zi->getMatchingEngineMonitor());
     // initial volume profile
