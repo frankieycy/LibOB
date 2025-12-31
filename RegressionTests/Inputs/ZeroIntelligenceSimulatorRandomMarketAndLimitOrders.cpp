@@ -20,7 +20,7 @@ int main() {
     ziConfig.marketSizeSampler = std::make_shared<Simulator::UniformOrderSizeSampler>(1, 5);
     ziConfig.limitOrderRateSampler = std::make_shared<Simulator::ConstantOrderEventRateSampler>(1.0);
     ziConfig.limitSizeSampler = std::make_shared<Simulator::UniformOrderSizeSampler>(1, 5);
-    ziConfig.limitPriceSampler = std::make_shared<Simulator::UniformOrderPricePlacementFromOppositeBestSampler>(1, 10, zi->getMatchingEngineMonitor());
+    ziConfig.limitPriceSampler = std::make_shared<Simulator::OrderPricePlacementSamplerUniformFromOppositeBest>(1, 10, zi->getMatchingEngineMonitor());
     // initial volume profile
     Simulator::VolumeProfile v0(
         std::make_unique<Simulator::LinearVolumeInterpolator>(1, 10, 1, 5), // linear interp from 1 @ 1 tick ($1) to 5 @ 10 ticks ($10)
