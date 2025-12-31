@@ -51,7 +51,26 @@ public:
     virtual ~ConstantOrderEventRateSampler() = default;
     virtual double sample() const override { return myRate; }
 private:
-    double myRate;
+    double myRate; // events per unit time
+};
+
+class OrderEventRateSamplerProportionalTotalSizeFromOppositeBest : public IEngineAwareOrderEventRateSampler {
+public:
+OrderEventRateSamplerProportionalTotalSizeFromOppositeBest(
+        const double rate,
+        const uint32_t minOffsetTicks,
+        const uint32_t maxOffsetTicks,
+        const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
+        IEngineAwareOrderEventRateSampler(monitor),
+        myRate(rate),
+        myMinOffsetTicks(minOffsetTicks),
+        myMaxOffsetTicks(maxOffsetTicks) {}
+    virtual ~OrderEventRateSamplerProportionalTotalSizeFromOppositeBest() = default;
+    virtual double sample() const override;
+private:
+    double myRate; // events per unit time per unit size
+    uint32_t myMinOffsetTicks;
+    uint32_t myMaxOffsetTicks;
 };
 
 ////////////////////////////////////// Order side samplers //////////////////////////////////////
@@ -77,12 +96,28 @@ public:
     }
 };
 
+class OrderSideSamplerProportionalTotalSizeFromOppositeBest : public IEngineAwareOrderSideSampler {
+public:
+    OrderSideSamplerProportionalTotalSizeFromOppositeBest(
+        const uint32_t minOffsetTicks,
+        const uint32_t maxOffsetTicks,
+        const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
+        IEngineAwareOrderSideSampler(monitor),
+        myMinOffsetTicks(minOffsetTicks),
+        myMaxOffsetTicks(maxOffsetTicks) {}
+    virtual ~OrderSideSamplerProportionalTotalSizeFromOppositeBest() = default;
+    virtual Market::Side sample() const override;
+private:
+    uint32_t myMinOffsetTicks;
+    uint32_t myMaxOffsetTicks;
+};
+
 ////////////////////////////////////// Order size samplers //////////////////////////////////////
 
 class IOrderSizeSampler {
 public:
     virtual ~IOrderSizeSampler() = default;
-    virtual uint32_t sample(Market::Side side) const = 0;
+    virtual uint32_t sample(const Market::Side side) const = 0;
 };
 
 class IEngineAwareOrderSizeSampler : public IOrderSizeSampler, public IEngineAwareSampler {
@@ -95,7 +130,7 @@ public:
 class NullOrderSizeSampler : public IOrderSizeSampler {
 public:
     virtual ~NullOrderSizeSampler() = default;
-    virtual uint32_t sample(Market::Side /* side */) const override {
+    virtual uint32_t sample(const Market::Side /* side */) const override {
         Error::LIB_THROW("[NullOrderSizeSampler] sample() cannot be called.");
         return 0;
     }
@@ -105,7 +140,7 @@ class ConstantOrderSizeSampler : public IOrderSizeSampler {
 public:
     ConstantOrderSizeSampler(const uint32_t size) : mySize(size) {}
     virtual ~ConstantOrderSizeSampler() = default;
-    virtual uint32_t sample(Market::Side /* side */) const override { return mySize; }
+    virtual uint32_t sample(const Market::Side /* side */) const override { return mySize; }
 private:
     uint32_t mySize;
 };
@@ -115,7 +150,7 @@ public:
     UniformOrderSizeSampler(const uint32_t minSize, const uint32_t maxSize) :
         myMinSize(minSize), myMaxSize(maxSize) {}
     virtual ~UniformOrderSizeSampler() = default;
-    virtual uint32_t sample(Market::Side /* side */) const override {
+    virtual uint32_t sample(const Market::Side /* side */) const override {
         return Statistics::getRandomUniformInt(myMinSize, myMaxSize, true);
     }
 private:
@@ -128,7 +163,7 @@ private:
 class IOrderPricePlacementSampler {
 public:
     virtual ~IOrderPricePlacementSampler() = default;
-    virtual double sample(Market::Side side) const = 0;
+    virtual double sample(const Market::Side side) const = 0;
 };
 
 class IEngineAwareOrderPricePlacementSampler : public IOrderPricePlacementSampler, public IEngineAwareSampler {
@@ -141,23 +176,23 @@ public:
 class NullOrderPricePlacementSampler : public IOrderPricePlacementSampler {
 public:
     virtual ~NullOrderPricePlacementSampler() = default;
-    virtual double sample(Market::Side /* side */) const override {
+    virtual double sample(const Market::Side /* side */) const override {
         Error::LIB_THROW("[NullOrderPricePlacementSampler] sample() cannot be called.");
         return Utils::Consts::NAN_DOUBLE;
     }
 };
 
-class UniformOrderPricePlacementFromOppositeBestSampler : public IEngineAwareOrderPricePlacementSampler {
+class OrderPricePlacementSamplerUniformFromOppositeBest : public IEngineAwareOrderPricePlacementSampler {
 public:
-    UniformOrderPricePlacementFromOppositeBestSampler(
+    OrderPricePlacementSamplerUniformFromOppositeBest(
         const uint32_t minOffsetTicks,
         const uint32_t maxOffsetTicks,
         const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
         IEngineAwareOrderPricePlacementSampler(monitor),
         myMinOffsetTicks(minOffsetTicks),
         myMaxOffsetTicks(maxOffsetTicks) {}
-    virtual ~UniformOrderPricePlacementFromOppositeBestSampler() = default;
-    virtual double sample(Market::Side side) const override;
+    virtual ~OrderPricePlacementSamplerUniformFromOppositeBest() = default;
+    virtual double sample(const Market::Side side) const override;
 private:
     uint32_t myMinOffsetTicks;
     uint32_t myMaxOffsetTicks;
@@ -173,7 +208,7 @@ struct OrderCancelSpec {
 class IOrderCancellationSampler {
 public:
     virtual ~IOrderCancellationSampler() = default;
-    virtual std::optional<OrderCancelSpec> sample(Market::Side side) const = 0; // optional to allow for empty book
+    virtual std::optional<OrderCancelSpec> sample(const Market::Side side) const = 0; // optional to allow for empty book
 };
 
 class IEngineAwareOrderCancellationSampler : public IOrderCancellationSampler, public IEngineAwareSampler {
@@ -186,7 +221,26 @@ public:
 class NullOrderCancellationSampler : public IOrderCancellationSampler {
 public:
     virtual ~NullOrderCancellationSampler() = default;
-    virtual std::optional<OrderCancelSpec> sample(Market::Side /* side */) const override { return std::nullopt; }
+    virtual std::optional<OrderCancelSpec> sample(const Market::Side /* side */) const override { return std::nullopt; }
+};
+
+class OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest : public IEngineAwareOrderCancellationSampler {
+public:
+    OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest(
+        const uint32_t size,
+        const uint32_t minOffsetTicks,
+        const uint32_t maxOffsetTicks,
+        const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
+        IEngineAwareOrderCancellationSampler(monitor),
+        mySize(size),
+        myMinOffsetTicks(minOffsetTicks),
+        myMaxOffsetTicks(maxOffsetTicks) {}
+    virtual ~OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest() = default;
+    virtual std::optional<OrderCancelSpec> sample(const Market::Side side) const override;
+private:
+    uint32_t mySize;
+    uint32_t myMinOffsetTicks;
+    uint32_t myMaxOffsetTicks;
 };
 }
 
