@@ -396,7 +396,7 @@ double MatchingEngineBase::getMicroPrice() const {
 }
 
 double MatchingEngineBase::getOrderImbalance() const {
-    return (getBestBidSize() - getBestAskSize()) / (getBestBidSize() + getBestAskSize());
+    return static_cast<double>(getBestBidSize() - getBestAskSize()) / static_cast<double>(getBestBidSize() + getBestAskSize());
 }
 
 double MatchingEngineBase::getLastTradePrice() const {
