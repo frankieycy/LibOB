@@ -65,17 +65,19 @@ void testZeroIntelligenceSimulatorRandomMarketAndLimitOrders() {
     // zero-intelligence config
     auto& ziConfig = zi->getZIConfig();
     ziConfig.marketOrderRateSampler = std::make_shared<Simulator::ConstantOrderEventRateSampler>(1.0);
-    ziConfig.marketSizeSampler = std::make_shared<Simulator::UniformOrderSizeSampler>(1, 10);
-    // TODO: limit order samplers config
+    ziConfig.marketSizeSampler = std::make_shared<Simulator::UniformOrderSizeSampler>(1, 5);
+    ziConfig.limitOrderRateSampler = std::make_shared<Simulator::ConstantOrderEventRateSampler>(1.0);
+    ziConfig.limitSizeSampler = std::make_shared<Simulator::UniformOrderSizeSampler>(1, 5);
+    ziConfig.limitPriceSampler = std::make_shared<Simulator::UniformOrderPricePlacementFromOppositeBestSampler>(1, 15, zi->getMatchingEngineMonitor());
     // initial volume profile
     Simulator::VolumeProfile v0(
-        std::make_unique<Simulator::LinearVolumeInterpolator>(1, 20, 2, 40), // linear interp from 2 @ 1 tick ($0.01) to 40 @ 20 ticks ($0.20)
-        std::make_unique<Simulator::FlatVolumeExtrapolator>(20, 40), // flat extrap at 40 beyond 20 ticks
-        40);
-    zi->setAnchorPrice(10.00);
-    zi->setMinPriceTick(0.01);
+        std::make_unique<Simulator::LinearVolumeInterpolator>(1, 10, 1, 5), // linear interp from 1 @ 1 tick ($1) to 5 @ 10 ticks ($10)
+        std::make_unique<Simulator::FlatVolumeExtrapolator>(10, 5), // flat extrap at 5 beyond 10 ticks
+        10);
+    zi->setAnchorPrice(100.0);
+    zi->setMinPriceTick(1.0);
     zi->setStopCondition(stopCondition);
-    zi->initOrderBookBuilding(v0, v0); // linear book of $0.2 around the $10 anchor
+    zi->initOrderBookBuilding(v0, v0); // linear book of $10 around the $100 anchor
     zi->simulate();
     Parser::LobsterDataParser p;
     zi->getMatchingEngineMonitor()->exportToLobsterDataParser(p);
