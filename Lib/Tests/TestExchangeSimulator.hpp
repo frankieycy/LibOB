@@ -6,6 +6,7 @@ namespace ExchangeSimulator {
 void testInitZeroIntelligenceSimulator();
 void testZeroIntelligenceSimulatorRandomMarketOrders();
 void testZeroIntelligenceSimulatorRandomMarketAndLimitOrders();
+void testZeroIntelligenceSimulatorSimpleSantaFeModel();
 }
 }
 

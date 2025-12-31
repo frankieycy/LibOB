@@ -23,6 +23,7 @@ int main() {
     // Tests::MatchingEngine::testMatchingEngineMonitorLobsterOutput();
     // Tests::ExchangeSimulator::testInitZeroIntelligenceSimulator();
     // Tests::ExchangeSimulator::testZeroIntelligenceSimulatorRandomMarketOrders();
-    Tests::ExchangeSimulator::testZeroIntelligenceSimulatorRandomMarketAndLimitOrders();
+    // Tests::ExchangeSimulator::testZeroIntelligenceSimulatorRandomMarketAndLimitOrders();
+    Tests::ExchangeSimulator::testZeroIntelligenceSimulatorSimpleSantaFeModel();
     return 0;
 }
