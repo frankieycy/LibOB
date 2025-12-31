@@ -9,10 +9,17 @@
    classes, or the conditional distributions dependent on the book shape by having the MatchingEngineMonitor
    as a class member - see the EngineAware classes. */
 namespace Simulator {
+using namespace Utils;
+
+/* EngineAware samplers have access to the matching engine in real time via the monitor, which may provide
+   order book statistics in addition to the book state. Note that the monitor is chosen over the engine so that
+   the sample generation may depend on other derived metrics like order imbalance. */
 class IEngineAwareSampler {
 public:
-    IEngineAwareSampler(const std::shared_ptr<Analytics::MatchingEngineMonitor>& monitor) : myMonitor(monitor) {}
+    IEngineAwareSampler(const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
+        myMonitor(monitor) {}
     virtual ~IEngineAwareSampler() = default;
+    double getPriceTick() const { return myMonitor->getMinimumPriceTick(); }
     const Analytics::MatchingEngineMonitor::OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const {
         return myMonitor->getLastOrderBookTopLevelsSnapshot();
     }
@@ -20,8 +27,10 @@ public:
         return myMonitor->getOrderBookStatistics();
     }
 protected:
-    std::shared_ptr<Analytics::MatchingEngineMonitor> myMonitor;
+    std::shared_ptr<const Analytics::MatchingEngineMonitor> myMonitor;
 };
+
+////////////////////////////////////// Event rate samplers //////////////////////////////////////
 
 class IOrderEventRateSampler {
 public:
@@ -31,7 +40,7 @@ public:
 
 class IEngineAwareOrderEventRateSampler : public IOrderEventRateSampler, public IEngineAwareSampler {
 public:
-    IEngineAwareOrderEventRateSampler(const std::shared_ptr<Analytics::MatchingEngineMonitor>& monitor) :
+    IEngineAwareOrderEventRateSampler(const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
         IOrderEventRateSampler(), IEngineAwareSampler(monitor) {}
     virtual ~IEngineAwareOrderEventRateSampler() = default;
 };
@@ -45,6 +54,8 @@ private:
     double myRate;
 };
 
+////////////////////////////////////// Order side samplers //////////////////////////////////////
+
 class IOrderSideSampler {
 public:
     virtual ~IOrderSideSampler() = default;
@@ -53,7 +64,7 @@ public:
 
 class IEngineAwareOrderSideSampler : public IOrderSideSampler, public IEngineAwareSampler {
 public:
-    IEngineAwareOrderSideSampler(const std::shared_ptr<Analytics::MatchingEngineMonitor>& monitor) :
+    IEngineAwareOrderSideSampler(const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
         IOrderSideSampler(), IEngineAwareSampler(monitor) {}
     virtual ~IEngineAwareOrderSideSampler() = default;
 };
@@ -66,6 +77,8 @@ public:
     }
 };
 
+////////////////////////////////////// Order size samplers //////////////////////////////////////
+
 class IOrderSizeSampler {
 public:
     virtual ~IOrderSizeSampler() = default;
@@ -74,7 +87,7 @@ public:
 
 class IEngineAwareOrderSizeSampler : public IOrderSizeSampler, public IEngineAwareSampler {
 public:
-    IEngineAwareOrderSizeSampler(const std::shared_ptr<Analytics::MatchingEngineMonitor>& monitor) :
+    IEngineAwareOrderSizeSampler(const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
         IOrderSizeSampler(), IEngineAwareSampler(monitor) {}
     virtual ~IEngineAwareOrderSizeSampler() = default;
 };
@@ -86,6 +99,15 @@ public:
         Error::LIB_THROW("[NullOrderSizeSampler] sample() cannot be called.");
         return 0;
     }
+};
+
+class ConstantOrderSizeSampler : public IOrderSizeSampler {
+public:
+    ConstantOrderSizeSampler(const uint32_t size) : mySize(size) {}
+    virtual ~ConstantOrderSizeSampler() = default;
+    virtual uint32_t sample(Market::Side /* side */) const override { return mySize; }
+private:
+    uint32_t mySize;
 };
 
 class UniformOrderSizeSampler : public IOrderSizeSampler {
@@ -101,6 +123,8 @@ private:
     uint32_t myMaxSize;
 };
 
+////////////////////////////////////// Order price placement samplers //////////////////////////////////////
+
 class IOrderPricePlacementSampler {
 public:
     virtual ~IOrderPricePlacementSampler() = default;
@@ -109,7 +133,7 @@ public:
 
 class IEngineAwareOrderPricePlacementSampler : public IOrderPricePlacementSampler, public IEngineAwareSampler {
 public:
-    IEngineAwareOrderPricePlacementSampler(const std::shared_ptr<Analytics::MatchingEngineMonitor>& monitor) :
+    IEngineAwareOrderPricePlacementSampler(const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
         IOrderPricePlacementSampler(), IEngineAwareSampler(monitor) {}
     virtual ~IEngineAwareOrderPricePlacementSampler() = default;
 };
@@ -122,6 +146,24 @@ public:
         return Utils::Consts::NAN_DOUBLE;
     }
 };
+
+class UniformOrderPricePlacementFromOppositeBestSampler : public IEngineAwareOrderPricePlacementSampler {
+public:
+    UniformOrderPricePlacementFromOppositeBestSampler(
+        const uint32_t minOffsetTicks,
+        const uint32_t maxOffsetTicks,
+        const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
+        IEngineAwareOrderPricePlacementSampler(monitor),
+        myMinOffsetTicks(minOffsetTicks),
+        myMaxOffsetTicks(maxOffsetTicks) {}
+    virtual ~UniformOrderPricePlacementFromOppositeBestSampler() = default;
+    virtual double sample(Market::Side side) const override;
+private:
+    uint32_t myMinOffsetTicks;
+    uint32_t myMaxOffsetTicks;
+};
+
+////////////////////////////////////// Order cancellation samplers //////////////////////////////////////
 
 struct OrderCancelSpec {
     uint32_t quantity;
@@ -136,7 +178,7 @@ public:
 
 class IEngineAwareOrderCancellationSampler : public IOrderCancellationSampler, public IEngineAwareSampler {
 public:
-    IEngineAwareOrderCancellationSampler(const std::shared_ptr<Analytics::MatchingEngineMonitor>& monitor) :
+    IEngineAwareOrderCancellationSampler(const std::shared_ptr<const Analytics::MatchingEngineMonitor>& monitor) :
         IOrderCancellationSampler(), IEngineAwareSampler(monitor) {}
     virtual ~IEngineAwareOrderCancellationSampler() = default;
 };
