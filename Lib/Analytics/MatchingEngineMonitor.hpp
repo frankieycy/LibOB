@@ -142,6 +142,7 @@ public:
         myTimeSeriesCollectorMaxSize = maxSize;
         myOrderBookStatisticsCollector.setMaxHistory(maxSize);
         myOrderEventProcessingLatenciesCollector.setMaxHistory(maxSize);
+        myOrderProcessingReportsCollector.setMaxHistory(maxSize);
     }
     void setMinimumPriceTick(const double minPriceTick) { myMinimumPriceTick = minPriceTick; }
     void setOrderBookStatisticsTimestampStrategy(const OrderBookStatisticsTimestampStrategy strategy) { myOrderBookStatisticsTimestampStrategy = strategy; }

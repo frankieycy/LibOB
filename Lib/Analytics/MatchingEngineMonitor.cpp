@@ -384,6 +384,7 @@ bool MatchingEngineMonitor::isPriceWithinTopOfBook(const Market::Side side, cons
 void MatchingEngineMonitor::init() {
     myOrderBookStatisticsCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
     myOrderEventProcessingLatenciesCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
+    myOrderProcessingReportsCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
     myOrderProcessingCallback = mySharedOrderProcessingCallback = std::make_shared<Exchange::OrderProcessingCallback>(
         [this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) {
             report->dispatchTo(*this);
