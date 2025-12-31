@@ -105,7 +105,6 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModel() {
     ziConfig.cancelRateSampler = std::make_shared<Simulator::OrderEventRateSamplerProportionalTotalSizeFromOppositeBest>(0.1, 1, 10, zi->getMatchingEngineMonitor());
     ziConfig.cancelSideSampler = std::make_shared<Simulator::OrderSideSamplerProportionalTotalSizeFromOppositeBest>(1, 10, zi->getMatchingEngineMonitor());
     ziConfig.cancelSampler = std::make_shared<Simulator::OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest>(1, 1, 10, zi->getMatchingEngineMonitor());
-    // TODO: order cancellation sampler
     // initial volume profile
     Simulator::VolumeProfile v0(
         std::make_unique<Simulator::LinearVolumeInterpolator>(1, 10, 1, 5), // linear interp from 1 @ 1 tick ($1) to 5 @ 10 ticks ($10)
