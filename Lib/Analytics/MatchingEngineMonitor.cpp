@@ -394,13 +394,24 @@ void MatchingEngineMonitor::init() {
         });
 }
 
-void MatchingEngineMonitor::reset() {
-    myLastTrade = nullptr;
+void MatchingEngineMonitor::reset(const bool keepLastSnapshot) {
     myOrderBookAggregateStatistics = OrderBookAggregateStatistics();
     myOrderBookAggregateStatisticsCache = OrderBookAggregateStatistics();
-    myOrderBookStatisticsCollector.clear();
     myOrderEventProcessingLatenciesCollector.clear();
-    myOrderProcessingReportsCollector.clear();
+    if (keepLastSnapshot) {
+        auto lastStats = myOrderBookStatisticsCollector.getLastSample();
+        auto lastReport = myOrderProcessingReportsCollector.getLastSample();
+        myOrderBookStatisticsCollector.clear();
+        myOrderProcessingReportsCollector.clear();
+        if (lastStats && lastReport) {
+            myOrderBookStatisticsCollector.addSample(lastStats);
+            myOrderProcessingReportsCollector.addSample(lastReport);
+        }
+    } else {
+        myLastTrade = nullptr;
+        myOrderBookStatisticsCollector.clear();
+        myOrderProcessingReportsCollector.clear();
+    }
 }
 
 void MatchingEngineMonitor::startMonitoring() {

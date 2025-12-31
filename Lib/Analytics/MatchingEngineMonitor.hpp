@@ -22,7 +22,8 @@ public:
         EACH_TRADE,        // log a new statistics entry per each trade event (that almost always happens at top-of-book)
     };
 
-    /* Order book top-level snapshot fetched directly from the matching engine */
+    /* Order book top-level snapshot fetched directly from the matching engine. The class vector members are in ascending order of book levels,
+       e.g. bidBookTopPrices = {99.0, 98.0, ...} and askBookTopPrices = {101.0, 102.0, ...}. */
     struct OrderBookTopLevelsSnapshot {
         size_t numLevels = 0;
         bool isFullBook = false;
@@ -124,6 +125,7 @@ public:
     bool isFetchFullOrderBook() const { return myFetchFullOrderBook; }
     size_t getOrderBookNumLevels() const { return myOrderBookNumLevels; }
     size_t getTimeSeriesCollectorMaxSize() const { return myTimeSeriesCollectorMaxSize; }
+    double getMinimumPriceTick() const { return myMinimumPriceTick; }
     OrderBookStatisticsTimestampStrategy getOrderBookStatisticsTimestampStrategy() const { return myOrderBookStatisticsTimestampStrategy; }
     OrderBookAggregateStatistics getOrderBookAggregateStatistics() { return myOrderBookAggregateStatistics; }
     const Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
@@ -141,10 +143,11 @@ public:
         myOrderBookStatisticsCollector.setMaxHistory(maxSize);
         myOrderEventProcessingLatenciesCollector.setMaxHistory(maxSize);
     }
+    void setMinimumPriceTick(const double minPriceTick) { myMinimumPriceTick = minPriceTick; }
     void setOrderBookStatisticsTimestampStrategy(const OrderBookStatisticsTimestampStrategy strategy) { myOrderBookStatisticsTimestampStrategy = strategy; }
 
     virtual void init();
-    virtual void reset();
+    virtual void reset(const bool keepLastSnapshot = false);
     virtual void startMonitoring();
     virtual void stopMonitoring();
     virtual void updateStatistics(const Exchange::OrderProcessingReport& report);
@@ -171,6 +174,7 @@ private:
     bool myFetchFullOrderBook = false;
     size_t myOrderBookNumLevels = 10; // used to detect top-of-book ticks
     size_t myTimeSeriesCollectorMaxSize = 1000000;
+    double myMinimumPriceTick = 0.01; // for informational purpose in sync with order event manager which manages the min price tick
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
     OrderBookAggregateStatistics myOrderBookAggregateStatisticsCache; // caches the last statistics entry
     Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
