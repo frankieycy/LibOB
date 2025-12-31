@@ -43,6 +43,7 @@ public:
     virtual void setDebugMode(const bool debugMode) { myConfig.debugMode = debugMode; }
     virtual void setConfig(const ExchangeSimulatorConfig& config) { myConfig = config; }
     virtual void setMinPriceTick(const double minPriceTick) { myConfig.grid.minPriceTick = minPriceTick; }
+    virtual void setMonitoredOrderBookNumLevels(const size_t numLevels) { myConfig.monitoredLevels = numLevels; }
     virtual void setStopCondition(const ExchangeSimulatorStopCondition& stopCondition) { myStopCondition = stopCondition; }
     virtual void setLoggerLogFile(const std::string& logFileName, const bool logToConsole = false, const bool showLogTimestamp = true);
     virtual bool checkStopCondition() const { return myStopCondition.check(*this); }
@@ -88,6 +89,7 @@ public:
     virtual std::shared_ptr<const OrderEventBase> getLastEvent() const override { return myOrderEventLog.empty() ? nullptr : myOrderEventLog.back(); }
     virtual void setConfig(const ExchangeSimulatorConfig& config) override;
     virtual void setMinPriceTick(const double minPriceTick) override;
+    virtual void setMonitoredOrderBookNumLevels(const size_t numLevels) override;
     virtual void setLoggerLogFile(const std::string& logFileName, const bool logToConsole = false, const bool showLogTimestamp = true) override;
     virtual void initOrderBookBuilding(const VolumeProfile& bidProfile, const VolumeProfile& askProfile) override;
     virtual void submit(const OrderEventBase& orderEvent) override;

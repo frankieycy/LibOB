@@ -45,6 +45,7 @@ void ExchangeSimulatorBase::init() {
     myOrderEventManager = std::make_shared<Market::OrderEventManagerBase>(myMatchingEngine);
     myMatchingEngineMonitor = std::make_shared<Analytics::MatchingEngineMonitor>(myMatchingEngine);
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
+    myMatchingEngineMonitor->setMinimumPriceTick(getConfig().grid.minPriceTick);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
     setState(ExchangeSimulatorState::READY);
     if (isDebugMode())
@@ -65,12 +66,19 @@ void ExchangeSimulatorBase::reset() {
 void ExchangeSimulatorBase::setConfig(const ExchangeSimulatorConfig& config) {
     IExchangeSimulator::setConfig(config);
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
+    myMatchingEngineMonitor->setMinimumPriceTick(getConfig().grid.minPriceTick);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
 }
 
 void ExchangeSimulatorBase::setMinPriceTick(const double minPriceTick) {
     IExchangeSimulator::setMinPriceTick(minPriceTick);
+    myMatchingEngineMonitor->setMinimumPriceTick(minPriceTick);
     myOrderEventManager->setMinimumPriceTick(minPriceTick);
+}
+
+void ExchangeSimulatorBase::setMonitoredOrderBookNumLevels(const size_t numLevels) {
+    IExchangeSimulator::setMonitoredOrderBookNumLevels(numLevels);
+    myMatchingEngineMonitor->setOrderBookNumLevels(numLevels);
 }
 
 void ExchangeSimulatorBase::setLoggerLogFile(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) {
@@ -122,7 +130,7 @@ void ExchangeSimulatorBase::simulate() {
     if (showOrderBookPerEvent)
         *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at initialization:\n" << *myMatchingEngine;
     if (config.resetMatchingEngineMonitorPreSimulation)
-        myMatchingEngineMonitor->reset();
+        myMatchingEngineMonitor->reset(true /* keepLastSnapshot */);
     setState(ExchangeSimulatorState::RUNNING);
     while (true) {
         if (checkStopCondition())
