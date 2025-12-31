@@ -94,6 +94,8 @@ void ExchangeSimulatorBase::initOrderBookBuilding(const VolumeProfile& bidProfil
 }
 
 void ExchangeSimulatorBase::submit(const OrderEventBase& orderEvent) {
+    if (isDebugMode())
+        *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Submitting order event at timestamp " << getCurrentTimestamp() << ": " << orderEvent;
     orderEvent.submitTo(*myOrderEventManager);
 }
 

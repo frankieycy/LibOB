@@ -38,6 +38,7 @@
 
 [LOG] DEBUG [IExchangeSimulator] Simulator state set to Running.
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":1,"Timestamp":1,"EventType":"MarketSubmit","Side":"Buy","Quantity":8}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 1: {"EventId":1,"Timestamp":1,"EventType":"MarketSubmit","Side":"Buy","Quantity":8}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 1:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -81,6 +82,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":2,"Timestamp":2,"EventType":"MarketSubmit","Side":"Buy","Quantity":1}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 2: {"EventId":2,"Timestamp":2,"EventType":"MarketSubmit","Side":"Buy","Quantity":1}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 2:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -125,6 +127,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":3,"Timestamp":3,"EventType":"MarketSubmit","Side":"Buy","Quantity":2}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 3: {"EventId":3,"Timestamp":3,"EventType":"MarketSubmit","Side":"Buy","Quantity":2}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 3:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -170,6 +173,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":4,"Timestamp":4,"EventType":"MarketSubmit","Side":"Buy","Quantity":8}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 4: {"EventId":4,"Timestamp":4,"EventType":"MarketSubmit","Side":"Buy","Quantity":8}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 4:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -218,6 +222,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":5,"Timestamp":5,"EventType":"MarketSubmit","Side":"Buy","Quantity":10}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 5: {"EventId":5,"Timestamp":5,"EventType":"MarketSubmit","Side":"Buy","Quantity":10}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 5:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -269,6 +274,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":6,"Timestamp":6,"EventType":"MarketSubmit","Side":"Sell","Quantity":1}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 6: {"EventId":6,"Timestamp":6,"EventType":"MarketSubmit","Side":"Sell","Quantity":1}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 6:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -321,6 +327,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":7,"Timestamp":7,"EventType":"MarketSubmit","Side":"Sell","Quantity":4}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 7: {"EventId":7,"Timestamp":7,"EventType":"MarketSubmit","Side":"Sell","Quantity":4}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 7:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -374,6 +381,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":8,"Timestamp":8,"EventType":"MarketSubmit","Side":"Sell","Quantity":3}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 8: {"EventId":8,"Timestamp":8,"EventType":"MarketSubmit","Side":"Sell","Quantity":3}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 8:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -428,6 +436,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":9,"Timestamp":9,"EventType":"MarketSubmit","Side":"Sell","Quantity":4}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 9: {"EventId":9,"Timestamp":9,"EventType":"MarketSubmit","Side":"Sell","Quantity":4}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 9:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
@@ -483,6 +492,7 @@
 ------------------------------------------------------------------------
 
 [LOG] DEBUG [ZeroIntelligenceSimulator] Generated order event: {"EventId":10,"Timestamp":10,"EventType":"MarketSubmit","Side":"Buy","Quantity":9}
+[LOG] DEBUG [ExchangeSimulatorBase] Submitting order event at timestamp 10: {"EventId":10,"Timestamp":10,"EventType":"MarketSubmit","Side":"Buy","Quantity":9}
 [LOG] DEBUG [ExchangeSimulatorBase] Order book snapshot at timestamp 10:
 ================= Order Book Snapshot ===================
   BID Size | BID Price || Level || ASK Price | ASK Size  
