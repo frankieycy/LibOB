@@ -24,6 +24,7 @@ int main() {
     // Tests::ExchangeSimulator::testInitZeroIntelligenceSimulator();
     // Tests::ExchangeSimulator::testZeroIntelligenceSimulatorRandomMarketOrders();
     // Tests::ExchangeSimulator::testZeroIntelligenceSimulatorRandomMarketAndLimitOrders();
-    Tests::ExchangeSimulator::testZeroIntelligenceSimulatorSimpleSantaFeModel();
+    // Tests::ExchangeSimulator::testZeroIntelligenceSimulatorSimpleSantaFeModel();
+    Tests::ExchangeSimulator::testZeroIntelligenceSimulatorSimpleSantaFeModelSpeedDiagnostics();
     return 0;
 }
