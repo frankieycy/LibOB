@@ -54,6 +54,9 @@ private:
     double myRate; // events per unit time
 };
 
+/* Define totalBidSize = (sum of bid order sizes between bestAsk - myMinOffsetTicks and bestAsk - myMaxOffsetTicks),
+    and totalAskSize = (sum of ask order sizes between bestBid + myMinOffsetTicks and bestBid + myMaxOffsetTicks).
+    Model the event rate as myRate * (totalBidSize + totalAskSize). */
 class OrderEventRateSamplerProportionalTotalSizeFromOppositeBest : public IEngineAwareOrderEventRateSampler {
 public:
 OrderEventRateSamplerProportionalTotalSizeFromOppositeBest(
@@ -96,6 +99,9 @@ public:
     }
 };
 
+/* Define totalBidSize = (sum of bid order sizes between bestAsk - myMinOffsetTicks and bestAsk - myMaxOffsetTicks),
+    and totalAskSize = (sum of ask order sizes between bestBid + myMinOffsetTicks and bestBid + myMaxOffsetTicks).
+    Model the order side as a Bernoulli with the bid probability being totalBidSize / (totalBidSize + totalAskSize). */
 class OrderSideSamplerProportionalTotalSizeFromOppositeBest : public IEngineAwareOrderSideSampler {
 public:
     OrderSideSamplerProportionalTotalSizeFromOppositeBest(
@@ -182,6 +188,8 @@ public:
     }
 };
 
+/* Model the bid price placement sampled uniformly between bestAsk - myMinOffsetTicks and bestAsk + myMaxOffsetTicks,
+    and the ask price placement between bestBid + myMinOffsetTicks and bestBid + myMaxOffsetTicks. */
 class OrderPricePlacementSamplerUniformFromOppositeBest : public IEngineAwareOrderPricePlacementSampler {
 public:
     OrderPricePlacementSamplerUniformFromOppositeBest(
@@ -224,6 +232,8 @@ public:
     virtual std::optional<OrderCancelSpec> sample(const Market::Side /* side */) const override { return std::nullopt; }
 };
 
+/* Model the bid order cancellation with a sampled price between bestAsk - myMinOffsetTicks and bestAsk + myMaxOffsetTicks,
+    and the ask order cancellation between bestBid + myMinOffsetTicks and bestBid + myMaxOffsetTicks, all with a constant size. */
 class OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest : public IEngineAwareOrderCancellationSampler {
 public:
     OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest(
