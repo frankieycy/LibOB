@@ -1,5 +1,6 @@
 .DS_Store
 .idea
+.last_build_mode
 main
 Obj*
 Exe*
