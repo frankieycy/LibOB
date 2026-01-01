@@ -3,7 +3,7 @@ CXXFLAGS = -std=c++17 -ILib -Wall -Wextra -MMD -MP
 
 # Build modes
 DEBUG_FLAGS     = -g -O0
-PROFILING_FLAGS = -g -O2
+PROFILING_FLAGS = -g -O2 -lprofiler
 RELEASE_FLAGS   = -O2
 
 # Default build mode
@@ -58,7 +58,7 @@ $(TARGET): $(OBJ)
 # Compile (Obj/Utils/Utils.o from Lib/Utils/Utils.cpp, etc.)
 Obj/%.o: %.cpp
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -o $@ $(if $(filter PROFILING,$(BUILD_MODE)),-lprofiler,)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Regression: build and run all regression tests
 regression: regression_build regression_run
