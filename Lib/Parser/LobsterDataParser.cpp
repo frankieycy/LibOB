@@ -94,6 +94,7 @@ std::string LobsterDataParser::OrderBookMessage::getHeaderCsv(bool aligned) {
 }
 
 std::string LobsterDataParser::OrderBookSnapshot::getAsCsv(size_t levels, bool aligned) const {
+    // TODO: costly dynamic allocations, use pre-reserved string buffer
     std::ostringstream oss;
     if (aligned) {
         for (size_t i = 0; i < levels; ++i) {

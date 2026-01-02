@@ -124,9 +124,12 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModel() {
 
 void testZeroIntelligenceSimulatorSimpleSantaFeModelSpeedDiagnostics() {
     // use a speed profiler to analyze performance bottlenecks
+    // cost centers: book monitor top-level snapshots (vector copies), Lobster data export (ostringstream dyanmic allocations)
     // 1. `make profiling` to compile in profiling mode with gperftools
     // 2. `CPUPROFILE=profile.out ./Exe/main` to run the executable with profiling enabled
     // 3. `pprof --top ./Exe/main profile.out` to see the text report of the profiling results
+    // 4. `pprof --pdf ./Exe/main profile.out > profile.pdf` to generate a PDF visualization of the profiling results
+    // 5. `pprof --http=:8080 Exe/main profile.out` to launch a web server for interactive visualization
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
     Simulator::ExchangeSimulatorStopCondition stopCondition(1000000 /* maxTimestamp */); // as of Jan2026, 1 million events take about 8.5 seconds
