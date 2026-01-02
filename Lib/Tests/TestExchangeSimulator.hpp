@@ -8,6 +8,7 @@ void testZeroIntelligenceSimulatorRandomMarketOrders();
 void testZeroIntelligenceSimulatorRandomMarketAndLimitOrders();
 void testZeroIntelligenceSimulatorSimpleSantaFeModel();
 void testZeroIntelligenceSimulatorSimpleSantaFeModelSpeedDiagnostics();
+void testZeroIntelligenceSimulatorSimpleSantaFeModelAsymptoticStats();
 }
 }
 
