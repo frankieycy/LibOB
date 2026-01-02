@@ -20,10 +20,10 @@ public:
         myMonitor(monitor) {}
     virtual ~IEngineAwareSampler() = default;
     double getPriceTick() const { return myMonitor->getMinimumPriceTick(); }
-    const Analytics::MatchingEngineMonitor::OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const {
+    const Analytics::OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const {
         return myMonitor->getLastOrderBookTopLevelsSnapshot();
     }
-    const Statistics::TimeSeriesCollector<Analytics::MatchingEngineMonitor::OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const {
+    const Statistics::TimeSeriesCollector<Analytics::OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const {
         return myMonitor->getOrderBookStatistics();
     }
 protected:

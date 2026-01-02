@@ -19,15 +19,15 @@ std::string to_string(const MatchingEngineMonitor::OrderBookStatisticsTimestampS
 
 std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy& strategy) { return out << to_string(strategy); }
 
-std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderBookTopLevelsSnapshot& snapshot) { return out << snapshot.getAsJson(); }
+std::ostream& operator<<(std::ostream& out, const OrderBookTopLevelsSnapshot& snapshot) { return out << snapshot.getAsJson(); }
 
-std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderBookAggregateStatistics& stats) { return out << stats.getAsJson(); }
+std::ostream& operator<<(std::ostream& out, const OrderBookAggregateStatistics& stats) { return out << stats.getAsJson(); }
 
-std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderBookStatisticsByTimestamp& stats) { return out << stats.getAsJson(); }
+std::ostream& operator<<(std::ostream& out, const OrderBookStatisticsByTimestamp& stats) { return out << stats.getAsJson(); }
 
-std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderEventProcessingLatency& latency) { return out << latency.getAsJson(); }
+std::ostream& operator<<(std::ostream& out, const OrderEventProcessingLatency& latency) { return out << latency.getAsJson(); }
 
-void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::constructFrom(const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine) {
+void OrderBookTopLevelsSnapshot::constructFrom(const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine) {
     if (!matchingEngine)
         Error::LIB_THROW("[OrderBookTopLevelsSnapshot] Matching engine is null.");
     lastTrade = matchingEngine->getLastTrade();
@@ -37,7 +37,7 @@ void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::constructFrom(const std:
     askBookTopSizes = isFullBook ? matchingEngine->getAskBookSizeVector() : matchingEngine->getAskBookSizeVector(numLevels);
 }
 
-void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::clear() {
+void OrderBookTopLevelsSnapshot::clear() {
     numLevels = 0;
     isFullBook = false;
     lastTrade = nullptr;
@@ -47,7 +47,7 @@ void MatchingEngineMonitor::OrderBookTopLevelsSnapshot::clear() {
     askBookTopSizes.clear();
 }
 
-std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const {
+std::string OrderBookTopLevelsSnapshot::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"NumLevels\":"  << numLevels << ","
@@ -69,7 +69,7 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsJson() const
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsCsv() const {
+std::string OrderBookTopLevelsSnapshot::getAsCsv() const {
     // format: BidNumLevels,AskNumLevels,BidPrice1,BidSize1,...,AskPrice1,AskSize1,...
     // note that the last trade information is omitted
     std::ostringstream oss;
@@ -88,7 +88,7 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsCsv() const 
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsTable() const {
+std::string OrderBookTopLevelsSnapshot::getAsTable() const {
     std::ostringstream oss;
     oss <<
     "---------------------------------------------------------\n"
@@ -143,7 +143,7 @@ std::string MatchingEngineMonitor::OrderBookTopLevelsSnapshot::getAsTable() cons
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsJson() const {
+std::string OrderBookAggregateStatistics::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"TimestampFrom\":"              << timestampFrom              << ","
@@ -160,7 +160,7 @@ std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsJson() con
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsCsv() const {
+std::string OrderBookAggregateStatistics::getAsCsv() const {
     std::ostringstream oss;
     oss <<
     timestampFrom              << "," <<
@@ -176,7 +176,7 @@ std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsCsv() cons
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsTable() const {
+std::string OrderBookAggregateStatistics::getAsTable() const {
     std::ostringstream oss;
     oss <<
     "---------------------------------------------------------\n"
@@ -196,7 +196,7 @@ std::string MatchingEngineMonitor::OrderBookAggregateStatistics::getAsTable() co
     return oss.str();
 }
 
-void MatchingEngineMonitor::OrderBookStatisticsByTimestamp::constructFrom(
+void OrderBookStatisticsByTimestamp::constructFrom(
     const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine,
     const OrderBookAggregateStatistics& orderBookAggregateStatistics,
     const OrderBookAggregateStatistics& orderBookAggregateStatisticsCache) {
@@ -226,7 +226,7 @@ void MatchingEngineMonitor::OrderBookStatisticsByTimestamp::constructFrom(
     topLevelsSnapshot.constructFrom(matchingEngine);
 }
 
-void MatchingEngineMonitor::OrderBookStatisticsByTimestamp::clear() {
+void OrderBookStatisticsByTimestamp::clear() {
     timestampFrom = 0;
     timestampTo = 0;
     cumNumNewLimitOrders = 0;
@@ -251,7 +251,7 @@ void MatchingEngineMonitor::OrderBookStatisticsByTimestamp::clear() {
     topLevelsSnapshot.clear();
 }
 
-std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsJson() const {
+std::string OrderBookStatisticsByTimestamp::getAsJson() const {
     std::ostringstream oss;
     oss << "{"
     "\"TimestampFrom\":"              << timestampFrom              << ","
@@ -280,7 +280,7 @@ std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsJson() c
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsCsv() const {
+std::string OrderBookStatisticsByTimestamp::getAsCsv() const {
     std::ostringstream oss;
     oss <<
     timestampFrom              << "," <<
@@ -308,7 +308,7 @@ std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsCsv() co
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsTable() const {
+std::string OrderBookStatisticsByTimestamp::getAsTable() const {
     std::ostringstream oss;
     oss <<
     "---------------------------------------------------------\n"
@@ -340,15 +340,15 @@ std::string MatchingEngineMonitor::OrderBookStatisticsByTimestamp::getAsTable() 
     return oss.str();
 }
 
-std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsJson() const {
+std::string OrderEventProcessingLatency::getAsJson() const {
     return ""; // TODO
 }
 
-std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsCsv() const {
+std::string OrderEventProcessingLatency::getAsCsv() const {
     return ""; // TODO
 }
 
-std::string MatchingEngineMonitor::OrderEventProcessingLatency::getAsTable() const {
+std::string OrderEventProcessingLatency::getAsTable() const {
     return ""; // TODO
 }
 
@@ -363,8 +363,8 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMa
     matchingEngine->addOrderEventLatencyCallback(myOrderEventLatencyCallback);
 }
 
-const MatchingEngineMonitor::OrderBookTopLevelsSnapshot& MatchingEngineMonitor::getLastOrderBookTopLevelsSnapshot() const {
-    static const MatchingEngineMonitor::OrderBookTopLevelsSnapshot emptySnapshot;
+const OrderBookTopLevelsSnapshot& MatchingEngineMonitor::getLastOrderBookTopLevelsSnapshot() const {
+    static const OrderBookTopLevelsSnapshot emptySnapshot;
     const auto& lastStats = myOrderBookStatisticsCollector.getLastSample();
     return lastStats ? lastStats->topLevelsSnapshot : emptySnapshot;
 }
