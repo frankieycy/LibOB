@@ -8,6 +8,7 @@ Test/
 Plot*
 *.txt
 *.log
+*.out
 _*
 Data/LOBSTER
 !*.baseline.txt

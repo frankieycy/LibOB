@@ -1,9 +1,11 @@
-CXX      = g++
+CXX      = clang++
 CXXFLAGS = -std=c++17 -ILib -Wall -Wextra -MMD -MP
+LDFLAGS  =
+LDLIBS   =
 
 # Build modes
 DEBUG_FLAGS     = -g -O0
-PROFILING_FLAGS = -g -O2 -lprofiler
+PROFILING_FLAGS = -g -O2
 RELEASE_FLAGS   = -O2
 
 # Default build mode
@@ -13,6 +15,8 @@ ifeq ($(BUILD_MODE), DEBUG)
 CXXFLAGS += $(DEBUG_FLAGS)
 else ifeq ($(BUILD_MODE), PROFILING)
 CXXFLAGS += $(PROFILING_FLAGS)
+LDFLAGS  += -L/opt/homebrew/lib
+LDLIBS   += -lprofiler
 else
 CXXFLAGS += $(RELEASE_FLAGS)
 endif
@@ -53,7 +57,7 @@ update_last_build_mode:
 # Link
 $(TARGET): $(OBJ)
 	@mkdir -p $(@D)
-	$(CXX) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
 
 # Compile (Obj/Utils/Utils.o from Lib/Utils/Utils.cpp, etc.)
 Obj/%.o: %.cpp
@@ -78,7 +82,7 @@ regression_run: regression_build
 # Rule to build each regression test executable from its object file
 Exe/RegressionTests/%: Obj/RegressionTests/Inputs/%.o $(filter-out Obj/Run/%.o, $(OBJ))
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
 
 debug:
 	$(MAKE) BUILD_MODE=DEBUG
