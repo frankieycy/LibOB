@@ -341,15 +341,39 @@ std::string OrderBookStatisticsByTimestamp::getAsTable() const {
 }
 
 std::string OrderEventProcessingLatency::getAsJson() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss << "{" <<
+    "\"Timestamp\":"        << timestamp        << "," <<
+    "\"EventId\":"          << eventId          << "," <<
+    "\"LatencyNs\":"        << latency          << "," <<
+    "\"EventType\":"        << eventType        << "," <<
+    "\"Event\":"            << (event ? event->getAsJson() : "null");
+    oss << "}";
+    return oss.str();
 }
 
 std::string OrderEventProcessingLatency::getAsCsv() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss <<
+    timestamp << "," <<
+    eventId   << "," <<
+    latency   << "," <<
+    eventType;
+    return oss.str();
 }
 
 std::string OrderEventProcessingLatency::getAsTable() const {
-    return ""; // TODO
+    std::ostringstream oss;
+    oss <<
+    "---------------------------------------------------------\n"
+    "|           Order Event Processing Latency              |\n"
+    "---------------------------------------------------------\n"
+    "| Timestamp                  |" << std::setw(25) << timestamp  << " |\n"
+    "| EventId                    |" << std::setw(25) << eventId    << " |\n"
+    "| LatencyNs                  |" << std::setw(25) << latency    << " |\n"
+    "| EventType                  |" << std::setw(25) << eventType  << " |\n"
+    "---------------------------------------------------------\n";
+    return oss.str();
 }
 
 MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) :
