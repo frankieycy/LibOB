@@ -10,38 +10,45 @@ using namespace Utils;
     Var(return_dt) ~ dt^H with H being the Hurst exponent.
     Each horizon dt yields a sumReturns, sumReturnsSquared etc. */
 struct PriceReturnScalingStats {
+    enum class PriceType { LAST_TRADE, MID, MICRO, NONE };
     std::vector<uint64_t> horizons;
     std::vector<double> sumReturns;
     std::vector<double> sumReturnsSquared;
-    std::vector<double> varReturns;
     std::vector<size_t> counts;
+    bool logReturns = true;
+    PriceType priceType = PriceType::NONE;
 };
 
 /* Event time (number of events) between each price tick (mid or best or whatever). */
 struct EventTimeStats {
-    std::vector<size_t> numEventsSinceLastPriceMove;
-    std::map<uint64_t, std::vector<std::shared_ptr<const Market::OrderEventBase>>> eventsSinceLastPriceMove; // map of event time to list of events
-    Statistics::Histogram histogram;
+    Statistics::Histogram eventsBetweenPriceMoves;
 };
 
 /* Autocorrelation of trade signs: +1 for buy and -1 for sell. */
 struct OrderFlowMemoryStats {
-    std::vector<int8_t> tradeSigns;
     Statistics::Autocorrelation<int8_t> tradeSignsACF;
 };
 
 /* Average depth profile in price ticks measured from opposite best price. */
 struct OrderDepthProfileStats {
-    size_t numTicks; // size of the depth profile in price ticks
-    size_t numSamples;
-    std::vector<double> avgProfileBid;
-    std::vector<double> avgProfileAsk;
-    std::vector<double> stddevProfileBid;
-    std::vector<double> stddevProfileAsk;
+    enum class DepthNormalization { BY_TOTAL_DEPTH, BY_BEST_LEVEL, NONE };
+    std::vector<double> avgBidProfile;
+    std::vector<double> avgAskProfile;
+    std::vector<double> stddevBidProfile;
+    std::vector<double> stddevAskProfile;
+    size_t numTicks = 0; // size of the depth profile in price ticks
+    size_t numSamples = 0; // averaged over how many samples
+    DepthNormalization normalization = DepthNormalization::NONE;
+};
+
+/* Spread statistics in space (histogram) and time (autocorrelation). */
+struct SpreadStats {
+    Statistics::Histogram spreadHistogram;
+    Statistics::Autocorrelation<double> spreadACF;
 };
 
 struct OrderLifetimeStats;
-struct ImpactResilienceStats;
+struct PriceImpactStats;
 }
 
 #endif
