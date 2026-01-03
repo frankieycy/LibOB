@@ -6,23 +6,34 @@
 namespace Analytics {
 using namespace Utils;
 
-std::string toString(const MonitorOutputsFileFormat& fileFormat) {
-    switch (fileFormat) {
-        case MonitorOutputsFileFormat::LOBSTER: return "Lobster";
-        default:                                return "None";
+std::string toString(const IMonitorOutputsAnalyzer::CalculationMode& calcMode) {
+    switch (calcMode) {
+        case IMonitorOutputsAnalyzer::CalculationMode::FROM_MONITOR: return "FromMonitor";
+        case IMonitorOutputsAnalyzer::CalculationMode::FROM_FILE:    return "FromFile";
+        default:                                                     return "None";
     }
 }
 
-std::ostream& operator<<(std::ostream& out, const MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
+std::string toString(const IMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) {
+    switch (fileFormat) {
+        case IMonitorOutputsAnalyzer::MonitorOutputsFileFormat::LOBSTER: return "Lobster";
+        default:                                                         return "None";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::CalculationMode& calcMode) { return out << toString(calcMode); }
+std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
 
 IMonitorOutputsAnalyzer::IMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :
-    myMonitor(monitor) {
+    myMonitor(monitor),
+    myCalculationMode(CalculationMode::FROM_MONITOR) {
     if (!monitor)
         Error::LIB_THROW("[IMonitorOutputsAnalyzer] Matching engine monitor is null.");
 }
 
 IMonitorOutputsAnalyzer::IMonitorOutputsAnalyzer(const std::string& /* monitorOutputsFilePath */, const MonitorOutputsFileFormat /* fileFormat */) :
-    myMonitor(nullptr) {
+    myMonitor(nullptr),
+    myCalculationMode(CalculationMode::FROM_FILE) {
     // TODO: load the monitor outputs from file path
 }
 }
