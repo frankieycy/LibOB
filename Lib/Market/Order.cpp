@@ -17,10 +17,10 @@ std::ostream& operator<<(std::ostream& out, const OrderBase& order) {
 OrderBase::OrderBase() :
     myId(0),
     myTimestamp(0),
-    mySide(Side::NULL_SIDE),
+    mySide(Side::NONE),
     myQuantity(0),
-    myOrderType(OrderType::NULL_ORDER_TYPE),
-    myOrderState(OrderState::NULL_ORDER_STATE) {}
+    myOrderType(OrderType::NONE),
+    myOrderState(OrderState::NONE) {}
 
 OrderBase::OrderBase(const OrderBase& order) :
     myId(order.myId),
@@ -36,8 +36,8 @@ OrderBase::OrderBase(const uint64_t id, const uint64_t timestamp, const Side sid
     myTimestamp(timestamp),
     mySide(side),
     myQuantity(quantity),
-    myOrderType(OrderType::NULL_ORDER_TYPE),
-    myOrderState(OrderState::NULL_ORDER_STATE),
+    myOrderType(OrderType::NONE),
+    myOrderState(OrderState::NONE),
     myMetaInfo(metaInfo) {}
 
 bool OrderBase::checkState() const {
@@ -60,7 +60,7 @@ void OrderBase::init() {
 }
 
 void OrderBase::cancel() {
-    mySide = Side::NULL_SIDE;
+    mySide = Side::NONE;
     myQuantity = 0;
     myOrderState = OrderState::CANCELLED;
 }
@@ -113,7 +113,7 @@ bool LimitOrder::checkState() const {
 }
 
 void LimitOrder::init() {
-    if (getSide() == Side::NULL_SIDE)
+    if (getSide() == Side::NONE)
         Error::LIB_THROW("[LimitOrder::init] Side cannot be null.");
     if (myPrice < 0)
         Error::LIB_THROW("[LimitOrder::init] Price cannot be negative.");
@@ -168,7 +168,7 @@ void MarketOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
 }
 
 void MarketOrder::init() {
-    if (getSide() == Side::NULL_SIDE)
+    if (getSide() == Side::NONE)
         Error::LIB_THROW("[MarketOrder::init] Side cannot be null.");
     setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::MARKET);

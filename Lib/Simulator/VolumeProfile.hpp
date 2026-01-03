@@ -5,8 +5,8 @@
 namespace Simulator {
 using namespace Utils;
 
-enum class VolumeInterpolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, CUSTOM_INPUT, PIECEWISE_CONSTANT, PIECEWISE_LINEAR, NULL_VOLUME_INTERPOLATION_STRATEGY };
-enum class VolumeExtrapolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, NULL_VOLUME_EXTRAPOLATION_STRATEGY };
+enum class VolumeInterpolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, CUSTOM_INPUT, PIECEWISE_CONSTANT, PIECEWISE_LINEAR, NONE };
+enum class VolumeExtrapolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, NONE };
 
 class IVolumeInterpolator {
 public:
@@ -20,7 +20,7 @@ public:
     uint32_t getInterpDistanceEnd() const { return myInterpDistanceEnd; }
     uint32_t operator()(const uint32_t dist) const { return volumeAt(dist); }
     virtual uint32_t volumeAt(const uint32_t dist) const = 0;
-    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::NULL_VOLUME_INTERPOLATION_STRATEGY;
+    static constexpr VolumeInterpolationStrategy ourType = VolumeInterpolationStrategy::NONE;
 private:
     uint32_t myInterpDistanceStart;
     uint32_t myInterpDistanceEnd;
@@ -91,7 +91,7 @@ public:
     uint32_t getExtrapDistance() const { return myExtrapDistance; }
     uint32_t operator()(const uint32_t dist) const { return volumeAt(dist); }
     virtual uint32_t volumeAt(const uint32_t dist) const = 0;
-    static constexpr VolumeExtrapolationStrategy ourType = VolumeExtrapolationStrategy::NULL_VOLUME_EXTRAPOLATION_STRATEGY;
+    static constexpr VolumeExtrapolationStrategy ourType = VolumeExtrapolationStrategy::NONE;
 private:
     uint32_t myExtrapDistance;
 };

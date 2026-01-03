@@ -16,7 +16,7 @@ OrderEventBase::OrderEventBase() :
     myEventId(0),
     myOrderId(0),
     myTimestamp(0),
-    myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE) {}
+    myEventType(OrderEventType::NONE) {}
 
 OrderEventBase::OrderEventBase(const OrderEventBase& event) :
     myEventId(event.myEventId),
@@ -29,7 +29,7 @@ OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, c
     myEventId(eventId),
     myOrderId(orderId),
     myTimestamp(timestamp),
-    myEventType(OrderEventType::NULL_ORDER_EVENT_TYPE),
+    myEventType(OrderEventType::NONE),
     myOrder(order) {}
 
 void OrderEventBase::applyTo(MarketOrder& /* order */) const {

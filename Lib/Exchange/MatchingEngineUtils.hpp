@@ -15,10 +15,10 @@ class MatchingEngineMonitor;
 }
 
 namespace Exchange {
-enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NULL_ORDER_MATCHING_STRATEGY };
-enum class OrderProcessingType   { EXECUTE, SUBMIT, PLACEMENT, CANCEL, PARTIAL_CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NULL_ORDER_PROCESSING_TYPE };
-enum class OrderProcessingStatus { SUCCESS, FAILURE, NULL_ORDER_PROCESSING_STATUS };
-enum class OrderExecutionType    { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NULL_ORDER_EXECUTION_TYPE };
+enum class OrderMatchingStrategy { FIFO, PRO_RATA, ICEBERG_SUPPORT, NONE };
+enum class OrderProcessingType   { EXECUTE, SUBMIT, PLACEMENT, CANCEL, PARTIAL_CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, NONE };
+enum class OrderProcessingStatus { SUCCESS, FAILURE, NONE };
+enum class OrderExecutionType    { FILLED, PARTIAL_FILLED, CANCELLED, REJECTED, NONE };
 
 struct OrderLevel {
     double price;
@@ -366,7 +366,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
         const Market::Side orderSide,
         const double orderPrice,
         const uint32_t modifiedQuantity,
-        const OrderProcessingStatus status = OrderProcessingStatus::NULL_ORDER_PROCESSING_STATUS,
+        const OrderProcessingStatus status = OrderProcessingStatus::NONE,
         const std::optional<uint64_t> latency = std::nullopt,
         const std::optional<std::string> message = std::nullopt) :
         OrderProcessingReport(reportId, timestamp, orderId, orderSide, OrderProcessingType::MODIFY_QUANTITY, status, latency, message),

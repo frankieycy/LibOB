@@ -89,7 +89,7 @@ struct OrderEventProcessingLatency {
     uint64_t timestamp;
     uint64_t eventId;
     std::chrono::nanoseconds::rep latency = 0;
-    Market::OrderEventType eventType = Market::OrderEventType::NULL_ORDER_EVENT_TYPE;
+    Market::OrderEventType eventType = Market::OrderEventType::NONE;
     std::shared_ptr<const Market::OrderEventBase> event = nullptr;
 
     OrderEventProcessingLatency(const std::shared_ptr<const Exchange::OrderEventLatency>& latency) :

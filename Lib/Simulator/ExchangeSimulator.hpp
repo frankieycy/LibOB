@@ -55,7 +55,7 @@ public:
     virtual void advanceByDuration(const uint64_t duration) { advanceToTimestamp(getCurrentTimestamp() + duration); }
     virtual void simulate() = 0; // simulate in wall-clock time until stop condition is met (may be imposed upon the number of events or timestamp)
     virtual std::ostream& orderBookSnapshot(std::ostream& out) const = 0;
-    static constexpr ExchangeSimulatorType ourType = ExchangeSimulatorType::NULL_EXCHANGE_SIMULATOR_TYPE;
+    static constexpr ExchangeSimulatorType ourType = ExchangeSimulatorType::NONE;
 private:
     ExchangeSimulatorConfig myConfig = ExchangeSimulatorConfig();
     ExchangeSimulatorStopCondition myStopCondition = ExchangeSimulatorStopCondition();

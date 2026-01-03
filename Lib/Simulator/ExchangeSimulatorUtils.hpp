@@ -9,10 +9,10 @@ using namespace Utils;
 class IExchangeSimulator;
 
 enum class ExchangeSimulatorState { UNINITIALIZED, READY, RUNNING, FINISHED };
-enum class ExchangeSimulatorType { ZERO_INTELLIGENCE, MINIMAL_INTELLIGENCE, NULL_EXCHANGE_SIMULATOR_TYPE };
+enum class ExchangeSimulatorType { ZERO_INTELLIGENCE, MINIMAL_INTELLIGENCE, NONE };
 // types of order events that can be scheduled in the simulator - note the difference between these and Market::OrderEventType,
 // the latter being used inside the matching engine to represent actual order events processed by the engine.
-enum class OrderEventType { LIMIT_SUBMIT, MARKET_SUBMIT, CANCEL, CANCEL_ID, CANCEL_REPLACE, NULL_ORDER_EVENT_TYPE };
+enum class OrderEventType { LIMIT_SUBMIT, MARKET_SUBMIT, CANCEL, CANCEL_ID, CANCEL_REPLACE, NONE };
 
 struct OrderBookGridDefinition {
     double anchorPrice = Consts::NAN_DOUBLE; // defines a small- or large-tick stock
@@ -52,7 +52,7 @@ struct OrderEventBase {
     }
     uint64_t eventId;
     uint64_t timestamp;
-    static constexpr OrderEventType eventType = OrderEventType::NULL_ORDER_EVENT_TYPE;
+    static constexpr OrderEventType eventType = OrderEventType::NONE;
 };
 
 struct LimitOrderSubmitEvent : public OrderEventBase {

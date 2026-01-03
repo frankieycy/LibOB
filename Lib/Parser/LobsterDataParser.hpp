@@ -26,7 +26,7 @@ public:
         ORDER_EXECUTE_VISIBLE = 4,    // 4. Execution of a visible limit order
         ORDER_EXECUTE_HIDDEN = 5,     // 5. Execution of a hidden limit order
         TRADING_HALT = 7,             // 7. Trading halt indicator
-        NULL_MESSAGE_TYPE = 0
+        NONE = 0
     };
 
     struct OrderBookMessage {
@@ -39,7 +39,7 @@ public:
         bool isOrderDeleteAndAdd;
 
         OrderBookMessage(bool isOrderDeleteAndAdd = false) :
-            timestamp(0), messageType(MessageType::NULL_MESSAGE_TYPE), orderId(0), quantity(0), price(0), isBuy(true),
+            timestamp(0), messageType(MessageType::NONE), orderId(0), quantity(0), price(0), isBuy(true),
             isOrderDeleteAndAdd(isOrderDeleteAndAdd) {}
         OrderBookMessage(const uint64_t timestamp, const MessageType messageType, const uint64_t orderId,
                          const uint32_t quantity, const uint32_t price, const bool isBuy, const bool isOrderDeleteAndAdd = false) :
@@ -54,7 +54,7 @@ public:
         OrderBookMessage(const Exchange::OrderCancelReport& report);
         OrderBookMessage(const Exchange::OrderPartialCancelReport& report);
         OrderBookMessage(const Exchange::OrderCancelAndReplaceReport& report);
-        bool isValid() const { return messageType != MessageType::NULL_MESSAGE_TYPE; }
+        bool isValid() const { return messageType != MessageType::NONE; }
         bool toSplitIntoDeleteAndAdd() const { return isOrderDeleteAndAdd; }
         std::string getAsCsv(bool aligned = false) const;
         static std::string getHeaderCsv(bool aligned = false);

@@ -5,7 +5,7 @@
 namespace Utils {
 namespace Logger {
 class LoggerBase;
-enum class LogLevel { INFO, WARNING, ERROR, DEBUG, TRACE, NULL_LOG_LEVEL };
+enum class LogLevel { INFO, WARNING, ERROR, DEBUG, TRACE, NONE };
 enum class OverwriteLastLog : bool { YES = true, NO = false };
 
 class LoggerStream {

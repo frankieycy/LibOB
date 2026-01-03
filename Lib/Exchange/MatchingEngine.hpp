@@ -109,7 +109,7 @@ protected:
 private:
     std::string mySymbol;
     std::string myExchangeId;
-    OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NULL_ORDER_MATCHING_STRATEGY;
+    OrderMatchingStrategy myOrderMatchingStrategy = OrderMatchingStrategy::NONE;
     OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
     Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myReportIdHandler = Utils::Counter::IdHandlerBase();

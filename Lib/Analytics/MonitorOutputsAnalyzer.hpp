@@ -7,7 +7,7 @@
 namespace Analytics {
 using namespace Utils;
 
-enum class MonitorOutputsFileFormat { LOBSTER, NULL_MONITOR_OUTPUTS_FILE_FORMAT };
+enum class MonitorOutputsFileFormat { LOBSTER, NONE };
 
 class MonitorOutputsAnalyzerBase {
 public:
