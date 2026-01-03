@@ -109,6 +109,30 @@ VectorStats getVectorStats(const std::vector<T>& vec) {
     stats.stddev = std::sqrt(stats.variance);
     return stats;
 }
+
+class Histogram {
+public:
+    enum class Binning { UNIFORM, LOG, CUSTOM };
+    Histogram(double min, double max, size_t numBins, Binning binning);
+    Histogram(const std::vector<double>& data, size_t numBins, Binning binning);
+    Histogram(const std::vector<double>& binEdges);
+    void add(double value);
+    void clear();
+    size_t getCount(size_t bin) const;
+    size_t getBinIndex(double value) const;
+    double getBinCenter(size_t bin) const;
+    double getBinLower(size_t bin) const;
+    double getBinUpper(size_t bin) const;
+    size_t totalCount() const { return myTotalCount; }
+    std::string getAsCsv() const;
+    std::string getAsJson() const;
+private:
+    std::vector<size_t> myBins; // counts per bin
+    std::vector<double> myBinLowerEdges; // lower edges inclusive
+    std::vector<double> myBinUpperEdges; // upper edges exclusive
+    size_t myTotalCount;
+    Binning myBinning;
+};
 }
 }
 
