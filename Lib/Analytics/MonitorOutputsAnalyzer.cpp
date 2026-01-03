@@ -6,13 +6,22 @@
 namespace Analytics {
 using namespace Utils;
 
-MonitorOutputsAnalyzerBase::MonitorOutputsAnalyzerBase(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :
-    myMonitor(monitor) {
-    if (!monitor)
-        Error::LIB_THROW("[MonitorOutputsAnalyzerBase] Matching engine monitor is null.");
+std::string toString(const MonitorOutputsFileFormat& fileFormat) {
+    switch (fileFormat) {
+        case MonitorOutputsFileFormat::LOBSTER: return "Lobster";
+        default:                                return "None";
+    }
 }
 
-MonitorOutputsAnalyzerBase::MonitorOutputsAnalyzerBase(const std::string& /* monitorOutputsFilePath */, const MonitorOutputsFileFormat /* fileFormat */) :
+std::ostream& operator<<(std::ostream& out, const MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
+
+IMonitorOutputsAnalyzer::IMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :
+    myMonitor(monitor) {
+    if (!monitor)
+        Error::LIB_THROW("[IMonitorOutputsAnalyzer] Matching engine monitor is null.");
+}
+
+IMonitorOutputsAnalyzer::IMonitorOutputsAnalyzer(const std::string& /* monitorOutputsFilePath */, const MonitorOutputsFileFormat /* fileFormat */) :
     myMonitor(nullptr) {
     // TODO: load the monitor outputs from file path
 }
