@@ -107,6 +107,10 @@ Histogram::Histogram(const std::vector<double>& binEdges) :
     myBinUpperEdges.push_back(Consts::POS_INF_DOUBLE);
 }
 
+void Histogram::setBins(double min, double max, size_t numBins, Binning binning) {
+    *this = Histogram(min, max, numBins, binning);
+}
+
 void Histogram::add(double value) {
     const size_t binIndex = getBinIndex(value);
     if (binIndex < myBins.size()) {
@@ -216,11 +220,16 @@ Autocorrelation<T>::Autocorrelation(const std::vector<T>& values) :
     myValues(values) {
     mySumValues = 0.0;
     mySumValuesSquared = 0.0;
-    for (const T& value : myValues) {
-        const double dValue = static_cast<double>(value);
-        mySumValues += dValue;
-        mySumValuesSquared += dValue * dValue;
-    }
+    for (const T& value : myValues)
+        add(value);
+}
+
+template <typename T>
+void Autocorrelation<T>::add(T value) {
+    myValues.push_back(value);
+    const double dValue = static_cast<double>(value);
+    mySumValues += dValue;
+    mySumValuesSquared += dValue * dValue;
 }
 
 template <typename T>

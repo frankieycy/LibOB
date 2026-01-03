@@ -112,14 +112,23 @@ VectorStats getVectorStats(const std::vector<T>& vec) {
 
 class Histogram {
 public:
-    enum class Binning { UNIFORM, LOG, CUSTOM };
+    enum class Binning { UNIFORM, LOG, CUSTOM, NONE };
+    Histogram() = default;
     Histogram(double min, double max, size_t numBins, Binning binning);
     Histogram(const std::vector<double>& data, size_t numBins, Binning binning);
     template<typename T>
     Histogram(const std::vector<T>& data, size_t numBins, Binning binning) :
         Histogram(std::vector<double>(data.begin(), data.end()), numBins, binning) {}
     Histogram(const std::vector<double>& binEdges);
+    void setBins(double min, double max, size_t numBins, Binning binning);
     void add(double value);
+    template<typename T>
+    void add(const T& value) { add(static_cast<double>(value)); }
+    template<typename T>
+    void add(const std::vector<T>& values) {
+        for (const T& value : values)
+            add(value);
+    }
     void clear();
     size_t getCount(size_t bin) const;
     size_t getBinIndex(double value) const;
@@ -137,15 +146,19 @@ private:
     std::vector<double> myBinUpperEdges; // upper edges exclusive
     double mySumValues = 0.0;
     double mySumValuesSquared = 0.0;
-    size_t myTotalCount;
-    Binning myBinning;
+    size_t myTotalCount = 0;
+    Binning myBinning = Binning::NONE;
 };
 
 template <typename T>
 class Autocorrelation {
 public:
     Autocorrelation(const std::vector<T>& values = {});
-    void add(T value) { myValues.push_back(value); }
+    void add(T value);
+    void add(const std::vector<T>& values) {
+        for (const T& value : values)
+            add(value);
+    }
     double get(size_t lag) const;
     double getMean() const;
     double getVariance() const;
