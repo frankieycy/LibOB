@@ -1,10 +1,16 @@
 #ifndef ORDER_BOOK_DERIVED_ANALYTICS_HPP
 #define ORDER_BOOK_DERIVED_ANALYTICS_HPP
 #include "Utils/Utils.hpp"
-#include "Market/OrderEvent.hpp"
+#include "Analytics/OrderBookObservables.hpp"
 
+/* Structs to store down calculated analytics derived from matching engine monitor outputs. */
 namespace Analytics {
 using namespace Utils;
+
+struct OrderBookTraces {
+    Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
+    Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> myOrderProcessingReportsCollector;
+};
 
 /* Multi-horizon price returns aggregator to study the scaling law of returns:
     Var(return_dt) ~ dt^H with H being the Hurst exponent.
