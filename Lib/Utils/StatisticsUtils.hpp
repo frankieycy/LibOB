@@ -153,15 +153,46 @@ private:
 template <typename T>
 class Autocorrelation {
 public:
-    Autocorrelation(const std::vector<T>& values = {});
-    void add(T value);
+    Autocorrelation(const std::vector<T>& values = {}) :
+        myValues(values) {
+        mySumValues = 0.0;
+        mySumValuesSquared = 0.0;
+        for (const T& value : myValues)
+            add(value);
+    }
+    void add(T value) {
+        myValues.push_back(value);
+        const double dValue = static_cast<double>(value);
+        mySumValues += dValue;
+        mySumValuesSquared += dValue * dValue;
+    }
     void add(const std::vector<T>& values) {
         for (const T& value : values)
             add(value);
     }
-    double get(size_t lag) const;
-    double getMean() const;
-    double getVariance() const;
+    double get(size_t lag) const {
+        const size_t n = myValues.size();
+        if (n == 0)
+            Error::LIB_THROW("[Autocorrelation::get] No values added.");
+        if (lag >= n)
+            Error::LIB_THROW("[Autocorrelation::get] Lag is greater than or equal to number of values.");
+        const double mean = getMean();
+        const double variance = getVariance();
+        if (variance == 0.0)
+            return 0.0;
+        double autocovariance = 0.0;
+        for (size_t i = 0; i < n - lag; ++i)
+            autocovariance += (static_cast<double>(myValues[i]) - mean) * (static_cast<double>(myValues[i + lag]) - mean);
+        autocovariance /= static_cast<double>(n - lag);
+        return autocovariance / variance;
+    }
+    double getMean() const { return myValues.empty() ? 0.0 : mySumValues / static_cast<double>(myValues.size()); }
+    double getVariance() const {
+        if (myValues.empty())
+            return 0.0;
+        const double mean = getMean();
+        return (mySumValuesSquared / static_cast<double>(myValues.size())) - (mean * mean);
+    }
     const std::vector<T>& getValues() const { return myValues; }
     void clear() { myValues.clear(); }
 private:

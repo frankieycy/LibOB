@@ -214,54 +214,6 @@ std::string Histogram::getAsJson() const {
     oss << "]";
     return oss.str();
 }
-
-template <typename T>
-Autocorrelation<T>::Autocorrelation(const std::vector<T>& values) :
-    myValues(values) {
-    mySumValues = 0.0;
-    mySumValuesSquared = 0.0;
-    for (const T& value : myValues)
-        add(value);
-}
-
-template <typename T>
-void Autocorrelation<T>::add(T value) {
-    myValues.push_back(value);
-    const double dValue = static_cast<double>(value);
-    mySumValues += dValue;
-    mySumValuesSquared += dValue * dValue;
-}
-
-template <typename T>
-double Autocorrelation<T>::get(size_t lag) const {
-    const size_t n = myValues.size();
-    if (n == 0)
-        Error::LIB_THROW("[Autocorrelation::get] No values added.");
-    if (lag >= n)
-        Error::LIB_THROW("[Autocorrelation::get] Lag is greater than or equal to number of values.");
-    const double mean = getMean();
-    const double variance = getVariance();
-    if (variance == 0.0)
-        return 0.0;
-    double autocovariance = 0.0;
-    for (size_t i = 0; i < n - lag; ++i)
-        autocovariance += (static_cast<double>(myValues[i]) - mean) * (static_cast<double>(myValues[i + lag]) - mean);
-    autocovariance /= static_cast<double>(n - lag);
-    return autocovariance / variance;
-}
-
-template <typename T>
-double Autocorrelation<T>::getMean() const {
-    return myValues.empty() ? 0.0 : mySumValues / static_cast<double>(myValues.size());
-}
-
-template <typename T>
-double Autocorrelation<T>::getVariance() const {
-    if (myValues.empty())
-        return 0.0;
-    const double mean = getMean();
-    return (mySumValuesSquared / static_cast<double>(myValues.size())) - (mean * mean);
-}
 }
 }
 
