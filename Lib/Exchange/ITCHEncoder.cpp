@@ -20,7 +20,7 @@ const std::string ITCHEncoder::ITCHTradeMessage::ourDescription                 
 const std::string ITCHEncoder::ITCHCrossTradeMessage::ourDescription            = "[Q] Used for open/close crosses";
 const std::string ITCHEncoder::ITCHBrokenTradeMessage::ourDescription           = "[B] Trade bust (e.g. error correction)";
 
-std::string to_string(const ITCHEncoder::EventCode& eventCode) {
+std::string toString(const ITCHEncoder::EventCode& eventCode) {
     switch (eventCode) {
         case ITCHEncoder::EventCode::MARKET_OPEN:  return "O";
         case ITCHEncoder::EventCode::MARKET_CLOSE: return "C";
@@ -28,7 +28,7 @@ std::string to_string(const ITCHEncoder::EventCode& eventCode) {
     }
 }
 
-std::string to_string(const ITCHEncoder::CrossCode& crossCode) {
+std::string toString(const ITCHEncoder::CrossCode& crossCode) {
     switch (crossCode) {
         case ITCHEncoder::CrossCode::OPENING: return "O";
         case ITCHEncoder::CrossCode::CLOSING: return "C";
@@ -38,7 +38,7 @@ std::string to_string(const ITCHEncoder::CrossCode& crossCode) {
     }
 }
 
-std::string to_string(const ITCHEncoder::MessageType& messageType) {
+std::string toString(const ITCHEncoder::MessageType& messageType) {
     switch (messageType) {
         case ITCHEncoder::MessageType::SYSTEM:                  return "S";
         case ITCHEncoder::MessageType::ORDER_ADD:               return "A";
@@ -55,11 +55,11 @@ std::string to_string(const ITCHEncoder::MessageType& messageType) {
     }
 }
 
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode) { return out << to_string(eventCode); }
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode) { return out << toString(eventCode); }
 
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::CrossCode& crossCode) { return out << to_string(crossCode); }
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::CrossCode& crossCode) { return out << toString(crossCode); }
 
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType) { return out << to_string(messageType); }
+std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType) { return out << toString(messageType); }
 
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::ITCHMessage& message) { return out << message.toString(); }
 

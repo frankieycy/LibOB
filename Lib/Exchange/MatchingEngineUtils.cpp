@@ -10,7 +10,7 @@
 namespace Exchange {
 using namespace Utils;
 
-std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy) {
+std::string toString(const OrderMatchingStrategy& orderMatchingStrategy) {
     switch (orderMatchingStrategy) {
         case OrderMatchingStrategy::FIFO:            return "FIFO";
         case OrderMatchingStrategy::PRO_RATA:        return "ProRata";
@@ -19,7 +19,7 @@ std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy) {
     }
 }
 
-std::string to_string(const OrderProcessingType& orderProcessingType) {
+std::string toString(const OrderProcessingType& orderProcessingType) {
     switch (orderProcessingType) {
         case OrderProcessingType::EXECUTE:           return "Execution";
         case OrderProcessingType::SUBMIT:            return "Submission";
@@ -33,7 +33,7 @@ std::string to_string(const OrderProcessingType& orderProcessingType) {
     }
 }
 
-std::string to_string(const OrderProcessingStatus& orderProcessingStatus) {
+std::string toString(const OrderProcessingStatus& orderProcessingStatus) {
     switch (orderProcessingStatus) {
         case OrderProcessingStatus::SUCCESS:         return "Success";
         case OrderProcessingStatus::FAILURE:         return "Failure";
@@ -41,7 +41,7 @@ std::string to_string(const OrderProcessingStatus& orderProcessingStatus) {
     }
 }
 
-std::string to_string(const OrderExecutionType& orderExecutionType) {
+std::string toString(const OrderExecutionType& orderExecutionType) {
     switch (orderExecutionType) {
         case OrderExecutionType::FILLED:             return "Filled";
         case OrderExecutionType::PARTIAL_FILLED:     return "PartialFilled";
@@ -51,13 +51,13 @@ std::string to_string(const OrderExecutionType& orderExecutionType) {
     }
 }
 
-std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy) { return out << to_string(orderMatchingStrategy); }
+std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy) { return out << toString(orderMatchingStrategy); }
 
-std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProcessingType) { return out << to_string(orderProcessingType); }
+std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProcessingType) { return out << toString(orderProcessingType); }
 
-std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderProcessingStatus) { return out << to_string(orderProcessingStatus); }
+std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderProcessingStatus) { return out << toString(orderProcessingStatus); }
 
-std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType) { return out << to_string(orderExecutionType); }
+std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType) { return out << toString(orderExecutionType); }
 
 std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& report) { return out << report.getAsJson(); }
 

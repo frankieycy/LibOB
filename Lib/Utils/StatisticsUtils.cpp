@@ -9,7 +9,7 @@
 
 namespace Utils {
 namespace Statistics {
-std::string to_string(const VectorStats& stats) {
+std::string toString(const VectorStats& stats) {
     std::ostringstream oss;
     oss << "{"
         << "\"size\":" << stats.size << ","
@@ -21,7 +21,7 @@ std::string to_string(const VectorStats& stats) {
 }
 
 std::ostream& operator<<(std::ostream& out, const VectorStats& stats) {
-    return out << to_string(stats);
+    return out << toString(stats);
 }
 
 size_t drawIndexWithRelativeProbabilities(const std::vector<double>& probabilities, const bool deterministic) {

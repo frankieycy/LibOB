@@ -31,7 +31,7 @@ private:
     size_t myMaxHistory = 0;
 };
 
-std::string to_string(const VectorStats& stats);
+std::string toString(const VectorStats& stats);
 std::ostream& operator<<(std::ostream& out, const VectorStats& orderMatchingStrategy);
 
 inline std::mt19937& GLOBAL_RNG() {

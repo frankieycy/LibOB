@@ -255,9 +255,9 @@ struct ITCHEncoder {
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderCancelAndReplaceReport& report);
 };
 
-std::string to_string(const ITCHEncoder::EventCode& eventCode);
-std::string to_string(const ITCHEncoder::CrossCode& crossCode);
-std::string to_string(const ITCHEncoder::MessageType& messageType);
+std::string toString(const ITCHEncoder::EventCode& eventCode);
+std::string toString(const ITCHEncoder::CrossCode& crossCode);
+std::string toString(const ITCHEncoder::MessageType& messageType);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::CrossCode& crossCode);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType);

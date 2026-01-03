@@ -34,7 +34,7 @@ private:
     bool myFlushed = false;
 };
 
-std::string to_string(const LogLevel& level);
+std::string toString(const LogLevel& level);
 std::ostream& operator<<(std::ostream& out, const LogLevel& level);
 }
 }

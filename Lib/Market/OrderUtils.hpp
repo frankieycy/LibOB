@@ -8,10 +8,10 @@ enum class OrderType      { LIMIT, MARKET, NULL_ORDER_TYPE };
 enum class OrderState     { ACTIVE, FILLED, PARTIAL_FILLED, CANCELLED, INVALID, NULL_ORDER_STATE }; // order filling goes from ACTIVE to PARTIAL_FILLED to FILLED
 enum class OrderEventType { SUBMIT, FILL, CANCEL, PARTIAL_CANCEL, CANCEL_REPLACE, MODIFY_PRICE, MODIFY_QUANTITY, BROKEN_TRADE, NULL_ORDER_EVENT_TYPE };
 
-std::string to_string(const Side& side);
-std::string to_string(const OrderType& orderType);
-std::string to_string(const OrderState& orderState);
-std::string to_string(const OrderEventType& orderEventType);
+std::string toString(const Side& side);
+std::string toString(const OrderType& orderType);
+std::string toString(const OrderState& orderState);
+std::string toString(const OrderEventType& orderEventType);
 
 std::ostream& operator<<(std::ostream& out, const Side& side);
 std::ostream& operator<<(std::ostream& out, const OrderType& orderType);

@@ -94,7 +94,7 @@ private:
     OrderBookStatisticsTimestampStrategy myOrderBookStatisticsTimestampStrategy = OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK;
 };
 
-std::string to_string(const MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy& strategy);
+std::string toString(const MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy& strategy);
 std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy& strategy);
 }
 

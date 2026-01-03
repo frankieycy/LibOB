@@ -4,7 +4,7 @@
 #include "Market/OrderUtils.hpp"
 
 namespace Market {
-std::string to_string(const Side& side) {
+std::string toString(const Side& side) {
     switch (side) {
         case Side::BUY:  return "Buy";
         case Side::SELL: return "Sell";
@@ -12,7 +12,7 @@ std::string to_string(const Side& side) {
     }
 }
 
-std::string to_string(const OrderType& orderType) {
+std::string toString(const OrderType& orderType) {
     switch (orderType) {
         case OrderType::LIMIT:  return "Limit";
         case OrderType::MARKET: return "Market";
@@ -20,7 +20,7 @@ std::string to_string(const OrderType& orderType) {
     }
 }
 
-std::string to_string(const OrderState& orderState) {
+std::string toString(const OrderState& orderState) {
     switch (orderState) {
         case OrderState::ACTIVE:         return "Active";
         case OrderState::FILLED:         return "Filled";
@@ -31,7 +31,7 @@ std::string to_string(const OrderState& orderState) {
     }
 }
 
-std::string to_string(const OrderEventType& orderEventType) {
+std::string toString(const OrderEventType& orderEventType) {
     switch (orderEventType) {
         case OrderEventType::SUBMIT:          return "Submit";
         case OrderEventType::FILL:            return "Fill";
@@ -44,10 +44,10 @@ std::string to_string(const OrderEventType& orderEventType) {
     }
 }
 
-std::ostream& operator<<(std::ostream& out, const Side& side) { return out << to_string(side); }
-std::ostream& operator<<(std::ostream& out, const OrderType& orderType) { return out << to_string(orderType); }
-std::ostream& operator<<(std::ostream& out, const OrderState& orderState) { return out << to_string(orderState); }
-std::ostream& operator<<(std::ostream& out, const OrderEventType& orderEventType) { return out << to_string(orderEventType); }
+std::ostream& operator<<(std::ostream& out, const Side& side) { return out << toString(side); }
+std::ostream& operator<<(std::ostream& out, const OrderType& orderType) { return out << toString(orderType); }
+std::ostream& operator<<(std::ostream& out, const OrderState& orderState) { return out << toString(orderState); }
+std::ostream& operator<<(std::ostream& out, const OrderEventType& orderEventType) { return out << toString(orderEventType); }
 }
 
 #endif

@@ -25,7 +25,7 @@ void LoggerBase::log(const std::string& message, const LogLevel level, const Ove
     if (myIsSilent)
         return;
     const std::string timestampStr = myShowLogTimestamp ? ('[' + getTimestamp() + ']') : "[LOG]";
-    const std::string logMessage = timestampStr + " " + to_string(level) + " " + message;
+    const std::string logMessage = timestampStr + " " + toString(level) + " " + message;
     if (myLogToConsole) {
         if (overwrite == OverwriteLastLog::YES)
             for (size_t i = 0; i < myLastLogLineCount; ++i)

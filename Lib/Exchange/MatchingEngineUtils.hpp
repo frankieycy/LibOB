@@ -384,10 +384,10 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     uint32_t modifiedQuantity;
 };
 
-std::string to_string(const OrderMatchingStrategy& orderMatchingStrategy);
-std::string to_string(const OrderProcessingType& orderProcessingType);
-std::string to_string(const OrderProcessingStatus& orderProcessingStatus);
-std::string to_string(const OrderExecutionType& orderExecutionType);
+std::string toString(const OrderMatchingStrategy& orderMatchingStrategy);
+std::string toString(const OrderProcessingType& orderProcessingType);
+std::string toString(const OrderProcessingStatus& orderProcessingStatus);
+std::string toString(const OrderExecutionType& orderExecutionType);
 
 std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy);
 std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProcessingType);
