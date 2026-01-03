@@ -243,7 +243,7 @@ double Autocorrelation<T>::get(size_t lag) const {
 
 template <typename T>
 double Autocorrelation<T>::getMean() const {
-    return n == 0 ? 0.0 : mySumValues / static_cast<double>(myValues.size());
+    return myValues.empty() ? 0.0 : mySumValues / static_cast<double>(myValues.size());
 }
 
 template <typename T>
