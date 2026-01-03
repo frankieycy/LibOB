@@ -123,7 +123,7 @@ public:
     double getBinCenter(size_t bin) const;
     double getBinLower(size_t bin) const;
     double getBinUpper(size_t bin) const;
-    size_t totalCount() const { return myTotalCount; }
+    size_t getTotalCount() const { return myTotalCount; }
     std::string getAsCsv() const;
     std::string getAsJson() const;
 private:
@@ -132,6 +132,20 @@ private:
     std::vector<double> myBinUpperEdges; // upper edges exclusive
     size_t myTotalCount;
     Binning myBinning;
+};
+
+template <typename T>
+class Autocorrelation {
+public:
+    Autocorrelation(const std::vector<T>& values = {});
+    void add(T value) { myValues.push_back(value); }
+    double get(size_t lag) const;
+    const std::vector<T>& getValues() const { return myValues; }
+    void clear() { myValues.clear(); }
+private:
+    std::vector<T> myValues;
+    double mySumValues = 0.0;
+    double mySumValuesSquared = 0.0;
 };
 }
 }
