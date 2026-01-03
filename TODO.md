@@ -8,6 +8,8 @@
     - ok, organize the lib hpp/cpp files into folders of their namespace e.g. `Utils` and `Market`
     - ok, avoid `return out` in `operator<<` if unneeded
     - ok, string util functions are to be put at file end after class definitions
+    - ok, unify `to_string()` and `toString()`, deprecate the former
+    - use EnumTraits idioms for all enum-to-string conversions
 * Misc. Utils
     - ok, ability to cast Enum as string, `to_string`
     - ok, write up `Logger` class, use it for debug logging
@@ -56,6 +58,9 @@
     - ok, (bug) `OrderBookTopLevelsSnapshot` iterators point to the order book subject to modifications later on, need to deep-copy the levels
     - ok, export order book time evolution as lobster csv format using `TimeSeriesCollector` members
     - ok, order event processing latency measurement
+* `Analytics::MonitorOutputsAnalyzer`
+    - complete some basic book analytics structs, like spreads, depths, price returns etc.
+    - implement `run()` function to populate the analytics structs from monitor outputs
 * `Parser::LobsterDataParser`
 * `Simulator::ZeroIntelligence`
     - ok, implement the `advance` and `simulate` functions in `ExchangeSimulatorBase`
