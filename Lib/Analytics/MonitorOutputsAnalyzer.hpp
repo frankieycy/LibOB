@@ -30,20 +30,21 @@ class MonitorOutputsAnalyzerBase : public IMonitorOutputsAnalyzer {
 public:
     virtual void init() override;
     virtual void clear() override;
-    virtual void populateOrderBookTraces() override;
     virtual void runAnalytics() override;
 private:
+    // define all the analytic components here
     OrderDepthProfileStats myOrderDepthProfileStats;
     OrderFlowMemoryStats myOrderFlowMemoryStats;
     SpreadStats mySpreadStats;
 };
 
-class MatchingEngineMinitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
+class MatchingEngineMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
 public:
-    MatchingEngineMinitorOutputsAnalyzer() = delete; // only permits construction from monitor
-    MatchingEngineMinitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) : myMonitor(monitor) {}
-    virtual ~MatchingEngineMinitorOutputsAnalyzer() = default;
+    MatchingEngineMonitorOutputsAnalyzer() = delete; // only permits construction from monitor
+    MatchingEngineMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) : myMonitor(monitor) {}
+    virtual ~MatchingEngineMonitorOutputsAnalyzer() = default;
     std::shared_ptr<const MatchingEngineMonitor> getMonitor() const { return myMonitor; }
+    virtual void populateOrderBookTraces() override;
     static constexpr CalculationMode ourCalcMode = CalculationMode::FROM_MONITOR;
 private:
     std::shared_ptr<const MatchingEngineMonitor> myMonitor;
@@ -55,6 +56,7 @@ public:
     LobsterDataParserOutputsAnalyzer(const std::shared_ptr<const Parser::LobsterDataParser>& parser) : myParser(parser) {}
     virtual ~LobsterDataParserOutputsAnalyzer() = default;
     std::shared_ptr<const Parser::LobsterDataParser> getParser() const { return myParser; }
+    virtual void populateOrderBookTraces() override;
     static constexpr CalculationMode ourCalcMode = CalculationMode::FROM_LOBSTER;
 private:
     std::shared_ptr<const Parser::LobsterDataParser> myParser;
@@ -68,6 +70,7 @@ public:
     virtual ~FileMonitorOutputsAnalyzer() = default;
     std::string getFilePath() const { return myFilePath; }
     MonitorOutputsFileFormat getFileFormat() const { return myFileFormat; }
+    virtual void populateOrderBookTraces() override;
     static constexpr CalculationMode ourCalcMode = CalculationMode::FROM_FILE;
 private:
     std::string myFilePath;

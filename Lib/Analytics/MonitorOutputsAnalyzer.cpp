@@ -32,12 +32,20 @@ void MonitorOutputsAnalyzerBase::clear() {
     // TODO
 }
 
-void MonitorOutputsAnalyzerBase::populateOrderBookTraces() {
-    // TODO: implement population of order book traces
-}
-
 void MonitorOutputsAnalyzerBase::runAnalytics() {
     // TODO: implement analytic computations
+}
+
+void MatchingEngineMonitorOutputsAnalyzer::populateOrderBookTraces() {
+    // TODO: populate order book traces from monitor outputs
+}
+
+void LobsterDataParserOutputsAnalyzer::populateOrderBookTraces() {
+    // TODO: populate order book traces from lobster parser outputs
+}
+
+void FileMonitorOutputsAnalyzer::populateOrderBookTraces() {
+    // TODO: populate order book traces from file monitor outputs
 }
 }
 
