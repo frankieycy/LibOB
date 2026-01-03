@@ -24,17 +24,20 @@ std::string toString(const IMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fi
 std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::CalculationMode& calcMode) { return out << toString(calcMode); }
 std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
 
-IMonitorOutputsAnalyzer::IMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :
-    myMonitor(monitor),
-    myCalculationMode(CalculationMode::FROM_MONITOR) {
-    if (!monitor)
-        Error::LIB_THROW("[IMonitorOutputsAnalyzer] Matching engine monitor is null.");
+void MonitorOutputsAnalyzerBase::init() {
+    // TODO
 }
 
-IMonitorOutputsAnalyzer::IMonitorOutputsAnalyzer(const std::string& /* monitorOutputsFilePath */, const MonitorOutputsFileFormat /* fileFormat */) :
-    myMonitor(nullptr),
-    myCalculationMode(CalculationMode::FROM_FILE) {
-    // TODO: load the monitor outputs from file path
+void MonitorOutputsAnalyzerBase::clear() {
+    // TODO
+}
+
+void MonitorOutputsAnalyzerBase::populateOrderBookTraces() {
+    // TODO: implement population of order book traces
+}
+
+void MonitorOutputsAnalyzerBase::runAnalytics() {
+    // TODO: implement analytic computations
 }
 }
 
