@@ -30,7 +30,7 @@
 #include "Utils/RegressionTestsUtils.hpp"
 
 template<typename T>
-std::ostream& operator<<(std::ostream& out, std::vector<T>& vec) {
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
     out << "[";
     for (size_t i = 0; i < vec.size(); ++i) {
         out << vec[i];
