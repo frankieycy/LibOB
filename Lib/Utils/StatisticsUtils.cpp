@@ -112,6 +112,8 @@ void Histogram::add(double value) {
     if (binIndex < myBins.size()) {
         ++myBins[binIndex];
         ++myTotalCount;
+        mySumValues += value;
+        mySumValuesSquared += value * value;
     }
 }
 
@@ -174,6 +176,17 @@ double Histogram::getBinUpper(size_t bin) const {
     return bin < myBinUpperEdges.size() ? myBinUpperEdges[bin] : Consts::NAN_DOUBLE;
 }
 
+double Histogram::getMean() const {
+    return myTotalCount == 0 ? 0.0 : mySumValues / static_cast<double>(myTotalCount);
+}
+
+double Histogram::getVariance() const {
+    if (myTotalCount == 0)
+        return 0.0;
+    const double mean = getMean();
+    return (mySumValuesSquared / static_cast<double>(myTotalCount)) - (mean * mean);
+}
+
 std::string Histogram::getAsCsv() const {
     std::ostringstream oss;
     oss << "BinLower,BinUpper,Count,CumCount\n";
@@ -217,8 +230,8 @@ double Autocorrelation<T>::get(size_t lag) const {
         Error::LIB_THROW("[Autocorrelation::get] No values added.");
     if (lag >= n)
         Error::LIB_THROW("[Autocorrelation::get] Lag is greater than or equal to number of values.");
-    const double mean = mySumValues / static_cast<double>(n);
-    const double variance = mySumValuesSquared / static_cast<double>(n) - mean * mean;
+    const double mean = getMean();
+    const double variance = getVariance();
     if (variance == 0.0)
         return 0.0;
     double autocovariance = 0.0;
@@ -226,6 +239,19 @@ double Autocorrelation<T>::get(size_t lag) const {
         autocovariance += (static_cast<double>(myValues[i]) - mean) * (static_cast<double>(myValues[i + lag]) - mean);
     autocovariance /= static_cast<double>(n - lag);
     return autocovariance / variance;
+}
+
+template <typename T>
+double Autocorrelation<T>::getMean() const {
+    return n == 0 ? 0.0 : mySumValues / static_cast<double>(myValues.size());
+}
+
+template <typename T>
+double Autocorrelation<T>::getVariance() const {
+    if (myValues.empty())
+        return 0.0;
+    const double mean = getMean();
+    return (mySumValuesSquared / static_cast<double>(myValues.size())) - (mean * mean);
 }
 }
 }

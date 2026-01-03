@@ -126,6 +126,8 @@ public:
     double getBinCenter(size_t bin) const;
     double getBinLower(size_t bin) const;
     double getBinUpper(size_t bin) const;
+    double getMean() const;
+    double getVariance() const;
     size_t getTotalCount() const { return myTotalCount; }
     std::string getAsCsv() const;
     std::string getAsJson() const;
@@ -133,6 +135,8 @@ private:
     std::vector<size_t> myBins; // counts per bin
     std::vector<double> myBinLowerEdges; // lower edges inclusive
     std::vector<double> myBinUpperEdges; // upper edges exclusive
+    double mySumValues = 0.0;
+    double mySumValuesSquared = 0.0;
     size_t myTotalCount;
     Binning myBinning;
 };
@@ -143,6 +147,8 @@ public:
     Autocorrelation(const std::vector<T>& values = {});
     void add(T value) { myValues.push_back(value); }
     double get(size_t lag) const;
+    double getMean() const;
+    double getVariance() const;
     const std::vector<T>& getValues() const { return myValues; }
     void clear() { myValues.clear(); }
 private:
