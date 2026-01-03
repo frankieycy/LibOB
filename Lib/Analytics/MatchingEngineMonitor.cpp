@@ -1,5 +1,6 @@
 #ifndef MATCHING_ENGINE_MONITOR_CPP
 #define MATCHING_ENGINE_MONITOR_CPP
+#include "Utils/Utils.hpp"
 #include "Exchange/MatchingEngine.hpp"
 #include "Analytics/OrderBookObservables.hpp"
 #include "Analytics/MatchingEngineMonitor.hpp"

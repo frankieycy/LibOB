@@ -1,5 +1,6 @@
 #ifndef LOBSTER_DATA_PARSER_CPP
 #define LOBSTER_DATA_PARSER_CPP
+#include "Utils/Utils.hpp"
 #include "LobsterDataParser.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 
