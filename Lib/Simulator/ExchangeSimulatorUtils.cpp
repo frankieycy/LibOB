@@ -11,7 +11,7 @@ std::string toString(const ExchangeSimulatorState state) {
         case ExchangeSimulatorState::READY:         return "Ready";
         case ExchangeSimulatorState::RUNNING:       return "Running";
         case ExchangeSimulatorState::FINISHED:      return "Finished";
-        default:                                    return "Null";
+        default:                                    return "None";
     }
 }
 
@@ -19,7 +19,7 @@ std::string toString(const ExchangeSimulatorType type) {
     switch (type) {
         case ExchangeSimulatorType::ZERO_INTELLIGENCE:     return "ZeroIntelligence";
         case ExchangeSimulatorType::MINIMAL_INTELLIGENCE:  return "MinimalIntelligence";
-        default:                                           return "Null";
+        default:                                           return "None";
     }
 }
 
@@ -30,7 +30,7 @@ std::string toString(const OrderEventType type) {
         case OrderEventType::CANCEL:            return "Cancel";
         case OrderEventType::CANCEL_ID:         return "CancelById";
         case OrderEventType::CANCEL_REPLACE:    return "CancelReplace";
-        default:                                return "Null";
+        default:                                return "None";
     }
 }
 

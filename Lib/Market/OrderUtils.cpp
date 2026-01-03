@@ -8,7 +8,7 @@ std::string toString(const Side& side) {
     switch (side) {
         case Side::BUY:  return "Buy";
         case Side::SELL: return "Sell";
-        default:         return "Null";
+        default:         return "None";
     }
 }
 
@@ -16,7 +16,7 @@ std::string toString(const OrderType& orderType) {
     switch (orderType) {
         case OrderType::LIMIT:  return "Limit";
         case OrderType::MARKET: return "Market";
-        default:                return "Null";
+        default:                return "None";
     }
 }
 
@@ -27,7 +27,7 @@ std::string toString(const OrderState& orderState) {
         case OrderState::PARTIAL_FILLED: return "PartialFilled";
         case OrderState::CANCELLED:      return "Cancelled";
         case OrderState::INVALID:        return "Invalid";
-        default:                         return "Null";
+        default:                         return "None";
     }
 }
 
@@ -40,7 +40,7 @@ std::string toString(const OrderEventType& orderEventType) {
         case OrderEventType::CANCEL_REPLACE:  return "CancelReplace";
         case OrderEventType::MODIFY_PRICE:    return "ModifyPrice";
         case OrderEventType::MODIFY_QUANTITY: return "ModifyQuantity";
-        default:                              return "Null";
+        default:                              return "None";
     }
 }
 

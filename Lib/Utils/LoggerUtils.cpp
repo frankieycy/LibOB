@@ -12,7 +12,7 @@ std::string toString(const LogLevel& level) {
         case LogLevel::ERROR:   return "ERROR";
         case LogLevel::DEBUG:   return "DEBUG";
         case LogLevel::TRACE:   return "TRACE";
-        default:                return "NULL";
+        default:                return "NONE";
     }
 }
 

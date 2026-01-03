@@ -13,7 +13,7 @@ std::string toString(const VolumeInterpolationStrategy strategy) {
         case VolumeInterpolationStrategy::CUSTOM_INPUT:         return "CustomInput";
         case VolumeInterpolationStrategy::PIECEWISE_CONSTANT:   return "PiecewiseConstant";
         case VolumeInterpolationStrategy::PIECEWISE_LINEAR:     return "PiecewiseLinear";
-        default:                                                return "Null";
+        default:                                                return "None";
     }
 }
 
@@ -23,7 +23,7 @@ std::string toString(const VolumeExtrapolationStrategy strategy) {
         case VolumeExtrapolationStrategy::LINEAR:       return "Linear";
         case VolumeExtrapolationStrategy::EXPONENTIAL:  return "Exponential";
         case VolumeExtrapolationStrategy::POWER_LAW:    return "PowerLaw";
-        default:                                        return "Null";
+        default:                                        return "None";
     }
 }
 

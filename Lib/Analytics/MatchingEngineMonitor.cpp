@@ -14,7 +14,7 @@ std::string toString(const MatchingEngineMonitor::OrderBookStatisticsTimestampSt
         case MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy::EACH_ORDER_EVENT:  return "EachOrderEvent";
         case MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy::EACH_MARKET_ORDER: return "EachMarketOrder";
         case MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy::EACH_TRADE:        return "EachTrade";
-        default:                                                                             return "Null";
+        default:                                                                             return "None";
     }
 }
 

@@ -15,7 +15,7 @@ std::string toString(const OrderMatchingStrategy& orderMatchingStrategy) {
         case OrderMatchingStrategy::FIFO:            return "FIFO";
         case OrderMatchingStrategy::PRO_RATA:        return "ProRata";
         case OrderMatchingStrategy::ICEBERG_SUPPORT: return "IcebergSupport";
-        default:                                     return "Null";
+        default:                                     return "None";
     }
 }
 
@@ -29,7 +29,7 @@ std::string toString(const OrderProcessingType& orderProcessingType) {
         case OrderProcessingType::CANCEL_REPLACE:    return "CancelReplace";
         case OrderProcessingType::MODIFY_PRICE:      return "ModifyPrice";
         case OrderProcessingType::MODIFY_QUANTITY:   return "ModifyQuantity";
-        default:                                     return "Null";
+        default:                                     return "None";
     }
 }
 
@@ -37,7 +37,7 @@ std::string toString(const OrderProcessingStatus& orderProcessingStatus) {
     switch (orderProcessingStatus) {
         case OrderProcessingStatus::SUCCESS:         return "Success";
         case OrderProcessingStatus::FAILURE:         return "Failure";
-        default:                                     return "Null";
+        default:                                     return "None";
     }
 }
 
@@ -47,7 +47,7 @@ std::string toString(const OrderExecutionType& orderExecutionType) {
         case OrderExecutionType::PARTIAL_FILLED:     return "PartialFilled";
         case OrderExecutionType::CANCELLED:          return "Cancelled";
         case OrderExecutionType::REJECTED:           return "Rejected";
-        default:                                     return "Null";
+        default:                                     return "None";
     }
 }
 
