@@ -115,6 +115,9 @@ public:
     enum class Binning { UNIFORM, LOG, CUSTOM };
     Histogram(double min, double max, size_t numBins, Binning binning);
     Histogram(const std::vector<double>& data, size_t numBins, Binning binning);
+    template<typename T>
+    Histogram(const std::vector<T>& data, size_t numBins, Binning binning) :
+        Histogram(std::vector<double>(data.begin(), data.end()), numBins, binning) {}
     Histogram(const std::vector<double>& binEdges);
     void add(double value);
     void clear();
