@@ -6,6 +6,8 @@
 #include "Market/OrderEvent.hpp"
 #include "Exchange/MatchingEngine.hpp"
 
+/* The direct order book observables extracted from the matching engine per event tick.
+    The structs defined are used in Analytics::MatchingEngineMonitor. */
 namespace Analytics {
 using namespace Utils;
 
