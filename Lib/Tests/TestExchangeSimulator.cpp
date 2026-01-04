@@ -6,6 +6,7 @@
 #include "Parser/LobsterDataParser.hpp"
 #include "Simulator/VolumeProfile.hpp"
 #include "Simulator/ZeroIntelligence.hpp"
+#include "Analytics/MonitorOutputsAnalyzer.hpp"
 #include "Tests/TestExchangeSimulator.hpp"
 
 namespace Tests {
@@ -79,6 +80,7 @@ void testZeroIntelligenceSimulatorRandomMarketAndLimitOrders() {
     zi->setStopCondition(stopCondition);
     zi->initOrderBookBuilding(v0, v0); // linear book of $10 around the $100 anchor
     zi->simulate();
+    // Lobster data export
     Parser::LobsterDataParser p;
     zi->getMatchingEngineMonitor()->exportToLobsterDataParser(p);
     const auto data = p.getOrderBookMessagesAndSnapshotsAsCsv(5, true);
@@ -115,6 +117,7 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModel() {
     zi->setStopCondition(stopCondition);
     zi->initOrderBookBuilding(v0, v0); // linear book of $10 around the $100 anchor
     zi->simulate();
+    // Lobster data export
     Parser::LobsterDataParser p;
     zi->getMatchingEngineMonitor()->exportToLobsterDataParser(p);
     const auto data = p.getOrderBookMessagesAndSnapshotsAsCsv(5, true);
@@ -126,10 +129,10 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelSpeedDiagnostics() {
     // use a speed profiler to analyze performance bottlenecks
     // cost centers: book monitor top-level snapshots (vector copies), Lobster data export (ostringstream dyanmic allocations)
     // 1. `make profiling` to compile in profiling mode with gperftools
-    // 2. `CPUPROFILE=profile.out ./Exe/main` to run the executable with profiling enabled
-    // 3. `pprof --top ./Exe/main profile.out` to see the text report of the profiling results
-    // 4. `pprof --pdf ./Exe/main profile.out > profile.pdf` to generate a PDF visualization of the profiling results
-    // 5. `pprof --http=:8080 Exe/main profile.out` to launch a web server for interactive visualization
+    // 2. `CPUPROFILE=profile.out ./Exe/PROFILING/main` to run the executable with profiling enabled
+    // 3. `pprof --top ./Exe/PROFILING/main profile.out` to see the text report of the profiling results
+    // 4. `pprof --pdf ./Exe/PROFILING/main profile.out > profile.pdf` to generate a PDF visualization of the profiling results
+    // 5. `pprof --http=:8080 Exe/PROFILING/main profile.out` to launch a web server for interactive visualization
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
     Simulator::ExchangeSimulatorStopCondition stopCondition(1000000 /* maxTimestamp */); // as of Jan2026, 1 million events take about 8.5 seconds
@@ -156,6 +159,7 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelSpeedDiagnostics() {
     zi->setStopCondition(stopCondition);
     zi->initOrderBookBuilding(v0, v0); // linear book of $10 around the $100 anchor
     zi->simulate();
+    // Lobster data export
     Parser::LobsterDataParser p;
     zi->getMatchingEngineMonitor()->exportToLobsterDataParser(p);
     const auto data = p.getOrderBookMessagesAndSnapshotsAsCsv(5, true);
@@ -164,6 +168,7 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelSpeedDiagnostics() {
 void testZeroIntelligenceSimulatorSimpleSantaFeModelAsymptoticStats() {
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
+    std::shared_ptr<Analytics::MatchingEngineMonitorOutputsAnalyzer> a = std::make_shared<Analytics::MatchingEngineMonitorOutputsAnalyzer>(zi->getMatchingEngineMonitor());
     Simulator::ExchangeSimulatorStopCondition stopCondition(1000000 /* maxTimestamp */);
     // simulator-level config
     auto& simConfig = zi->getConfig();
@@ -188,9 +193,12 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelAsymptoticStats() {
     zi->setStopCondition(stopCondition);
     zi->initOrderBookBuilding(v0, v0); // linear book of $10 around the $100 anchor
     zi->simulate();
-    Parser::LobsterDataParser p;
-    zi->getMatchingEngineMonitor()->exportToLobsterDataParser(p);
-    const auto data = p.getOrderBookMessagesAndSnapshotsAsCsv(5, true);
+    a->populateOrderBookTraces();
+    a->runAnalytics();
+    // Lobster data export
+    // Parser::LobsterDataParser p;
+    // zi->getMatchingEngineMonitor()->exportToLobsterDataParser(p);
+    // const auto data = p.getOrderBookMessagesAndSnapshotsAsCsv(5, true);
 }
 }
 }
