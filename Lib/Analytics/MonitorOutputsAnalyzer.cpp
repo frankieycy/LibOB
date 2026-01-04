@@ -26,18 +26,18 @@ std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::Or
 std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
 
 void MonitorOutputsAnalyzerBase::init() {
-    myOrderDepthProfileStats.set(
-        OrderDepthProfileStats::DepthNormalization::UNNORMALIZED,
-        OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST,
-        true);
+    myOrderDepthProfileStats.set(myStatsConfig.orderDepthProfileConfig);
+    myPriceReturnScalingStats.set(myStatsConfig.priceReturnScalingStatsConfig);
     myOrderDepthProfileStats.init();
     myOrderFlowMemoryStats.init();
+    myPriceReturnScalingStats.init();
     mySpreadStats.init();
 }
 
 void MonitorOutputsAnalyzerBase::clear() {
     myOrderDepthProfileStats.reset();
     myOrderFlowMemoryStats.reset();
+    myPriceReturnScalingStats.reset();
     mySpreadStats.reset();
 }
 
@@ -50,6 +50,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     }
     myOrderDepthProfileStats.compute();
     myOrderFlowMemoryStats.compute();
+    myPriceReturnScalingStats.compute();
     mySpreadStats.compute();
 }
 
@@ -67,7 +68,7 @@ void MatchingEngineMonitorOutputsAnalyzer::init() {
 void MatchingEngineMonitorOutputsAnalyzer::populateOrderBookTraces() {
     // populate order book traces from monitor outputs
     auto& traces = getOrderBookTraces();
-    traces.orderBookStatisticsCollector = myMonitor->getOrderBookStatistics();
+    traces.orderBookStatisticsCollector = myMonitor->getOrderBookStatistics(); // owns a deep copy of the time series
     traces.orderProcessingReportsCollector = myMonitor->getOrderProcessingReports();
 }
 

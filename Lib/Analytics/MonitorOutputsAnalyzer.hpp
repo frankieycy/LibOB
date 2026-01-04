@@ -4,12 +4,18 @@
 #include "Parser/LobsterDataParser.hpp"
 #include "Analytics/MatchingEngineMonitor.hpp"
 #include "Analytics/OrderBookDerivedAnalytics.hpp"
+#include "Analytics/OrderBookDerivedAnalyticsUtils.hpp"
 
 namespace Analytics {
 using namespace Utils;
 
 struct MonitorOutputsAnalyzerConfig {
     bool debugMode = false;
+};
+
+struct OrderBookDerivedStatsConfig {
+    OrderDepthProfileConfig orderDepthProfileConfig = OrderDepthProfileConfig();
+    PriceReturnScalingStatsConfig priceReturnScalingStatsConfig = PriceReturnScalingStatsConfig();
 };
 
 /* Performs analytics on matching engine monitor outputs e.g. top-level order book snapshots.
@@ -37,13 +43,18 @@ private:
 
 class MonitorOutputsAnalyzerBase : public IMonitorOutputsAnalyzer {
 public:
+    OrderBookDerivedStatsConfig& getStatsConfig() { return myStatsConfig; }
+    const OrderBookDerivedStatsConfig& getStatsConfig() const { return myStatsConfig; }
+    virtual void setStatsConfig(const OrderBookDerivedStatsConfig& config) { myStatsConfig = config; }
     virtual void init() override;
     virtual void clear() override;
     virtual void runAnalytics() override;
 private:
+    OrderBookDerivedStatsConfig myStatsConfig = OrderBookDerivedStatsConfig();
     // define all the analytic components here
     OrderDepthProfileStats myOrderDepthProfileStats = OrderDepthProfileStats();
     OrderFlowMemoryStats myOrderFlowMemoryStats = OrderFlowMemoryStats();
+    PriceReturnScalingStats myPriceReturnScalingStats = PriceReturnScalingStats();
     SpreadStats mySpreadStats = SpreadStats();
 };
 

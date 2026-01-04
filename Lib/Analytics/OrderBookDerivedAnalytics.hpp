@@ -6,11 +6,8 @@
 /* Structs to store down calculated analytics derived from matching engine monitor outputs. */
 namespace Analytics {
 using namespace Utils;
-
-struct OrderBookTraces {
-    Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> orderBookStatisticsCollector;
-    Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> orderProcessingReportsCollector;
-};
+struct OrderDepthProfileConfig;
+struct PriceReturnScalingStatsConfig;
 
 /* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
 struct IOrderBookDerivedStats {
@@ -30,7 +27,7 @@ struct OrderDepthProfileStats : public IOrderBookDerivedStats {
     DepthNormalization getNormalization() const { return normalization; }
     PriceSpaceDefinition getPriceSpaceDefinition() const { return priceSpace; }
 
-    void set(const DepthNormalization normalization, const PriceSpaceDefinition priceSpace, const bool countMissingLevels = true);
+    void set(const OrderDepthProfileConfig& config);
     void accumulate(const OrderBookTopLevelsSnapshot& /* snapshot */) {} // TODO
     virtual void init() override;
     virtual void reset() override;
@@ -80,7 +77,7 @@ struct PriceReturnScalingStats : public IOrderBookDerivedStats {
     bool isLogReturns() const { return logReturns; }
     PriceType getPriceType() const { return priceType; }
 
-    void set(const PriceType priceType, const bool logReturns = true);
+    void set(const PriceReturnScalingStatsConfig& config);
     virtual void init() override;
     virtual void reset() override;
     virtual void compute() override {}

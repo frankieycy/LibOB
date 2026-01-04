@@ -2,6 +2,7 @@
 #define ORDER_BOOK_DERIVED_ANALYTICS_CPP
 #include "Utils/Utils.hpp"
 #include "Analytics/OrderBookDerivedAnalytics.hpp"
+#include "Analytics/OrderBookDerivedAnalyticsUtils.hpp"
 
 namespace Analytics {
 using namespace Utils;
@@ -14,13 +15,10 @@ void OrderFlowMemoryStats::reset() {
     tradeSignsACF.clear();
 }
 
-void OrderDepthProfileStats::set(
-    const DepthNormalization normalization,
-    const PriceSpaceDefinition priceSpace,
-    const bool countMissingLevels) {
-    this->normalization = normalization;
-    this->priceSpace = priceSpace;
-    this->countMissingLevels = countMissingLevels;
+void OrderDepthProfileStats::set(const OrderDepthProfileConfig& config) {
+    normalization = config.normalization;
+    priceSpace = config.priceSpace;
+    countMissingLevels = config.countMissingLevels;
 }
 
 void OrderDepthProfileStats::init() {
@@ -59,9 +57,9 @@ void SpreadStats::reset() {
     spreadACF.clear();
 }
 
-void PriceReturnScalingStats::set(const PriceType priceType, const bool logReturns) {
-    this->priceType = priceType;
-    this->logReturns = logReturns;
+void PriceReturnScalingStats::set(const PriceReturnScalingStatsConfig& config) {
+    priceType = config.priceType;
+    logReturns = config.logReturns;
 }
 
 void PriceReturnScalingStats::init() {
