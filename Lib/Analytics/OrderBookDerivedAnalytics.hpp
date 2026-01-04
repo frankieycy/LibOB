@@ -8,8 +8,8 @@ namespace Analytics {
 using namespace Utils;
 
 struct OrderBookTraces {
-    Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
-    Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> myOrderProcessingReportsCollector;
+    Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> orderBookStatisticsCollector;
+    Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> orderProcessingReportsCollector;
 };
 
 /* Multi-horizon price returns aggregator to study the scaling law of returns:

@@ -36,7 +36,7 @@ private:
 
 class MonitorOutputsAnalyzerBase : public IMonitorOutputsAnalyzer {
 public:
-    virtual void init() override;
+    virtual void init() override {}
     virtual void clear() override;
     virtual void runAnalytics() override;
 private:
@@ -49,9 +49,10 @@ private:
 class MatchingEngineMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
 public:
     MatchingEngineMonitorOutputsAnalyzer() = delete; // only permits construction from monitor
-    MatchingEngineMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) : myMonitor(monitor) {}
+    MatchingEngineMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor);
     virtual ~MatchingEngineMonitorOutputsAnalyzer() = default;
     std::shared_ptr<const MatchingEngineMonitor> getMonitor() const { return myMonitor; }
+    virtual void init() override;
     virtual void populateOrderBookTraces() override;
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::MONITOR;
 private:
@@ -61,9 +62,10 @@ private:
 class LobsterDataParserOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
 public:
     LobsterDataParserOutputsAnalyzer() = delete; // only permits construction from lobster data parser
-    LobsterDataParserOutputsAnalyzer(const std::shared_ptr<const Parser::LobsterDataParser>& parser) : myParser(parser) {}
+    LobsterDataParserOutputsAnalyzer(const std::shared_ptr<const Parser::LobsterDataParser>& parser);
     virtual ~LobsterDataParserOutputsAnalyzer() = default;
     std::shared_ptr<const Parser::LobsterDataParser> getParser() const { return myParser; }
+    virtual void init() override;
     virtual void populateOrderBookTraces() override;
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::LOBSTER;
 private:
@@ -74,11 +76,11 @@ class FileMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
 public:
     enum class MonitorOutputsFileFormat { LOBSTER, NONE };
     FileMonitorOutputsAnalyzer() = delete; // only permits construction from file path
-    FileMonitorOutputsAnalyzer(const std::string& filePath, const MonitorOutputsFileFormat fileFormat) :
-        myFilePath(filePath), myFileFormat(fileFormat) {}
+    FileMonitorOutputsAnalyzer(const std::string& filePath, const MonitorOutputsFileFormat fileFormat);
     virtual ~FileMonitorOutputsAnalyzer() = default;
     std::string getFilePath() const { return myFilePath; }
     MonitorOutputsFileFormat getFileFormat() const { return myFileFormat; }
+    virtual void init() override;
     virtual void populateOrderBookTraces() override;
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::FILE;
 private:

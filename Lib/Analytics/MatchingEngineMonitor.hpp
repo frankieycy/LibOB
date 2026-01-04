@@ -37,6 +37,7 @@ public:
     OrderBookAggregateStatistics getOrderBookAggregateStatistics() { return myOrderBookAggregateStatistics; }
     const Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
     const Statistics::TimeSeriesCollector<OrderEventProcessingLatency>& getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatenciesCollector; }
+    const Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport>& getOrderProcessingReports() const { return myOrderProcessingReportsCollector; }
     const OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const;
     bool isPriceWithinTopOfBook(const Market::Side side, const double price, const std::optional<Market::OrderType>& type = std::nullopt) const;
 
