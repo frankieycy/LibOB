@@ -18,6 +18,7 @@ class IMonitorOutputsAnalyzer {
 public:
     enum class OrderBookTracesSource { MONITOR, LOBSTER, FILE, NONE };
     bool isDebugMode() const { return myConfig.debugMode; }
+    MonitorOutputsAnalyzerConfig& getConfig() { return myConfig; }
     const MonitorOutputsAnalyzerConfig& getConfig() const { return myConfig; }
     OrderBookTraces& getOrderBookTraces() { return myOrderBookTraces; }
     const OrderBookTraces& getOrderBookTraces() const { return myOrderBookTraces; }
@@ -36,7 +37,7 @@ private:
 
 class MonitorOutputsAnalyzerBase : public IMonitorOutputsAnalyzer {
 public:
-    virtual void init() override {}
+    virtual void init() override;
     virtual void clear() override;
     virtual void runAnalytics() override;
 private:

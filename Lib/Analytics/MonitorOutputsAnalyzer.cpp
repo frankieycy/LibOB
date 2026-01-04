@@ -25,12 +25,28 @@ std::string toString(const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat&
 std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode) { return out << toString(calcMode); }
 std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
 
+void MonitorOutputsAnalyzerBase::init() {
+    myOrderDepthProfileStats.init();
+    myOrderFlowMemoryStats.init();
+    mySpreadStats.init();
+}
+
 void MonitorOutputsAnalyzerBase::clear() {
-    // TODO
+    myOrderDepthProfileStats.reset();
+    myOrderFlowMemoryStats.reset();
+    mySpreadStats.reset();
 }
 
 void MonitorOutputsAnalyzerBase::runAnalytics() {
-    // TODO: implement analytic computations
+    // run analytic computations on order book traces
+    // TODO: accumulate data from traces
+    const auto& traces = getOrderBookTraces();
+    for (const auto& stats : traces.orderBookStatisticsCollector.getSamples()) {
+        myOrderDepthProfileStats.accumulate(stats->topLevelsSnapshot);
+    }
+    myOrderDepthProfileStats.compute();
+    myOrderFlowMemoryStats.compute();
+    mySpreadStats.compute();
 }
 
 MatchingEngineMonitorOutputsAnalyzer::MatchingEngineMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :
@@ -58,7 +74,8 @@ LobsterDataParserOutputsAnalyzer::LobsterDataParserOutputsAnalyzer(const std::sh
 }
 
 void LobsterDataParserOutputsAnalyzer::init() {
-    // TODO
+    if (!myParser)
+        Error::LIB_THROW("[LobsterDataParserOutputsAnalyzer] Lobster data parser is null.");
 }
 
 void LobsterDataParserOutputsAnalyzer::populateOrderBookTraces() {
