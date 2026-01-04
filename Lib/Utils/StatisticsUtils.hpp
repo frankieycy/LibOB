@@ -138,6 +138,7 @@ public:
     double getMean() const;
     double getVariance() const;
     size_t getTotalCount() const { return myTotalCount; }
+    bool isEmpty() const { return myBins.empty(); }
     std::string getAsCsv() const;
     std::string getAsJson() const;
 private:
@@ -194,6 +195,7 @@ public:
         return (mySumValuesSquared / static_cast<double>(myValues.size())) - (mean * mean);
     }
     const std::vector<T>& getValues() const { return myValues; }
+    bool isEmpty() const { return myValues.empty(); }
     void clear() { myValues.clear(); }
 private:
     std::vector<T> myValues;
