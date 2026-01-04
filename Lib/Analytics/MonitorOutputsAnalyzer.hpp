@@ -8,22 +8,30 @@
 namespace Analytics {
 using namespace Utils;
 
+struct MonitorOutputsAnalyzerConfig {
+    bool debugMode = false;
+};
+
 /* Performs analytics on matching engine monitor outputs e.g. top-level order book snapshots.
     Supports construction from matching engine monitor, lobster data parser and outputs file path, */
 class IMonitorOutputsAnalyzer {
 public:
-    enum class CalculationMode { FROM_MONITOR, FROM_LOBSTER, FROM_FILE, NONE };
-    enum class MonitorOutputsFileFormat { LOBSTER, NONE };
+    enum class OrderBookTracesSource { MONITOR, LOBSTER, FILE, NONE };
+    bool isDebugMode() const { return myConfig.debugMode; }
+    const MonitorOutputsAnalyzerConfig& getConfig() const { return myConfig; }
     OrderBookTraces& getOrderBookTraces() { return myOrderBookTraces; }
     const OrderBookTraces& getOrderBookTraces() const { return myOrderBookTraces; }
     virtual void init() = 0;
     virtual void clear() = 0;
+    virtual void setDebugMode(const bool debugMode) { myConfig.debugMode = debugMode; }
+    virtual void setConfig(const MonitorOutputsAnalyzerConfig& config) { myConfig = config; }
     virtual void setOrderBookTraces(const OrderBookTraces& traces) { myOrderBookTraces = traces; }
     virtual void populateOrderBookTraces() = 0; // populates internal order book traces from monitor outputs
     virtual void runAnalytics() = 0; // runs analytics on the populated book traces
-    static constexpr CalculationMode ourCalcMode = CalculationMode::NONE;
+    static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::NONE;
 private:
-    OrderBookTraces myOrderBookTraces;
+    MonitorOutputsAnalyzerConfig myConfig = MonitorOutputsAnalyzerConfig();
+    OrderBookTraces myOrderBookTraces = OrderBookTraces();
 };
 
 class MonitorOutputsAnalyzerBase : public IMonitorOutputsAnalyzer {
@@ -33,9 +41,9 @@ public:
     virtual void runAnalytics() override;
 private:
     // define all the analytic components here
-    OrderDepthProfileStats myOrderDepthProfileStats;
-    OrderFlowMemoryStats myOrderFlowMemoryStats;
-    SpreadStats mySpreadStats;
+    OrderDepthProfileStats myOrderDepthProfileStats = OrderDepthProfileStats();
+    OrderFlowMemoryStats myOrderFlowMemoryStats = OrderFlowMemoryStats();
+    SpreadStats mySpreadStats = SpreadStats();
 };
 
 class MatchingEngineMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
@@ -45,7 +53,7 @@ public:
     virtual ~MatchingEngineMonitorOutputsAnalyzer() = default;
     std::shared_ptr<const MatchingEngineMonitor> getMonitor() const { return myMonitor; }
     virtual void populateOrderBookTraces() override;
-    static constexpr CalculationMode ourCalcMode = CalculationMode::FROM_MONITOR;
+    static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::MONITOR;
 private:
     std::shared_ptr<const MatchingEngineMonitor> myMonitor;
 };
@@ -57,13 +65,14 @@ public:
     virtual ~LobsterDataParserOutputsAnalyzer() = default;
     std::shared_ptr<const Parser::LobsterDataParser> getParser() const { return myParser; }
     virtual void populateOrderBookTraces() override;
-    static constexpr CalculationMode ourCalcMode = CalculationMode::FROM_LOBSTER;
+    static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::LOBSTER;
 private:
     std::shared_ptr<const Parser::LobsterDataParser> myParser;
 };
 
 class FileMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
 public:
+    enum class MonitorOutputsFileFormat { LOBSTER, NONE };
     FileMonitorOutputsAnalyzer() = delete; // only permits construction from file path
     FileMonitorOutputsAnalyzer(const std::string& filePath, const MonitorOutputsFileFormat fileFormat) :
         myFilePath(filePath), myFileFormat(fileFormat) {}
@@ -71,16 +80,16 @@ public:
     std::string getFilePath() const { return myFilePath; }
     MonitorOutputsFileFormat getFileFormat() const { return myFileFormat; }
     virtual void populateOrderBookTraces() override;
-    static constexpr CalculationMode ourCalcMode = CalculationMode::FROM_FILE;
+    static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::FILE;
 private:
     std::string myFilePath;
-    MonitorOutputsFileFormat myFileFormat;
+    MonitorOutputsFileFormat myFileFormat = MonitorOutputsFileFormat::NONE;
 };
 
-std::string toString(const IMonitorOutputsAnalyzer::CalculationMode& calcMode);
-std::string toString(const IMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat);
-std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::CalculationMode& calcMode);
-std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat);
+std::string toString(const IMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode);
+std::string toString(const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat);
+std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode);
+std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat);
 }
 
 #endif
