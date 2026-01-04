@@ -26,6 +26,10 @@ std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::Or
 std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
 
 void MonitorOutputsAnalyzerBase::init() {
+    myOrderDepthProfileStats.set(
+        OrderDepthProfileStats::DepthNormalization::UNNORMALIZED,
+        OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST,
+        true);
     myOrderDepthProfileStats.init();
     myOrderFlowMemoryStats.init();
     mySpreadStats.init();
