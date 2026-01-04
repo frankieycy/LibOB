@@ -14,12 +14,12 @@ struct OrderBookTraces {
 
 /* Multi-horizon price returns aggregator to study the scaling law of returns:
     Var(return_dt) ~ dt^H with H being the Hurst exponent.
-    Each horizon dt yields a sumReturns, sumReturnsSquared etc. */
+    Each horizon dt yields a sumReturns, sumSqReturns etc. */
 struct PriceReturnScalingStats {
     enum class PriceType { LAST_TRADE, MID, MICRO, NONE };
     std::vector<uint64_t> horizons;
     std::vector<double> sumReturns;
-    std::vector<double> sumReturnsSquared;
+    std::vector<double> sumSqReturns;
     std::vector<size_t> counts;
     bool logReturns = true;
     PriceType priceType = PriceType::NONE;
@@ -38,13 +38,18 @@ struct OrderFlowMemoryStats {
 /* Average depth profile in price ticks measured from opposite best price. */
 struct OrderDepthProfileStats {
     enum class DepthNormalization { BY_TOTAL_DEPTH, BY_BEST_LEVEL, NONE };
-    std::vector<double> avgBidProfile;
-    std::vector<double> avgAskProfile;
-    std::vector<double> stddevBidProfile;
-    std::vector<double> stddevAskProfile;
-    size_t numTicks = 0; // size of the depth profile in price ticks
-    size_t numSamples = 0; // averaged over how many samples
+    enum class PriceSpaceDefinition { DIFF_TO_MID, DIFF_TO_OWN_BEST, DIFF_TO_OPPOSITE_BEST, NONE };
+    std::vector<double> avgBid;
+    std::vector<double> avgAsk;
+    std::vector<double> stdBid;
+    std::vector<double> stdAsk;
+    std::vector<size_t> nonZeroCountBid;
+    std::vector<size_t> nonZeroCountAsk;
+    size_t maxTicks = 0; // size of the depth profile in price ticks
+    size_t numSnapshots; // number of snapshots used to compute the profile
+    bool countMissingLevels = true;
     DepthNormalization normalization = DepthNormalization::NONE;
+    PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
 };
 
 /* Spread statistics in space (histogram) and time (autocorrelation). */
