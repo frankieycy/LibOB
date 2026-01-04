@@ -87,7 +87,7 @@ Exe/RegressionTests/%: Obj/RegressionTests/Inputs/%.o $(filter-out Obj/Run/%.o, 
 debug:
 	$(MAKE) BUILD_MODE=DEBUG
 
-profiling:
+profiling: helpProfilingMode
 	$(MAKE) BUILD_MODE=PROFILING
 
 release:
@@ -95,6 +95,10 @@ release:
 
 clean:
 	rm -rf Obj Exe
+
+helpProfilingMode:
+	@echo "HELP: run \`CPUPROFILE=profile.out ./Exe/main\` to collect profiling data"
+	@echo "HELP: run \`pprof --http=:8080 ./Exe/main profile.out\` to view report"
 
 # Pull in auto-generated header dependencies
 -include $(DEP)
