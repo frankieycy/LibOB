@@ -1,75 +1,85 @@
-CXX      = clang++
+# --------------------------------------------------------------------
+# Toolchain
+CXX ?= clang++
 CXXFLAGS = -std=c++17 -ILib -Wall -Wextra -MMD -MP
 LDFLAGS  =
 LDLIBS   =
+# --------------------------------------------------------------------
 
+# --------------------------------------------------------------------
 # Build modes
 DEBUG_FLAGS     = -g -O0
 PROFILING_FLAGS = -g -O2
 RELEASE_FLAGS   = -O2
 
-# Default build mode
 BUILD_MODE ?= DEBUG
 
-ifeq ($(BUILD_MODE), DEBUG)
-CXXFLAGS += $(DEBUG_FLAGS)
-else ifeq ($(BUILD_MODE), PROFILING)
-CXXFLAGS += $(PROFILING_FLAGS)
-LDFLAGS  += -L/opt/homebrew/lib
-LDLIBS   += -lprofiler
+ifeq ($(BUILD_MODE),DEBUG)
+  CXXFLAGS += $(DEBUG_FLAGS)
+else ifeq ($(BUILD_MODE),PROFILING)
+  CXXFLAGS += $(PROFILING_FLAGS)
+  LDFLAGS  += -L/opt/homebrew/lib
+  LDLIBS   += -lprofiler
+else ifeq ($(BUILD_MODE),RELEASE)
+  CXXFLAGS += $(RELEASE_FLAGS)
 else
-CXXFLAGS += $(RELEASE_FLAGS)
+  $(error Unknown BUILD_MODE=$(BUILD_MODE))
 endif
+# --------------------------------------------------------------------
 
 # --------------------------------------------------------------------
-# Source discovery (recursive)
+# Output directories (mode-scoped)
+OBJ_DIR := Obj/$(BUILD_MODE)
+BIN_DIR := Exe/$(BUILD_MODE)
+# --------------------------------------------------------------------
+
+# --------------------------------------------------------------------
+# Sources
 SRC := $(shell find Run Lib -name '*.cpp')
-OBJ := $(patsubst %.cpp, Obj/%.o, $(SRC))
+OBJ := $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
 DEP := $(OBJ:.o=.d)
 
-TARGET = Exe/main
+TARGET := $(BIN_DIR)/main
 # --------------------------------------------------------------------
-# Regression test setup
+
+# --------------------------------------------------------------------
+# Regression tests
 REG_SRC := $(shell find RegressionTests/Inputs -name '*.cpp')
-REG_OBJ := $(patsubst %.cpp, Obj/%.o, $(REG_SRC))
-REG_EXE := $(patsubst RegressionTests/Inputs/%.cpp, Exe/RegressionTests/%, $(REG_SRC))
+REG_OBJ := $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(REG_SRC))
+REG_EXE := $(patsubst RegressionTests/Inputs/%.cpp,$(BIN_DIR)/RegressionTests/%,$(REG_SRC))
 # --------------------------------------------------------------------
 
-# Track the last build mode
-LAST_BUILD_MODE_FILE = .last_build_mode
+# --------------------------------------------------------------------
+# Phony targets
+.PHONY: all clean debug profiling release regression regression_build regression_run help_profiling
+# --------------------------------------------------------------------
 
-# Check if the build mode has changed
-FORCE_REBUILD = $(if $(filter $(BUILD_MODE),$(word 1,$(shell cat $(LAST_BUILD_MODE_FILE) 2>/dev/null))),0,1)
+# --------------------------------------------------------------------
+# Default target
+all: $(TARGET)
+# --------------------------------------------------------------------
 
-all: $(TARGET) update_last_build_mode
-
-# Force rebuild if the build mode has changed
-ifeq ($(FORCE_REBUILD),1)
-all: clean rebuild
-
-rebuild:
-	$(MAKE) BUILD_MODE=$(BUILD_MODE)
-endif
-
-update_last_build_mode:
-	echo "$(BUILD_MODE) FORCE_REBUILD=$(FORCE_REBUILD)" > $(LAST_BUILD_MODE_FILE)
-
-# Link
+# --------------------------------------------------------------------
+# Link main executable
 $(TARGET): $(OBJ)
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
+# --------------------------------------------------------------------
 
-# Compile (Obj/Utils/Utils.o from Lib/Utils/Utils.cpp, etc.)
-Obj/%.o: %.cpp
+# --------------------------------------------------------------------
+# Compile objects
+$(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+# --------------------------------------------------------------------
 
-# Regression: build and run all regression tests
+# --------------------------------------------------------------------
+# Regression tests
 regression: regression_build regression_run
 
 regression_build: $(REG_EXE)
 
-regression_run: regression_build
+regression_run:
 	@echo "Running regression tests..."
 	@for exe in $(REG_EXE); do \
 		name=$$(basename $$exe); \
@@ -79,28 +89,37 @@ regression_run: regression_build
 		fi \
 	done
 
-# Rule to build each regression test executable from its object file
-Exe/RegressionTests/%: Obj/RegressionTests/Inputs/%.o $(filter-out Obj/Run/%.o, $(OBJ))
+$(BIN_DIR)/RegressionTests/%: $(OBJ_DIR)/RegressionTests/Inputs/%.o \
+                             $(filter-out $(OBJ_DIR)/Run/%.o,$(OBJ))
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
+# --------------------------------------------------------------------
 
+# --------------------------------------------------------------------
+# Convenience build-mode targets
 debug:
-	$(MAKE) BUILD_MODE=DEBUG
+	@$(MAKE) BUILD_MODE=DEBUG all
 
-profiling: helpProfilingMode
-	$(MAKE) BUILD_MODE=PROFILING
+profiling: help_profiling
+	@$(MAKE) BUILD_MODE=PROFILING all
 
 release:
-	$(MAKE) BUILD_MODE=RELEASE
+	@$(MAKE) BUILD_MODE=RELEASE all
+# --------------------------------------------------------------------
 
+# --------------------------------------------------------------------
+# Utilities
 clean:
 	rm -rf Obj Exe
 
-helpProfilingMode:
-	@echo "HELP: run \`CPUPROFILE=profile.out ./Exe/main\` to collect profiling data"
-	@echo "HELP: run \`pprof --http=:8080 ./Exe/main profile.out\` to view report"
+help_profiling:
+	@echo "HELP: run \`CPUPROFILE=profile.out ./Exe/PROFILING/main\` to collect profiling data"
+	@echo "HELP: run \`pprof --http=:8080 ./Exe/PROFILING/main profile.out\` to view report"
+# --------------------------------------------------------------------
 
-# Pull in auto-generated header dependencies
+# --------------------------------------------------------------------
+# Dependency files
 -include $(DEP)
 
 .SECONDARY: $(REG_OBJ)
+# --------------------------------------------------------------------
