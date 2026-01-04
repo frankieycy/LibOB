@@ -12,11 +12,13 @@ struct OrderBookTraces {
     Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> orderProcessingReportsCollector;
 };
 
+/* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
 struct IOrderBookDerivedStats {
     virtual ~IOrderBookDerivedStats() = default;
-    virtual void init() = 0;
-    virtual void reset() = 0;
-    virtual void compute() = 0;
+    virtual void init() = 0; // state consistency checks for the internal configs and data members
+    virtual void reset() = 0; // clear all accumulated data
+    virtual void compute() = 0; // compute final statistics from the accumulated data
+    // optionally provide set(...) and accumulate(...) methods for configuring and accumulating data
 };
 
 /* Multi-horizon price returns aggregator to study the scaling law of returns:
@@ -24,6 +26,10 @@ struct IOrderBookDerivedStats {
     Each horizon dt yields a sumReturns, sumSqReturns etc. */
 struct PriceReturnScalingStats : public IOrderBookDerivedStats {
     enum class PriceType { LAST_TRADE, MID, MICRO, NONE };
+    bool isLogReturns() const { return logReturns; }
+    PriceType getPriceType() const { return priceType; }
+
+    void set(const PriceType priceType, const bool logReturns = true);
     virtual void init() override {} // TODO
     virtual void reset() override {}
     virtual void compute() override {}
@@ -32,8 +38,10 @@ struct PriceReturnScalingStats : public IOrderBookDerivedStats {
     std::vector<double> sumReturns;
     std::vector<double> sumSqReturns;
     std::vector<size_t> counts;
-    bool logReturns = true;
+
+private:
     PriceType priceType = PriceType::NONE;
+    bool logReturns = true;
 };
 
 /* Event time (number of events) between each price tick (mid or best or whatever). */
@@ -47,8 +55,9 @@ struct EventTimeStats : public IOrderBookDerivedStats {
 
 /* Autocorrelation of trade signs: +1 for buy and -1 for sell. */
 struct OrderFlowMemoryStats : public IOrderBookDerivedStats {
+    void accumulate(const int8_t tradeSign);
     virtual void init() override {} // TODO
-    virtual void reset() override {}
+    virtual void reset() override;
     virtual void compute() override {}
 
     Statistics::Autocorrelation<int8_t> tradeSignsACF;
@@ -59,6 +68,11 @@ struct OrderDepthProfileStats : public IOrderBookDerivedStats {
     enum class DepthNormalization { BY_TOTAL_DEPTH, BY_BEST_LEVEL, NONE };
     enum class PriceSpaceDefinition { DIFF_TO_MID, DIFF_TO_OWN_BEST, DIFF_TO_OPPOSITE_BEST, NONE };
     size_t getNumSnapshots() const { return numSnapshots; }
+    bool isCountMissingLevels() const { return countMissingLevels; }
+    DepthNormalization getNormalization() const { return normalization; }
+    PriceSpaceDefinition getPriceSpaceDefinition() const { return priceSpace; }
+
+    void set(const DepthNormalization normalization, const PriceSpaceDefinition priceSpace, const bool countMissingLevels = true);
     void accumulate(const OrderBookTopLevelsSnapshot& /* snapshot */) {} // TODO
     virtual void init() override {}
     virtual void reset() override {}
@@ -68,20 +82,22 @@ struct OrderDepthProfileStats : public IOrderBookDerivedStats {
     std::vector<double> stdBid, stdAsk;
     std::vector<size_t> nonZeroCountBid, nonZeroCountAsk;
     size_t maxTicks = 0; // size of the depth profile in price ticks
-    bool countMissingLevels = true;
-    DepthNormalization normalization = DepthNormalization::NONE;
-    PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
 
 private:
     size_t numSnapshots = 0; // number of snapshots used to compute the profile
     std::vector<double> sumBid, sumAsk;
     std::vector<double> sumSqBid, sumSqAsk;
+
+    DepthNormalization normalization = DepthNormalization::NONE;
+    PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
+    bool countMissingLevels = true;
 };
 
 /* Spread statistics in space (histogram) and time (autocorrelation). */
 struct SpreadStats : public IOrderBookDerivedStats {
+    void accumulate(const double spread);
     virtual void init() override {} // TODO
-    virtual void reset() override {}
+    virtual void reset() override;
     virtual void compute() override {}
 
     Statistics::Histogram spreadHistogram;
