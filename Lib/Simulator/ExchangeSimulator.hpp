@@ -22,6 +22,7 @@ public:
     bool isDebugMode() const { return myConfig.debugMode; }
     double getAnchorPrice() const { return myConfig.grid.anchorPrice; }
     double getMinPriceTick() const { return myConfig.grid.minPriceTick; }
+    size_t getMonitoredOrderBookNumLevels() const { return myConfig.monitoredLevels; }
     uint32_t getNumGrids() const { return myConfig.grid.numGrids; }
     uint64_t getRandomSeed() const { return myConfig.randomSeed; }
     uint64_t getCurrentTimestamp() const { return mySimulationClock->getCurrentTimestamp(); }
