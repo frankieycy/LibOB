@@ -7,6 +7,37 @@
 namespace Analytics {
 using namespace Utils;
 
+std::string toString(const OrderDepthProfileStats::DepthNormalization& normalization) {
+    switch (normalization) {
+        case OrderDepthProfileStats::DepthNormalization::BY_TOTAL_DEPTH:  return "ByTotalDepth";
+        case OrderDepthProfileStats::DepthNormalization::BY_BEST_LEVEL:   return "ByBestLevel";
+        case OrderDepthProfileStats::DepthNormalization::UNNORMALIZED:    return "Unnormalized";
+        default:                                                          return "None";
+    }
+}
+
+std::string toString(const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace) {
+    switch (priceSpace) {
+        case OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_MID:           return "DiffToMid";
+        case OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST:      return "DiffToOwnBest";
+        case OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_OPPOSITE_BEST: return "DiffToOppositeBest";
+        default:                                                                return "None";
+    }
+}
+
+std::string toString(const PriceReturnScalingStats::PriceType& priceType) {
+    switch (priceType) {
+        case PriceReturnScalingStats::PriceType::LAST_TRADE: return "LastTrade";
+        case PriceReturnScalingStats::PriceType::MID:        return "Mid";
+        case PriceReturnScalingStats::PriceType::MICRO:      return "Micro";
+        default:                                             return "None";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization) { return out << toString(normalization); }
+std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
+std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType) { return out << toString(priceType); }
+
 void OrderFlowMemoryStats::accumulate(const int8_t tradeSign) {
     tradeSignsACF.add(tradeSign);
 }
@@ -190,8 +221,13 @@ void OrderDepthProfileStats::compute() {
 std::string OrderDepthProfileStats::getAsJson() const {
     std::ostringstream oss;
     oss << "{\n";
-    oss << "\"numSnapshots\":" << numSnapshots << ",";
-    oss << "\"avgBid\":" << Utils::toString(avgBid) << ",\n"
+    oss << "\"normalization\":\"" << normalization << "\",\n"
+        << "\"priceSpace\":\"" << priceSpace << "\",\n"
+        << "\"maxTicks\":" << maxTicks << ",\n"
+        << "\"minPriceTick\":" << minPriceTick << ",\n"
+        << "\"countMissingLevels\":" << countMissingLevels << ",\n"
+        << "\"numSnapshots\":" << numSnapshots << ",\n"
+        << "\"avgBid\":" << Utils::toString(avgBid) << ",\n"
         << "\"avgAsk\":" << Utils::toString(avgAsk) << ",\n"
         << "\"stdBid\":" << Utils::toString(stdBid) << ",\n"
         << "\"stdAsk\":" << Utils::toString(stdAsk) << "\n";

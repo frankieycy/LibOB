@@ -117,6 +117,13 @@ struct PriceImpactStats : public IOrderBookDerivedStats {
     virtual void clear() override {}
     virtual void compute() override {}
 };
+
+std::string toString(const OrderDepthProfileStats::DepthNormalization& normalization);
+std::string toString(const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
+std::string toString(const PriceReturnScalingStats::PriceType& priceType);
+std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization);
+std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
+std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType);
 }
 
 #endif
