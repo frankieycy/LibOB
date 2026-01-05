@@ -82,7 +82,7 @@ private:
     bool myMonitoringEnabled = false;
     bool myFetchFullOrderBook = false;
     size_t myOrderBookNumLevels = 10; // used to detect top-of-book ticks
-    size_t myTimeSeriesCollectorMaxSize = 1000000;
+    size_t myTimeSeriesCollectorMaxSize = 1'000'000;
     double myMinimumPriceTick = 0.01; // for informational purpose in sync with order event manager which manages the min price tick
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
     OrderBookAggregateStatistics myOrderBookAggregateStatisticsCache; // caches the last statistics entry

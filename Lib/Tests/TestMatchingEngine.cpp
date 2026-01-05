@@ -271,7 +271,7 @@ void testMatchingEngineRandomOrdersStressTest() {
     // sample outputs =======================================================
     // Time taken for bulk order submission: 10.7403 secs / 10000000 orders
     // Time taken for bulk order cancel/modify: 53.3957 secs / 10000000 orders
-    const int numOrders = 10000000; // 10 million orders
+    const int numOrders = 10'000'000; // 10 million orders
     const std::vector<double> p{0, 1, 3, 5, 7, 9, 6, 3, 2, 1, 1, 1, 1}; // relative probabilities for order book levels
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     Market::OrderEventManagerBase em{e};

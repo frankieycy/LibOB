@@ -135,7 +135,7 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelSpeedDiagnostics() {
     // 5. `pprof --http=:8080 Exe/PROFILING/main profile.out` to launch a web server for interactive visualization
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
-    Simulator::ExchangeSimulatorStopCondition stopCondition(1000000 /* maxTimestamp */); // as of Jan2026, 1 million events take about 8.5 seconds
+    Simulator::ExchangeSimulatorStopCondition stopCondition(1'000'000 /* maxTimestamp */); // as of Jan2026, 1 million events take about 8.5 seconds
     // simulator-level config
     auto& simConfig = zi->getConfig();
     simConfig.resetMatchingEngineMonitorPreSimulation = true;
@@ -169,7 +169,7 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelAsymptoticStats() {
     std::shared_ptr<Exchange::MatchingEngineFIFO> e = std::make_shared<Exchange::MatchingEngineFIFO>();
     std::shared_ptr<Simulator::ZeroIntelligenceSimulator> zi = std::make_shared<Simulator::ZeroIntelligenceSimulator>(e);
     std::shared_ptr<Analytics::MatchingEngineMonitorOutputsAnalyzer> a = std::make_shared<Analytics::MatchingEngineMonitorOutputsAnalyzer>(zi->getMatchingEngineMonitor());
-    Simulator::ExchangeSimulatorStopCondition stopCondition(1000000 /* maxTimestamp */);
+    Simulator::ExchangeSimulatorStopCondition stopCondition(1'000'000 /* maxTimestamp */);
     // simulator-level config
     auto& simConfig = zi->getConfig();
     simConfig.resetMatchingEngineMonitorPreSimulation = true;
