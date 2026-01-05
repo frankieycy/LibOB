@@ -8,6 +8,27 @@
 namespace Analytics {
 using namespace Utils;
 
+struct BurnInPolicy {
+    enum class Type {
+        NONE,
+        EVENT_COUNT,
+        TRADE_COUNT,
+        VOLUME,
+        AUTO_CONVERGENCE
+    };
+
+    Type type = Type::NONE;
+
+    uint64_t minEvents = 0;
+    uint64_t minTrades = 0;
+    double minVolume = 0.0;
+
+    // auto-detection
+    size_t windowSize = 10'000;
+    size_t stableWindows = 5;
+    double tolerance = 1e-3;
+};
+
 struct OrderBookTraces {
     Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> orderBookStatisticsCollector;
     Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> orderProcessingReportsCollector;
@@ -24,6 +45,15 @@ struct OrderDepthProfileConfig {
 struct PriceReturnScalingStatsConfig {
     PriceReturnScalingStats::PriceType priceType = PriceReturnScalingStats::PriceType::MID;
     bool logReturns = true;
+};
+
+struct MonitorOutputsAnalyzerConfig {
+    bool debugMode = false;
+};
+
+struct OrderBookDerivedStatsConfig {
+    OrderDepthProfileConfig orderDepthProfileConfig = OrderDepthProfileConfig();
+    PriceReturnScalingStatsConfig priceReturnScalingStatsConfig = PriceReturnScalingStatsConfig();
 };
 }
 
