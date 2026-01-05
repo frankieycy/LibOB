@@ -29,15 +29,24 @@
 #include "Utils/VectorUtils.hpp"
 #include "Utils/RegressionTestsUtils.hpp"
 
+namespace Utils {
+template<typename T>
+std::string toString(const std::vector<T>& vec) {
+    std::ostringstream oss;
+    oss << "[";
+    for (size_t i = 0; i < vec.size(); ++i) {
+        oss << vec[i];
+        if (i != vec.size() - 1)
+            oss << ", ";
+    }
+    oss << "]";
+    return oss.str();
+}
+}
+
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
-    out << "[";
-    for (size_t i = 0; i < vec.size(); ++i) {
-        out << vec[i];
-        if (i != vec.size() - 1)
-            out << ", ";
-    }
-    return out << "]";
+    out << toString(vec);
 }
 
 #endif
