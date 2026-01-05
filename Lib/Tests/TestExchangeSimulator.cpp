@@ -193,6 +193,10 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelAsymptoticStats() {
     zi->setStopCondition(stopCondition);
     zi->initOrderBookBuilding(v0, v0); // linear book of $10 around the $100 anchor
     zi->simulate();
+    auto& statsConfig = a->getStatsConfig();
+    statsConfig.orderDepthProfileConfig.minPriceTick = zi->getMinPriceTick();
+    statsConfig.orderDepthProfileConfig.maxTicks = zi->getMonitoredOrderBookNumLevels();
+    a->updateStatsConfig();
     a->populateOrderBookTraces();
     a->runAnalytics();
     // Lobster data export
