@@ -26,6 +26,7 @@ public:
     virtual void setOrderBookTraces(const OrderBookTraces& traces) { myOrderBookTraces = traces; }
     virtual void populateOrderBookTraces() = 0; // populates internal order book traces from monitor outputs
     virtual void runAnalytics() = 0; // runs analytics on the populated book traces
+    virtual std::string getStatsReport() = 0; // returns a string report of the computed statistics
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::NONE;
 private:
     MonitorOutputsAnalyzerConfig myConfig = MonitorOutputsAnalyzerConfig();
@@ -41,6 +42,7 @@ public:
     virtual void init() override;
     virtual void clear() override;
     virtual void runAnalytics() override;
+    virtual std::string getStatsReport() override;
 private:
     OrderBookDerivedStatsConfig myStatsConfig = OrderBookDerivedStatsConfig();
     // define all the analytic components here

@@ -63,6 +63,10 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     mySpreadStats.compute();
 }
 
+std::string MonitorOutputsAnalyzerBase::getStatsReport() {
+    return ""; // TODO: generate a report string from the computed statistics
+}
+
 MatchingEngineMonitorOutputsAnalyzer::MatchingEngineMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :
     myMonitor(monitor) {
     MonitorOutputsAnalyzerBase::init();
