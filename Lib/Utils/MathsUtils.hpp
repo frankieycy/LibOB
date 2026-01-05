@@ -4,6 +4,10 @@
 
 namespace Utils {
 namespace Maths {
+inline long long countPriceTicks(double price, double tick = 0.01) {
+    return std::llround(price / tick);
+}
+
 inline double roundPriceToTick(double price, double tick = 0.01) {
     const auto ticks = std::llround(price / tick);
     return ticks * tick;
