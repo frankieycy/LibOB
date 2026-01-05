@@ -64,7 +64,14 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
 }
 
 std::string MonitorOutputsAnalyzerBase::getStatsReport() {
-    return ""; // TODO: generate a report string from the computed statistics
+    std::ostringstream oss;
+    oss << "{\n";
+    oss << "\"OrderDepthProfileStats\": " << myOrderDepthProfileStats.getAsJson() << ",\n";
+    oss << "\"OrderFlowMemoryStats\": " << myOrderFlowMemoryStats.getAsJson() << ",\n";
+    oss << "\"PriceReturnScalingStats\": " << myPriceReturnScalingStats.getAsJson() << ",\n";
+    oss << "\"SpreadStats\": " << mySpreadStats.getAsJson() << "\n";
+    oss << "}";
+    return oss.str();
 }
 
 MatchingEngineMonitorOutputsAnalyzer::MatchingEngineMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :

@@ -15,6 +15,7 @@ struct IOrderBookDerivedStats {
     virtual void init() = 0; // state consistency checks for the internal configs and data members
     virtual void clear() = 0; // clear all accumulated data
     virtual void compute() = 0; // compute final statistics from the accumulated data
+    virtual std::string getAsJson() const { return "{}"; } // optionally provide JSON serialization
     // optionally provide set(...) and accumulate(...) methods for configuring and accumulating data
 };
 
@@ -32,6 +33,7 @@ struct OrderDepthProfileStats : public IOrderBookDerivedStats {
     virtual void init() override;
     virtual void clear() override;
     virtual void compute() override;
+    virtual std::string getAsJson() const override;
 
     std::vector<double> avgBid, avgAsk;
     std::vector<double> stdBid, stdAsk;

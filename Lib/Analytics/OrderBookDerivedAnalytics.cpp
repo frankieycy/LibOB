@@ -187,6 +187,18 @@ void OrderDepthProfileStats::compute() {
     }
 }
 
+std::string OrderDepthProfileStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n";
+    oss << "\"numSnapshots\":" << numSnapshots << ",";
+    oss << "\"avgBid\":" << Utils::toString(avgBid) << ",\n"
+        << "\"avgAsk\":" << Utils::toString(avgAsk) << ",\n"
+        << "\"stdBid\":" << Utils::toString(stdBid) << ",\n"
+        << "\"stdAsk\":" << Utils::toString(stdAsk) << "\n";
+    oss << "}";
+    return oss.str();
+}
+
 void SpreadStats::accumulate(const double spread) {
     spreadHistogram.add(spread);
     spreadACF.add(spread);
