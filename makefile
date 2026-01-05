@@ -75,7 +75,14 @@ $(OBJ_DIR)/%.o: %.cpp
 
 # --------------------------------------------------------------------
 # Regression tests
-regression: regression_build regression_run
+regression:
+	@echo "=== Running regression tests in RELEASE mode ==="
+	@$(MAKE) BUILD_MODE=RELEASE regression_impl
+
+regression_debug:
+	@$(MAKE) BUILD_MODE=DEBUG regression_impl
+
+regression_impl: regression_build regression_run
 
 regression_build: $(REG_EXE)
 
