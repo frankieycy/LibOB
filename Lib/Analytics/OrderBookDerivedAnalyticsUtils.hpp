@@ -16,6 +16,8 @@ struct OrderBookTraces {
 struct OrderDepthProfileConfig {
     OrderDepthProfileStats::DepthNormalization normalization = OrderDepthProfileStats::DepthNormalization::UNNORMALIZED;
     OrderDepthProfileStats::PriceSpaceDefinition priceSpace = OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST;
+    size_t maxTicks = 10; // size of the depth profile in price ticks, chosen to be the same as MatchingEngineMonitor::myOrderBookNumLevels default
+    double minPriceTick = 0.01;
     bool countMissingLevels = true;
 };
 

@@ -13,7 +13,7 @@ struct PriceReturnScalingStatsConfig;
 struct IOrderBookDerivedStats {
     virtual ~IOrderBookDerivedStats() = default;
     virtual void init() = 0; // state consistency checks for the internal configs and data members
-    virtual void reset() = 0; // clear all accumulated data
+    virtual void clear() = 0; // clear all accumulated data
     virtual void compute() = 0; // compute final statistics from the accumulated data
     // optionally provide set(...) and accumulate(...) methods for configuring and accumulating data
 };
@@ -28,23 +28,24 @@ struct OrderDepthProfileStats : public IOrderBookDerivedStats {
     PriceSpaceDefinition getPriceSpaceDefinition() const { return priceSpace; }
 
     void set(const OrderDepthProfileConfig& config);
-    void accumulate(const OrderBookTopLevelsSnapshot& /* snapshot */) {} // TODO
+    void accumulate(const OrderBookTopLevelsSnapshot& snapshot);
     virtual void init() override;
-    virtual void reset() override;
-    virtual void compute() override {}
+    virtual void clear() override;
+    virtual void compute() override;
 
     std::vector<double> avgBid, avgAsk;
     std::vector<double> stdBid, stdAsk;
-    std::vector<size_t> nonZeroCountBid, nonZeroCountAsk;
-    size_t maxTicks = 0; // size of the depth profile in price ticks
 
 private:
     size_t numSnapshots = 0; // number of snapshots used to compute the profile
     std::vector<double> sumBid, sumAsk;
     std::vector<double> sumSqBid, sumSqAsk;
+    std::vector<size_t> nonZeroCountBid, nonZeroCountAsk;
 
     DepthNormalization normalization = DepthNormalization::NONE;
     PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
+    size_t maxTicks = 0; // size of the depth profile in price ticks
+    double minPriceTick = 0.01;
     bool countMissingLevels = true;
 };
 
@@ -52,7 +53,7 @@ private:
 struct OrderFlowMemoryStats : public IOrderBookDerivedStats {
     void accumulate(const int8_t tradeSign);
     virtual void init() override {} // TODO
-    virtual void reset() override;
+    virtual void clear() override;
     virtual void compute() override {}
 
     Statistics::Autocorrelation<int8_t> tradeSignsACF;
@@ -62,7 +63,7 @@ struct OrderFlowMemoryStats : public IOrderBookDerivedStats {
 struct SpreadStats : public IOrderBookDerivedStats {
     void accumulate(const double spread);
     virtual void init() override {} // TODO
-    virtual void reset() override;
+    virtual void clear() override;
     virtual void compute() override {}
 
     Statistics::Histogram spreadHistogram;
@@ -79,15 +80,17 @@ struct PriceReturnScalingStats : public IOrderBookDerivedStats {
 
     void set(const PriceReturnScalingStatsConfig& config);
     virtual void init() override;
-    virtual void reset() override;
+    virtual void clear() override;
     virtual void compute() override {}
 
     std::vector<uint64_t> horizons;
+    std::vector<double> varReturns;
+
+private:
     std::vector<double> sumReturns;
     std::vector<double> sumSqReturns;
     std::vector<size_t> counts;
 
-private:
     PriceType priceType = PriceType::NONE;
     bool logReturns = true;
 };
@@ -95,7 +98,7 @@ private:
 /* Event time (number of events) between each price tick (mid or best or whatever). */
 struct EventTimeStats : public IOrderBookDerivedStats {
     virtual void init() override {} // TODO
-    virtual void reset() override {}
+    virtual void clear() override {}
     virtual void compute() override {}
 
     Statistics::Histogram eventsBetweenPriceMoves;
@@ -103,13 +106,13 @@ struct EventTimeStats : public IOrderBookDerivedStats {
 
 struct OrderLifetimeStats : public IOrderBookDerivedStats {
     virtual void init() override {} // TODO
-    virtual void reset() override {}
+    virtual void clear() override {}
     virtual void compute() override {}
 };
 
 struct PriceImpactStats : public IOrderBookDerivedStats {
     virtual void init() override {} // TODO
-    virtual void reset() override {}
+    virtual void clear() override {}
     virtual void compute() override {}
 };
 }
