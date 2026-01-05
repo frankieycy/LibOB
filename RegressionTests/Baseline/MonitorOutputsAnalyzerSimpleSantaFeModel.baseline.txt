@@ -1,0 +1,3 @@
+[LOG] INFO [IExchangeSimulator::setLoggerLogFile] Logger log file set to: RegressionTests/Baseline/MonitorOutputsAnalyzerSimpleSantaFeModel.baseline.txt
+[LOG] INFO Monitor outputs analytics:
+
