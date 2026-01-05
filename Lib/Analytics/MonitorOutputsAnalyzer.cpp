@@ -25,6 +25,15 @@ std::string toString(const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat&
 std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode) { return out << toString(calcMode); }
 std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
 
+void MonitorOutputsAnalyzerBase::setStatsConfig(const OrderBookDerivedStatsConfig& config) {
+    myStatsConfig = config;
+    updateStatsConfig();
+}
+
+void MonitorOutputsAnalyzerBase::updateStatsConfig() {
+    MonitorOutputsAnalyzerBase::init();
+}
+
 void MonitorOutputsAnalyzerBase::init() {
     myOrderDepthProfileStats.set(myStatsConfig.orderDepthProfileConfig);
     myPriceReturnScalingStats.set(myStatsConfig.priceReturnScalingStatsConfig);
@@ -35,10 +44,10 @@ void MonitorOutputsAnalyzerBase::init() {
 }
 
 void MonitorOutputsAnalyzerBase::clear() {
-    myOrderDepthProfileStats.reset();
-    myOrderFlowMemoryStats.reset();
-    myPriceReturnScalingStats.reset();
-    mySpreadStats.reset();
+    myOrderDepthProfileStats.clear();
+    myOrderFlowMemoryStats.clear();
+    myPriceReturnScalingStats.clear();
+    mySpreadStats.clear();
 }
 
 void MonitorOutputsAnalyzerBase::runAnalytics() {

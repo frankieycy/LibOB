@@ -45,7 +45,8 @@ class MonitorOutputsAnalyzerBase : public IMonitorOutputsAnalyzer {
 public:
     OrderBookDerivedStatsConfig& getStatsConfig() { return myStatsConfig; }
     const OrderBookDerivedStatsConfig& getStatsConfig() const { return myStatsConfig; }
-    virtual void setStatsConfig(const OrderBookDerivedStatsConfig& config) { myStatsConfig = config; }
+    virtual void setStatsConfig(const OrderBookDerivedStatsConfig& config);
+    virtual void updateStatsConfig(); // updates internal analytic components with the current stats config
     virtual void init() override;
     virtual void clear() override;
     virtual void runAnalytics() override;
