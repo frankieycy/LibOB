@@ -56,7 +56,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     const auto& traces = getOrderBookTraces();
     for (const auto& stats : traces.orderBookStatisticsCollector.getSamples()) {
         myOrderDepthProfileStats.accumulate(stats->topLevelsSnapshot);
-        if (stats->lastTradeIsBuyInitiated)
+        if (stats->cumNumTrades > 0 && stats->lastTradeIsBuyInitiated)
             myOrderFlowMemoryStats.accumulate(*stats->lastTradeIsBuyInitiated ? 1 : -1);
     }
     myOrderDepthProfileStats.compute();
