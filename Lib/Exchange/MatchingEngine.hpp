@@ -88,6 +88,7 @@ public:
     virtual size_t getNumberOfBidPriceLevels() const = 0;
     virtual size_t getNumberOfAskPriceLevels() const = 0;
     virtual size_t getNumberOfTrades() const = 0;
+    virtual std::optional<bool> getLastTradeIsBuyInitiated() const = 0;
     virtual std::shared_ptr<const Market::TradeBase> getLastTrade() const = 0;
     virtual std::shared_ptr<IMatchingEngine> clone() const = 0;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) = 0;
@@ -196,6 +197,7 @@ public:
     size_t getNumberOfBidPriceLevels() const override;
     size_t getNumberOfAskPriceLevels() const override;
     size_t getNumberOfTrades() const override;
+    std::optional<bool> getLastTradeIsBuyInitiated() const override;
     std::shared_ptr<const Market::TradeBase> getLastTrade() const override;
     virtual void process(const std::shared_ptr<const Market::OrderBase>& order) override;
     virtual void process(const std::shared_ptr<const Market::OrderEventBase>& event) override;

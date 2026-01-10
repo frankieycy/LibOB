@@ -443,6 +443,11 @@ size_t MatchingEngineBase::getNumberOfTrades() const {
     return myTradeLog.size();
 }
 
+std::optional<bool> MatchingEngineBase::getLastTradeIsBuyInitiated() const {
+    const auto& lastTrade = getLastTrade();
+    return lastTrade ? std::optional<bool>(lastTrade->getIsBuyInitiated()) : std::nullopt;
+}
+
 std::shared_ptr<const Market::TradeBase> MatchingEngineBase::getLastTrade() const {
     if (myTradeLog.empty())
         return nullptr;
