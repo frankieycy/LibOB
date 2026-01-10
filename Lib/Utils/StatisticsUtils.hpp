@@ -172,7 +172,7 @@ public:
             add(value);
     }
     double get(size_t lag) const {
-        const size_t n = myValues.size();
+        const size_t n = size();
         if (n == 0)
             Error::LIB_THROW("[Autocorrelation::get] No values added.");
         if (lag >= n)
@@ -187,14 +187,15 @@ public:
         autocovariance /= static_cast<double>(n - lag);
         return autocovariance / variance;
     }
-    double getMean() const { return myValues.empty() ? 0.0 : mySumValues / static_cast<double>(myValues.size()); }
+    double getMean() const { return myValues.empty() ? 0.0 : mySumValues / static_cast<double>(size()); }
     double getVariance() const {
         if (myValues.empty())
             return 0.0;
         const double mean = getMean();
-        return (mySumValuesSquared / static_cast<double>(myValues.size())) - (mean * mean);
+        return (mySumValuesSquared / static_cast<double>(size())) - (mean * mean);
     }
     const std::vector<T>& getValues() const { return myValues; }
+    size_t size() const { return myValues.size(); }
     bool isEmpty() const { return myValues.empty(); }
     void clear() { myValues.clear(); }
 private:
