@@ -66,10 +66,10 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
 std::string MonitorOutputsAnalyzerBase::getStatsReport() {
     std::ostringstream oss;
     oss << "{\n";
-    oss << "\"OrderDepthProfileStats\": " << myOrderDepthProfileStats.getAsJson() << ",\n";
-    oss << "\"OrderFlowMemoryStats\": " << myOrderFlowMemoryStats.getAsJson() << ",\n";
-    oss << "\"PriceReturnScalingStats\": " << myPriceReturnScalingStats.getAsJson() << ",\n";
-    oss << "\"SpreadStats\": " << mySpreadStats.getAsJson() << "\n";
+    oss << "\"OrderDepthProfileStats\":"    << myOrderDepthProfileStats.getAsJson()     << ",\n"
+        << "\"OrderFlowMemoryStats\":"      << myOrderFlowMemoryStats.getAsJson()       << ",\n"
+        << "\"PriceReturnScalingStats\":"   << myPriceReturnScalingStats.getAsJson()    << ",\n"
+        << "\"SpreadStats\":"               << mySpreadStats.getAsJson()                << "\n";
     oss << "}";
     return oss.str();
 }

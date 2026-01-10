@@ -21,7 +21,7 @@ std::string toString(const OrderDepthProfileStats::PriceSpaceDefinition& priceSp
         case OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_MID:           return "DiffToMid";
         case OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST:      return "DiffToOwnBest";
         case OrderDepthProfileStats::PriceSpaceDefinition::DIFF_TO_OPPOSITE_BEST: return "DiffToOppositeBest";
-        default:                                                                return "None";
+        default:                                                                  return "None";
     }
 }
 
@@ -221,16 +221,16 @@ void OrderDepthProfileStats::compute() {
 std::string OrderDepthProfileStats::getAsJson() const {
     std::ostringstream oss;
     oss << "{\n";
-    oss << "\"normalization\":\"" << normalization << "\",\n"
-        << "\"priceSpace\":\"" << priceSpace << "\",\n"
-        << "\"maxTicks\":" << maxTicks << ",\n"
-        << "\"minPriceTick\":" << minPriceTick << ",\n"
-        << "\"countMissingLevels\":" << countMissingLevels << ",\n"
-        << "\"numSnapshots\":" << numSnapshots << ",\n"
-        << "\"avgBid\":" << Utils::toString(avgBid) << ",\n"
-        << "\"avgAsk\":" << Utils::toString(avgAsk) << ",\n"
-        << "\"stdBid\":" << Utils::toString(stdBid) << ",\n"
-        << "\"stdAsk\":" << Utils::toString(stdAsk) << "\n";
+    oss << "\"normalization\":\""       << normalization            << "\",\n"
+        << "\"priceSpace\":\""          << priceSpace               << "\",\n"
+        << "\"maxTicks\":"              << maxTicks                 << ",\n"
+        << "\"minPriceTick\":"          << minPriceTick             << ",\n"
+        << "\"countMissingLevels\":"    << countMissingLevels       << ",\n"
+        << "\"numSnapshots\":"          << numSnapshots             << ",\n"
+        << "\"avgBid\":"                << Utils::toString(avgBid)  << ",\n"
+        << "\"avgAsk\":"                << Utils::toString(avgAsk)  << ",\n"
+        << "\"stdBid\":"                << Utils::toString(stdBid)  << ",\n"
+        << "\"stdAsk\":"                << Utils::toString(stdAsk)  << "\n";
     oss << "}";
     return oss.str();
 }

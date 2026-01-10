@@ -37,7 +37,7 @@ std::string toString(const std::vector<T>& vec) {
     for (size_t i = 0; i < vec.size(); ++i) {
         oss << vec[i];
         if (i != vec.size() - 1)
-            oss << ", ";
+            oss << ",";
     }
     oss << "]";
     return oss.str();
