@@ -197,7 +197,11 @@ public:
     const std::vector<T>& getValues() const { return myValues; }
     size_t size() const { return myValues.size(); }
     bool isEmpty() const { return myValues.empty(); }
-    void clear() { myValues.clear(); }
+    void clear() {
+        mySumValues = 0.0;
+        mySumValuesSquared = 0.0;
+        myValues.clear();
+    }
 private:
     std::vector<T> myValues;
     double mySumValues = 0.0;
