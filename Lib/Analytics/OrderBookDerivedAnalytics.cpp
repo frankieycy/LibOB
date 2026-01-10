@@ -162,6 +162,7 @@ void OrderDepthProfileStats::init() {
         Error::LIB_THROW("[OrderDepthProfileStats::init] Depth normalization is NONE.");
     if (priceSpace == PriceSpaceDefinition::NONE)
         Error::LIB_THROW("[OrderDepthProfileStats::init] Price space definition is NONE.");
+    numSnapshots = 0;
     avgBid.clear();
     avgAsk.clear();
     stdBid.clear();
@@ -232,15 +233,20 @@ void OrderFlowMemoryStats::accumulate(const int8_t tradeSign) {
 }
 
 void OrderFlowMemoryStats::init() {
-    tradeSignsACF.clear();
+    clear();
 }
 
 void OrderFlowMemoryStats::clear() {
+    numTrades = 0;
+    meanTradeSign = 0.0;
+    varTradeSign = 0.0;
     tradeSignsACF.clear();
 }
 
 void OrderFlowMemoryStats::compute() {
-    // TODO: compute mean, variance, auto-correlation etc.
+    numTrades = tradeSignsACF.size();
+    meanTradeSign = tradeSignsACF.getMean();
+    varTradeSign = tradeSignsACF.getVariance();
 }
 
 void SpreadStats::accumulate(const double spread) {

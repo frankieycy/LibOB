@@ -57,7 +57,11 @@ struct OrderFlowMemoryStats : public IOrderBookDerivedStats {
     virtual void init() override;
     virtual void clear() override;
     virtual void compute() override;
+    virtual double getAutocorrelationAt(size_t lag) const { return tradeSignsACF.get(lag); }
 
+    size_t numTrades = 0;
+    double meanTradeSign = 0.0;
+    double varTradeSign = 0.0;
     Statistics::Autocorrelation<int8_t> tradeSignsACF;
 };
 
