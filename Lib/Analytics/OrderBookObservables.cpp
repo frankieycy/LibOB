@@ -212,6 +212,7 @@ void OrderBookStatisticsByTimestamp::constructFrom(
     bestAskSize = matchingEngine->getBestAskSize();
     lastTradePrice = matchingEngine->getLastTradePrice();
     lastTradeQuantity = matchingEngine->getLastTradeSize();
+    lastTradeIsBuyInitiated = matchingEngine->getLastTradeIsBuyInitiated();
     topLevelsSnapshot.constructFrom(matchingEngine);
 }
 

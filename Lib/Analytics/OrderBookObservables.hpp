@@ -71,6 +71,7 @@ struct OrderBookStatisticsByTimestamp {
     uint32_t bestAskSize = 0;
     double lastTradePrice = Utils::Consts::NAN_DOUBLE;
     uint32_t lastTradeQuantity = 0;
+    std::optional<bool> lastTradeIsBuyInitiated = std::nullopt;
     OrderBookTopLevelsSnapshot topLevelsSnapshot;
 
     OrderBookStatisticsByTimestamp(const size_t numLevels = 0, const bool isFullBook = false) : topLevelsSnapshot(numLevels, isFullBook) {}
