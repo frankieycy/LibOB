@@ -38,14 +38,6 @@ std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthN
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType) { return out << toString(priceType); }
 
-void OrderFlowMemoryStats::accumulate(const int8_t tradeSign) {
-    tradeSignsACF.add(tradeSign);
-}
-
-void OrderFlowMemoryStats::clear() {
-    tradeSignsACF.clear();
-}
-
 void OrderDepthProfileStats::set(const OrderDepthProfileConfig& config) {
     normalization = config.normalization;
     priceSpace = config.priceSpace;
@@ -233,6 +225,22 @@ std::string OrderDepthProfileStats::getAsJson() const {
         << "\"stdAsk\":"                << Utils::toString(stdAsk)  << "\n";
     oss << "}";
     return oss.str();
+}
+
+void OrderFlowMemoryStats::accumulate(const int8_t tradeSign) {
+    tradeSignsACF.add(tradeSign);
+}
+
+void OrderFlowMemoryStats::init() {
+    tradeSignsACF.clear();
+}
+
+void OrderFlowMemoryStats::clear() {
+    tradeSignsACF.clear();
+}
+
+void OrderFlowMemoryStats::compute() {
+    // TODO: compute mean, variance, auto-correlation etc.
 }
 
 void SpreadStats::accumulate(const double spread) {

@@ -54,9 +54,9 @@ private:
 /* Autocorrelation of trade signs: +1 for buy and -1 for sell. */
 struct OrderFlowMemoryStats : public IOrderBookDerivedStats {
     void accumulate(const int8_t tradeSign);
-    virtual void init() override {} // TODO
+    virtual void init() override;
     virtual void clear() override;
-    virtual void compute() override {}
+    virtual void compute() override;
 
     Statistics::Autocorrelation<int8_t> tradeSignsACF;
 };
