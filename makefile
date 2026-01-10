@@ -25,6 +25,10 @@ else ifeq ($(BUILD_MODE),RELEASE)
 else
   $(error Unknown BUILD_MODE=$(BUILD_MODE))
 endif
+
+define CLEAN_MODE
+	rm -rf Obj/$(1) Exe/$(1)
+endef
 # --------------------------------------------------------------------
 
 # --------------------------------------------------------------------
@@ -117,7 +121,22 @@ release:
 # --------------------------------------------------------------------
 # Utilities
 clean:
+	@echo "=== Running clean in $(BUILD_MODE) mode ==="
+	rm -rf Obj/$(BUILD_MODE) Exe/$(BUILD_MODE)
+
+clean_all:
 	rm -rf Obj Exe
+
+clean_debug:
+	$(call CLEAN_MODE,DEBUG)
+
+clean_release:
+	$(call CLEAN_MODE,RELEASE)
+
+clean_profiling:
+	$(call CLEAN_MODE,PROFILING)
+
+nuke: clean_all
 
 help_profiling:
 	@echo "HELP: run \`CPUPROFILE=profile.out ./Exe/PROFILING/main\` to collect profiling data"
