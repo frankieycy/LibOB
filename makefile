@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------
 # Toolchain
 CXX ?= clang++
-CXXFLAGS = -std=c++17 -ILib -Wall -Wextra -MMD -MP
+CXXFLAGS = -std=c++20 -ILib -Wall -Wextra -MMD -MP
 LDFLAGS  =
 LDLIBS   =
 # --------------------------------------------------------------------
