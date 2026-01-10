@@ -213,8 +213,8 @@ void OrderDepthProfileStats::compute() {
 
 std::string OrderDepthProfileStats::getAsJson() const {
     std::ostringstream oss;
-    oss << "{\n";
-    oss << "\"normalization\":\""       << normalization            << "\",\n"
+    oss << "{\n"
+        << "\"normalization\":\""       << normalization            << "\",\n"
         << "\"priceSpace\":\""          << priceSpace               << "\",\n"
         << "\"maxTicks\":"              << maxTicks                 << ",\n"
         << "\"minPriceTick\":"          << minPriceTick             << ",\n"
@@ -223,9 +223,13 @@ std::string OrderDepthProfileStats::getAsJson() const {
         << "\"avgBid\":"                << Utils::toString(avgBid)  << ",\n"
         << "\"avgAsk\":"                << Utils::toString(avgAsk)  << ",\n"
         << "\"stdBid\":"                << Utils::toString(stdBid)  << ",\n"
-        << "\"stdAsk\":"                << Utils::toString(stdAsk)  << "\n";
-    oss << "}";
+        << "\"stdAsk\":"                << Utils::toString(stdAsk)  << "\n"
+        << "}";
     return oss.str();
+}
+
+void OrderFlowMemoryStats::set(const OrderFlowMemoryStatsConfig& config) {
+    lags = config.lags;
 }
 
 void OrderFlowMemoryStats::accumulate(const int8_t tradeSign) {
@@ -233,7 +237,13 @@ void OrderFlowMemoryStats::accumulate(const int8_t tradeSign) {
 }
 
 void OrderFlowMemoryStats::init() {
-    clear();
+    numTrades = 0;
+    meanTradeSign = 0.0;
+    varTradeSign = 0.0;
+    tradeSignsACF.clear();
+    autocorrelations.clear();
+    if (lags.empty())
+        lags = std::vector<size_t>(DefaultLags.begin(), DefaultLags.end());
 }
 
 void OrderFlowMemoryStats::clear() {
@@ -241,12 +251,29 @@ void OrderFlowMemoryStats::clear() {
     meanTradeSign = 0.0;
     varTradeSign = 0.0;
     tradeSignsACF.clear();
+    autocorrelations.clear();
+    lags.clear();
 }
 
 void OrderFlowMemoryStats::compute() {
     numTrades = tradeSignsACF.size();
     meanTradeSign = tradeSignsACF.getMean();
     varTradeSign = tradeSignsACF.getVariance();
+    autocorrelations.resize(lags.size(), 0.0);
+    for (size_t i = 0; i < lags.size(); ++i)
+        autocorrelations[i] = tradeSignsACF.get(lags[i]);
+}
+
+std::string OrderFlowMemoryStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"numTrades\":"        << numTrades                         << ",\n"
+        << "\"meanTradeSign\":"    << meanTradeSign                     << ",\n"
+        << "\"varTradeSign\":"     << varTradeSign                      << ",\n"
+        << "\"lags\":"             << Utils::toString(lags)             << ",\n"
+        << "\"autocorrelations\":" << Utils::toString(autocorrelations) << "\n"
+        << "}";
+    return oss.str();
 }
 
 void SpreadStats::accumulate(const double spread) {

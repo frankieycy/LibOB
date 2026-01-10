@@ -42,6 +42,10 @@ struct OrderDepthProfileConfig {
     bool countMissingLevels = true;
 };
 
+struct OrderFlowMemoryStatsConfig {
+    std::vector<size_t> lags = std::vector<size_t>(OrderFlowMemoryStats::DefaultLags.begin(), OrderFlowMemoryStats::DefaultLags.end());
+};
+
 struct PriceReturnScalingStatsConfig {
     PriceReturnScalingStats::PriceType priceType = PriceReturnScalingStats::PriceType::MID;
     bool logReturns = true;
@@ -53,6 +57,7 @@ struct MonitorOutputsAnalyzerConfig {
 
 struct OrderBookDerivedStatsConfig {
     OrderDepthProfileConfig orderDepthProfileConfig = OrderDepthProfileConfig();
+    OrderFlowMemoryStatsConfig orderFlowMemoryStatsConfig = OrderFlowMemoryStatsConfig();
     PriceReturnScalingStatsConfig priceReturnScalingStatsConfig = PriceReturnScalingStatsConfig();
 };
 }

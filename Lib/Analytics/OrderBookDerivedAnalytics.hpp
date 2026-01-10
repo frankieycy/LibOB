@@ -7,6 +7,7 @@
 namespace Analytics {
 using namespace Utils;
 struct OrderDepthProfileConfig;
+struct OrderFlowMemoryStatsConfig;
 struct PriceReturnScalingStatsConfig;
 
 /* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
@@ -53,16 +54,23 @@ private:
 
 /* Autocorrelation of trade signs: +1 for buy and -1 for sell. */
 struct OrderFlowMemoryStats : public IOrderBookDerivedStats {
+    static constexpr std::array<size_t, 11> DefaultLags{ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+    void set(const OrderFlowMemoryStatsConfig& config);
     void accumulate(const int8_t tradeSign);
     virtual void init() override;
     virtual void clear() override;
     virtual void compute() override;
     virtual double getAutocorrelationAt(size_t lag) const { return tradeSignsACF.get(lag); }
+    virtual std::string getAsJson() const override;
 
     size_t numTrades = 0;
     double meanTradeSign = 0.0;
     double varTradeSign = 0.0;
     Statistics::Autocorrelation<int8_t> tradeSignsACF;
+
+private:
+    std::vector<size_t> lags;
+    std::vector<double> autocorrelations;
 };
 
 /* Spread statistics in space (histogram) and time (autocorrelation). */

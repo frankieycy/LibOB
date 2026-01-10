@@ -36,6 +36,7 @@ void MonitorOutputsAnalyzerBase::updateStatsConfig() {
 
 void MonitorOutputsAnalyzerBase::init() {
     myOrderDepthProfileStats.set(myStatsConfig.orderDepthProfileConfig);
+    myOrderFlowMemoryStats.set(myStatsConfig.orderFlowMemoryStatsConfig);
     myPriceReturnScalingStats.set(myStatsConfig.priceReturnScalingStatsConfig);
     myOrderDepthProfileStats.init();
     myOrderFlowMemoryStats.init();
@@ -56,7 +57,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     const auto& traces = getOrderBookTraces();
     for (const auto& stats : traces.orderBookStatisticsCollector.getSamples()) {
         myOrderDepthProfileStats.accumulate(stats->topLevelsSnapshot);
-        if (stats->cumNumTrades > 0 && stats->lastTradeIsBuyInitiated)
+        if (stats->cumNumTrades > 0 && stats->lastTradeIsBuyInitiated) // only when at least a trade has occurred
             myOrderFlowMemoryStats.accumulate(*stats->lastTradeIsBuyInitiated ? 1 : -1);
     }
     myOrderDepthProfileStats.compute();
@@ -67,12 +68,12 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
 
 std::string MonitorOutputsAnalyzerBase::getStatsReport() {
     std::ostringstream oss;
-    oss << "{\n";
-    oss << "\"OrderDepthProfileStats\":"    << myOrderDepthProfileStats.getAsJson()     << ",\n"
+    oss << "{\n"
+        << "\"OrderDepthProfileStats\":"    << myOrderDepthProfileStats.getAsJson()     << ",\n"
         << "\"OrderFlowMemoryStats\":"      << myOrderFlowMemoryStats.getAsJson()       << ",\n"
         << "\"PriceReturnScalingStats\":"   << myPriceReturnScalingStats.getAsJson()    << ",\n"
-        << "\"SpreadStats\":"               << mySpreadStats.getAsJson()                << "\n";
-    oss << "}";
+        << "\"SpreadStats\":"               << mySpreadStats.getAsJson()                << "\n"
+        << "}";
     return oss.str();
 }
 
