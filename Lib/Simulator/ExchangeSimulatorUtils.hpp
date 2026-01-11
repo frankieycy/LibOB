@@ -26,7 +26,7 @@ struct ExchangeSimulatorConfig {
     bool debugShowOrderBookPerEvent = false;
     bool resetMatchingEngineMonitorPreSimulation = true;
     size_t monitoredLevels = 100; // passes down to matching engine monitor
-    uint64_t randomSeed = 42;
+    uint randomSeed = 42;
     OrderBookGridDefinition grid;
 };
 

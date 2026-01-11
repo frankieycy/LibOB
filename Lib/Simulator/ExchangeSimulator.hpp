@@ -24,7 +24,7 @@ public:
     double getMinPriceTick() const { return myConfig.grid.minPriceTick; }
     size_t getMonitoredOrderBookNumLevels() const { return myConfig.monitoredLevels; }
     uint32_t getNumGrids() const { return myConfig.grid.numGrids; }
-    uint64_t getRandomSeed() const { return myConfig.randomSeed; }
+    uint getRandomSeed() const { return myConfig.randomSeed; }
     uint64_t getCurrentTimestamp() const { return mySimulationClock->getCurrentTimestamp(); }
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return mySimulationClock->tick(elapsedTimeUnit); }
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> getSimulationClock() const { return mySimulationClock; }
@@ -32,7 +32,7 @@ public:
     void setState(const ExchangeSimulatorState state);
     void setAnchorPrice(const double anchorPrice) { myConfig.grid.anchorPrice = anchorPrice; }
     void setNumGrids(const uint32_t numGrids) { myConfig.grid.numGrids = numGrids; }
-    void setRandomSeed(const uint64_t seed) { myConfig.randomSeed = seed; }
+    void setRandomSeed(const uint seed) { myConfig.randomSeed = seed; }
     void setSimulationClock(const std::shared_ptr<Utils::Counter::TimestampHandlerBase>& simulationClock) { mySimulationClock = simulationClock; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     virtual void init() = 0;
