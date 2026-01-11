@@ -59,14 +59,15 @@
     - ok, export order book time evolution as lobster csv format using `TimeSeriesCollector` members
     - ok, order event processing latency measurement
 * `Analytics::MonitorOutputsAnalyzer`
-    - complete some basic book analytics structs, like spreads, depths, price returns etc.
-    - implement `run()` function to populate the analytics structs from monitor outputs
+    - ok, complete some basic book analytics structs, like spreads, depths, price returns etc.
+    - ok, implement `runAnalytics()` function to populate the analytics structs from monitor outputs
 * `Parser::LobsterDataParser`
 * `Simulator::ZeroIntelligence`
     - ok, implement the `advance` and `simulate` functions in `ExchangeSimulatorBase`
     - ok, implement the next-event generator in `ZeroIntelligenceExchangeSimulator`
     - ok, test the behaviors of the engine, order manager and monitor for small books
-    - Santa Fe simulation experiments, appropriate choice of price/size/cancel sampling functors
+    - ok, Santa Fe simulation experiments, appropriate choice of price/size/cancel sampling functors
+    - study book asymptotics under the simplest assumption of sampling functors
 
 ### Analytics
 
