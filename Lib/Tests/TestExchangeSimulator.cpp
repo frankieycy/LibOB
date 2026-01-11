@@ -196,6 +196,8 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelAsymptoticStats() {
     auto& statsConfig = a->getStatsConfig();
     statsConfig.orderDepthProfileConfig.minPriceTick = zi->getMinPriceTick();
     statsConfig.orderDepthProfileConfig.maxTicks = zi->getMonitoredOrderBookNumLevels();
+    statsConfig.spreadStatsConfig.maxSpread = 100.0 * zi->getMinPriceTick();
+    statsConfig.spreadStatsConfig.numBins = 100; // 100 bins over $0 to $100
     a->updateStatsConfig();
     a->populateOrderBookTraces();
     a->runAnalytics();
