@@ -9,6 +9,7 @@ using namespace Utils;
 struct OrderDepthProfileConfig;
 struct OrderFlowMemoryStatsConfig;
 struct PriceReturnScalingStatsConfig;
+struct SpreadStatsConfig;
 
 /* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
 struct IOrderBookDerivedStats {
@@ -73,17 +74,6 @@ private:
     std::vector<double> autocorrelations;
 };
 
-/* Spread statistics in space (histogram) and time (autocorrelation). */
-struct SpreadStats : public IOrderBookDerivedStats {
-    void accumulate(const double spread);
-    virtual void init() override {} // TODO
-    virtual void clear() override;
-    virtual void compute() override {}
-
-    Statistics::Histogram spreadHistogram;
-    Statistics::Autocorrelation<double> spreadACF;
-};
-
 /* Multi-horizon price returns aggregator to study the scaling law of returns:
     Var(return_dt) ~ dt^H with H being the Hurst exponent.
     Each horizon dt yields a sumReturns, sumSqReturns etc. */
@@ -107,6 +97,26 @@ private:
 
     PriceType priceType = PriceType::NONE;
     bool logReturns = true;
+};
+
+/* Spread statistics in space (histogram) and time (autocorrelation). */
+struct SpreadStats : public IOrderBookDerivedStats {
+    static constexpr double MinSpread = 0.0;
+    static constexpr double MaxSpread = 1000.0;
+    static constexpr size_t NumBins = 100000;
+    void set(const SpreadStatsConfig& config);
+    void accumulate(const double spread);
+    virtual void init() override;
+    virtual void clear() override;
+    virtual void compute() override;
+    virtual double getAutocorrelationAt(size_t lag) const { return spreadACF.get(lag); }
+    virtual std::string getAsJson() const override;
+
+    size_t numSpreads = 0;
+    double meanSpread = 0.0;
+    double varSpread = 0.0;
+    Statistics::Histogram spreadHistogram;
+    Statistics::Autocorrelation<double> spreadACF;
 };
 
 /* Event time (number of events) between each price tick (mid or best or whatever). */

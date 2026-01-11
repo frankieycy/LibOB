@@ -276,16 +276,6 @@ std::string OrderFlowMemoryStats::getAsJson() const {
     return oss.str();
 }
 
-void SpreadStats::accumulate(const double spread) {
-    spreadHistogram.add(spread);
-    spreadACF.add(spread);
-}
-
-void SpreadStats::clear() {
-    spreadHistogram.clear();
-    spreadACF.clear();
-}
-
 void PriceReturnScalingStats::set(const PriceReturnScalingStatsConfig& config) {
     priceType = config.priceType;
     logReturns = config.logReturns;
@@ -305,6 +295,49 @@ void PriceReturnScalingStats::clear() {
     sumReturns.clear();
     sumSqReturns.clear();
     counts.clear();
+}
+
+void SpreadStats::set(const SpreadStatsConfig& config) {
+    spreadHistogram.setBins(config.minSpread, config.maxSpread, config.numBins, config.binning);
+}
+
+void SpreadStats::accumulate(const double spread) {
+    spreadHistogram.add(spread);
+    spreadACF.add(spread);
+}
+
+void SpreadStats::init() {
+    numSpreads = 0;
+    meanSpread = 0.0;
+    varSpread = 0.0;
+    spreadHistogram.clear(); // clear existing data but retain bins
+    spreadACF.clear();
+    if (spreadHistogram.empty()) // check if bins are unset
+        spreadHistogram.setBins(MinSpread, MaxSpread, NumBins, Statistics::Histogram::Binning::UNIFORM);
+}
+
+void SpreadStats::clear() {
+    numSpreads = 0;
+    meanSpread = 0.0;
+    varSpread = 0.0;
+    spreadHistogram.clear();
+    spreadACF.clear();
+}
+
+void SpreadStats::compute() {
+    numSpreads = spreadHistogram.getTotalCount();
+    meanSpread = spreadHistogram.getMean();
+    varSpread = spreadHistogram.getVariance();
+}
+
+std::string SpreadStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"numSpreads\":"     << numSpreads                   << ",\n"
+        << "\"meanSpread\":"     << meanSpread                   << ",\n"
+        << "\"varSpread\":"      << varSpread                    << "\n"
+        << "}";
+    return oss.str();
 }
 }
 

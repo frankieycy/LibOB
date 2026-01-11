@@ -38,6 +38,7 @@ void MonitorOutputsAnalyzerBase::init() {
     myOrderDepthProfileStats.set(myStatsConfig.orderDepthProfileConfig);
     myOrderFlowMemoryStats.set(myStatsConfig.orderFlowMemoryStatsConfig);
     myPriceReturnScalingStats.set(myStatsConfig.priceReturnScalingStatsConfig);
+    mySpreadStats.set(myStatsConfig.spreadStatsConfig);
     myOrderDepthProfileStats.init();
     myOrderFlowMemoryStats.init();
     myPriceReturnScalingStats.init();
@@ -72,6 +73,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
             continue;
         myOrderDepthProfileStats.accumulate(stats->topLevelsSnapshot);
         myOrderFlowMemoryStats.accumulate(*stats->lastTradeIsBuyInitiated ? 1 : -1);
+        mySpreadStats.accumulate(stats->spread);
     }
     myOrderDepthProfileStats.compute();
     myOrderFlowMemoryStats.compute();

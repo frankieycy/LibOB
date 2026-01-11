@@ -9,19 +9,12 @@ namespace Analytics {
 using namespace Utils;
 
 struct BurnInPolicy {
-    enum class Type {
-        NONE,
-        EVENT_COUNT,
-        TRADE_COUNT,
-        VOLUME,
-        AUTO_CONVERGENCE
-    };
-
+    enum class Type { EVENT_COUNT, TRADE_COUNT, VOLUME, AUTO_CONVERGENCE, NONE };
     Type type = Type::NONE;
 
-    uint64_t minEvents = 0;
-    uint64_t minTrades = 0;
-    double minVolume = 0.0;
+    std::optional<uint32_t> minEvents;
+    std::optional<uint32_t> minTrades;
+    std::optional<double> minVolume;
 
     // auto-detection
     size_t windowSize = 10'000;
@@ -46,6 +39,13 @@ struct OrderFlowMemoryStatsConfig {
     std::vector<size_t> lags = std::vector<size_t>(OrderFlowMemoryStats::DefaultLags.begin(), OrderFlowMemoryStats::DefaultLags.end());
 };
 
+struct SpreadStatsConfig {
+    double minSpread = 0.0;
+    double maxSpread = 1000.0;
+    size_t numBins = 100000;
+    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+};
+
 struct PriceReturnScalingStatsConfig {
     PriceReturnScalingStats::PriceType priceType = PriceReturnScalingStats::PriceType::MID;
     bool logReturns = true;
@@ -61,6 +61,7 @@ struct OrderBookDerivedStatsConfig {
     OrderDepthProfileConfig orderDepthProfileConfig = OrderDepthProfileConfig();
     OrderFlowMemoryStatsConfig orderFlowMemoryStatsConfig = OrderFlowMemoryStatsConfig();
     PriceReturnScalingStatsConfig priceReturnScalingStatsConfig = PriceReturnScalingStatsConfig();
+    SpreadStatsConfig spreadStatsConfig = SpreadStatsConfig();
 };
 
 std::string toString(const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);

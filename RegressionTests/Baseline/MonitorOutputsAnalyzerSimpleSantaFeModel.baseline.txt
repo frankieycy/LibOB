@@ -22,5 +22,9 @@
 "autocorrelations":[-0.0183162,0.0177165,-0.0409799,-0.0177839,-0.0252699,-0.0143227,0.0450666,0.0258117,0.0238328,0.0505868,0.0049588]
 },
 "PriceReturnScalingStats":{},
-"SpreadStats":{}
+"SpreadStats":{
+"numSpreads":1639,
+"meanSpread":9.13301,
+"varSpread":21.3636
+}
 }
