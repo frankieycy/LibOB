@@ -25,6 +25,7 @@
 "SpreadStats":{
 "numSpreads":1639,
 "meanSpread":9.13301,
-"varSpread":21.3636
+"varSpread":21.3636,
+"spreadHistogram":[{"BinLower":1,"BinUpper":2,"Count":19},{"BinLower":2,"BinUpper":3,"Count":66},{"BinLower":3,"BinUpper":4,"Count":81},{"BinLower":4,"BinUpper":5,"Count":113},{"BinLower":5,"BinUpper":6,"Count":121},{"BinLower":6,"BinUpper":7,"Count":110},{"BinLower":7,"BinUpper":8,"Count":148},{"BinLower":8,"BinUpper":9,"Count":140},{"BinLower":9,"BinUpper":10,"Count":140},{"BinLower":10,"BinUpper":11,"Count":133},{"BinLower":11,"BinUpper":12,"Count":111},{"BinLower":12,"BinUpper":13,"Count":111},{"BinLower":13,"BinUpper":14,"Count":68},{"BinLower":14,"BinUpper":15,"Count":47},{"BinLower":15,"BinUpper":16,"Count":52},{"BinLower":16,"BinUpper":17,"Count":55},{"BinLower":17,"BinUpper":18,"Count":34},{"BinLower":18,"BinUpper":19,"Count":22},{"BinLower":19,"BinUpper":20,"Count":16},{"BinLower":20,"BinUpper":21,"Count":29},{"BinLower":21,"BinUpper":22,"Count":12},{"BinLower":22,"BinUpper":23,"Count":6},{"BinLower":23,"BinUpper":24,"Count":5}]
 }
 }

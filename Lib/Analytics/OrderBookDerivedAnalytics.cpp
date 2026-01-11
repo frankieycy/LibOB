@@ -335,7 +335,8 @@ std::string SpreadStats::getAsJson() const {
     oss << "{\n"
         << "\"numSpreads\":"     << numSpreads                   << ",\n"
         << "\"meanSpread\":"     << meanSpread                   << ",\n"
-        << "\"varSpread\":"      << varSpread                    << "\n"
+        << "\"varSpread\":"      << varSpread                    << ",\n"
+        << "\"spreadHistogram\":" << spreadHistogram.getAsJson() << "\n"
         << "}";
     return oss.str();
 }
