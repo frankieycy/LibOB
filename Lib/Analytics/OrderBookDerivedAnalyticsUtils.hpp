@@ -52,8 +52,8 @@ struct PriceReturnScalingStatsConfig {
 };
 
 struct MonitorOutputsAnalyzerConfig {
-    enum class OrderBookStatsAccumulationMode { ALL, TRADE };
-    OrderBookStatsAccumulationMode statsAccumulationMode = OrderBookStatsAccumulationMode::TRADE;
+    enum class OrderBookStatsAccumulationMode { ALL, EACH_TRADE, EACH_EVENT, LEVEL_ONE_TICK };
+    OrderBookStatsAccumulationMode statsAccumulationMode = OrderBookStatsAccumulationMode::EACH_TRADE;
     bool debugMode = false;
 };
 

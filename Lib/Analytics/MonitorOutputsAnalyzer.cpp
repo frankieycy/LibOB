@@ -63,9 +63,14 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
             case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::ALL:
                 accumulate = true;
                 break;
-            case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::TRADE:
+            case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::EACH_TRADE:
                 accumulate = (stats->cumNumTrades > 0); // only when at least a trade has occurred
                 break;
+            case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::EACH_EVENT:
+                accumulate = (stats->cumNumNewLimitOrders + stats->cumNumNewMarketOrders + stats->cumNumCancelOrders +
+                    stats->cumNumModifyPriceOrders + stats->cumNumModifyQuantityOrders) > 0; // only when at least an event has occurred
+                break;
+            case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::LEVEL_ONE_TICK: // TODO
             default:
                 break;
         }

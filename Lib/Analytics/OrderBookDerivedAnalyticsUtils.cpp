@@ -8,9 +8,11 @@ using namespace Utils;
 
 std::string toString(const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode) {
     switch (accumulationMode) {
-        case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::ALL:   return "All";
-        case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::TRADE: return "Trade";
-        default:                                                                  return "None";
+        case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::ALL:             return "All";
+        case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::EACH_TRADE:      return "EachTrade";
+        case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::EACH_EVENT:      return "EachEvent";
+        case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::LEVEL_ONE_TICK:  return "LevelOneTick";
+        default:                                                                            return "None";
     }
 }
 
