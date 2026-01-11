@@ -3,9 +3,46 @@
 #include <vector>
 #include <deque>
 #include <random>
+#include "Utils/ErrorUtils.hpp"
 
 namespace Utils {
 namespace Statistics {
+
+namespace RNG {
+    enum class Mode { DETERMINISTIC, NON_DETERMINISTIC };
+
+    struct Config {
+        uint deterministicSeed = 42;
+    };
+
+    inline Config& config() {
+        static Config cfg;
+        return cfg;
+    }
+
+    inline bool& deterministicInitialized() {
+        static bool initialized = false;
+        return initialized;
+    }
+
+    inline std::mt19937& deterministicEngine() {
+        static thread_local std::mt19937 eng{ config().deterministicSeed };
+        deterministicInitialized() = true;
+        return eng;
+    }
+
+    inline std::mt19937& nondeterministicEngine() {
+        static thread_local std::mt19937 eng{ std::random_device{}() };
+        return eng;
+    }
+
+    inline void setDeterministicSeed(uint seed) {
+        if (deterministicInitialized())
+            Error::LIB_THROW("[RNG::setDeterministicSeed] Cannot set seed after RNG initialization.");
+        Statistics::RNG::config().deterministicSeed = seed;
+    }
+}
+
 struct VectorStats {
     size_t size;
     double mean;
@@ -34,23 +71,17 @@ private:
 std::string toString(const VectorStats& stats);
 std::ostream& operator<<(std::ostream& out, const VectorStats& orderMatchingStrategy);
 
-inline std::mt19937& GLOBAL_RNG() {
-    static thread_local std::mt19937 eng{ std::random_device{}() };
-    return eng;
-}
-
-inline std::mt19937& RNG_42() {
-    static thread_local std::mt19937 eng{ 42 };
-    return eng;
-}
-
 template<class Engine>
 inline double getRandomUniform01(Engine& eng) {
     static thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
     return dist(eng);
 }
 
-inline double getRandomUniform01(const bool deterministic = false) { return deterministic ? getRandomUniform01(RNG_42()) : getRandomUniform01(GLOBAL_RNG()); }
+inline double getRandomUniform01(const bool deterministic = false) {
+    return deterministic ?
+        getRandomUniform01(RNG::deterministicEngine()) :
+        getRandomUniform01(RNG::nondeterministicEngine());
+}
 
 inline double getRandomUniform(const double a, const double b, const bool deterministic = false) { return a + (b - a) * getRandomUniform01(deterministic); }
 
@@ -69,7 +100,11 @@ inline Int getRandomUniformIntFast(const Int a, const Int b, Engine& eng) {
 }
 
 template<class Int>
-inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) { return deterministic ? getRandomUniformIntFast(a, b, RNG_42()) : getRandomUniformIntFast(a, b, GLOBAL_RNG()); }
+inline int getRandomUniformInt(const Int a, const Int b, const bool deterministic = false) {
+    return deterministic ?
+        getRandomUniformIntFast(a, b, RNG::deterministicEngine()) :
+        getRandomUniformIntFast(a, b, RNG::nondeterministicEngine());
+}
 
 template<class T>
 inline T drawRandomElement(const std::vector<T>& vec, const bool deterministic = false) {
