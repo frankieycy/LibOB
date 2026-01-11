@@ -199,17 +199,22 @@ std::string Histogram::getAsCsv() const {
     return oss.str();
 }
 
-std::string Histogram::getAsJson() const {
+std::string Histogram::getAsJson(bool hideEmptyBins) const {
     std::ostringstream oss;
+    bool hasPriorBin = false;
     oss << "[";
     for (size_t i = 0; i < myBins.size(); ++i) {
+        if (hideEmptyBins && myBins[i] == 0)
+            continue;
+        if (hasPriorBin)
+            oss << ",";
         oss << "{"
             << "\"BinLower\":" << getBinLower(i) << ","
             << "\"BinUpper\":" << getBinUpper(i) << ","
             << "\"Count\":" << myBins[i]
             << "}";
-        if (i < myBins.size() - 1)
-            oss << ",";
+        if (!hasPriorBin)
+            hasPriorBin = true;
     }
     oss << "]";
     return oss.str();

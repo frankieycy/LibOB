@@ -140,7 +140,7 @@ public:
     size_t getTotalCount() const { return myTotalCount; }
     bool empty() const { return myBins.empty(); }
     std::string getAsCsv() const;
-    std::string getAsJson() const;
+    std::string getAsJson(bool hideEmptyBins = true) const;
 private:
     std::vector<size_t> myBins; // counts per bin
     std::vector<double> myBinLowerEdges; // lower edges inclusive
