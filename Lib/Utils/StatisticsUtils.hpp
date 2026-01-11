@@ -20,14 +20,8 @@ namespace RNG {
         return cfg;
     }
 
-    inline bool& deterministicInitialized() {
-        static bool initialized = false;
-        return initialized;
-    }
-
     inline std::mt19937& deterministicEngine() {
         static thread_local std::mt19937 eng{ config().deterministicSeed };
-        deterministicInitialized() = true;
         return eng;
     }
 
@@ -37,9 +31,8 @@ namespace RNG {
     }
 
     inline void setDeterministicSeed(uint seed) {
-        if (deterministicInitialized())
-            Error::LIB_THROW("[RNG::setDeterministicSeed] Cannot set seed after RNG initialization.");
         Statistics::RNG::config().deterministicSeed = seed;
+        deterministicEngine().seed(seed);
     }
 }
 
