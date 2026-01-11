@@ -47,6 +47,7 @@ void ExchangeSimulatorBase::init() {
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
     myMatchingEngineMonitor->setMinimumPriceTick(getConfig().grid.minPriceTick);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
+    Statistics::RNG::setDeterministicSeed(getRandomSeed());
     setState(ExchangeSimulatorState::READY);
     if (isDebugMode())
         *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Simulator initialization complete with monitored levels "
@@ -61,6 +62,11 @@ void ExchangeSimulatorBase::reset() {
     myOrderEventManager->reset();
     myMatchingEngineMonitor->reset();
     IExchangeSimulator::reset();
+}
+
+void ExchangeSimulatorBase::setRandomSeed(const uint seed) {
+    IExchangeSimulator::setRandomSeed(seed);
+    Statistics::RNG::setDeterministicSeed(seed);
 }
 
 void ExchangeSimulatorBase::setConfig(const ExchangeSimulatorConfig& config) {
