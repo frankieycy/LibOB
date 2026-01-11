@@ -52,6 +52,8 @@ struct PriceReturnScalingStatsConfig {
 };
 
 struct MonitorOutputsAnalyzerConfig {
+    enum class OrderBookStatsAccumulationMode { ALL, TRADE };
+    OrderBookStatsAccumulationMode statsAccumulationMode = OrderBookStatsAccumulationMode::TRADE;
     bool debugMode = false;
 };
 
@@ -60,6 +62,9 @@ struct OrderBookDerivedStatsConfig {
     OrderFlowMemoryStatsConfig orderFlowMemoryStatsConfig = OrderFlowMemoryStatsConfig();
     PriceReturnScalingStatsConfig priceReturnScalingStatsConfig = PriceReturnScalingStatsConfig();
 };
+
+std::string toString(const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);
+std::ostream& operator<<(std::ostream& out, const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);
 }
 
 #endif

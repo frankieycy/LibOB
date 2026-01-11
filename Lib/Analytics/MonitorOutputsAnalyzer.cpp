@@ -55,10 +55,23 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     // run analytic computations on order book traces
     // TODO: accumulate data from traces
     const auto& traces = getOrderBookTraces();
+    const auto& accumulationMode = getConfig().statsAccumulationMode;
     for (const auto& stats : traces.orderBookStatisticsCollector.getSamples()) {
+        bool accumulate = false;
+        switch (accumulationMode) {
+            case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::ALL:
+                accumulate = true;
+                break;
+            case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::TRADE:
+                accumulate = (stats->cumNumTrades > 0); // only when at least a trade has occurred
+                break;
+            default:
+                break;
+        }
+        if (!accumulate)
+            continue;
         myOrderDepthProfileStats.accumulate(stats->topLevelsSnapshot);
-        if (stats->cumNumTrades > 0 && stats->lastTradeIsBuyInitiated) // only when at least a trade has occurred
-            myOrderFlowMemoryStats.accumulate(*stats->lastTradeIsBuyInitiated ? 1 : -1);
+        myOrderFlowMemoryStats.accumulate(*stats->lastTradeIsBuyInitiated ? 1 : -1);
     }
     myOrderDepthProfileStats.compute();
     myOrderFlowMemoryStats.compute();
@@ -69,6 +82,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
 std::string MonitorOutputsAnalyzerBase::getStatsReport() {
     std::ostringstream oss;
     oss << "{\n"
+        << "\"StatsAccumulationMode\":\""   << getConfig().statsAccumulationMode        << "\",\n"
         << "\"OrderDepthProfileStats\":"    << myOrderDepthProfileStats.getAsJson()     << ",\n"
         << "\"OrderFlowMemoryStats\":"      << myOrderFlowMemoryStats.getAsJson()       << ",\n"
         << "\"PriceReturnScalingStats\":"   << myPriceReturnScalingStats.getAsJson()    << ",\n"
