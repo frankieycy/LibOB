@@ -44,6 +44,7 @@ void ExchangeSimulatorBase::init() {
         Error::LIB_THROW("[ExchangeSimulatorBase] Matching engine is null during simulator initialization.");
     myOrderEventManager = std::make_shared<Market::OrderEventManagerBase>(myMatchingEngine);
     myMatchingEngineMonitor = std::make_shared<Analytics::MatchingEngineMonitor>(myMatchingEngine);
+    myMatchingEngineMonitor->setClockOverride(getSimulationClock());
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
     myMatchingEngineMonitor->setMinimumPriceTick(getConfig().grid.minPriceTick);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);

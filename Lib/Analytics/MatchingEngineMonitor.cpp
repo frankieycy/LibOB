@@ -154,7 +154,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecuti
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order execution report received: " << report;
     if (myLastTrade && report.tradeId == myLastTrade->getId())
         return; // avoid double-counting execution reports for the same trade (sent twice from both sides)
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumTrades;
     myOrderBookAggregateStatistics.aggTradeVolume += report.filledQuantity;
     myOrderBookAggregateStatistics.aggTradeNotional += report.filledPrice * report.filledQuantity;
@@ -183,7 +183,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderPl
         return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Limit order placement report received: " << report;
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice, Market::OrderType::LIMIT))
@@ -206,7 +206,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelR
         return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel report received: " << report;
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Consts::NAN_DOUBLE), report.orderType))
@@ -221,7 +221,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderPartial
         return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order partial cancel report received: " << report;
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyQuantityOrders; // partial cancel represented as a modify quantity order
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Consts::NAN_DOUBLE), report.orderType))
@@ -236,7 +236,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelA
         return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel and replace report received: " << report;
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
@@ -252,7 +252,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyP
         return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify price report received: " << report;
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyPriceOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.modifiedPrice))
@@ -267,7 +267,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyQ
         return;
     if (myDebugMode)
         *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify quantity report received: " << report;
-    myOrderBookAggregateStatistics.timestampTo = report.timestamp;
+    myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyQuantityOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice))

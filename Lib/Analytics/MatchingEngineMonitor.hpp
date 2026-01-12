@@ -43,6 +43,7 @@ public:
 
     void setMatchingEngine(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) { myMatchingEngine = matchingEngine; }
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
+    void setClockOverride(const std::shared_ptr<const Utils::Counter::TimestampHandlerBase>& clockOverride) { myClockOverride = clockOverride; }
     void setDebugMode(const bool debugMode) { myDebugMode = debugMode; }
     void setFetchFullOrderBook(const bool fetchFullOrderBook) { myFetchFullOrderBook = fetchFullOrderBook; }
     void setOrderBookNumLevels(const size_t numLevels) { myOrderBookNumLevels = numLevels; }
@@ -77,6 +78,7 @@ public:
 private:
     std::shared_ptr<Exchange::IMatchingEngine> myMatchingEngine;
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
+    std::shared_ptr<const Utils::Counter::TimestampHandlerBase> myClockOverride; // optional clock override for timestamping statistics entries
     std::shared_ptr<const Market::TradeBase> myLastTrade; // caches the last trade to uniquely count executions sent from both sides of the trade
     bool myDebugMode = false;
     bool myMonitoringEnabled = false;
