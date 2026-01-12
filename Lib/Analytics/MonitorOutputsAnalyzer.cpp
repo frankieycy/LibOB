@@ -54,7 +54,6 @@ void MonitorOutputsAnalyzerBase::clear() {
 
 void MonitorOutputsAnalyzerBase::runAnalytics() {
     // run analytic computations on order book traces
-    // TODO: accumulate data from traces
     const auto& traces = getOrderBookTraces();
     const auto& accumulationMode = getConfig().statsAccumulationMode;
     for (const auto& stats : traces.orderBookStatisticsCollector.getSamples()) {
