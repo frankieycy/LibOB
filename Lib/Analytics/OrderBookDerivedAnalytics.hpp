@@ -101,6 +101,7 @@ private:
 
 /* Spread statistics in space (histogram) and time (autocorrelation). */
 struct SpreadStats : public IOrderBookDerivedStats {
+    static constexpr std::array<size_t, 11> DefaultLags{ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
     static constexpr double MinSpread = 0.0;
     static constexpr double MaxSpread = 1000.0;
     static constexpr size_t NumBins = 100000;
@@ -117,6 +118,10 @@ struct SpreadStats : public IOrderBookDerivedStats {
     double varSpread = 0.0;
     Statistics::Histogram spreadHistogram;
     Statistics::Autocorrelation<double> spreadACF;
+
+private:
+    std::vector<size_t> lags;
+    std::vector<double> autocorrelations;
 };
 
 /* Event time (number of events) between each price tick (mid or best or whatever). */

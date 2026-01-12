@@ -44,6 +44,7 @@ struct SpreadStatsConfig {
     double maxSpread = 1000.0;
     size_t numBins = 100000;
     Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+    std::vector<size_t> lags = std::vector<size_t>(SpreadStats::DefaultLags.begin(), SpreadStats::DefaultLags.end());
 };
 
 struct PriceReturnScalingStatsConfig {

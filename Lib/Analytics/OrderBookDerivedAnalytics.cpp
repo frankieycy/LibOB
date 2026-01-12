@@ -299,6 +299,7 @@ void PriceReturnScalingStats::clear() {
 
 void SpreadStats::set(const SpreadStatsConfig& config) {
     spreadHistogram.setBins(config.minSpread, config.maxSpread, config.numBins, config.binning);
+    lags = config.lags;
 }
 
 void SpreadStats::accumulate(const double spread) {
@@ -312,8 +313,11 @@ void SpreadStats::init() {
     varSpread = 0.0;
     spreadHistogram.clear(); // clear existing data but retain bins
     spreadACF.clear();
+    autocorrelations.clear();
     if (spreadHistogram.empty()) // check if bins are unset
         spreadHistogram.setBins(MinSpread, MaxSpread, NumBins, Statistics::Histogram::Binning::UNIFORM);
+    if (lags.empty())
+        lags = std::vector<size_t>(DefaultLags.begin(), DefaultLags.end());
 }
 
 void SpreadStats::clear() {
@@ -322,21 +326,28 @@ void SpreadStats::clear() {
     varSpread = 0.0;
     spreadHistogram.clear();
     spreadACF.clear();
+    autocorrelations.clear();
+    lags.clear();
 }
 
 void SpreadStats::compute() {
     numSpreads = spreadHistogram.getTotalCount();
     meanSpread = spreadHistogram.getMean();
     varSpread = spreadHistogram.getVariance();
+    autocorrelations.resize(lags.size(), 0.0);
+    for (size_t i = 0; i < lags.size(); ++i)
+        autocorrelations[i] = spreadACF.get(lags[i]);
 }
 
 std::string SpreadStats::getAsJson() const {
     std::ostringstream oss;
     oss << "{\n"
-        << "\"numSpreads\":"     << numSpreads                   << ",\n"
-        << "\"meanSpread\":"     << meanSpread                   << ",\n"
-        << "\"varSpread\":"      << varSpread                    << ",\n"
-        << "\"spreadHistogram\":" << spreadHistogram.getAsJson() << "\n"
+        << "\"numSpreads\":"       << numSpreads                   << ",\n"
+        << "\"meanSpread\":"       << meanSpread                   << ",\n"
+        << "\"varSpread\":"        << varSpread                    << ",\n"
+        << "\"spreadHistogram\":"  << spreadHistogram.getAsJson()  << ",\n"
+        << "\"lags\":"             << Utils::toString(lags)        << ",\n"
+        << "\"autocorrelations\":" << Utils::toString(autocorrelations) << "\n"
         << "}";
     return oss.str();
 }
