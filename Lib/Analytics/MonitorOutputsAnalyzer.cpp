@@ -78,6 +78,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
             continue;
         myOrderDepthProfileStats.accumulate(stats->topLevelsSnapshot);
         myOrderFlowMemoryStats.accumulate(*stats->lastTradeIsBuyInitiated ? 1 : -1);
+        myPriceReturnScalingStats.accumulate(*stats);
         mySpreadStats.accumulate(stats->spread);
     }
     myOrderDepthProfileStats.compute();

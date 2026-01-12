@@ -48,6 +48,7 @@ struct SpreadStatsConfig {
 };
 
 struct PriceReturnScalingStatsConfig {
+    std::vector<uint64_t> horizons = std::vector<uint64_t>(PriceReturnScalingStats::DefaultHorizons.begin(), PriceReturnScalingStats::DefaultHorizons.end());
     PriceReturnScalingStats::PriceType priceType = PriceReturnScalingStats::PriceType::MID;
     bool logReturns = true;
 };

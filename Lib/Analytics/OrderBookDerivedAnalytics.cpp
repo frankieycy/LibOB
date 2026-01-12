@@ -277,24 +277,101 @@ std::string OrderFlowMemoryStats::getAsJson() const {
 }
 
 void PriceReturnScalingStats::set(const PriceReturnScalingStatsConfig& config) {
+    horizons = config.horizons;
     priceType = config.priceType;
     logReturns = config.logReturns;
+}
+
+void PriceReturnScalingStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
+    double price = Consts::NAN_DOUBLE;
+    switch (priceType) {
+        case PriceType::LAST_TRADE:
+            price = stats.lastTradePrice;
+            break;
+        case PriceType::MID:
+            price = stats.midPrice;
+            break;
+        case PriceType::MICRO:
+            price = stats.microPrice;
+            break;
+        default:
+            Error::LIB_THROW("[PriceReturnScalingStats::accumulate] Invalid price type.");
+    }
+    if (Consts::isNaN(price))
+        return;
+    prices.push_back(price);
+    timestamps.push_back(stats.timestampTo);
 }
 
 void PriceReturnScalingStats::init() {
     if (priceType == PriceType::NONE)
         Error::LIB_THROW("[PriceReturnScalingStats::init] Price type is NONE.");
-    horizons.clear();
+    prices.clear();
+    timestamps.clear();
     sumReturns.clear();
     sumSqReturns.clear();
     counts.clear();
+    varReturns.clear();
+    if (horizons.empty())
+        horizons = std::vector<uint64_t>(DefaultHorizons.begin(), DefaultHorizons.end());
 }
 
 void PriceReturnScalingStats::clear() {
-    horizons.clear();
+    prices.clear();
+    timestamps.clear();
     sumReturns.clear();
     sumSqReturns.clear();
     counts.clear();
+    varReturns.clear();
+    horizons.clear();
+}
+
+void PriceReturnScalingStats::compute() {
+    const size_t numHorizons = horizons.size();
+    sumReturns.resize(numHorizons, 0.0);
+    sumSqReturns.resize(numHorizons, 0.0);
+    counts.resize(numHorizons, 0);
+    varReturns.resize(numHorizons, 0.0);
+    const size_t numPrices = prices.size();
+    for (size_t i = 0; i < numPrices; ++i) {
+        const double price_i = prices[i];
+        const uint64_t time_i = timestamps[i];
+        for (size_t h = 0; h < numHorizons; ++h) {
+            const uint64_t horizon = horizons[h];
+            size_t j = i + 1;
+            while (j < numPrices && (timestamps[j] - time_i) < horizon)
+                ++j; // such that timestamps[j] - time_i >= horizon
+            if (j < numPrices) {
+                const double price_j = prices[j];
+                double ret = price_j - price_i;
+                if (logReturns) {
+                    if (price_i <= 0.0 || price_j <= 0.0)
+                        continue; // skip invalid prices for log returns
+                    ret = std::log(price_j / price_i);
+                }
+                sumReturns[h] += ret;
+                sumSqReturns[h] += ret * ret;
+                ++counts[h];
+            }
+        }
+    }
+    for (size_t h = 0; h < numHorizons; ++h) {
+        if (counts[h] > 0) {
+            const double meanRet = sumReturns[h] / static_cast<double>(counts[h]);
+            varReturns[h] = (sumSqReturns[h] / static_cast<double>(counts[h])) - (meanRet * meanRet);
+        }
+    }
+}
+
+std::string PriceReturnScalingStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"priceType\":\""   << priceType                    << "\",\n"
+        << "\"logReturns\":"    << logReturns                   << ",\n"
+        << "\"horizons\":"      << Utils::toString(horizons)    << ",\n"
+        << "\"varReturns\":"    << Utils::toString(varReturns)  << "\n"
+        << "}";
+    return oss.str();
 }
 
 void SpreadStats::set(const SpreadStatsConfig& config) {

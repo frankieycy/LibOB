@@ -78,19 +78,26 @@ private:
     Var(return_dt) ~ dt^H with H being the Hurst exponent.
     Each horizon dt yields a sumReturns, sumSqReturns etc. */
 struct PriceReturnScalingStats : public IOrderBookDerivedStats {
+    static constexpr std::array<uint64_t, 11> DefaultHorizons{ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
     enum class PriceType { LAST_TRADE, MID, MICRO, NONE };
     bool isLogReturns() const { return logReturns; }
     PriceType getPriceType() const { return priceType; }
 
     void set(const PriceReturnScalingStatsConfig& config);
+    void accumulate(const OrderBookStatisticsByTimestamp& stats);
     virtual void init() override;
     virtual void clear() override;
-    virtual void compute() override {}
+    virtual void compute() override;
+    virtual std::string getAsJson() const override;
 
     std::vector<uint64_t> horizons;
     std::vector<double> varReturns;
 
 private:
+    // accumulated for each snapshot
+    std::vector<double> prices;
+    std::vector<uint64_t> timestamps;
+    // helper accumulators for each horizon
     std::vector<double> sumReturns;
     std::vector<double> sumSqReturns;
     std::vector<size_t> counts;
