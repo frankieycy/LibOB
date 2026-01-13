@@ -69,14 +69,11 @@ void MatchingEngineMonitor::reset(const bool keepLastSnapshot) {
     myOrderBookAggregateStatisticsCache = OrderBookAggregateStatistics();
     myOrderEventProcessingLatenciesCollector.clear();
     if (keepLastSnapshot) {
-        auto lastStats = myOrderBookStatisticsCollector.getLastSample();
         auto lastReport = myOrderProcessingReportsCollector.getLastSample();
         myOrderBookStatisticsCollector.clear();
         myOrderProcessingReportsCollector.clear();
-        if (lastStats && lastReport) {
-            myOrderBookStatisticsCollector.addSample(lastStats);
-            myOrderProcessingReportsCollector.addSample(lastReport);
-        }
+        if (lastReport)
+            updateStatistics(*lastReport);
     } else {
         myLastTrade = nullptr;
         myOrderBookStatisticsCollector.clear();
