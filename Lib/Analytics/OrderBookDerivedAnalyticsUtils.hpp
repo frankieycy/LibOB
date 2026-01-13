@@ -39,6 +39,12 @@ struct OrderFlowMemoryStatsConfig {
     std::vector<size_t> lags = std::vector<size_t>(OrderFlowMemoryStats::DefaultLags.begin(), OrderFlowMemoryStats::DefaultLags.end());
 };
 
+struct PriceReturnScalingStatsConfig {
+    std::vector<uint64_t> horizons = std::vector<uint64_t>(PriceReturnScalingStats::DefaultHorizons.begin(), PriceReturnScalingStats::DefaultHorizons.end());
+    PriceReturnScalingStats::PriceType priceType = PriceReturnScalingStats::PriceType::MID;
+    bool logReturns = true;
+};
+
 struct SpreadStatsConfig {
     double minSpread = 0.0;
     double maxSpread = 1000.0;
@@ -47,10 +53,12 @@ struct SpreadStatsConfig {
     std::vector<size_t> lags = std::vector<size_t>(SpreadStats::DefaultLags.begin(), SpreadStats::DefaultLags.end());
 };
 
-struct PriceReturnScalingStatsConfig {
-    std::vector<uint64_t> horizons = std::vector<uint64_t>(PriceReturnScalingStats::DefaultHorizons.begin(), PriceReturnScalingStats::DefaultHorizons.end());
-    PriceReturnScalingStats::PriceType priceType = PriceReturnScalingStats::PriceType::MID;
-    bool logReturns = true;
+struct EventTimeStatsConfig {
+    double minEventTime = 0.0;
+    double maxEventTime = 1000.0;
+    size_t numBins = 1000;
+    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+    EventTimeStats::PriceType priceType = EventTimeStats::PriceType::MID;
 };
 
 struct MonitorOutputsAnalyzerConfig {
@@ -64,6 +72,7 @@ struct OrderBookDerivedStatsConfig {
     OrderFlowMemoryStatsConfig orderFlowMemoryStatsConfig = OrderFlowMemoryStatsConfig();
     PriceReturnScalingStatsConfig priceReturnScalingStatsConfig = PriceReturnScalingStatsConfig();
     SpreadStatsConfig spreadStatsConfig = SpreadStatsConfig();
+    EventTimeStatsConfig eventTimeStatsConfig = EventTimeStatsConfig();
 };
 
 std::string toString(const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);

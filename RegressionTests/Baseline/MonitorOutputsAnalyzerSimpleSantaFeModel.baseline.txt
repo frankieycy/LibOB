@@ -34,5 +34,12 @@
 "spreadHistogram":[{"BinLower":1,"BinUpper":2,"Count":19},{"BinLower":2,"BinUpper":3,"Count":66},{"BinLower":3,"BinUpper":4,"Count":81},{"BinLower":4,"BinUpper":5,"Count":113},{"BinLower":5,"BinUpper":6,"Count":121},{"BinLower":6,"BinUpper":7,"Count":110},{"BinLower":7,"BinUpper":8,"Count":148},{"BinLower":8,"BinUpper":9,"Count":140},{"BinLower":9,"BinUpper":10,"Count":140},{"BinLower":10,"BinUpper":11,"Count":133},{"BinLower":11,"BinUpper":12,"Count":111},{"BinLower":12,"BinUpper":13,"Count":111},{"BinLower":13,"BinUpper":14,"Count":68},{"BinLower":14,"BinUpper":15,"Count":47},{"BinLower":15,"BinUpper":16,"Count":52},{"BinLower":16,"BinUpper":17,"Count":55},{"BinLower":17,"BinUpper":18,"Count":34},{"BinLower":18,"BinUpper":19,"Count":22},{"BinLower":19,"BinUpper":20,"Count":16},{"BinLower":20,"BinUpper":21,"Count":29},{"BinLower":21,"BinUpper":22,"Count":12},{"BinLower":22,"BinUpper":23,"Count":6},{"BinLower":23,"BinUpper":24,"Count":5}],
 "lags":[1,2,4,8,16,32,64,128,256,512,1024],
 "autocorrelations":[0.590877,0.413628,0.265514,0.125517,0.0652915,0.0562806,-0.0119811,-0.00377262,0.0367706,0.00130273,0.0724791]
+},
+"EventTimeStats":{
+"priceType":"Mid",
+"numPriceTicks":1075,
+"meanPriceTicks":1.52372,
+"varPriceTicks":0.774088,
+"eventsBetweenPriceMoves":[{"BinLower":1,"BinUpper":2,"Count":704},{"BinLower":2,"BinUpper":3,"Count":238},{"BinLower":3,"BinUpper":4,"Count":96},{"BinLower":4,"BinUpper":5,"Count":21},{"BinLower":5,"BinUpper":6,"Count":12},{"BinLower":6,"BinUpper":7,"Count":3},{"BinLower":8,"BinUpper":9,"Count":1}]
 }
 }

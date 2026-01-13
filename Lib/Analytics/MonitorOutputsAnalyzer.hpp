@@ -50,6 +50,7 @@ private:
     OrderFlowMemoryStats myOrderFlowMemoryStats = OrderFlowMemoryStats();
     PriceReturnScalingStats myPriceReturnScalingStats = PriceReturnScalingStats();
     SpreadStats mySpreadStats = SpreadStats();
+    EventTimeStats myEventTimeStats = EventTimeStats();
 };
 
 class MatchingEngineMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {

@@ -10,6 +10,7 @@ struct OrderDepthProfileConfig;
 struct OrderFlowMemoryStatsConfig;
 struct PriceReturnScalingStatsConfig;
 struct SpreadStatsConfig;
+struct EventTimeStatsConfig;
 
 /* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
 struct IOrderBookDerivedStats {
@@ -133,11 +134,31 @@ private:
 
 /* Event time (number of events) between each price tick (mid or best or whatever). */
 struct EventTimeStats : public IOrderBookDerivedStats {
-    virtual void init() override {} // TODO
-    virtual void clear() override {}
-    virtual void compute() override {}
+    enum class PriceType { MID, MICRO, NONE };
+    static constexpr double MinEventTime = 0.0;
+    static constexpr double MaxEventTime = 1000.0;
+    static constexpr size_t NumBins = 1000;
+    PriceType getPriceType() const { return priceType; }
 
+    void set(const EventTimeStatsConfig& config);
+    void accumulate(const OrderBookStatisticsByTimestamp& stats);
+    virtual void init() override;
+    virtual void clear() override;
+    virtual void compute() override;
+    virtual std::string getAsJson() const override;
+
+    size_t numPriceTicks = 0;
+    double meanPriceTicks = 0.0;
+    double varPriceTicks = 0.0;
     Statistics::Histogram eventsBetweenPriceMoves;
+
+private:
+    // accumulated for each snapshot
+    std::vector<double> prices;
+    std::vector<size_t> eventCounts;
+    std::vector<uint64_t> timestamps;
+
+    PriceType priceType = PriceType::NONE;
 };
 
 struct OrderLifetimeStats : public IOrderBookDerivedStats {
@@ -155,9 +176,11 @@ struct PriceImpactStats : public IOrderBookDerivedStats {
 std::string toString(const OrderDepthProfileStats::DepthNormalization& normalization);
 std::string toString(const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
 std::string toString(const PriceReturnScalingStats::PriceType& priceType);
+std::string toString(const EventTimeStats::PriceType& priceType);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType);
+std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& priceType);
 }
 
 #endif

@@ -34,9 +34,18 @@ std::string toString(const PriceReturnScalingStats::PriceType& priceType) {
     }
 }
 
+std::string toString(const EventTimeStats::PriceType& priceType) {
+    switch (priceType) {
+        case EventTimeStats::PriceType::MID:   return "Mid";
+        case EventTimeStats::PriceType::MICRO: return "Micro";
+        default:                               return "None";
+    }
+}
+
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization) { return out << toString(normalization); }
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType) { return out << toString(priceType); }
+std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& priceType) { return out << toString(priceType); }
 
 void OrderDepthProfileStats::set(const OrderDepthProfileConfig& config) {
     normalization = config.normalization;
@@ -425,6 +434,99 @@ std::string SpreadStats::getAsJson() const {
         << "\"spreadHistogram\":"  << spreadHistogram.getAsJson()  << ",\n"
         << "\"lags\":"             << Utils::toString(lags)        << ",\n"
         << "\"autocorrelations\":" << Utils::toString(autocorrelations) << "\n"
+        << "}";
+    return oss.str();
+}
+
+void EventTimeStats::set(const EventTimeStatsConfig& config) {
+    eventsBetweenPriceMoves.setBins(config.minEventTime, config.maxEventTime, config.numBins, config.binning);
+    priceType = config.priceType;
+}
+
+void EventTimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
+    double price = Consts::NAN_DOUBLE;
+    switch (priceType) {
+        case PriceType::MID:
+            price = stats.midPrice;
+            break;
+        case PriceType::MICRO:
+            price = stats.microPrice;
+            break;
+        default:
+            Error::LIB_THROW("[EventTimeStats::accumulate] Invalid price type.");
+    }
+    if (Consts::isNaN(price))
+        return;
+    const size_t numEvents = stats.cumNumNewLimitOrders // all order events
+                           + stats.cumNumNewMarketOrders
+                           + stats.cumNumCancelOrders
+                           + stats.cumNumModifyPriceOrders
+                           + stats.cumNumModifyQuantityOrders;
+    prices.push_back(price);
+    eventCounts.push_back(numEvents);
+    timestamps.push_back(stats.timestampTo);
+}
+
+void EventTimeStats::init() {
+    if (priceType == PriceType::NONE)
+        Error::LIB_THROW("[EventTimeStats::init] Price type is NONE.");
+    numPriceTicks = 0;
+    meanPriceTicks = 0.0;
+    varPriceTicks = 0.0;
+    prices.clear();
+    eventCounts.clear();
+    timestamps.clear();
+    eventsBetweenPriceMoves.clear(); // clear existing data but retain bins
+    if (eventsBetweenPriceMoves.empty()) // check if bins are unset
+        eventsBetweenPriceMoves.setBins(MinEventTime, MaxEventTime, NumBins, Statistics::Histogram::Binning::UNIFORM);
+}
+
+void EventTimeStats::clear() {
+    numPriceTicks = 0;
+    meanPriceTicks = 0.0;
+    varPriceTicks = 0.0;
+    prices.clear();
+    eventCounts.clear();
+    timestamps.clear();
+    eventsBetweenPriceMoves.clear();
+}
+
+void EventTimeStats::compute() {
+    const size_t numPrices = prices.size();
+    if (numPrices == 0)
+        Error::LIB_THROW("[EventTimeStats::compute] No price data accumulated to compute event time stats.");
+    std::vector<size_t> eventTimes;
+    size_t cumEventTime = eventCounts[0];
+    for (size_t i = 1; i < numPrices; ++i) {
+        if (prices[i] != prices[i - 1]) { // price tick detected
+            eventTimes.push_back(cumEventTime);
+            cumEventTime = eventCounts[i];
+        } else {
+            cumEventTime += eventCounts[i];
+        }
+    }
+    numPriceTicks = eventTimes.size();
+    if (numPriceTicks == 0)
+        Error::LIB_THROW("[EventTimeStats::compute] No price ticks detected to compute event time stats.");
+    double sumEvents = 0.0;
+    double sumSqEvents = 0.0;
+    for (const auto& et : eventTimes) {
+        sumEvents += static_cast<double>(et);
+        sumSqEvents += static_cast<double>(et * et);
+        eventsBetweenPriceMoves.add(static_cast<double>(et));
+    }
+    meanPriceTicks = sumEvents / static_cast<double>(numPriceTicks);
+    varPriceTicks = (sumSqEvents / static_cast<double>(numPriceTicks)) - (meanPriceTicks * meanPriceTicks);
+}
+
+std::string EventTimeStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"priceType\":\""       << priceType                        << "\",\n"
+        << "\"numPriceTicks\":"     << numPriceTicks                    << ",\n"
+        << "\"meanPriceTicks\":"    << meanPriceTicks                   << ",\n"
+        << "\"varPriceTicks\":"     << varPriceTicks                    << ",\n"
+        << "\"eventsBetweenPriceMoves\":" << eventsBetweenPriceMoves.getAsJson() << "\n"
         << "}";
     return oss.str();
 }
