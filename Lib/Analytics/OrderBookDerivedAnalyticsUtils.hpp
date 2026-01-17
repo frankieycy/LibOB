@@ -61,6 +61,11 @@ struct EventTimeStatsConfig {
     EventTimeStats::PriceType priceType = EventTimeStats::PriceType::MID;
 };
 
+struct OrderLifetimeStatsConfig {
+    OrderLifetimeStats::PriceSpaceDefinition priceSpace = OrderLifetimeStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST;
+    double minPriceTick = 0.01;
+};
+
 struct MonitorOutputsAnalyzerConfig {
     enum class OrderBookStatsAccumulationMode { ALL, EACH_TRADE, EACH_EVENT, LEVEL_ONE_TICK };
     OrderBookStatsAccumulationMode statsAccumulationMode = OrderBookStatsAccumulationMode::EACH_TRADE;
@@ -73,6 +78,7 @@ struct OrderBookDerivedStatsConfig {
     PriceReturnScalingStatsConfig priceReturnScalingStatsConfig = PriceReturnScalingStatsConfig();
     SpreadStatsConfig spreadStatsConfig = SpreadStatsConfig();
     EventTimeStatsConfig eventTimeStatsConfig = EventTimeStatsConfig();
+    OrderLifetimeStatsConfig orderLifetimeStatsConfig = OrderLifetimeStatsConfig();
 };
 
 std::string toString(const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);

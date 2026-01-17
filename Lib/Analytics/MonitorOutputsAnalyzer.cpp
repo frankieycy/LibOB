@@ -40,11 +40,13 @@ void MonitorOutputsAnalyzerBase::init() {
     myPriceReturnScalingStats.set(myStatsConfig.priceReturnScalingStatsConfig);
     mySpreadStats.set(myStatsConfig.spreadStatsConfig);
     myEventTimeStats.set(myStatsConfig.eventTimeStatsConfig);
+    myOrderLifetimeStats.set(myStatsConfig.orderLifetimeStatsConfig);
     myOrderDepthProfileStats.init();
     myOrderFlowMemoryStats.init();
     myPriceReturnScalingStats.init();
     mySpreadStats.init();
     myEventTimeStats.init();
+    myOrderLifetimeStats.init();
 }
 
 void MonitorOutputsAnalyzerBase::clear() {
@@ -53,6 +55,7 @@ void MonitorOutputsAnalyzerBase::clear() {
     myPriceReturnScalingStats.clear();
     mySpreadStats.clear();
     myEventTimeStats.clear();
+    myOrderLifetimeStats.clear();
 }
 
 void MonitorOutputsAnalyzerBase::runAnalytics() {
@@ -61,40 +64,48 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     const auto& accumulationMode = getConfig().statsAccumulationMode;
     double bestBidPriceCache = Consts::NAN_DOUBLE;
     double bestAskPriceCache = Consts::NAN_DOUBLE;
-    for (const auto& stats : traces.orderBookStatisticsCollector.getSamples()) {
+    const auto& reports = traces.orderProcessingReportsCollector.getSamples();
+    const auto& stats = traces.orderBookStatisticsCollector.getSamples();
+    auto reportsIt = reports.begin();
+    auto statsIt = stats.begin();
+    for (; reportsIt != reports.end() && statsIt != stats.end(); ++reportsIt, ++statsIt) {
+        const auto& report = *reportsIt;
+        const auto& stat = *statsIt;
         bool accumulate = false;
         switch (accumulationMode) {
             case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::ALL:
                 accumulate = true;
                 break;
             case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::EACH_TRADE:
-                accumulate = (stats->cumNumTrades > 0); // only when at least a trade has occurred
+                accumulate = (stat->cumNumTrades > 0); // only when at least a trade has occurred
                 break;
             case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::EACH_EVENT:
-                accumulate = (stats->cumNumNewLimitOrders + stats->cumNumNewMarketOrders + stats->cumNumCancelOrders +
-                    stats->cumNumModifyPriceOrders + stats->cumNumModifyQuantityOrders) > 0; // only when at least an event has occurred
+                accumulate = (stat->cumNumNewLimitOrders + stat->cumNumNewMarketOrders + stat->cumNumCancelOrders +
+                    stat->cumNumModifyPriceOrders + stat->cumNumModifyQuantityOrders) > 0; // only when at least an event has occurred
                 break;
             case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::LEVEL_ONE_TICK:
-                accumulate = (stats->bestBidPrice != bestBidPriceCache) || (stats->bestAskPrice != bestAskPriceCache);
-                bestBidPriceCache = stats->bestBidPrice;
-                bestAskPriceCache = stats->bestAskPrice;
+                accumulate = (stat->bestBidPrice != bestBidPriceCache) || (stat->bestAskPrice != bestAskPriceCache);
+                bestBidPriceCache = stat->bestBidPrice;
+                bestAskPriceCache = stat->bestAskPrice;
                 break;
             default:
                 break;
         }
         if (!accumulate)
             continue;
-        myOrderDepthProfileStats.accumulate(stats->topLevelsSnapshot);
-        myOrderFlowMemoryStats.accumulate(*stats->lastTradeIsBuyInitiated ? 1 : -1);
-        myPriceReturnScalingStats.accumulate(*stats);
-        mySpreadStats.accumulate(stats->spread);
-        myEventTimeStats.accumulate(*stats);
+        myOrderDepthProfileStats.accumulate(stat->topLevelsSnapshot);
+        myOrderFlowMemoryStats.accumulate(*stat->lastTradeIsBuyInitiated ? 1 : -1);
+        myPriceReturnScalingStats.accumulate(*stat);
+        mySpreadStats.accumulate(stat->spread);
+        myEventTimeStats.accumulate(*stat);
+        myOrderLifetimeStats.accumulate(*stat, *report);
     }
     myOrderDepthProfileStats.compute();
     myOrderFlowMemoryStats.compute();
     myPriceReturnScalingStats.compute();
     mySpreadStats.compute();
     myEventTimeStats.compute();
+    myOrderLifetimeStats.compute();
 }
 
 std::string MonitorOutputsAnalyzerBase::getStatsReport() {
@@ -105,7 +116,8 @@ std::string MonitorOutputsAnalyzerBase::getStatsReport() {
         << "\"OrderFlowMemoryStats\":"      << myOrderFlowMemoryStats.getAsJson()       << ",\n"
         << "\"PriceReturnScalingStats\":"   << myPriceReturnScalingStats.getAsJson()    << ",\n"
         << "\"SpreadStats\":"               << mySpreadStats.getAsJson()                << ",\n"
-        << "\"EventTimeStats\":"            << myEventTimeStats.getAsJson()             << "\n"
+        << "\"EventTimeStats\":"            << myEventTimeStats.getAsJson()             << ",\n"
+        << "\"OrderLifetimeStats\":"        << myOrderLifetimeStats.getAsJson()         << "\n"
         << "}";
     return oss.str();
 }
@@ -124,6 +136,8 @@ void MatchingEngineMonitorOutputsAnalyzer::init() {
 void MatchingEngineMonitorOutputsAnalyzer::populateOrderBookTraces() {
     // populate order book traces from monitor outputs
     auto& traces = getOrderBookTraces();
+    if (myMonitor->getOrderBookStatistics().size() != myMonitor->getOrderProcessingReports().size())
+        Error::LIB_THROW("[MatchingEngineMonitorOutputsAnalyzer::populateOrderBookTraces] Mismatched sizes between order book statistics and order processing reports in monitor.");
     traces.orderBookStatisticsCollector = myMonitor->getOrderBookStatistics(); // owns a deep copy of the time series
     traces.orderProcessingReportsCollector = myMonitor->getOrderProcessingReports();
 }

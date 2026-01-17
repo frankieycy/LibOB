@@ -1,6 +1,7 @@
 #ifndef ORDER_BOOK_DERIVED_ANALYTICS_HPP
 #define ORDER_BOOK_DERIVED_ANALYTICS_HPP
 #include "Utils/Utils.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 #include "Analytics/OrderBookObservables.hpp"
 
 /* Structs to store down calculated analytics derived from matching engine monitor outputs. */
@@ -11,6 +12,7 @@ struct OrderFlowMemoryStatsConfig;
 struct PriceReturnScalingStatsConfig;
 struct SpreadStatsConfig;
 struct EventTimeStatsConfig;
+struct OrderLifetimeStatsConfig;
 
 /* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
 struct IOrderBookDerivedStats {
@@ -161,10 +163,41 @@ private:
     PriceType priceType = PriceType::NONE;
 };
 
+/* Limit order average lifetime to cancellation (function of price) or execution (function of price and size). */
 struct OrderLifetimeStats : public IOrderBookDerivedStats {
-    virtual void init() override {} // TODO
-    virtual void clear() override {}
-    virtual void compute() override {}
+    enum class PriceSpaceDefinition { DIFF_TO_MID, DIFF_TO_OWN_BEST, DIFF_TO_OPPOSITE_BEST, NONE };
+    enum class OrderDeathType { CANCEL, EXECUTE };
+    struct OrderLifetime {
+        OrderLifetime() = delete;
+        OrderLifetime(uint64_t birthTimestamp, uint32_t birthQuantity, double birthPrice,
+            const std::optional<long long>& birthPriceDiffTicks = std::nullopt,
+            const std::optional<uint64_t>& deathTimestamp = std::nullopt,
+            const std::optional<OrderDeathType>& deathType = std::nullopt) :
+            birthTimestamp(birthTimestamp),
+            birthQuantity(birthQuantity),
+            birthPrice(birthPrice),
+            birthPriceDiffTicks(birthPriceDiffTicks),
+            deathTimestamp(deathTimestamp),
+            deathType(deathType) {}
+        uint64_t birthTimestamp;
+        uint32_t birthQuantity;
+        double birthPrice;
+        std::optional<long long> birthPriceDiffTicks; // price difference in ticks to reference price at birth
+        std::optional<uint64_t> deathTimestamp;
+        std::optional<OrderDeathType> deathType;
+    };
+
+    void set(const OrderLifetimeStatsConfig& config);
+    void accumulate(const OrderBookStatisticsByTimestamp& stats, const Exchange::OrderProcessingReport& report);
+    virtual void init() override;
+    virtual void clear() override;
+    virtual void compute() override;
+
+    std::unordered_map<uint64_t, OrderLifetime> orderLifetimes;
+
+private:
+    PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
+    double minPriceTick = 0.01;
 };
 
 struct PriceImpactStats : public IOrderBookDerivedStats {
@@ -177,10 +210,14 @@ std::string toString(const OrderDepthProfileStats::DepthNormalization& normaliza
 std::string toString(const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
 std::string toString(const PriceReturnScalingStats::PriceType& priceType);
 std::string toString(const EventTimeStats::PriceType& priceType);
+std::string toString(const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
+std::string toString(const OrderLifetimeStats::OrderDeathType& deathType);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType);
 std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& priceType);
+std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
+std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::OrderDeathType& deathType);
 }
 
 #endif

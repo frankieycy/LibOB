@@ -51,6 +51,7 @@ private:
     PriceReturnScalingStats myPriceReturnScalingStats = PriceReturnScalingStats();
     SpreadStats mySpreadStats = SpreadStats();
     EventTimeStats myEventTimeStats = EventTimeStats();
+    OrderLifetimeStats myOrderLifetimeStats = OrderLifetimeStats();
 };
 
 class MatchingEngineMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {

@@ -42,10 +42,29 @@ std::string toString(const EventTimeStats::PriceType& priceType) {
     }
 }
 
+std::string toString(const OrderLifetimeStats::PriceSpaceDefinition& priceSpace) {
+    switch (priceSpace) {
+        case OrderLifetimeStats::PriceSpaceDefinition::DIFF_TO_MID:           return "DiffToMid";
+        case OrderLifetimeStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST:      return "DiffToOwnBest";
+        case OrderLifetimeStats::PriceSpaceDefinition::DIFF_TO_OPPOSITE_BEST: return "DiffToOppositeBest";
+        default:                                                              return "None";
+    }
+}
+
+std::string toString(const OrderLifetimeStats::OrderDeathType& deathType) {
+    switch (deathType) {
+        case OrderLifetimeStats::OrderDeathType::CANCEL:  return "Cancel";
+        case OrderLifetimeStats::OrderDeathType::EXECUTE: return "Execute";
+        default:                                          return "None";
+    }
+}
+
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization) { return out << toString(normalization); }
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType) { return out << toString(priceType); }
 std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& priceType) { return out << toString(priceType); }
+std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
+std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::OrderDeathType& deathType) { return out << toString(deathType); }
 
 void OrderDepthProfileStats::set(const OrderDepthProfileConfig& config) {
     normalization = config.normalization;
@@ -529,6 +548,29 @@ std::string EventTimeStats::getAsJson() const {
         << "\"eventsBetweenPriceMoves\":" << eventsBetweenPriceMoves.getAsJson() << "\n"
         << "}";
     return oss.str();
+}
+
+void OrderLifetimeStats::set(const OrderLifetimeStatsConfig& config) {
+    priceSpace = config.priceSpace;
+    minPriceTick = config.minPriceTick;
+}
+
+void OrderLifetimeStats::accumulate(const OrderBookStatisticsByTimestamp& /* stats */, const Exchange::OrderProcessingReport& /* report */) {
+    // TODO: accumulation logic by order processing type in report
+}
+
+void OrderLifetimeStats::init() {
+    if (priceSpace == PriceSpaceDefinition::NONE)
+        Error::LIB_THROW("[OrderLifetimeStats::init] Price space definition is NONE.");
+    orderLifetimes.clear();
+}
+
+void OrderLifetimeStats::clear() {
+    orderLifetimes.clear();
+}
+
+void OrderLifetimeStats::compute() {
+    // TODO
 }
 }
 
