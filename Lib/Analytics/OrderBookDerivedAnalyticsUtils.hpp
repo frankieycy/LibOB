@@ -63,7 +63,12 @@ struct EventTimeStatsConfig {
 
 struct OrderLifetimeStatsConfig {
     OrderLifetimeStats::PriceSpaceDefinition priceSpace = OrderLifetimeStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST;
+    size_t maxTicks = 10; // size of the price buckets in price ticks of the histograms, chosen to be the same as MatchingEngineMonitor::myOrderBookNumLevels default
     double minPriceTick = 0.01;
+    double minLifetime = 0.0;
+    double maxLifetime = 1000.0;
+    size_t numBins = 1000;
+    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
 };
 
 struct MonitorOutputsAnalyzerConfig {

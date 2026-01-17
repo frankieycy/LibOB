@@ -552,7 +552,11 @@ std::string EventTimeStats::getAsJson() const {
 
 void OrderLifetimeStats::set(const OrderLifetimeStatsConfig& config) {
     priceSpace = config.priceSpace;
+    maxTicks = config.maxTicks;
     minPriceTick = config.minPriceTick;
+    minLifetime = config.minLifetime;
+    maxLifetime = config.maxLifetime;
+    numBins = config.numBins;
 }
 
 void OrderLifetimeStats::accumulate(const OrderBookStatisticsByTimestamp& /* stats */, const Exchange::OrderProcessingReport& /* report */) {
@@ -562,11 +566,26 @@ void OrderLifetimeStats::accumulate(const OrderBookStatisticsByTimestamp& /* sta
 void OrderLifetimeStats::init() {
     if (priceSpace == PriceSpaceDefinition::NONE)
         Error::LIB_THROW("[OrderLifetimeStats::init] Price space definition is NONE.");
-    orderLifetimes.clear();
+    orderBirths.clear();
+    lifetimeToCancelByBidPriceBucket.resize(maxTicks);
+    lifetimeToCancelByAskPriceBucket.resize(maxTicks);
+    lifetimeToExecuteByBidPriceBucket.resize(maxTicks);
+    lifetimeToExecuteByAskPriceBucket.resize(maxTicks);
+    for (size_t i = 0; i < maxTicks; ++i) {
+        lifetimeToCancelByBidPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
+        lifetimeToCancelByAskPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
+        lifetimeToExecuteByBidPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
+        lifetimeToExecuteByAskPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
+    }
 }
 
 void OrderLifetimeStats::clear() {
-    orderLifetimes.clear();
+    maxTicks = 0;
+    orderBirths.clear();
+    lifetimeToCancelByBidPriceBucket.clear();
+    lifetimeToCancelByAskPriceBucket.clear();
+    lifetimeToExecuteByBidPriceBucket.clear();
+    lifetimeToExecuteByAskPriceBucket.clear();
 }
 
 void OrderLifetimeStats::compute() {

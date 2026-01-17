@@ -1,6 +1,7 @@
 #ifndef ORDER_BOOK_DERIVED_ANALYTICS_HPP
 #define ORDER_BOOK_DERIVED_ANALYTICS_HPP
 #include "Utils/Utils.hpp"
+#include "Market/OrderUtils.hpp"
 #include "Exchange/MatchingEngineUtils.hpp"
 #include "Analytics/OrderBookObservables.hpp"
 
@@ -167,24 +168,21 @@ private:
 struct OrderLifetimeStats : public IOrderBookDerivedStats {
     enum class PriceSpaceDefinition { DIFF_TO_MID, DIFF_TO_OWN_BEST, DIFF_TO_OPPOSITE_BEST, NONE };
     enum class OrderDeathType { CANCEL, EXECUTE };
-    struct OrderLifetime {
-        OrderLifetime() = delete;
-        OrderLifetime(uint64_t birthTimestamp, uint32_t birthQuantity, double birthPrice,
-            const std::optional<long long>& birthPriceDiffTicks = std::nullopt,
-            const std::optional<uint64_t>& deathTimestamp = std::nullopt,
-            const std::optional<OrderDeathType>& deathType = std::nullopt) :
-            birthTimestamp(birthTimestamp),
-            birthQuantity(birthQuantity),
-            birthPrice(birthPrice),
-            birthPriceDiffTicks(birthPriceDiffTicks),
-            deathTimestamp(deathTimestamp),
-            deathType(deathType) {}
-        uint64_t birthTimestamp;
-        uint32_t birthQuantity;
-        double birthPrice;
-        std::optional<long long> birthPriceDiffTicks; // price difference in ticks to reference price at birth
-        std::optional<uint64_t> deathTimestamp;
-        std::optional<OrderDeathType> deathType;
+    static constexpr double MinLifetime = 0.0;
+    static constexpr double MaxLifetime = 1000.0;
+    static constexpr size_t NumBins = 1000;
+
+    /* Order birth entry where upon death, delete the entry from the births map immediately and
+        append the lifetime to the histograms accordingly. */
+    struct OrderBirth {
+        OrderBirth() = delete;
+        OrderBirth(uint64_t timestamp, Market::Side side, uint32_t quantity, double price, long long priceDiffTicks) :
+            timestamp(timestamp), side(side), quantity(quantity), price(price), priceDiffTicks(priceDiffTicks) {}
+        uint64_t timestamp;
+        Market::Side side;
+        uint32_t quantity;
+        double price;
+        long long priceDiffTicks; // price difference in ticks to reference price at birth
     };
 
     void set(const OrderLifetimeStatsConfig& config);
@@ -193,11 +191,19 @@ struct OrderLifetimeStats : public IOrderBookDerivedStats {
     virtual void clear() override;
     virtual void compute() override;
 
-    std::unordered_map<uint64_t, OrderLifetime> orderLifetimes;
+    std::unordered_map<uint64_t, OrderBirth> orderBirths;
+    std::vector<Statistics::Histogram> lifetimeToCancelByBidPriceBucket;
+    std::vector<Statistics::Histogram> lifetimeToCancelByAskPriceBucket;
+    std::vector<Statistics::Histogram> lifetimeToExecuteByBidPriceBucket;
+    std::vector<Statistics::Histogram> lifetimeToExecuteByAskPriceBucket;
 
 private:
     PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
+    size_t maxTicks = 0; // size of the price buckets in price ticks of the histograms
     double minPriceTick = 0.01;
+    std::optional<double> minLifetime;
+    std::optional<double> maxLifetime;
+    std::optional<size_t> numBins;
 };
 
 struct PriceImpactStats : public IOrderBookDerivedStats {
