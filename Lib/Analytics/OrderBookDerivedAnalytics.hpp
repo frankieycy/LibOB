@@ -191,6 +191,7 @@ struct OrderLifetimeStats : public IOrderBookDerivedStats {
     void accumulate(const OrderBookStatisticsByTimestamp& stats, const Market::Side side);
     void onOrderPlacement(const uint64_t orderId, const Market::Side side, const uint32_t quantity, const double price);
     void onOrderCancel(const uint64_t orderId);
+    void onOrderPartialCancel(const uint64_t orderId, const uint32_t cancelQuantity);
     void onOrderExecute(const uint64_t orderId, const uint32_t executedQuantity);
     virtual void init() override;
     virtual void clear() override;

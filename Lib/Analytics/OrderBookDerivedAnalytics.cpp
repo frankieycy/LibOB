@@ -582,12 +582,57 @@ void OrderLifetimeStats::onOrderPlacement(const uint64_t orderId, const Market::
     orderBirths.try_emplace(orderId, currentTimestamp, side, quantity, price, currentRefPrice, priceDiffTicks);
 }
 
-void OrderLifetimeStats::onOrderCancel(const uint64_t /* orderId */) {
-    // TODO
+void OrderLifetimeStats::onOrderCancel(const uint64_t orderId) {
+    const auto it = orderBirths.find(orderId);
+    if (it == orderBirths.end())
+        return; // order not found
+    const OrderBirth& birth = it->second;
+    const double lifetime = static_cast<double>(currentTimestamp - birth.timestamp);
+    const size_t priceDiffTicksIndex = static_cast<size_t>(birth.priceDiffTicks);
+    if (priceDiffTicksIndex < maxTicks) {
+        if (birth.side == Market::Side::BUY)
+            lifetimeToCancelByBidPriceBucket[priceDiffTicksIndex].add(lifetime);
+        else
+            lifetimeToCancelByAskPriceBucket[priceDiffTicksIndex].add(lifetime);
+    }
+    orderBirths.erase(it);
 }
 
-void OrderLifetimeStats::onOrderExecute(const uint64_t /* orderId */, const uint32_t /* executedQuantity */) {
-    // TODO
+void OrderLifetimeStats::onOrderPartialCancel(const uint64_t orderId, const uint32_t cancelQuantity) {
+    const auto it = orderBirths.find(orderId);
+    if (it == orderBirths.end())
+        return;
+    OrderBirth& birth = it->second;
+    birth.quantityAlive -= cancelQuantity;
+    if (birth.quantityAlive > 0)
+        return; // order still alive
+    const double lifetime = static_cast<double>(currentTimestamp - birth.timestamp);
+    const size_t priceDiffTicksIndex = static_cast<size_t>(birth.priceDiffTicks);
+    if (priceDiffTicksIndex < maxTicks) {
+        if (birth.side == Market::Side::BUY)
+            lifetimeToCancelByBidPriceBucket[priceDiffTicksIndex].add(lifetime);
+        else
+            lifetimeToCancelByAskPriceBucket[priceDiffTicksIndex].add(lifetime);
+    }
+    orderBirths.erase(it);
+}
+
+void OrderLifetimeStats::onOrderExecute(const uint64_t orderId, const uint32_t executedQuantity) {
+    const auto it = orderBirths.find(orderId);
+    if (it == orderBirths.end())
+        return;
+    OrderBirth& birth = it->second;
+    birth.quantityAlive -= executedQuantity;
+    if (birth.quantityAlive > 0)
+        return; // order still alive
+    const double lifetime = static_cast<double>(currentTimestamp - birth.timestamp);
+    const size_t priceDiffTicksIndex = static_cast<size_t>(birth.priceDiffTicks);
+    if (priceDiffTicksIndex < maxTicks) {
+        if (birth.side == Market::Side::BUY)
+            lifetimeToExecuteByBidPriceBucket[priceDiffTicksIndex].add(lifetime);
+        else
+            lifetimeToExecuteByAskPriceBucket[priceDiffTicksIndex].add(lifetime);
+    }
 }
 
 void OrderLifetimeStats::init() {
