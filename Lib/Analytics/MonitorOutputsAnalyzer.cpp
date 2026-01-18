@@ -71,6 +71,10 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     for (; reportsIt != reports.end() && statsIt != stats.end(); ++reportsIt, ++statsIt) {
         const auto& report = *reportsIt;
         const auto& stat = *statsIt;
+        // stats that need to be accumulated for every snapshot
+        myOrderLifetimeStats.accumulate(*stat, report->orderSide);
+        report->dispatchTo(*this); // report-specific accumulation (e.g. order births in lifetime stats)
+        // stats that need to be accumulated conditionally based on accumulation mode
         bool accumulate = false;
         switch (accumulationMode) {
             case MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode::ALL:
@@ -98,7 +102,6 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
         myPriceReturnScalingStats.accumulate(*stat);
         mySpreadStats.accumulate(stat->spread);
         myEventTimeStats.accumulate(*stat);
-        myOrderLifetimeStats.accumulate(*stat, *report);
     }
     myOrderDepthProfileStats.compute();
     myOrderFlowMemoryStats.compute();
@@ -121,6 +124,43 @@ std::string MonitorOutputsAnalyzerBase::getStatsReport() {
         << "}";
     return oss.str();
 }
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderExecutionReport& /* report */) {
+    // no implementation needed yet
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& /* report */) {
+    // no implementation needed yet
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::LimitOrderPlacementReport& report) {
+    myOrderLifetimeStats.onOrderPlacement(report.orderId, report.orderSide, report.orderQuantity, report.orderPrice);
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& /* report */) {
+    // no implementation needed yet
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderCancelReport& /* report */) {
+    // no implementation needed yet
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& /* report */) {
+    // no implementation needed yet
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& /* report */) {
+    // no implementation needed yet
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& /* report */) {
+    // no implementation needed yet
+}
+
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& /* report */) {
+    // no implementation needed yet
+}
+
 
 MatchingEngineMonitorOutputsAnalyzer::MatchingEngineMonitorOutputsAnalyzer(const std::shared_ptr<const MatchingEngineMonitor>& monitor) :
     myMonitor(monitor) {

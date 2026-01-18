@@ -1,6 +1,7 @@
 #ifndef MONITOR_OUTPUTS_ANALYZER_HPP
 #define MONITOR_OUTPUTS_ANALYZER_HPP
 #include "Utils/Utils.hpp"
+#include "Exchange/MatchingEngineUtils.hpp"
 #include "Parser/LobsterDataParser.hpp"
 #include "Analytics/MatchingEngineMonitor.hpp"
 #include "Analytics/OrderBookDerivedAnalytics.hpp"
@@ -28,6 +29,7 @@ public:
     virtual void runAnalytics() = 0; // runs analytics on the populated book traces
     virtual std::string getStatsReport() = 0; // returns a string report of the computed statistics
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::NONE;
+
 private:
     MonitorOutputsAnalyzerConfig myConfig = MonitorOutputsAnalyzerConfig();
     OrderBookTraces myOrderBookTraces = OrderBookTraces();
@@ -43,6 +45,18 @@ public:
     virtual void clear() override;
     virtual void runAnalytics() override;
     virtual std::string getStatsReport() override;
+
+    // dispatchers of specific reports into the analytic components
+    virtual void onOrderProcessingReport(const Exchange::OrderExecutionReport& report);
+    virtual void onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report);
+    virtual void onOrderProcessingReport(const Exchange::LimitOrderPlacementReport& report);
+    virtual void onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderCancelReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderPartialCancelReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report);
+    virtual void onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report);
+
 private:
     OrderBookDerivedStatsConfig myStatsConfig = OrderBookDerivedStatsConfig();
     // define all the analytic components here
@@ -63,6 +77,7 @@ public:
     virtual void init() override;
     virtual void populateOrderBookTraces() override;
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::MONITOR;
+
 private:
     std::shared_ptr<const MatchingEngineMonitor> myMonitor;
 };
@@ -76,6 +91,7 @@ public:
     virtual void init() override;
     virtual void populateOrderBookTraces() override;
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::LOBSTER;
+
 private:
     std::shared_ptr<const Parser::LobsterDataParser> myParser;
 };
@@ -91,6 +107,7 @@ public:
     virtual void init() override;
     virtual void populateOrderBookTraces() override;
     static constexpr OrderBookTracesSource ourSource = OrderBookTracesSource::FILE;
+
 private:
     std::string myFilePath;
     MonitorOutputsFileFormat myFileFormat = MonitorOutputsFileFormat::NONE;
