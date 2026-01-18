@@ -12,6 +12,7 @@ class OrderEventManagerBase;
 
 namespace Analytics {
 class MatchingEngineMonitor;
+class MonitorOutputsAnalyzerBase;
 }
 
 namespace Exchange {
@@ -103,6 +104,7 @@ struct OrderProcessingReport {
     virtual ~OrderProcessingReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const = 0;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const = 0;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const = 0;
     virtual std::vector<std::shared_ptr<const OrderProcessingReport>> decomposeIntoAtomicReports() const {
         Error::LIB_THROW("No implementation for OrderProcessingReport::decomposeIntoAtomicReports().");
         return {};
@@ -150,6 +152,7 @@ struct OrderExecutionReport : public OrderProcessingReport {
     virtual ~OrderExecutionReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
@@ -182,6 +185,7 @@ struct LimitOrderSubmitReport : public OrderProcessingReport {
     virtual ~LimitOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
@@ -208,6 +212,7 @@ struct LimitOrderPlacementReport : public OrderProcessingReport {
     virtual ~LimitOrderPlacementReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& /* orderEventManager */) const override {}
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override { return nullptr; }
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override { return nullptr; }
     virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
@@ -233,6 +238,7 @@ struct MarketOrderSubmitReport : public OrderProcessingReport {
     virtual ~MarketOrderSubmitReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
@@ -259,6 +265,7 @@ struct OrderCancelReport : public OrderProcessingReport {
     virtual ~OrderCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
@@ -288,6 +295,7 @@ struct OrderPartialCancelReport : public OrderProcessingReport {
     virtual ~OrderPartialCancelReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
     virtual std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> makeLobsterMessage() const override;
@@ -318,6 +326,7 @@ struct OrderCancelAndReplaceReport : public OrderProcessingReport {
     virtual ~OrderCancelAndReplaceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::vector<std::shared_ptr<const OrderProcessingReport>> decomposeIntoAtomicReports() const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
@@ -347,6 +356,7 @@ struct OrderModifyPriceReport : public OrderProcessingReport {
     virtual ~OrderModifyPriceReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::vector<std::shared_ptr<const OrderProcessingReport>> decomposeIntoAtomicReports() const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;
@@ -374,6 +384,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     virtual ~OrderModifyQuantityReport() = default;
     virtual void dispatchTo(Market::OrderEventManagerBase& orderEventManager) const override;
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const override;
+    virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const override;
     virtual std::vector<std::shared_ptr<const OrderProcessingReport>> decomposeIntoAtomicReports() const override;
     virtual std::shared_ptr<Market::OrderEventBase> makeEvent() const override;
     virtual std::shared_ptr<ITCHEncoder::ITCHMessage> makeITCHMessage() const override;

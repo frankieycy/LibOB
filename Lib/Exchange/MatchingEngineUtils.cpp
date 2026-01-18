@@ -6,6 +6,7 @@
 #include "Exchange/ITCHEncoder.hpp"
 #include "Parser/LobsterDataParser.hpp"
 #include "Analytics/MatchingEngineMonitor.hpp"
+#include "Analytics/MonitorOutputsAnalyzer.hpp"
 
 namespace Exchange {
 using namespace Utils;
@@ -163,6 +164,10 @@ void OrderExecutionReport::dispatchTo(Analytics::MatchingEngineMonitor& matching
     matchingEngineMonitor.onOrderProcessingReport(*this);
 }
 
+void OrderExecutionReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
+}
+
 /* We do NOT infer order submit event from execution report since it has already
     been accounted for in submit report, otherwise there are duplicate orders. */
 std::shared_ptr<Market::OrderEventBase> OrderExecutionReport::makeEvent() const {
@@ -215,6 +220,10 @@ void LimitOrderSubmitReport::dispatchTo(Analytics::MatchingEngineMonitor& matchi
     matchingEngineMonitor.onOrderProcessingReport(*this);
 }
 
+void LimitOrderSubmitReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
+}
+
 std::shared_ptr<Market::OrderEventBase> LimitOrderSubmitReport::makeEvent() const {
     return std::make_shared<Market::OrderSubmitEvent>(reportId, orderId, timestamp, order->clone());
 }
@@ -248,6 +257,10 @@ void LimitOrderPlacementReport::dispatchTo(Analytics::MatchingEngineMonitor& mat
     matchingEngineMonitor.onOrderProcessingReport(*this);
 }
 
+void LimitOrderPlacementReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
+}
+
 std::shared_ptr<Parser::LobsterDataParser::OrderBookMessage> LimitOrderPlacementReport::makeLobsterMessage() const {
     return std::make_shared<Parser::LobsterDataParser::OrderBookMessage>(*this);
 }
@@ -276,6 +289,10 @@ void MarketOrderSubmitReport::dispatchTo(Market::OrderEventManagerBase& orderEve
 
 void MarketOrderSubmitReport::dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const {
     matchingEngineMonitor.onOrderProcessingReport(*this);
+}
+
+void MarketOrderSubmitReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
 }
 
 std::shared_ptr<Market::OrderEventBase> MarketOrderSubmitReport::makeEvent() const {
@@ -315,6 +332,10 @@ void OrderCancelReport::dispatchTo(Analytics::MatchingEngineMonitor& matchingEng
     matchingEngineMonitor.onOrderProcessingReport(*this);
 }
 
+void OrderCancelReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
+}
+
 std::shared_ptr<Market::OrderEventBase> OrderCancelReport::makeEvent() const {
     return std::make_shared<Market::OrderCancelEvent>(reportId, orderId, timestamp);
 }
@@ -350,6 +371,10 @@ void OrderPartialCancelReport::dispatchTo(Market::OrderEventManagerBase& orderEv
 
 void OrderPartialCancelReport::dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const {
     matchingEngineMonitor.onOrderProcessingReport(*this);
+}
+
+void OrderPartialCancelReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
 }
 
 std::shared_ptr<Market::OrderEventBase> OrderPartialCancelReport::makeEvent() const {
@@ -388,6 +413,10 @@ void OrderCancelAndReplaceReport::dispatchTo(Market::OrderEventManagerBase& orde
 
 void OrderCancelAndReplaceReport::dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const {
     matchingEngineMonitor.onOrderProcessingReport(*this);
+}
+
+void OrderCancelAndReplaceReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
 }
 
 std::vector<std::shared_ptr<const OrderProcessingReport>> OrderCancelAndReplaceReport::decomposeIntoAtomicReports() const {
@@ -439,6 +468,10 @@ void OrderModifyPriceReport::dispatchTo(Analytics::MatchingEngineMonitor& matchi
     matchingEngineMonitor.onOrderProcessingReport(*this);
 }
 
+void OrderModifyPriceReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
+}
+
 std::vector<std::shared_ptr<const OrderProcessingReport>> OrderModifyPriceReport::decomposeIntoAtomicReports() const {
     return {
         std::make_shared<OrderCancelReport>(reportId, timestamp, orderId, orderSide, Market::OrderType::LIMIT, std::nullopt, std::nullopt, status),
@@ -484,6 +517,10 @@ void OrderModifyQuantityReport::dispatchTo(Market::OrderEventManagerBase& orderE
 
 void OrderModifyQuantityReport::dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const {
     matchingEngineMonitor.onOrderProcessingReport(*this);
+}
+
+void OrderModifyQuantityReport::dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const {
+    monitorOutputsAnalyzer.onOrderProcessingReport(*this);
 }
 
 std::vector<std::shared_ptr<const OrderProcessingReport>> OrderModifyQuantityReport::decomposeIntoAtomicReports() const {
