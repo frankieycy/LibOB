@@ -559,8 +559,35 @@ void OrderLifetimeStats::set(const OrderLifetimeStatsConfig& config) {
     numBins = config.numBins;
 }
 
-void OrderLifetimeStats::accumulate(const OrderBookStatisticsByTimestamp& /* stats */, const Exchange::OrderProcessingReport& /* report */) {
-    // TODO: accumulation logic by order processing type in report
+void OrderLifetimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats, const Market::Side side) {
+    // ticks the current timestamp and reference price, but does no report-specific processing yet (e.g. order placements)
+    currentTimestamp = stats.timestampTo;
+    switch (priceSpace) {
+        case PriceSpaceDefinition::DIFF_TO_MID:
+            currentRefPrice = stats.midPrice;
+            break;
+        case PriceSpaceDefinition::DIFF_TO_OWN_BEST:
+            currentRefPrice = (side == Market::Side::BUY) ? stats.bestBidPrice : stats.bestAskPrice;
+            break;
+        case PriceSpaceDefinition::DIFF_TO_OPPOSITE_BEST:
+            currentRefPrice = (side == Market::Side::SELL) ? stats.bestAskPrice : stats.bestBidPrice;
+            break;
+        default:
+            Error::LIB_THROW("[OrderLifetimeStats::accumulate] Invalid price space definition.");
+    }
+}
+
+void OrderLifetimeStats::onOrderPlacement(const uint64_t orderId, const Market::Side side, const uint32_t quantity, const double price) {
+    const long long priceDiffTicks = Maths::countPriceTicks(std::abs(price - currentRefPrice), minPriceTick);
+    orderBirths.try_emplace(orderId, currentTimestamp, side, quantity, price, currentRefPrice, priceDiffTicks);
+}
+
+void OrderLifetimeStats::onOrderCancel(const uint64_t /* orderId */) {
+    // TODO
+}
+
+void OrderLifetimeStats::onOrderExecute(const uint64_t /* orderId */, const uint32_t /* executedQuantity */) {
+    // TODO
 }
 
 void OrderLifetimeStats::init() {

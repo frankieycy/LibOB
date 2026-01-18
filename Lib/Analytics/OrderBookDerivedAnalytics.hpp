@@ -176,17 +176,22 @@ struct OrderLifetimeStats : public IOrderBookDerivedStats {
         append the lifetime to the histograms accordingly. */
     struct OrderBirth {
         OrderBirth() = delete;
-        OrderBirth(uint64_t timestamp, Market::Side side, uint32_t quantity, double price, long long priceDiffTicks) :
-            timestamp(timestamp), side(side), quantity(quantity), price(price), priceDiffTicks(priceDiffTicks) {}
+        OrderBirth(uint64_t timestamp, Market::Side side, uint32_t quantity, double price, double refPrice, long long priceDiffTicks) :
+            timestamp(timestamp), side(side), quantityAlive(quantity), price(price), refPrice(refPrice), priceDiffTicks(priceDiffTicks) {}
         uint64_t timestamp;
         Market::Side side;
-        uint32_t quantity;
+        uint32_t quantityAlive; // quantity alive that has not yet been executed, reduced upon executions
         double price;
-        long long priceDiffTicks; // price difference in ticks to reference price at birth
+        double refPrice; // reference price (mid, own best, opposite best)
+        long long priceDiffTicks; // price difference in ticks to the reference price
     };
 
     void set(const OrderLifetimeStatsConfig& config);
-    void accumulate(const OrderBookStatisticsByTimestamp& stats, const Exchange::OrderProcessingReport& report);
+    // ticks the current timestamp and reference price based on the statistics by timestamp
+    void accumulate(const OrderBookStatisticsByTimestamp& stats, const Market::Side side);
+    void onOrderPlacement(const uint64_t orderId, const Market::Side side, const uint32_t quantity, const double price);
+    void onOrderCancel(const uint64_t orderId);
+    void onOrderExecute(const uint64_t orderId, const uint32_t executedQuantity);
     virtual void init() override;
     virtual void clear() override;
     virtual void compute() override;
@@ -201,6 +206,8 @@ private:
     PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
     size_t maxTicks = 0; // size of the price buckets in price ticks of the histograms
     double minPriceTick = 0.01;
+    uint64_t currentTimestamp = 0;
+    double currentRefPrice = Utils::Consts::NAN_DOUBLE;
     std::optional<double> minLifetime;
     std::optional<double> maxLifetime;
     std::optional<size_t> numBins;
