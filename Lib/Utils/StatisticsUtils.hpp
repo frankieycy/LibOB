@@ -165,6 +165,7 @@ public:
     double getBinUpper(size_t bin) const;
     double getMean() const;
     double getVariance() const;
+    double getMedian() const;
     size_t getTotalCount() const { return myTotalCount; }
     bool empty() const { return myBins.empty(); }
     std::string getAsCsv() const;
@@ -207,18 +208,18 @@ public:
             Error::LIB_THROW("[Autocorrelation::get] Lag is greater than or equal to number of values.");
         const double mean = getMean();
         const double variance = getVariance();
-        if (variance == 0.0)
-            return 0.0;
+        if (!Consts::isFinite(variance) || Consts::isZero(variance))
+            return Consts::NAN_DOUBLE;
         double autocovariance = 0.0;
         for (size_t i = 0; i < n - lag; ++i)
             autocovariance += (static_cast<double>(myValues[i]) - mean) * (static_cast<double>(myValues[i + lag]) - mean);
         autocovariance /= static_cast<double>(n - lag);
         return autocovariance / variance;
     }
-    double getMean() const { return myValues.empty() ? 0.0 : mySumValues / static_cast<double>(size()); }
+    double getMean() const { return myValues.empty() ? Consts::NAN_DOUBLE : mySumValues / static_cast<double>(size()); }
     double getVariance() const {
         if (myValues.empty())
-            return 0.0;
+            return Consts::NAN_DOUBLE;
         const double mean = getMean();
         return (mySumValuesSquared / static_cast<double>(size())) - (mean * mean);
     }

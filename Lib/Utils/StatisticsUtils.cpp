@@ -30,7 +30,7 @@ size_t drawIndexWithRelativeProbabilities(const std::vector<double>& probabiliti
     if (std::any_of(probabilities.begin(), probabilities.end(), [](double p) { return p < 0.0; }))
         Error::LIB_THROW("[drawIndexWithRelativeProbability] Probabilities must be non-negative.");
     const double sum = std::accumulate(probabilities.begin(), probabilities.end(), 0.0);
-    if (sum == 0.0)
+    if (Consts::isZero(sum))
         Error::LIB_THROW("[drawIndexWithRelativeProbability] Sum of probabilities is zero.");
     std::vector<double> normalizedProbabilities(probabilities.size());
     std::transform(probabilities.begin(), probabilities.end(), normalizedProbabilities.begin(), [sum](double p) { return p / sum; });
@@ -181,14 +181,27 @@ double Histogram::getBinUpper(size_t bin) const {
 }
 
 double Histogram::getMean() const {
-    return myTotalCount == 0 ? 0.0 : mySumValues / static_cast<double>(myTotalCount);
+    return (myTotalCount == 0) ? Consts::NAN_DOUBLE : mySumValues / static_cast<double>(myTotalCount);
 }
 
 double Histogram::getVariance() const {
     if (myTotalCount == 0)
-        return 0.0;
+        return Consts::NAN_DOUBLE;
     const double mean = getMean();
     return (mySumValuesSquared / static_cast<double>(myTotalCount)) - (mean * mean);
+}
+
+double Histogram::getMedian() const {
+    if (myTotalCount == 0)
+        return Consts::NAN_DOUBLE;
+    const size_t midCount = myTotalCount / 2;
+    size_t cumulativeCount = 0;
+    for (size_t i = 0; i < myBins.size(); ++i) {
+        cumulativeCount += myBins[i];
+        if (cumulativeCount >= midCount)
+            return getBinCenter(i); // return center of the bin as a proxy for median
+    }
+    return Consts::NAN_DOUBLE; // never reached
 }
 
 std::string Histogram::getAsCsv() const {
