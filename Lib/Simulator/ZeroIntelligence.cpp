@@ -35,7 +35,7 @@ std::shared_ptr<OrderEventBase> ZeroIntelligenceSimulator::generateNextOrderEven
     const double marketOrderRate = myZIConfig.marketOrderRateSampler->sample();
     const double limitOrderRate = myZIConfig.limitOrderRateSampler->sample();
     const double cancelRate = myZIConfig.cancelRateSampler->sample();
-    if (marketOrderRate + limitOrderRate + cancelRate == 0.0)
+    if (Consts::isZero(marketOrderRate + limitOrderRate + cancelRate))
         return nullptr; // no events to generate
     const std::vector<double> orderEventRates = { marketOrderRate, limitOrderRate, cancelRate };
     // next tick must have one of the events happening, hence conditional sampling

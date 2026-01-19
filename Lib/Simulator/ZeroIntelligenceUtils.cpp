@@ -59,7 +59,7 @@ Market::Side OrderSideSamplerProportionalTotalSizeFromOppositeBest::sample() con
         }
     }
     const double totalSize = static_cast<double>(totalBuySize + totalSellSize);
-    if (totalSize == 0.0)
+    if (Consts::isZero(totalSize))
         return Market::Side::NONE;
     const double buyProbability = static_cast<double>(totalBuySize) / totalSize;
     return Statistics::getRandomUniform01(true) < buyProbability ? Market::Side::BUY : Market::Side::SELL;

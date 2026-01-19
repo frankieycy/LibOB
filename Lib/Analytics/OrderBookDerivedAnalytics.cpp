@@ -168,7 +168,7 @@ void OrderDepthProfileStats::accumulate(const OrderBookTopLevelsSnapshot& snapsh
         askDepthDenom = askDepthProfile.empty() ? 0.0 : askDepthProfile[0];
     }
     if (normalization == DepthNormalization::BY_TOTAL_DEPTH || normalization == DepthNormalization::BY_BEST_LEVEL) {
-        if (bidDepthDenom == 0.0 || askDepthDenom == 0.0)
+        if (Consts::isZero(bidDepthDenom) || Consts::isZero(askDepthDenom))
             return; // cannot normalize with zero total depth, skip this snapshot
     }
     for (size_t i = 0; i < maxTicks; ++i) {
@@ -325,7 +325,7 @@ void PriceReturnScalingStats::accumulate(const OrderBookStatisticsByTimestamp& s
         default:
             Error::LIB_THROW("[PriceReturnScalingStats::accumulate] Invalid price type.");
     }
-    if (Consts::isNaN(price))
+    if (!Consts::isFinite(price))
         return;
     prices.push_back(price);
     timestamps.push_back(stats.timestampTo);
@@ -474,7 +474,7 @@ void EventTimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
         default:
             Error::LIB_THROW("[EventTimeStats::accumulate] Invalid price type.");
     }
-    if (Consts::isNaN(price))
+    if (!Consts::isFinite(price))
         return;
     const size_t numEvents = stats.cumNumNewLimitOrders // all order events
                            + stats.cumNumNewMarketOrders
@@ -578,6 +578,7 @@ void OrderLifetimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats,
 }
 
 void OrderLifetimeStats::onOrderPlacement(const uint64_t orderId, const Market::Side side, const uint32_t quantity, const double price) {
+    // ref price set in accumulate() must have the same side
     const long long priceDiffTicks = Maths::countPriceTicks(std::abs(price - currentRefPrice), minPriceTick);
     orderBirths.try_emplace(orderId, currentTimestamp, side, quantity, price, currentRefPrice, priceDiffTicks);
 }
