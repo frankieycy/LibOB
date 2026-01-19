@@ -1,6 +1,7 @@
 #ifndef MONITOR_OUTPUTS_ANALYZER_CPP
 #define MONITOR_OUTPUTS_ANALYZER_CPP
 #include "Utils/Utils.hpp"
+#include "Market/OrderUtils.hpp"
 #include "Analytics/MonitorOutputsAnalyzer.hpp"
 
 namespace Analytics {
@@ -125,8 +126,14 @@ std::string MonitorOutputsAnalyzerBase::getStatsReport() {
     return oss.str();
 }
 
-void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderExecutionReport& /* report */) {
-    // no implementation needed yet
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderExecutionReport& report) {
+    // Note that the matching engine sends out execution reports for both (incoming) taker and (resting) maker orders, and
+    // the matching engine monitor logs only the taker order (i.e. market order side). Effectively, only the "!isMakerOrder"
+    // block is executed in practice.
+    if (report.isMakerOrder) // execution on resting limit order hence this order id
+        myOrderLifetimeStats.onOrderExecute(report.orderId, report.filledQuantity);
+    else // execution on taker market order hence match order id
+        myOrderLifetimeStats.onOrderExecute(report.matchOrderId, report.filledQuantity);
 }
 
 void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& /* report */) {
@@ -141,12 +148,14 @@ void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::MarketO
     // no implementation needed yet
 }
 
-void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderCancelReport& /* report */) {
-    // no implementation needed yet
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
+    if (report.orderType == Market::OrderType::LIMIT)
+        myOrderLifetimeStats.onOrderCancel(report.orderId);
 }
 
-void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& /* report */) {
-    // no implementation needed yet
+void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& report) {
+    if (report.orderType == Market::OrderType::LIMIT)
+        myOrderLifetimeStats.onOrderPartialCancel(report.orderId, report.cancelQuantity);
 }
 
 void MonitorOutputsAnalyzerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& /* report */) {
