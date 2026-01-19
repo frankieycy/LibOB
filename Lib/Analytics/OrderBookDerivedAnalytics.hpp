@@ -196,8 +196,13 @@ struct OrderLifetimeStats : public IOrderBookDerivedStats {
     virtual void init() override;
     virtual void clear() override;
     virtual void compute() override;
+    virtual std::string getAsJson() const override;
 
     std::unordered_map<uint64_t, OrderBirth> orderBirths;
+    std::vector<double> meanLifetimeToCancelByBidPriceBucket;
+    std::vector<double> meanLifetimeToCancelByAskPriceBucket;
+    std::vector<double> meanLifetimeToExecuteByBidPriceBucket;
+    std::vector<double> meanLifetimeToExecuteByAskPriceBucket;
     std::vector<Statistics::Histogram> lifetimeToCancelByBidPriceBucket;
     std::vector<Statistics::Histogram> lifetimeToCancelByAskPriceBucket;
     std::vector<Statistics::Histogram> lifetimeToExecuteByBidPriceBucket;

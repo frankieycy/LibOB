@@ -639,6 +639,10 @@ void OrderLifetimeStats::init() {
     if (priceSpace == PriceSpaceDefinition::NONE)
         Error::LIB_THROW("[OrderLifetimeStats::init] Price space definition is NONE.");
     orderBirths.clear();
+    meanLifetimeToCancelByBidPriceBucket.resize(maxTicks, 0.0);
+    meanLifetimeToCancelByAskPriceBucket.resize(maxTicks, 0.0);
+    meanLifetimeToExecuteByBidPriceBucket.resize(maxTicks, 0.0);
+    meanLifetimeToExecuteByAskPriceBucket.resize(maxTicks, 0.0);
     lifetimeToCancelByBidPriceBucket.resize(maxTicks);
     lifetimeToCancelByAskPriceBucket.resize(maxTicks);
     lifetimeToExecuteByBidPriceBucket.resize(maxTicks);
@@ -654,6 +658,10 @@ void OrderLifetimeStats::init() {
 void OrderLifetimeStats::clear() {
     maxTicks = 0;
     orderBirths.clear();
+    meanLifetimeToCancelByBidPriceBucket.clear();
+    meanLifetimeToCancelByAskPriceBucket.clear();
+    meanLifetimeToExecuteByBidPriceBucket.clear();
+    meanLifetimeToExecuteByAskPriceBucket.clear();
     lifetimeToCancelByBidPriceBucket.clear();
     lifetimeToCancelByAskPriceBucket.clear();
     lifetimeToExecuteByBidPriceBucket.clear();
@@ -661,7 +669,26 @@ void OrderLifetimeStats::clear() {
 }
 
 void OrderLifetimeStats::compute() {
-    // TODO
+    for (size_t i = 0; i < maxTicks; ++i) {
+        meanLifetimeToCancelByBidPriceBucket[i] = lifetimeToCancelByBidPriceBucket[i].getMean();
+        meanLifetimeToCancelByAskPriceBucket[i] = lifetimeToCancelByAskPriceBucket[i].getMean();
+        meanLifetimeToExecuteByBidPriceBucket[i] = lifetimeToExecuteByBidPriceBucket[i].getMean();
+        meanLifetimeToExecuteByAskPriceBucket[i] = lifetimeToExecuteByAskPriceBucket[i].getMean();
+    }
+}
+
+std::string OrderLifetimeStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"priceSpace\":\""    << priceSpace   << "\",\n"
+        << "\"maxTicks\":"        << maxTicks     << ",\n"
+        << "\"minPriceTick\":"    << minPriceTick << ",\n"
+        << "\"meanLifetimeToCancelByBidPriceBucket\":"    << Utils::toString(meanLifetimeToCancelByBidPriceBucket)    << ",\n"
+        << "\"meanLifetimeToCancelByAskPriceBucket\":"    << Utils::toString(meanLifetimeToCancelByAskPriceBucket)    << ",\n"
+        << "\"meanLifetimeToExecuteByBidPriceBucket\":"   << Utils::toString(meanLifetimeToExecuteByBidPriceBucket)   << ",\n"
+        << "\"meanLifetimeToExecuteByAskPriceBucket\":"   << Utils::toString(meanLifetimeToExecuteByAskPriceBucket)   << "\n"
+        << "}";
+    return oss.str();
 }
 }
 
