@@ -396,7 +396,9 @@ double MatchingEngineBase::getMicroPrice() const {
 }
 
 double MatchingEngineBase::getOrderImbalance() const {
-    return static_cast<double>(getBestBidSize() - getBestAskSize()) / static_cast<double>(getBestBidSize() + getBestAskSize());
+    const double bestBidSize = static_cast<double>(getBestBidSize());
+    const double bestAskSize = static_cast<double>(getBestAskSize());
+    return (bestBidSize - bestAskSize) / (bestBidSize + bestAskSize); // returns nan if either side of the book is empty
 }
 
 double MatchingEngineBase::getLastTradePrice() const {
