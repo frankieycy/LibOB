@@ -71,6 +71,14 @@ struct OrderLifetimeStatsConfig {
     Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
 };
 
+struct OrderImbalanceStatsConfig {
+    OrderImbalanceStats::PriceType priceType = OrderImbalanceStats::PriceType::MID;
+    double minImbalance = -1.0;
+    double maxImbalance = 1.0;
+    size_t numBins = 20;
+    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+};
+
 struct MonitorOutputsAnalyzerConfig {
     enum class OrderBookStatsAccumulationMode { ALL, EACH_TRADE, EACH_EVENT, LEVEL_ONE_TICK };
     OrderBookStatsAccumulationMode statsAccumulationMode = OrderBookStatsAccumulationMode::EACH_TRADE;
@@ -84,6 +92,7 @@ struct OrderBookDerivedStatsConfig {
     SpreadStatsConfig spreadStatsConfig = SpreadStatsConfig();
     EventTimeStatsConfig eventTimeStatsConfig = EventTimeStatsConfig();
     OrderLifetimeStatsConfig orderLifetimeStatsConfig = OrderLifetimeStatsConfig();
+    OrderImbalanceStatsConfig orderImbalanceStatsConfig = OrderImbalanceStatsConfig();
 };
 
 std::string toString(const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);

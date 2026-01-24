@@ -42,12 +42,14 @@ void MonitorOutputsAnalyzerBase::init() {
     mySpreadStats.set(myStatsConfig.spreadStatsConfig);
     myEventTimeStats.set(myStatsConfig.eventTimeStatsConfig);
     myOrderLifetimeStats.set(myStatsConfig.orderLifetimeStatsConfig);
+    myOrderImbalanceStats.set(myStatsConfig.orderImbalanceStatsConfig);
     myOrderDepthProfileStats.init();
     myOrderFlowMemoryStats.init();
     myPriceReturnScalingStats.init();
     mySpreadStats.init();
     myEventTimeStats.init();
     myOrderLifetimeStats.init();
+    myOrderImbalanceStats.init();
 }
 
 void MonitorOutputsAnalyzerBase::clear() {
@@ -57,6 +59,7 @@ void MonitorOutputsAnalyzerBase::clear() {
     mySpreadStats.clear();
     myEventTimeStats.clear();
     myOrderLifetimeStats.clear();
+    myOrderImbalanceStats.clear();
 }
 
 void MonitorOutputsAnalyzerBase::runAnalytics() {
@@ -103,6 +106,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
         myPriceReturnScalingStats.accumulate(*stat);
         mySpreadStats.accumulate(stat->spread);
         myEventTimeStats.accumulate(*stat);
+        myOrderImbalanceStats.accumulate(*stat);
     }
     myOrderDepthProfileStats.compute();
     myOrderFlowMemoryStats.compute();
@@ -110,6 +114,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     mySpreadStats.compute();
     myEventTimeStats.compute();
     myOrderLifetimeStats.compute();
+    myOrderImbalanceStats.compute();
 }
 
 std::string MonitorOutputsAnalyzerBase::getStatsReport() {
@@ -121,7 +126,8 @@ std::string MonitorOutputsAnalyzerBase::getStatsReport() {
         << "\"PriceReturnScalingStats\":"   << myPriceReturnScalingStats.getAsJson()    << ",\n"
         << "\"SpreadStats\":"               << mySpreadStats.getAsJson()                << ",\n"
         << "\"EventTimeStats\":"            << myEventTimeStats.getAsJson()             << ",\n"
-        << "\"OrderLifetimeStats\":"        << myOrderLifetimeStats.getAsJson()         << "\n"
+        << "\"OrderLifetimeStats\":"        << myOrderLifetimeStats.getAsJson()         << ",\n"
+        << "\"OrderImbalanceStats\":"       << myOrderImbalanceStats.getAsJson()        << "\n"
         << "}";
     return oss.str();
 }

@@ -14,6 +14,7 @@ struct PriceReturnScalingStatsConfig;
 struct SpreadStatsConfig;
 struct EventTimeStatsConfig;
 struct OrderLifetimeStatsConfig;
+struct OrderImbalanceStatsConfig;
 
 /* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
 struct IOrderBookDerivedStats {
@@ -219,6 +220,31 @@ private:
     std::optional<size_t> numBins;
 };
 
+struct OrderImbalanceStats : public IOrderBookDerivedStats {
+    enum class PriceType { MID, MICRO, NONE };
+    static constexpr double MinImbalance = -1.0;
+    static constexpr double MaxImbalance = 1.0;
+    static constexpr size_t NumBins = 20;
+    PriceType getPriceType() const { return priceType; }
+
+    void set(const OrderImbalanceStatsConfig& config);
+    void accumulate(const OrderBookStatisticsByTimestamp& stats);
+    virtual void init() override;
+    virtual void clear() override;
+    virtual void compute() override;
+    virtual std::string getAsJson() const override;
+
+    Statistics::Histogram orderImbalanceHistogram;
+
+private:
+    // accumulated for each snapshot
+    std::vector<double> prices;
+    std::vector<double> imbalances;
+    std::vector<uint64_t> timestamps;
+
+    PriceType priceType = PriceType::NONE;
+};
+
 struct PriceImpactStats : public IOrderBookDerivedStats {
     virtual void init() override {} // TODO
     virtual void clear() override {}
@@ -231,12 +257,14 @@ std::string toString(const PriceReturnScalingStats::PriceType& priceType);
 std::string toString(const EventTimeStats::PriceType& priceType);
 std::string toString(const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
 std::string toString(const OrderLifetimeStats::OrderDeathType& deathType);
+std::string toString(const OrderImbalanceStats::PriceType& priceType);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType);
 std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& priceType);
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::OrderDeathType& deathType);
+std::ostream& operator<<(std::ostream& out, const OrderImbalanceStats::PriceType& priceType);
 }
 
 #endif

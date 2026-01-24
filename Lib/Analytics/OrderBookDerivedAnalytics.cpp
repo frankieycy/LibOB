@@ -59,12 +59,21 @@ std::string toString(const OrderLifetimeStats::OrderDeathType& deathType) {
     }
 }
 
+std::string toString(const OrderImbalanceStats::PriceType& priceType) {
+    switch (priceType) {
+        case OrderImbalanceStats::PriceType::MID:   return "Mid";
+        case OrderImbalanceStats::PriceType::MICRO: return "Micro";
+        default:                                    return "None";
+    }
+}
+
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization) { return out << toString(normalization); }
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType) { return out << toString(priceType); }
 std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& priceType) { return out << toString(priceType); }
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::OrderDeathType& deathType) { return out << toString(deathType); }
+std::ostream& operator<<(std::ostream& out, const OrderImbalanceStats::PriceType& priceType) { return out << toString(priceType); }
 
 void OrderDepthProfileStats::set(const OrderDepthProfileConfig& config) {
     normalization = config.normalization;
@@ -688,6 +697,62 @@ std::string OrderLifetimeStats::getAsJson() const {
         << "\"meanLifetimeToCancelByAskPriceBucket\":"    << Utils::toString(meanLifetimeToCancelByAskPriceBucket)    << ",\n"
         << "\"meanLifetimeToExecuteByBidPriceBucket\":"   << Utils::toString(meanLifetimeToExecuteByBidPriceBucket)   << ",\n"
         << "\"meanLifetimeToExecuteByAskPriceBucket\":"   << Utils::toString(meanLifetimeToExecuteByAskPriceBucket)   << "\n"
+        << "}";
+    return oss.str();
+}
+
+void OrderImbalanceStats::set(const OrderImbalanceStatsConfig& config) {
+    priceType = config.priceType;
+    orderImbalanceHistogram.setBins(config.minImbalance, config.maxImbalance, config.numBins, config.binning);
+}
+
+void OrderImbalanceStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
+    double price = Consts::NAN_DOUBLE;
+    switch (priceType) {
+        case PriceType::MID:
+            price = stats.midPrice;
+            break;
+        case PriceType::MICRO:
+            price = stats.microPrice;
+            break;
+        default:
+            Error::LIB_THROW("[OrderImbalanceStats::accumulate] Invalid price type.");
+    }
+    if (!Consts::isFinite(price))
+        return;
+    prices.push_back(price);
+    imbalances.push_back(stats.orderImbalance);
+    timestamps.push_back(stats.timestampTo);
+    orderImbalanceHistogram.add(stats.orderImbalance);
+}
+
+void OrderImbalanceStats::init() {
+    if (priceType == PriceType::NONE)
+        Error::LIB_THROW("[OrderImbalanceStats::init] Price type is NONE.");
+    prices.clear();
+    imbalances.clear();
+    timestamps.clear();
+    orderImbalanceHistogram.clear(); // clear existing data but retain bins
+    if (orderImbalanceHistogram.empty()) // check if bins are unset
+        orderImbalanceHistogram.setBins(MinImbalance, MaxImbalance, NumBins, Statistics::Histogram::Binning::UNIFORM);
+}
+
+void OrderImbalanceStats::clear() {
+    prices.clear();
+    imbalances.clear();
+    timestamps.clear();
+    orderImbalanceHistogram.clear();
+}
+
+void OrderImbalanceStats::compute() {
+    // no computation needed yet
+}
+
+std::string OrderImbalanceStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"priceType\":\""               << priceType                            << "\",\n"
+        << "\"orderImbalanceHistogram\":"   << orderImbalanceHistogram.getAsJson()  << "\n"
         << "}";
     return oss.str();
 }

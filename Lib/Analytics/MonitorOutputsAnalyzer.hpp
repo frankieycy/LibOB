@@ -66,6 +66,7 @@ private:
     SpreadStats mySpreadStats = SpreadStats();
     EventTimeStats myEventTimeStats = EventTimeStats();
     OrderLifetimeStats myOrderLifetimeStats = OrderLifetimeStats();
+    OrderImbalanceStats myOrderImbalanceStats = OrderImbalanceStats();
 };
 
 class MatchingEngineMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {
