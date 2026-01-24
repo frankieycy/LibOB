@@ -4,9 +4,15 @@
 
 namespace {
 inline void printProgramOpening() { Utils::IO::printLibOBBanner(std::cout); }
+void terminateHandler() {
+    std::cerr << "Unhandled exception!\n";
+    std::cerr << Utils::Error::captureStackTrace();
+    std::_Exit(1);
+}
 }
 
 int main() {
+    std::set_terminate(terminateHandler);
     printProgramOpening();
     // Tests::MatchingEngine::testPrintOrderBookASCII();
     // Tests::MatchingEngine::testMatchingEngineSimpleBook();

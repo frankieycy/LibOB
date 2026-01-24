@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
+#include <exception>
 #include "Utils/Logger.hpp"
 #include "Utils/ErrorUtils.hpp"
 #include "Utils/IOUtils.hpp"

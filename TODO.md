@@ -15,6 +15,7 @@
     - ok, write up `Logger` class, use it for debug logging
     - ok, add `LogLevel` to logger to enable `logger << LogLevel::INFO << ...`
     - ok, break Utils.hpp into smaller specific util files when the set of functions becomes big enough
+    - ok, output trace stack in `Error::LIB_THROW` for debugging
 * `RegressionTests`
     - ok, cpp files in `Inputs` (small selections from `Tests`) and txt output files in `Baseline` (outputs from running cpp)
     - ok, add `FILTER` makefile flag to run specific tests

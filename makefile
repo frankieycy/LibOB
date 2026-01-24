@@ -8,7 +8,7 @@ LDLIBS   =
 
 # --------------------------------------------------------------------
 # Build modes
-DEBUG_FLAGS     = -g -O0
+DEBUG_FLAGS     = -g -O0 -fno-omit-frame-pointer
 PROFILING_FLAGS = -g -O2
 RELEASE_FLAGS   = -O2
 
