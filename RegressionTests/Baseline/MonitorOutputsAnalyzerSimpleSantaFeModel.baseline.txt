@@ -53,6 +53,7 @@
 },
 "OrderImbalanceStats":{
 "priceType":"Mid",
-"orderImbalanceHistogram":[{"BinLower":-0.9,"BinUpper":-0.8,"Count":11},{"BinLower":-0.8,"BinUpper":-0.7,"Count":28},{"BinLower":-0.7,"BinUpper":-0.6,"Count":25},{"BinLower":-0.6,"BinUpper":-0.5,"Count":35},{"BinLower":-0.5,"BinUpper":-0.4,"Count":82},{"BinLower":-0.4,"BinUpper":-0.3,"Count":196},{"BinLower":-0.3,"BinUpper":-0.2,"Count":1},{"BinLower":-0.2,"BinUpper":-0.1,"Count":28},{"BinLower":5.55112e-17,"BinUpper":0.1,"Count":660},{"BinLower":0.1,"BinUpper":0.2,"Count":7},{"BinLower":0.2,"BinUpper":0.3,"Count":21},{"BinLower":0.3,"BinUpper":0.4,"Count":213},{"BinLower":0.4,"BinUpper":0.5,"Count":13},{"BinLower":0.5,"BinUpper":0.6,"Count":108},{"BinLower":0.6,"BinUpper":0.7,"Count":128},{"BinLower":0.7,"BinUpper":0.8,"Count":47},{"BinLower":0.8,"BinUpper":0.9,"Count":36}]
+"orderImbalanceHistogram":[{"BinLower":-1,"BinUpper":-0.6,"Count":64},{"BinLower":-0.6,"BinUpper":-0.2,"Count":314},{"BinLower":-0.2,"BinUpper":0.2,"Count":713},{"BinLower":0.2,"BinUpper":0.6,"Count":337},{"BinLower":0.6,"BinUpper":1,"Count":211}],
+"meanNextPriceTickByOrderImbalanceBucket":[nan,-1.16406,-0.738854,-0.0800562,0.44362,0.635071,nan]
 }
 }

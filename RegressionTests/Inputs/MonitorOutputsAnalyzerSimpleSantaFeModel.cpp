@@ -39,6 +39,8 @@ int main() {
     statsConfig.orderDepthProfileConfig.maxTicks = zi->getMonitoredOrderBookNumLevels(); // 100
     statsConfig.orderLifetimeStatsConfig.minPriceTick = zi->getMinPriceTick(); // 1.0
     statsConfig.orderLifetimeStatsConfig.maxTicks = zi->getMonitoredOrderBookNumLevels(); // 100
+    statsConfig.orderImbalanceStatsConfig.minPriceTick = zi->getMinPriceTick(); // 1.0
+    statsConfig.orderImbalanceStatsConfig.maxTicks = zi->getMonitoredOrderBookNumLevels(); // 100
     statsConfig.spreadStatsConfig.maxSpread = 100.0 * zi->getMinPriceTick(); // 100.0
     statsConfig.spreadStatsConfig.numBins = 100; // 100 bins over $0 to $100
     a->updateStatsConfig();
