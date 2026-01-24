@@ -703,6 +703,8 @@ std::string OrderLifetimeStats::getAsJson() const {
 
 void OrderImbalanceStats::set(const OrderImbalanceStatsConfig& config) {
     priceType = config.priceType;
+    maxTicks = config.maxTicks;
+    minPriceTick = config.minPriceTick;
     orderImbalanceHistogram.setBins(config.minImbalance, config.maxImbalance, config.numBins, config.binning);
 }
 
@@ -735,24 +737,44 @@ void OrderImbalanceStats::init() {
     orderImbalanceHistogram.clear(); // clear existing data but retain bins
     if (orderImbalanceHistogram.empty()) // check if bins are unset
         orderImbalanceHistogram.setBins(MinImbalance, MaxImbalance, NumBins, Statistics::Histogram::Binning::UNIFORM);
+    meanNextPriceTickByOrderImbalanceBucket.resize(orderImbalanceHistogram.size(), 0.0);
+    nextPriceTickByOrderImbalanceBucket.resize(orderImbalanceHistogram.size());
+    for (size_t i = 0; i < orderImbalanceHistogram.size(); ++i) // price buckets have bin width of minPriceTick
+        nextPriceTickByOrderImbalanceBucket[i].setBins(-minPriceTick * maxTicks, minPriceTick * maxTicks, 2 * maxTicks, Statistics::Histogram::Binning::UNIFORM);
 }
 
 void OrderImbalanceStats::clear() {
+    // no need to reset maxTicks and minPriceTick to cache their last states, and
+    // after clear(), user may immediately call init() to re-initialize the stats
     prices.clear();
     imbalances.clear();
     timestamps.clear();
     orderImbalanceHistogram.clear();
+    meanNextPriceTickByOrderImbalanceBucket.clear();
+    nextPriceTickByOrderImbalanceBucket.clear();
 }
 
 void OrderImbalanceStats::compute() {
-    // no computation needed yet
+    const size_t numImbalances = imbalances.size();
+    if (numImbalances == 0)
+        Error::LIB_THROW("[OrderImbalanceStats::compute] No imbalance data accumulated to compute order imbalance stats.");
+    for (size_t i = 0; i < numImbalances - 1; ++i) {
+        const double imbalance = imbalances[i];
+        const double thisPrice = prices[i];
+        const double nextPrice = prices[i + 1];
+        const size_t binIndex = orderImbalanceHistogram.getBinIndex(imbalance);
+        nextPriceTickByOrderImbalanceBucket[binIndex].add(nextPrice - thisPrice);
+    }
+    for (size_t i = 0; i < orderImbalanceHistogram.size(); ++i)
+        meanNextPriceTickByOrderImbalanceBucket[i] = nextPriceTickByOrderImbalanceBucket[i].getMean();
 }
 
 std::string OrderImbalanceStats::getAsJson() const {
     std::ostringstream oss;
     oss << "{\n"
         << "\"priceType\":\""               << priceType                            << "\",\n"
-        << "\"orderImbalanceHistogram\":"   << orderImbalanceHistogram.getAsJson()  << "\n"
+        << "\"orderImbalanceHistogram\":"   << orderImbalanceHistogram.getAsJson()  << ",\n"
+        << "\"meanNextPriceTickByOrderImbalanceBucket\":" << Utils::toString(meanNextPriceTickByOrderImbalanceBucket) << "\n"
         << "}";
     return oss.str();
 }

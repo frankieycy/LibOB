@@ -224,7 +224,7 @@ struct OrderImbalanceStats : public IOrderBookDerivedStats {
     enum class PriceType { MID, MICRO, NONE };
     static constexpr double MinImbalance = -1.0;
     static constexpr double MaxImbalance = 1.0;
-    static constexpr size_t NumBins = 20;
+    static constexpr size_t NumBins = 5;
     PriceType getPriceType() const { return priceType; }
 
     void set(const OrderImbalanceStatsConfig& config);
@@ -235,6 +235,8 @@ struct OrderImbalanceStats : public IOrderBookDerivedStats {
     virtual std::string getAsJson() const override;
 
     Statistics::Histogram orderImbalanceHistogram;
+    std::vector<double> meanNextPriceTickByOrderImbalanceBucket;
+    std::vector<Statistics::Histogram> nextPriceTickByOrderImbalanceBucket; // immediate next price tick conditional on order imbalance
 
 private:
     // accumulated for each snapshot
@@ -243,6 +245,8 @@ private:
     std::vector<uint64_t> timestamps;
 
     PriceType priceType = PriceType::NONE;
+    size_t maxTicks = 10; // size of the price histogram buckets in price ticks
+    double minPriceTick = 0.01;
 };
 
 struct PriceImpactStats : public IOrderBookDerivedStats {

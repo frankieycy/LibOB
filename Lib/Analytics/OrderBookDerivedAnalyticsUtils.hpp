@@ -75,7 +75,9 @@ struct OrderImbalanceStatsConfig {
     OrderImbalanceStats::PriceType priceType = OrderImbalanceStats::PriceType::MID;
     double minImbalance = -1.0;
     double maxImbalance = 1.0;
-    size_t numBins = 20;
+    size_t numBins = 5;
+    size_t maxTicks = 10; // size of the price histogram buckets in price ticks, chosen to be the same as MatchingEngineMonitor::myOrderBookNumLevels default
+    double minPriceTick = 0.01;
     Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
 };
 
