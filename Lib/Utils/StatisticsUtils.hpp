@@ -167,7 +167,8 @@ public:
     double getVariance() const;
     double getMedian() const;
     size_t getTotalCount() const { return myTotalCount; }
-    bool empty() const { return myBins.empty(); }
+    size_t size() const { return myBins.size(); } // number of bins
+    bool empty() const { return myBins.empty(); } // check if histogram has no bins
     std::string getAsCsv() const;
     std::string getAsJson(bool hideEmptyBins = true) const;
 private:
@@ -224,8 +225,8 @@ public:
         return (mySumValuesSquared / static_cast<double>(size())) - (mean * mean);
     }
     const std::vector<T>& getValues() const { return myValues; }
-    size_t size() const { return myValues.size(); }
-    bool empty() const { return myValues.empty(); }
+    size_t size() const { return myValues.size(); } // number of values added
+    bool empty() const { return myValues.empty(); } // check if no values added
     void clear() {
         mySumValues = 0.0;
         mySumValuesSquared = 0.0;
