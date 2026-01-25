@@ -67,6 +67,7 @@ private:
     EventTimeStats myEventTimeStats = EventTimeStats();
     OrderLifetimeStats myOrderLifetimeStats = OrderLifetimeStats();
     OrderImbalanceStats myOrderImbalanceStats = OrderImbalanceStats();
+    PriceImpactStats myPriceImpactStats = PriceImpactStats();
 };
 
 class MatchingEngineMonitorOutputsAnalyzer : public MonitorOutputsAnalyzerBase {

@@ -200,6 +200,7 @@ void testZeroIntelligenceSimulatorSimpleSantaFeModelAsymptoticStats() {
     statsConfig.orderLifetimeStatsConfig.maxTicks = zi->getMonitoredOrderBookNumLevels();
     statsConfig.orderImbalanceStatsConfig.minPriceTick = zi->getMinPriceTick();
     statsConfig.orderImbalanceStatsConfig.maxTicks = zi->getMonitoredOrderBookNumLevels();
+    statsConfig.priceImpactStatsConfig.minPriceTick = zi->getMinPriceTick();
     statsConfig.spreadStatsConfig.maxSpread = 100.0 * zi->getMinPriceTick();
     statsConfig.spreadStatsConfig.numBins = 100; // 100 bins over $0 to $100
     a->updateStatsConfig();

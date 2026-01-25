@@ -43,6 +43,7 @@ void MonitorOutputsAnalyzerBase::init() {
     myEventTimeStats.set(myStatsConfig.eventTimeStatsConfig);
     myOrderLifetimeStats.set(myStatsConfig.orderLifetimeStatsConfig);
     myOrderImbalanceStats.set(myStatsConfig.orderImbalanceStatsConfig);
+    myPriceImpactStats.set(myStatsConfig.priceImpactStatsConfig);
     myOrderDepthProfileStats.init();
     myOrderFlowMemoryStats.init();
     myPriceReturnScalingStats.init();
@@ -50,6 +51,7 @@ void MonitorOutputsAnalyzerBase::init() {
     myEventTimeStats.init();
     myOrderLifetimeStats.init();
     myOrderImbalanceStats.init();
+    myPriceImpactStats.init();
 }
 
 void MonitorOutputsAnalyzerBase::clear() {
@@ -60,6 +62,7 @@ void MonitorOutputsAnalyzerBase::clear() {
     myEventTimeStats.clear();
     myOrderLifetimeStats.clear();
     myOrderImbalanceStats.clear();
+    myPriceImpactStats.clear();
 }
 
 void MonitorOutputsAnalyzerBase::runAnalytics() {
@@ -107,6 +110,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
         mySpreadStats.accumulate(stat->spread);
         myEventTimeStats.accumulate(*stat);
         myOrderImbalanceStats.accumulate(*stat);
+        myPriceImpactStats.accumulate(*stat);
     }
     myOrderDepthProfileStats.compute();
     myOrderFlowMemoryStats.compute();
@@ -115,6 +119,7 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     myEventTimeStats.compute();
     myOrderLifetimeStats.compute();
     myOrderImbalanceStats.compute();
+    myPriceImpactStats.compute();
 }
 
 std::string MonitorOutputsAnalyzerBase::getStatsReport() {
@@ -127,7 +132,8 @@ std::string MonitorOutputsAnalyzerBase::getStatsReport() {
         << "\"SpreadStats\":"               << mySpreadStats.getAsJson()                << ",\n"
         << "\"EventTimeStats\":"            << myEventTimeStats.getAsJson()             << ",\n"
         << "\"OrderLifetimeStats\":"        << myOrderLifetimeStats.getAsJson()         << ",\n"
-        << "\"OrderImbalanceStats\":"       << myOrderImbalanceStats.getAsJson()        << "\n"
+        << "\"OrderImbalanceStats\":"       << myOrderImbalanceStats.getAsJson()        << ",\n"
+        << "\"PriceImpactStats\":"          << myPriceImpactStats.getAsJson()           << "\n"
         << "}";
     return oss.str();
 }

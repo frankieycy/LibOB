@@ -15,6 +15,7 @@ struct SpreadStatsConfig;
 struct EventTimeStatsConfig;
 struct OrderLifetimeStatsConfig;
 struct OrderImbalanceStatsConfig;
+struct PriceImpactStatsConfig;
 
 /* All derived stats structs must inherit from the IOrderBookDerivedStats interface. */
 struct IOrderBookDerivedStats {
@@ -220,7 +221,9 @@ private:
     std::optional<size_t> numBins;
 };
 
+/* Price ticks stats (e.g. next price tick or up-tick probability) conditional on the instantaneous order imbalance. */
 struct OrderImbalanceStats : public IOrderBookDerivedStats {
+    // TODO: extend the immediate price tick to multi-horizon price ticks (ref. PriceImpactStats)
     enum class PriceType { MID, MICRO, NONE };
     static constexpr double MinImbalance = -1.0;
     static constexpr double MaxImbalance = 1.0;
@@ -249,10 +252,40 @@ private:
     double minPriceTick = 0.01;
 };
 
+/* Price impact stats conditional on the trade sign or size. Formally, we define "price impact" as the expectation of
+    the price tick change over some future timeframe (in trade event time unit) given a certain trade sign or size. */
 struct PriceImpactStats : public IOrderBookDerivedStats {
-    virtual void init() override {} // TODO
-    virtual void clear() override {}
-    virtual void compute() override {}
+    static constexpr std::array<uint64_t, 11> DefaultHorizons{ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+    enum class PriceType { MID, MICRO, NONE };
+    enum class TradeConditioning { SIGN_ONLY, SIZE, BUCKETED_SIZE, VOLUME_FRACTION, NONE };
+
+    struct TradeEvent {
+        TradeEvent() = delete;
+        TradeEvent(uint64_t timestamp, int8_t sign, uint32_t size, double price, double refPrice) :
+            timestamp(timestamp), sign(sign), size(size), price(price), refPrice(refPrice) {}
+        uint64_t timestamp;
+        int8_t sign; // +1 for buy, -1 for sell
+        uint32_t size;
+        double price;
+        double refPrice; // mid or micro price at the trade time
+    };
+
+    void set(const PriceImpactStatsConfig& config);
+    void accumulate(const OrderBookStatisticsByTimestamp& stats);
+    virtual void init() override;
+    virtual void clear() override;
+    virtual void compute() override;
+    virtual std::string getAsJson() const override;
+
+    std::vector<uint64_t> horizons;
+    std::vector<TradeEvent> trades;
+    std::vector<std::vector<double>> meanPriceImpactByHorizonAndTradeBucket;
+    std::vector<std::vector<Statistics::Histogram>> priceImpactByHorizonAndTradeBucket; // price impact at each horizon conditional on trade buckets (e.g. sign only, size buckets)
+
+private:
+    PriceType priceType = PriceType::NONE;
+    TradeConditioning tradeConditioning = TradeConditioning::NONE;
+    double minPriceTick = 0.01;
 };
 
 std::string toString(const OrderDepthProfileStats::DepthNormalization& normalization);
@@ -262,6 +295,8 @@ std::string toString(const EventTimeStats::PriceType& priceType);
 std::string toString(const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
 std::string toString(const OrderLifetimeStats::OrderDeathType& deathType);
 std::string toString(const OrderImbalanceStats::PriceType& priceType);
+std::string toString(const PriceImpactStats::PriceType& priceType);
+std::string toString(const PriceImpactStats::TradeConditioning& tradeConditioning);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization);
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType);
@@ -269,6 +304,8 @@ std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& pri
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::OrderDeathType& deathType);
 std::ostream& operator<<(std::ostream& out, const OrderImbalanceStats::PriceType& priceType);
+std::ostream& operator<<(std::ostream& out, const PriceImpactStats::PriceType& priceType);
+std::ostream& operator<<(std::ostream& out, const PriceImpactStats::TradeConditioning& tradeConditioning);
 }
 
 #endif

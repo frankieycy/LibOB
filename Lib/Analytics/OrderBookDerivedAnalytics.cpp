@@ -67,6 +67,24 @@ std::string toString(const OrderImbalanceStats::PriceType& priceType) {
     }
 }
 
+std::string toString(const PriceImpactStats::PriceType& priceType) {
+    switch (priceType) {
+        case PriceImpactStats::PriceType::MID:   return "Mid";
+        case PriceImpactStats::PriceType::MICRO: return "Micro";
+        default:                                 return "None";
+    }
+}
+
+std::string toString(const PriceImpactStats::TradeConditioning& tradeConditioning) {
+    switch (tradeConditioning) {
+        case PriceImpactStats::TradeConditioning::SIGN_ONLY:       return "SignOnly";
+        case PriceImpactStats::TradeConditioning::SIZE:            return "Size";
+        case PriceImpactStats::TradeConditioning::BUCKETED_SIZE:   return "BucketedSize";
+        case PriceImpactStats::TradeConditioning::VOLUME_FRACTION: return "VolumeFraction";
+        default:                                                   return "None";
+    }
+}
+
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization) { return out << toString(normalization); }
 std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
 std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType) { return out << toString(priceType); }
@@ -74,6 +92,8 @@ std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& pri
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::PriceSpaceDefinition& priceSpace) { return out << toString(priceSpace); }
 std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::OrderDeathType& deathType) { return out << toString(deathType); }
 std::ostream& operator<<(std::ostream& out, const OrderImbalanceStats::PriceType& priceType) { return out << toString(priceType); }
+std::ostream& operator<<(std::ostream& out, const PriceImpactStats::PriceType& priceType) { return out << toString(priceType); }
+std::ostream& operator<<(std::ostream& out, const PriceImpactStats::TradeConditioning& tradeConditioning) { return out << toString(tradeConditioning); }
 
 void OrderDepthProfileStats::set(const OrderDepthProfileConfig& config) {
     normalization = config.normalization;
@@ -775,6 +795,66 @@ std::string OrderImbalanceStats::getAsJson() const {
         << "\"priceType\":\""               << priceType                            << "\",\n"
         << "\"orderImbalanceHistogram\":"   << orderImbalanceHistogram.getAsJson()  << ",\n"
         << "\"meanNextPriceTickByOrderImbalanceBucket\":" << Utils::toString(meanNextPriceTickByOrderImbalanceBucket) << "\n"
+        << "}";
+    return oss.str();
+}
+
+void PriceImpactStats::set(const PriceImpactStatsConfig& config) {
+    horizons = config.horizons;
+    priceType = config.priceType;
+    tradeConditioning = config.tradeConditioning;
+    minPriceTick = config.minPriceTick;
+}
+
+void PriceImpactStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
+    double refPrice = Consts::NAN_DOUBLE;
+    switch (priceType) {
+        case PriceType::MID:
+            refPrice = stats.midPrice;
+            break;
+        case PriceType::MICRO:
+            refPrice = stats.microPrice;
+            break;
+        default:
+            Error::LIB_THROW("[PriceImpactStats::accumulate] Invalid price type.");
+    }
+    if (!Consts::isFinite(refPrice))
+        return;
+    if (stats.cumNumTrades) { // accumulate only if some trades occurred in this timestamp interval
+        const auto& lastTrade = stats.topLevelsSnapshot.lastTrade;
+        trades.emplace_back(stats.timestampTo, (lastTrade->getIsBuyInitiated() ? 1 : -1), lastTrade->getQuantity(), lastTrade->getPrice(), refPrice);
+    }
+}
+
+void PriceImpactStats::init() {
+    if (priceType == PriceType::NONE)
+        Error::LIB_THROW("[PriceImpactStats::init] Price type is NONE.");
+    if (tradeConditioning == TradeConditioning::NONE)
+        Error::LIB_THROW("[PriceImpactStats::init] Trade conditioning is NONE.");
+    trades.clear();
+    if (horizons.empty())
+        horizons = std::vector<uint64_t>(DefaultHorizons.begin(), DefaultHorizons.end());
+    meanPriceImpactByHorizonAndTradeBucket.resize(horizons.size());
+    priceImpactByHorizonAndTradeBucket.resize(horizons.size());
+}
+
+void PriceImpactStats::clear() {
+    trades.clear();
+    horizons.clear();
+    meanPriceImpactByHorizonAndTradeBucket.clear();
+    priceImpactByHorizonAndTradeBucket.clear();
+}
+
+void PriceImpactStats::compute() {
+    // no computation needed yet
+}
+
+std::string PriceImpactStats::getAsJson() const {
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"priceType\":\""         << priceType                    << "\",\n"
+        << "\"tradeConditioning\":\"" << tradeConditioning            << "\",\n"
+        << "\"horizons\":"            << Utils::toString(horizons)    << "\n"
         << "}";
     return oss.str();
 }
