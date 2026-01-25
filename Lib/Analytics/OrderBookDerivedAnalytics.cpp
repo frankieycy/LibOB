@@ -78,8 +78,7 @@ std::string toString(const PriceImpactStats::PriceType& priceType) {
 std::string toString(const PriceImpactStats::TradeConditioning& tradeConditioning) {
     switch (tradeConditioning) {
         case PriceImpactStats::TradeConditioning::SIGN_ONLY:       return "SignOnly";
-        case PriceImpactStats::TradeConditioning::SIZE:            return "Size";
-        case PriceImpactStats::TradeConditioning::BUCKETED_SIZE:   return "BucketedSize";
+        case PriceImpactStats::TradeConditioning::SIZE_BUCKETED:   return "SizeBucketed";
         case PriceImpactStats::TradeConditioning::VOLUME_FRACTION: return "VolumeFraction";
         default:                                                   return "None";
     }
@@ -561,7 +560,7 @@ void EventTimeStats::compute() {
     for (const auto& et : eventTimes) {
         sumEvents += static_cast<double>(et);
         sumSqEvents += static_cast<double>(et * et);
-        eventsBetweenPriceMoves.add(static_cast<double>(et));
+        eventsBetweenPriceMoves.add(et);
     }
     meanPriceTicks = sumEvents / static_cast<double>(numPriceTicks);
     varPriceTicks = (sumSqEvents / static_cast<double>(numPriceTicks)) - (meanPriceTicks * meanPriceTicks);
@@ -804,6 +803,9 @@ void PriceImpactStats::set(const PriceImpactStatsConfig& config) {
     priceType = config.priceType;
     tradeConditioning = config.tradeConditioning;
     minPriceTick = config.minPriceTick;
+    minPriceImpact = config.minPriceImpact;
+    maxPriceImpact = config.maxPriceImpact;
+    numBins = config.numBins;
 }
 
 void PriceImpactStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
@@ -836,6 +838,23 @@ void PriceImpactStats::init() {
         horizons = std::vector<uint64_t>(DefaultHorizons.begin(), DefaultHorizons.end());
     meanPriceImpactByHorizonAndTradeBucket.resize(horizons.size());
     priceImpactByHorizonAndTradeBucket.resize(horizons.size());
+    for (size_t h = 0; h < horizons.size(); ++h) {
+        switch (tradeConditioning) {
+            case TradeConditioning::SIGN_ONLY:
+                meanPriceImpactByHorizonAndTradeBucket[h].resize(NumTradeBuckets_SignOnly, 0.0);
+                priceImpactByHorizonAndTradeBucket[h].resize(NumTradeBuckets_SignOnly);
+                break;
+            case TradeConditioning::SIZE_BUCKETED:
+                meanPriceImpactByHorizonAndTradeBucket[h].resize(NumTradeBuckets_SizeBucketed + 1, 0.0);
+                priceImpactByHorizonAndTradeBucket[h].resize(NumTradeBuckets_SizeBucketed + 1);
+                break;
+            default:
+                Error::LIB_THROW("[PriceImpactStats::init] Unsupported trade conditioning.");
+        }
+        const size_t numBuckets = priceImpactByHorizonAndTradeBucket[h].size();
+        for (size_t b = 0; b < numBuckets; ++b)
+            priceImpactByHorizonAndTradeBucket[h][b].setBins(minPriceImpact.value_or(MinPriceImpact), maxPriceImpact.value_or(MaxPriceImpact), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
+    }
 }
 
 void PriceImpactStats::clear() {
@@ -846,7 +865,39 @@ void PriceImpactStats::clear() {
 }
 
 void PriceImpactStats::compute() {
-    // no computation needed yet
+    const size_t numTrades = trades.size();
+    if (numTrades == 0)
+        Error::LIB_THROW("[PriceImpactStats::compute] No trade data accumulated to compute price impact stats.");
+    for (size_t i = 0; i < numTrades; ++i) {
+        const TradeEvent& trade = trades[i];
+        const double thisRefPrice = trade.refPrice;
+        for (size_t h = 0; h < horizons.size(); ++h) {
+            const uint64_t horizon = horizons[h];
+            if (i + horizon >= numTrades)
+                continue; // not enough trades ahead to cover the horizon
+            const double futureRefPrice = trades[i + horizon].refPrice;
+            const double priceImpact = (futureRefPrice - thisRefPrice) * static_cast<double>(trade.sign); // sign-corrected to collapse buy/sell symmetry
+            const long long priceImpactTicks = Maths::countPriceTicks(priceImpact, minPriceTick);
+            size_t bucketIndex = 0;
+            switch (tradeConditioning) {
+                case TradeConditioning::SIGN_ONLY:
+                    bucketIndex = (trade.sign > 0) ? 0 : 1; // 0 for buy, 1 for sell
+                    break;
+                case TradeConditioning::SIZE_BUCKETED:
+                    bucketIndex = std::min(std::log2(static_cast<double>(trade.size)), static_cast<double>(NumTradeBuckets_SizeBucketed));
+                    break;
+                default:
+                    continue; // unsupported trade conditioning
+            }
+            priceImpactByHorizonAndTradeBucket[h][bucketIndex].add(priceImpactTicks);
+        }
+    }
+    // compute mean price impacts
+    for (size_t h = 0; h < horizons.size(); ++h) {
+        const size_t numBuckets = priceImpactByHorizonAndTradeBucket[h].size();
+        for (size_t b = 0; b < numBuckets; ++b)
+            meanPriceImpactByHorizonAndTradeBucket[h][b] = priceImpactByHorizonAndTradeBucket[h][b].getMean();
+    }
 }
 
 std::string PriceImpactStats::getAsJson() const {
@@ -854,7 +905,13 @@ std::string PriceImpactStats::getAsJson() const {
     oss << "{\n"
         << "\"priceType\":\""         << priceType                    << "\",\n"
         << "\"tradeConditioning\":\"" << tradeConditioning            << "\",\n"
-        << "\"horizons\":"            << Utils::toString(horizons)    << "\n"
+        << "\"horizons\":"            << Utils::toString(horizons)    << ",\n"
+        << "\"meanPriceImpactByHorizonAndTradeBucket\":" << "{\n";
+    for (size_t h = 0; h < horizons.size(); ++h) {
+        oss << horizons[h] << ":" << Utils::toString(meanPriceImpactByHorizonAndTradeBucket[h])
+            << ((h < horizons.size() - 1) ? ",\n" : "\n");
+    }
+    oss << "}\n"
         << "}";
     return oss.str();
 }

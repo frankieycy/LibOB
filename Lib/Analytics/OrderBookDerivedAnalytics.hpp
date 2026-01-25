@@ -256,8 +256,13 @@ private:
     the price tick change over some future timeframe (in trade event time unit) given a certain trade sign or size. */
 struct PriceImpactStats : public IOrderBookDerivedStats {
     static constexpr std::array<uint64_t, 11> DefaultHorizons{ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+    static constexpr size_t NumTradeBuckets_SignOnly = 2; // buy vs sell
+    static constexpr size_t NumTradeBuckets_SizeBucketed = 20; // size in log2 scale
+    static constexpr double MinPriceImpact = -100;
+    static constexpr double MaxPriceImpact = 100;
+    static constexpr size_t NumBins = 200;
     enum class PriceType { MID, MICRO, NONE };
-    enum class TradeConditioning { SIGN_ONLY, SIZE, BUCKETED_SIZE, VOLUME_FRACTION, NONE };
+    enum class TradeConditioning { SIGN_ONLY, SIZE_BUCKETED, VOLUME_FRACTION, NONE };
 
     struct TradeEvent {
         TradeEvent() = delete;
@@ -280,12 +285,15 @@ struct PriceImpactStats : public IOrderBookDerivedStats {
     std::vector<uint64_t> horizons;
     std::vector<TradeEvent> trades;
     std::vector<std::vector<double>> meanPriceImpactByHorizonAndTradeBucket;
-    std::vector<std::vector<Statistics::Histogram>> priceImpactByHorizonAndTradeBucket; // price impact at each horizon conditional on trade buckets (e.g. sign only, size buckets)
+    std::vector<std::vector<Statistics::Histogram>> priceImpactByHorizonAndTradeBucket; // price impact (in ticks) at each horizon conditional on trade buckets (e.g. sign only, size buckets)
 
 private:
     PriceType priceType = PriceType::NONE;
     TradeConditioning tradeConditioning = TradeConditioning::NONE;
     double minPriceTick = 0.01;
+    std::optional<double> minPriceImpact;
+    std::optional<double> maxPriceImpact;
+    std::optional<size_t> numBins;
 };
 
 std::string toString(const OrderDepthProfileStats::DepthNormalization& normalization);

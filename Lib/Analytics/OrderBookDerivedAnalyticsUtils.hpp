@@ -46,17 +46,17 @@ struct PriceReturnScalingStatsConfig {
 };
 
 struct SpreadStatsConfig {
-    double minSpread = 0.0;
-    double maxSpread = 1000.0;
-    size_t numBins = 100000;
+    double minSpread = SpreadStats::MinSpread;
+    double maxSpread = SpreadStats::MaxSpread;
+    size_t numBins = SpreadStats::NumBins;
     Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
     std::vector<size_t> lags = std::vector<size_t>(SpreadStats::DefaultLags.begin(), SpreadStats::DefaultLags.end());
 };
 
 struct EventTimeStatsConfig {
-    double minEventTime = 0.0;
-    double maxEventTime = 1000.0;
-    size_t numBins = 1000;
+    double minEventTime = EventTimeStats::MinEventTime;
+    double maxEventTime = EventTimeStats::MaxEventTime;
+    size_t numBins = EventTimeStats::NumBins;
     Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
     EventTimeStats::PriceType priceType = EventTimeStats::PriceType::MID;
 };
@@ -65,17 +65,17 @@ struct OrderLifetimeStatsConfig {
     OrderLifetimeStats::PriceSpaceDefinition priceSpace = OrderLifetimeStats::PriceSpaceDefinition::DIFF_TO_OWN_BEST;
     size_t maxTicks = 10; // size of the price buckets in price ticks of the histograms, chosen to be the same as MatchingEngineMonitor::myOrderBookNumLevels default
     double minPriceTick = 0.01;
-    double minLifetime = 0.0;
-    double maxLifetime = 1000.0;
-    size_t numBins = 1000;
+    double minLifetime = OrderLifetimeStats::MinLifetime;
+    double maxLifetime = OrderLifetimeStats::MaxLifetime;
+    size_t numBins = OrderLifetimeStats::NumBins;
     Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
 };
 
 struct OrderImbalanceStatsConfig {
     OrderImbalanceStats::PriceType priceType = OrderImbalanceStats::PriceType::MID;
-    double minImbalance = -1.0;
-    double maxImbalance = 1.0;
-    size_t numBins = 5;
+    double minImbalance = OrderImbalanceStats::MinImbalance;
+    double maxImbalance = OrderImbalanceStats::MaxImbalance;
+    size_t numBins = OrderImbalanceStats::NumBins;
     size_t maxTicks = 10; // size of the price histogram buckets in price ticks, chosen to be the same as MatchingEngineMonitor::myOrderBookNumLevels default
     double minPriceTick = 0.01;
     Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
@@ -83,8 +83,11 @@ struct OrderImbalanceStatsConfig {
 
 struct PriceImpactStatsConfig {
     std::vector<uint64_t> horizons = std::vector<uint64_t>(PriceImpactStats::DefaultHorizons.begin(), PriceImpactStats::DefaultHorizons.end());
+    double minPriceImpact = PriceImpactStats::MinPriceImpact;
+    double maxPriceImpact = PriceImpactStats::MaxPriceImpact;
+    size_t numBins = PriceImpactStats::NumBins;
     PriceImpactStats::PriceType priceType = PriceImpactStats::PriceType::MID;
-    PriceImpactStats::TradeConditioning tradeConditioning = PriceImpactStats::TradeConditioning::SIZE;
+    PriceImpactStats::TradeConditioning tradeConditioning = PriceImpactStats::TradeConditioning::SIZE_BUCKETED;
     double minPriceTick = 0.01;
 };
 
