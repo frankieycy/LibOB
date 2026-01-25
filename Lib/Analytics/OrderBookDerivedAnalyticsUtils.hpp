@@ -87,7 +87,7 @@ struct PriceImpactStatsConfig {
     double maxPriceImpact = PriceImpactStats::MaxPriceImpact;
     size_t numBins = PriceImpactStats::NumBins;
     PriceImpactStats::PriceType priceType = PriceImpactStats::PriceType::MID;
-    PriceImpactStats::TradeConditioning tradeConditioning = PriceImpactStats::TradeConditioning::SIZE_BUCKETED;
+    PriceImpactStats::TradeConditioning tradeConditioning = PriceImpactStats::TradeConditioning::SIGN_ONLY;
     double minPriceTick = 0.01;
 };
 
