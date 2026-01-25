@@ -4,8 +4,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <cstdlib>
-#include <execinfo.h>
 #include <cxxabi.h>
+#include <execinfo.h>
 
 namespace Utils {
 namespace Error {
