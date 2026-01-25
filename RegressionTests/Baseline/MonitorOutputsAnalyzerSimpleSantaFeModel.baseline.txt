@@ -55,5 +55,10 @@
 "priceType":"Mid",
 "orderImbalanceHistogram":[{"BinLower":-1,"BinUpper":-0.6,"Count":64},{"BinLower":-0.6,"BinUpper":-0.2,"Count":314},{"BinLower":-0.2,"BinUpper":0.2,"Count":713},{"BinLower":0.2,"BinUpper":0.6,"Count":337},{"BinLower":0.6,"BinUpper":1,"Count":211}],
 "meanNextPriceTickByOrderImbalanceBucket":[nan,-1.16406,-0.738854,-0.0800562,0.44362,0.635071,nan]
+},
+"PriceImpactStats":{
+"priceType":"Mid",
+"tradeConditioning":"Size",
+"horizons":[1,2,4,8,16,32,64,128,256,512,1024]
 }
 }
