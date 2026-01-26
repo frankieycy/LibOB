@@ -6,8 +6,6 @@
 #include "Market/Trade.hpp"
 
 namespace Market {
-using namespace Utils;
-
 std::ostream& operator<<(std::ostream& out, const TradeBase& trade) {
     return out << trade.getAsJson();
 }
@@ -69,7 +67,7 @@ TradeBase::TradeBase(const uint64_t id, const uint64_t timestamp, const uint32_t
 
 void TradeBase::init() {
     if (myPrice < 0)
-        Error::LIB_THROW("[TradeBase::init] Price cannot be negative.");
+        Utils::Error::LIB_THROW("[TradeBase::init] Price cannot be negative.");
 }
 
 std::string TradeBase::getAsJson() const {

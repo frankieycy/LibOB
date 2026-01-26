@@ -102,14 +102,14 @@ inline int getRandomUniformInt(const Int a, const Int b, const bool deterministi
 template<class T>
 inline T drawRandomElement(const std::vector<T>& vec, const bool deterministic = false) {
     if (vec.empty())
-        Error::LIB_THROW("[drawRandomElement] Empty vector.");
+        Utils::Error::LIB_THROW("[drawRandomElement] Empty vector.");
     return vec[getRandomUniformInt(0, static_cast<int>(vec.size()) - 1, deterministic)];
 }
 
 template<typename Container>
 auto drawRandomIterator(const Container& container, const bool deterministic = false) {
     if (container.empty())
-        Error::LIB_THROW("[drawRandomIterator] Empty container.");
+        Utils::Error::LIB_THROW("[drawRandomIterator] Empty container.");
     const size_t index = getRandomUniformInt(0, static_cast<int>(container.size()) - 1, deterministic);
     if constexpr (std::is_base_of_v<std::random_access_iterator_tag, typename std::iterator_traits<typename Container::const_iterator>::iterator_category>)
         return container.begin() + index; // specialization for random access iterators e.g. std::vector, std::deque
@@ -122,7 +122,7 @@ size_t drawIndexWithRelativeProbabilities(const std::vector<double>& probabiliti
 template<typename T>
 VectorStats getVectorStats(const std::vector<T>& vec) {
     if (vec.empty())
-        Error::LIB_THROW("[getVectorStats] Empty vector.");
+        Utils::Error::LIB_THROW("[getVectorStats] Empty vector.");
     VectorStats stats;
     stats.size = vec.size();
     stats.mean = std::accumulate(vec.begin(), vec.end(), 0.0,
@@ -204,23 +204,23 @@ public:
     double get(size_t lag) const {
         const size_t n = size();
         if (n == 0)
-            Error::LIB_THROW("[Autocorrelation::get] No values added.");
+            Utils::Error::LIB_THROW("[Autocorrelation::get] No values added.");
         if (lag >= n)
-            Error::LIB_THROW("[Autocorrelation::get] Lag is greater than or equal to number of values.");
+            Utils::Error::LIB_THROW("[Autocorrelation::get] Lag is greater than or equal to number of values.");
         const double mean = getMean();
         const double variance = getVariance();
-        if (!Consts::isFinite(variance) || Consts::isZero(variance))
-            return Consts::NAN_DOUBLE;
+        if (!Consts::isFinite(variance) || Utils::Consts::isZero(variance))
+            return Utils::Consts::NAN_DOUBLE;
         double autocovariance = 0.0;
         for (size_t i = 0; i < n - lag; ++i)
             autocovariance += (static_cast<double>(myValues[i]) - mean) * (static_cast<double>(myValues[i + lag]) - mean);
         autocovariance /= static_cast<double>(n - lag);
         return autocovariance / variance;
     }
-    double getMean() const { return myValues.empty() ? Consts::NAN_DOUBLE : mySumValues / static_cast<double>(size()); }
+    double getMean() const { return myValues.empty() ? Utils::Consts::NAN_DOUBLE : mySumValues / static_cast<double>(size()); }
     double getVariance() const {
         if (myValues.empty())
-            return Consts::NAN_DOUBLE;
+            return Utils::Consts::NAN_DOUBLE;
         const double mean = getMean();
         return (mySumValuesSquared / static_cast<double>(size())) - (mean * mean);
     }

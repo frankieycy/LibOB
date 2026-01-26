@@ -5,8 +5,6 @@
 #include "Simulator/ZeroIntelligenceUtils.hpp"
 
 namespace Simulator {
-using namespace Utils;
-
 struct ZeroIntelligenceConfig {
     // samplers for market order submit event
     std::shared_ptr<IOrderEventRateSampler> marketOrderRateSampler = std::make_shared<ConstantOrderEventRateSampler>(0.0);

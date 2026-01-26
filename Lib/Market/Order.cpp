@@ -8,7 +8,6 @@
 #include "Exchange/MatchingEngine.hpp"
 
 namespace Market {
-using namespace Utils;
 using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderBase& order) {
@@ -97,7 +96,7 @@ LimitOrder::LimitOrder(const LimitOrder& order) :
 LimitOrder::LimitOrder(const uint64_t id, const uint64_t timestamp, const Side side, const uint32_t quantity, const double price, const std::shared_ptr<OrderMetaInfo>& metaInfo) :
     OrderBase(id, timestamp, side, quantity, metaInfo),
     myPrice(price),
-    myIntPrice(Maths::castDoublePriceAsInt<uint32_t>(price)) {
+    myIntPrice(Utils::Maths::castDoublePriceAsInt<uint32_t>(price)) {
     init();
 }
 
@@ -115,16 +114,16 @@ bool LimitOrder::checkState() const {
 
 void LimitOrder::init() {
     if (getSide() == Side::NONE)
-        Error::LIB_THROW("[LimitOrder::init] Side cannot be null.");
+        Utils::Error::LIB_THROW("[LimitOrder::init] Side cannot be null.");
     if (myPrice < 0)
-        Error::LIB_THROW("[LimitOrder::init] Price cannot be negative.");
+        Utils::Error::LIB_THROW("[LimitOrder::init] Price cannot be negative.");
     setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::LIMIT);
 }
 
 void LimitOrder::cancel() {
     OrderBase::cancel();
-    myPrice = isBuy() ? 0 : Consts::POS_INF_DOUBLE;
+    myPrice = isBuy() ? 0 : Utils::Consts::POS_INF_DOUBLE;
 }
 
 std::string LimitOrder::getAsJson() const {
@@ -170,7 +169,7 @@ void MarketOrder::submit(Exchange::IMatchingEngine& matchingEngine) const {
 
 void MarketOrder::init() {
     if (getSide() == Side::NONE)
-        Error::LIB_THROW("[MarketOrder::init] Side cannot be null.");
+        Utils::Error::LIB_THROW("[MarketOrder::init] Side cannot be null.");
     setOrderState(OrderState::ACTIVE);
     setOrderType(OrderType::MARKET);
 }

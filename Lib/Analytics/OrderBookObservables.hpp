@@ -9,8 +9,6 @@
 /* The direct order book observables extracted from the matching engine per event tick.
     The structs defined are used in Analytics::MatchingEngineMonitor. */
 namespace Analytics {
-using namespace Utils;
-
 /* Order book top-level snapshot fetched directly from the matching engine. The class vector members are in ascending order of book levels,
     e.g. bidBookTopPrices = {99.0, 98.0, ...} and askBookTopPrices = {101.0, 102.0, ...}. */
 struct OrderBookTopLevelsSnapshot {

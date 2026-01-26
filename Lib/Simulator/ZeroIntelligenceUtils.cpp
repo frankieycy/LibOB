@@ -4,8 +4,6 @@
 #include "Simulator/ZeroIntelligenceUtils.hpp"
 
 namespace Simulator {
-using namespace Utils;
-
 double OrderEventRateSamplerProportionalTotalSizeFromOppositeBest::sample() const {
     const auto& bookSnapshot = getLastOrderBookTopLevelsSnapshot();
     const double priceTick = getPriceTick();
@@ -59,41 +57,41 @@ Market::Side OrderSideSamplerProportionalTotalSizeFromOppositeBest::sample() con
         }
     }
     const double totalSize = static_cast<double>(totalBuySize + totalSellSize);
-    if (Consts::isZero(totalSize))
+    if (Utils::Consts::isZero(totalSize))
         return Market::Side::NONE;
     const double buyProbability = static_cast<double>(totalBuySize) / totalSize;
-    return Statistics::getRandomUniform01(true) < buyProbability ? Market::Side::BUY : Market::Side::SELL;
+    return Utils::Statistics::getRandomUniform01(true) < buyProbability ? Market::Side::BUY : Market::Side::SELL;
 }
 
 double OrderPricePlacementSamplerUniformFromOppositeBest::sample(const Market::Side side) const {
     const auto& bookSnapshot = getLastOrderBookTopLevelsSnapshot();
     const double priceTick = getPriceTick();
-    double minPrice = Consts::NAN_DOUBLE;
-    double maxPrice = Consts::NAN_DOUBLE;
+    double minPrice = Utils::Consts::NAN_DOUBLE;
+    double maxPrice = Utils::Consts::NAN_DOUBLE;
     if (side == Market::Side::BUY) {
         if (bookSnapshot.askBookTopPrices.empty())
-            return Consts::NAN_DOUBLE;
+            return Utils::Consts::NAN_DOUBLE;
         const double bestAskPrice = bookSnapshot.askBookTopPrices[0];
         minPrice = bestAskPrice - myMaxOffsetTicks * priceTick;
         maxPrice = bestAskPrice - myMinOffsetTicks * priceTick;
     } else if (side == Market::Side::SELL) {
         if (bookSnapshot.bidBookTopPrices.empty())
-            return Consts::NAN_DOUBLE;
+            return Utils::Consts::NAN_DOUBLE;
         const double bestBidPrice = bookSnapshot.bidBookTopPrices[0];
         minPrice = bestBidPrice + myMinOffsetTicks * priceTick;
         maxPrice = bestBidPrice + myMaxOffsetTicks * priceTick;
     } else {
-        return Consts::NAN_DOUBLE;
+        return Utils::Consts::NAN_DOUBLE;
     }
-    const double sampledPrice = Statistics::getRandomUniform(minPrice, maxPrice, true);
-    return Maths::roundPriceToTick(sampledPrice, priceTick);
+    const double sampledPrice = Utils::Statistics::getRandomUniform(minPrice, maxPrice, true);
+    return Utils::Maths::roundPriceToTick(sampledPrice, priceTick);
 }
 
 std::optional<OrderCancelSpec> OrderCancellationSamplerConstantSizeUniformPriceFromOppositeBest::sample(const Market::Side side) const {
     const auto& bookSnapshot = getLastOrderBookTopLevelsSnapshot();
     const double priceTick = getPriceTick();
-    double minPrice = Consts::NAN_DOUBLE;
-    double maxPrice = Consts::NAN_DOUBLE;
+    double minPrice = Utils::Consts::NAN_DOUBLE;
+    double maxPrice = Utils::Consts::NAN_DOUBLE;
     std::vector<double> samplePrices;
     if (side == Market::Side::BUY) {
         if (bookSnapshot.askBookTopPrices.empty())
@@ -122,8 +120,8 @@ std::optional<OrderCancelSpec> OrderCancellationSamplerConstantSizeUniformPriceF
     }
     if (samplePrices.empty())
         return std::nullopt;
-    const size_t randomIndex = Statistics::getRandomUniformInt<size_t>(0, samplePrices.size() - 1, true);
-    return OrderCancelSpec{ mySize, Maths::roundPriceToTick(samplePrices[randomIndex], priceTick) };
+    const size_t randomIndex = Utils::Statistics::getRandomUniformInt<size_t>(0, samplePrices.size() - 1, true);
+    return OrderCancelSpec{ mySize, Utils::Maths::roundPriceToTick(samplePrices[randomIndex], priceTick) };
 }
 }
 

@@ -13,7 +13,7 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderExecu
     messageType = MessageType::ORDER_EXECUTE_VISIBLE;
     orderId = report.orderId;
     quantity = report.filledQuantity;
-    price = Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice);
+    price = Utils::Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice);
     isBuy = report.orderSide == Market::Side::BUY;
 }
 
@@ -27,7 +27,7 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::LimitOrder
     messageType = MessageType::ORDER_ADD;
     orderId = report.orderId;
     quantity = report.orderQuantity;
-    price = Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice);
+    price = Utils::Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice);
     isBuy = report.orderSide == Market::Side::BUY;
 }
 
@@ -48,7 +48,7 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderCance
     messageType = MessageType::ORDER_DELETE;
     orderId = report.orderId;
     quantity = report.orderQuantity.value_or(0); // entire cancelled quantity
-    price = Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice.value_or(0.0));
+    price = Utils::Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice.value_or(0.0));
     isBuy = report.orderSide == Market::Side::BUY;
 }
 
@@ -59,7 +59,7 @@ LobsterDataParser::OrderBookMessage::OrderBookMessage(const Exchange::OrderParti
     messageType = MessageType::ORDER_CANCEL;
     orderId = report.orderId;
     quantity = report.cancelQuantity; // partially cancelled quantity
-    price = Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice.value_or(0.0));
+    price = Utils::Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice.value_or(0.0));
     isBuy = report.orderSide == Market::Side::BUY;
 }
 

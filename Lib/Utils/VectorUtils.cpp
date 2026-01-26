@@ -6,7 +6,7 @@
 namespace Utils {
 namespace Vector {
 std::vector<double> getVectorRange(const double a, const double b, const double x) {
-    Error::LIB_ASSERT((a <= b && x > 0) || (a >= b && x < 0), "[getVectorRange] Invalid range.");
+    Utils::Error::LIB_ASSERT((a <= b && x > 0) || (a >= b && x < 0), "[getVectorRange] Invalid range.");
     std::vector<double> vec;
     for (double i = a; i <= b; i += x)
         vec.push_back(i);
@@ -14,7 +14,7 @@ std::vector<double> getVectorRange(const double a, const double b, const double 
 }
 
 std::vector<double> getVectorRange(const double a, const double b, const int n) {
-    Error::LIB_ASSERT(n > 0, "[getVectorRange] n must be positive.");
+    Utils::Error::LIB_ASSERT(n > 0, "[getVectorRange] n must be positive.");
     std::vector<double> vec;
     const double x = (b - a) / n;
     for (int i = 0; i <= n; ++i)

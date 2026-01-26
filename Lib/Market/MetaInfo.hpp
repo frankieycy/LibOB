@@ -3,8 +3,6 @@
 #include "Utils/Utils.hpp"
 
 namespace Market {
-using namespace Utils;
-
 class TradeMetaInfo {
 public:
     TradeMetaInfo() = default;
@@ -17,11 +15,11 @@ public:
     const char* getExchangeIdCharRaw() const { return myExchangeIdCharRaw; }
     void setSymbol(const std::string& symbol) {
         mySymbol = symbol;
-        String::stringToCharRaw(symbol, mySymbolCharRaw, '0');
+        Utils::String::stringToCharRaw(symbol, mySymbolCharRaw, '0');
     }
     void setExchangeId(const std::string& exchangeId) {
         myExchangeId = exchangeId;
-        String::stringToCharRaw(exchangeId, myExchangeIdCharRaw, '0');
+        Utils::String::stringToCharRaw(exchangeId, myExchangeIdCharRaw, '0');
     }
     virtual std::shared_ptr<TradeMetaInfo> clone() const { return std::make_shared<TradeMetaInfo>(*this); }
     virtual void init();
@@ -45,11 +43,11 @@ public:
     const char* getMarketParticipantCharRaw() const { return myMarketParticipantIdCharRaw; }
     void setAgentId(const std::string& agentId) {
         myAgentId = agentId;
-        myAgentIdHash = String::hashStringTo<uint64_t>(agentId);
+        myAgentIdHash = Utils::String::hashStringTo<uint64_t>(agentId);
     }
     void setMarketParticipantId(const std::string& marketParticipantId) {
         myMarketParticipantId = marketParticipantId;
-        String::stringToCharRaw(marketParticipantId, myMarketParticipantIdCharRaw, '0');
+        Utils::String::stringToCharRaw(marketParticipantId, myMarketParticipantIdCharRaw, '0');
     }
     virtual std::shared_ptr<TradeMetaInfo> clone() const override { return std::make_shared<OrderMetaInfo>(*this); }
     virtual void init() override;

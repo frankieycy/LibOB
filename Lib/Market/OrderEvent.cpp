@@ -6,7 +6,6 @@
 #include "Market/Order.hpp"
 
 namespace Market {
-using namespace Utils;
 using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event) {
@@ -34,11 +33,11 @@ OrderEventBase::OrderEventBase(const uint64_t eventId, const uint64_t orderId, c
     myOrder(order) {}
 
 void OrderEventBase::applyTo(MarketOrder& /* order */) const {
-    Error::LIB_THROW("No implementation for OrderEventBase::applyTo(MarketOrder&).");
+    Utils::Error::LIB_THROW("No implementation for OrderEventBase::applyTo(MarketOrder&).");
 }
 
 void OrderEventBase::applyTo(LimitOrder& /* order */) const {
-    Error::LIB_THROW("No implementation for OrderEventBase::applyTo(LimitOrder&).");
+    Utils::Error::LIB_THROW("No implementation for OrderEventBase::applyTo(LimitOrder&).");
 }
 
 std::string OrderEventBase::getAsJson() const {
@@ -69,7 +68,7 @@ OrderSubmitEvent::OrderSubmitEvent(const uint64_t eventId, const uint64_t orderI
 
 void OrderSubmitEvent::init() {
     if (!getOrder())
-        Error::LIB_THROW("[OrderSubmitEvent::init] Order is null.");
+        Utils::Error::LIB_THROW("[OrderSubmitEvent::init] Order is null.");
     setEventType(OrderEventType::SUBMIT);
 }
 
@@ -128,7 +127,7 @@ void OrderFillEvent::applyTo(LimitOrder& order) const {
 
 void OrderFillEvent::init() {
     if (myFillPrice < 0)
-        Error::LIB_THROW("[OrderFillEvent::init] Price cannot be negative.");
+        Utils::Error::LIB_THROW("[OrderFillEvent::init] Price cannot be negative.");
     setEventType(OrderEventType::FILL);
 }
 
@@ -169,7 +168,7 @@ void OrderModifyPriceEvent::applyTo(LimitOrder& order) const {
 
 void OrderModifyPriceEvent::init() {
     if (myModifiedPrice < 0)
-        Error::LIB_THROW("[OrderModifyPriceEvent::init] Price cannot be negative.");
+        Utils::Error::LIB_THROW("[OrderModifyPriceEvent::init] Price cannot be negative.");
     setEventType(OrderEventType::MODIFY_PRICE);
 }
 
@@ -358,7 +357,7 @@ void OrderCancelAndReplaceEvent::applyTo(LimitOrder& order) const {
 
 void OrderCancelAndReplaceEvent::init() {
     if (myModifiedPrice && *myModifiedPrice < 0)
-        Error::LIB_THROW("[OrderCancelAndReplaceEvent::init] Modified price cannot be negative.");
+        Utils::Error::LIB_THROW("[OrderCancelAndReplaceEvent::init] Modified price cannot be negative.");
     setEventType(OrderEventType::CANCEL_REPLACE);
 }
 

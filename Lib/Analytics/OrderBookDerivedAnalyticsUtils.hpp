@@ -6,8 +6,6 @@
 #include "Analytics/OrderBookDerivedAnalytics.hpp"
 
 namespace Analytics {
-using namespace Utils;
-
 struct BurnInPolicy {
     enum class Type { EVENT_COUNT, TRADE_COUNT, VOLUME, AUTO_CONVERGENCE, NONE };
     Type type = Type::NONE;
@@ -23,8 +21,8 @@ struct BurnInPolicy {
 };
 
 struct OrderBookTraces {
-    Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> orderBookStatisticsCollector;
-    Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> orderProcessingReportsCollector;
+    Utils::Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> orderBookStatisticsCollector;
+    Utils::Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> orderProcessingReportsCollector;
 };
 
 struct OrderDepthProfileConfig {
@@ -49,7 +47,7 @@ struct SpreadStatsConfig {
     double minSpread = SpreadStats::MinSpread;
     double maxSpread = SpreadStats::MaxSpread;
     size_t numBins = SpreadStats::NumBins;
-    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+    Utils::Statistics::Histogram::Binning binning = Utils::Statistics::Histogram::Binning::UNIFORM;
     std::vector<size_t> lags = std::vector<size_t>(SpreadStats::DefaultLags.begin(), SpreadStats::DefaultLags.end());
 };
 
@@ -57,7 +55,7 @@ struct EventTimeStatsConfig {
     double minEventTime = EventTimeStats::MinEventTime;
     double maxEventTime = EventTimeStats::MaxEventTime;
     size_t numBins = EventTimeStats::NumBins;
-    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+    Utils::Statistics::Histogram::Binning binning = Utils::Statistics::Histogram::Binning::UNIFORM;
     EventTimeStats::PriceType priceType = EventTimeStats::PriceType::MID;
 };
 
@@ -68,7 +66,7 @@ struct OrderLifetimeStatsConfig {
     double minLifetime = OrderLifetimeStats::MinLifetime;
     double maxLifetime = OrderLifetimeStats::MaxLifetime;
     size_t numBins = OrderLifetimeStats::NumBins;
-    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+    Utils::Statistics::Histogram::Binning binning = Utils::Statistics::Histogram::Binning::UNIFORM;
 };
 
 struct OrderImbalanceStatsConfig {
@@ -78,7 +76,7 @@ struct OrderImbalanceStatsConfig {
     size_t numBins = OrderImbalanceStats::NumBins;
     size_t maxTicks = 10; // size of the price histogram buckets in price ticks, chosen to be the same as MatchingEngineMonitor::myOrderBookNumLevels default
     double minPriceTick = 0.01;
-    Statistics::Histogram::Binning binning = Statistics::Histogram::Binning::UNIFORM;
+    Utils::Statistics::Histogram::Binning binning = Utils::Statistics::Histogram::Binning::UNIFORM;
 };
 
 struct PriceImpactStatsConfig {

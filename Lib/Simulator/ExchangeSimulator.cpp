@@ -8,21 +8,19 @@
 #include "Simulator/ExchangeSimulator.hpp"
 
 namespace Simulator {
-using namespace Utils;
-
 void IExchangeSimulator::setState(const ExchangeSimulatorState state) {
     myState = state;
     if (isDebugMode())
-        *myLogger << Logger::LogLevel::DEBUG << "[IExchangeSimulator] Simulator state set to " << myState << ".";
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[IExchangeSimulator] Simulator state set to " << myState << ".";
 }
 
 void IExchangeSimulator::setLoggerLogFile(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) {
     if (logFileName.empty()) {
-        *myLogger << Logger::LogLevel::WARNING << "[IExchangeSimulator::setLoggerLogFile] Log file name is empty, logger will not log to file.";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[IExchangeSimulator::setLoggerLogFile] Log file name is empty, logger will not log to file.";
         return;
     }
     myLogger->setLogFile(logFileName, logToConsole, showLogTimestamp);
-    *myLogger << Logger::LogLevel::INFO << "[IExchangeSimulator::setLoggerLogFile] Logger log file set to: " << logFileName;
+    *myLogger << Utils::Logger::LogLevel::INFO << "[IExchangeSimulator::setLoggerLogFile] Logger log file set to: " << logFileName;
 }
 
 void IExchangeSimulator::reset() {
@@ -38,26 +36,26 @@ ExchangeSimulatorBase::ExchangeSimulatorBase(const std::shared_ptr<Exchange::IMa
 void ExchangeSimulatorBase::init() {
     // myEventScheduler is not initialized here as it relies on the implementation details of the derived classes,
     // whose init function shall call setEventScheduler(makeEventScheduler()).
-    Error::LIB_ASSERT(getState() == ExchangeSimulatorState::UNINITIALIZED,
+    Utils::Error::LIB_ASSERT(getState() == ExchangeSimulatorState::UNINITIALIZED,
         "[ExchangeSimulatorBase] Simulator state is not uninitialized.");
     if (!myMatchingEngine)
-        Error::LIB_THROW("[ExchangeSimulatorBase] Matching engine is null during simulator initialization.");
+        Utils::Error::LIB_THROW("[ExchangeSimulatorBase] Matching engine is null during simulator initialization.");
     myOrderEventManager = std::make_shared<Market::OrderEventManagerBase>(myMatchingEngine);
     myMatchingEngineMonitor = std::make_shared<Analytics::MatchingEngineMonitor>(myMatchingEngine);
     myMatchingEngineMonitor->setClockOverride(getSimulationClock());
     myMatchingEngineMonitor->setOrderBookNumLevels(getConfig().monitoredLevels);
     myMatchingEngineMonitor->setMinimumPriceTick(getConfig().grid.minPriceTick);
     myOrderEventManager->setMinimumPriceTick(getConfig().grid.minPriceTick);
-    Statistics::RNG::setDeterministicSeed(getRandomSeed());
+    Utils::Statistics::RNG::setDeterministicSeed(getRandomSeed());
     setState(ExchangeSimulatorState::READY);
     if (isDebugMode())
-        *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Simulator initialization complete with monitored levels "
+        *getLogger() << Utils::Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Simulator initialization complete with monitored levels "
                      << getConfig().monitoredLevels << " and minimum price tick " << getConfig().grid.minPriceTick << ".";
 }
 
 void ExchangeSimulatorBase::reset() {
     // empties out the matching engine and re-initializes the simulator
-    Error::LIB_ASSERT(getState() != ExchangeSimulatorState::RUNNING,
+    Utils::Error::LIB_ASSERT(getState() != ExchangeSimulatorState::RUNNING,
         "[ExchangeSimulatorBase] Cannot reset simulator while it is running.");
     myMatchingEngine->reset();
     myOrderEventManager->reset();
@@ -67,7 +65,7 @@ void ExchangeSimulatorBase::reset() {
 
 void ExchangeSimulatorBase::setRandomSeed(const uint seed) {
     IExchangeSimulator::setRandomSeed(seed);
-    Statistics::RNG::setDeterministicSeed(seed);
+    Utils::Statistics::RNG::setDeterministicSeed(seed);
 }
 
 void ExchangeSimulatorBase::setConfig(const ExchangeSimulatorConfig& config) {
@@ -102,7 +100,7 @@ void ExchangeSimulatorBase::initOrderBookBuilding(const VolumeProfile& bidProfil
 
 void ExchangeSimulatorBase::submit(const OrderEventBase& orderEvent) {
     if (isDebugMode())
-        *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Submitting order event at timestamp " << getCurrentTimestamp() << ": " << orderEvent;
+        *getLogger() << Utils::Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Submitting order event at timestamp " << getCurrentTimestamp() << ": " << orderEvent;
     orderEvent.submitTo(*myOrderEventManager);
 }
 
@@ -132,12 +130,12 @@ void ExchangeSimulatorBase::advanceToTimestamp(const uint64_t timestamp) {
 }
 
 void ExchangeSimulatorBase::simulate() {
-    Error::LIB_ASSERT(getState() == ExchangeSimulatorState::READY,
+    Utils::Error::LIB_ASSERT(getState() == ExchangeSimulatorState::READY,
         "[ExchangeSimulatorBase] Simulator state is not ready to start simulation.");
     const auto& config = getConfig();
     const bool showOrderBookPerEvent = isDebugMode() && config.debugShowOrderBookPerEvent;
     if (showOrderBookPerEvent)
-        *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at initialization:\n" << *myMatchingEngine;
+        *getLogger() << Utils::Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at initialization:\n" << *myMatchingEngine;
     if (config.resetMatchingEngineMonitorPreSimulation)
         myMatchingEngineMonitor->reset(true /* keepLastSnapshot */);
     setState(ExchangeSimulatorState::RUNNING);
@@ -146,7 +144,7 @@ void ExchangeSimulatorBase::simulate() {
             break;
         stepOneTick(); // wall-clock tick
         if (showOrderBookPerEvent)
-            *getLogger() << Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at timestamp " << getCurrentTimestamp() << ":\n" << *myMatchingEngine;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[ExchangeSimulatorBase] Order book snapshot at timestamp " << getCurrentTimestamp() << ":\n" << *myMatchingEngine;
     }
     setState(ExchangeSimulatorState::FINISHED);
 }

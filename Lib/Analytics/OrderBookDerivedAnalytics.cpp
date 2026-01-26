@@ -5,7 +5,6 @@
 #include "Analytics/OrderBookDerivedAnalyticsUtils.hpp"
 
 namespace Analytics {
-using namespace Utils;
 using Utils::operator<<;
 
 void OrderDepthProfileStats::set(const OrderDepthProfileConfig& config) {
@@ -24,9 +23,9 @@ void OrderDepthProfileStats::accumulate(const OrderBookTopLevelsSnapshot& snapsh
     std::vector<double> bidDepthProfile(maxTicks, 0.0);
     std::vector<double> askDepthProfile(maxTicks, 0.0);
     const long long llMaxTicks = static_cast<long long>(maxTicks);
-    double midPrice = Consts::NAN_DOUBLE;
-    double bidRefPrice = Consts::NAN_DOUBLE;
-    double askRefPrice = Consts::NAN_DOUBLE;
+    double midPrice = Utils::Consts::NAN_DOUBLE;
+    double bidRefPrice = Utils::Consts::NAN_DOUBLE;
+    double askRefPrice = Utils::Consts::NAN_DOUBLE;
     switch (priceSpace) {
         case PriceSpaceDefinition::DIFF_TO_MID:
             if (!snapshot.bidBookTopPrices.empty() && !snapshot.askBookTopPrices.empty())
@@ -65,7 +64,7 @@ void OrderDepthProfileStats::accumulate(const OrderBookTopLevelsSnapshot& snapsh
                 default:
                     continue; // invalid price space definition
             }
-            const long long tickIndex = Maths::countPriceTicks(priceDiff, minPriceTick);
+            const long long tickIndex = Utils::Maths::countPriceTicks(priceDiff, minPriceTick);
             if (tickIndex < llMaxTicks) {
                 const uint32_t size = snapshot.bidBookTopSizes[level];
                 bidDepthProfile[tickIndex] += static_cast<double>(size);
@@ -88,7 +87,7 @@ void OrderDepthProfileStats::accumulate(const OrderBookTopLevelsSnapshot& snapsh
                 default:
                     continue; // invalid price space definition
             }
-            const long long tickIndex = Maths::countPriceTicks(priceDiff, minPriceTick);
+            const long long tickIndex = Utils::Maths::countPriceTicks(priceDiff, minPriceTick);
             if (tickIndex < llMaxTicks) {
                 const uint32_t size = snapshot.askBookTopSizes[level];
                 askDepthProfile[tickIndex] += static_cast<double>(size);
@@ -110,7 +109,7 @@ void OrderDepthProfileStats::accumulate(const OrderBookTopLevelsSnapshot& snapsh
         askDepthDenom = askDepthProfile.empty() ? 0.0 : askDepthProfile[0];
     }
     if (normalization == DepthNormalization::BY_TOTAL_DEPTH || normalization == DepthNormalization::BY_BEST_LEVEL) {
-        if (Consts::isZero(bidDepthDenom) || Consts::isZero(askDepthDenom))
+        if (Utils::Consts::isZero(bidDepthDenom) || Utils::Consts::isZero(askDepthDenom))
             return; // cannot normalize with zero total depth, skip this snapshot
     }
     for (size_t i = 0; i < maxTicks; ++i) {
@@ -129,9 +128,9 @@ void OrderDepthProfileStats::accumulate(const OrderBookTopLevelsSnapshot& snapsh
 
 void OrderDepthProfileStats::init() {
     if (normalization == DepthNormalization::NONE)
-        Error::LIB_THROW("[OrderDepthProfileStats::init] Depth normalization is NONE.");
+        Utils::Error::LIB_THROW("[OrderDepthProfileStats::init] Depth normalization is NONE.");
     if (priceSpace == PriceSpaceDefinition::NONE)
-        Error::LIB_THROW("[OrderDepthProfileStats::init] Price space definition is NONE.");
+        Utils::Error::LIB_THROW("[OrderDepthProfileStats::init] Price space definition is NONE.");
     numSnapshots = 0;
     avgBid.clear();
     avgAsk.clear();
@@ -162,7 +161,7 @@ void OrderDepthProfileStats::clear() {
 
 void OrderDepthProfileStats::compute() {
     if (numSnapshots == 0)
-        Error::LIB_THROW("[OrderDepthProfileStats::compute] No snapshots accumulated to compute the depth profile.");
+        Utils::Error::LIB_THROW("[OrderDepthProfileStats::compute] No snapshots accumulated to compute the depth profile.");
     avgBid.resize(maxTicks, 0.0);
     avgAsk.resize(maxTicks, 0.0);
     stdBid.resize(maxTicks, 0.0);
@@ -253,7 +252,7 @@ void PriceReturnScalingStats::set(const PriceReturnScalingStatsConfig& config) {
 }
 
 void PriceReturnScalingStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
-    double price = Consts::NAN_DOUBLE;
+    double price = Utils::Consts::NAN_DOUBLE;
     switch (priceType) {
         case PriceType::LAST_TRADE:
             price = stats.lastTradePrice;
@@ -265,9 +264,9 @@ void PriceReturnScalingStats::accumulate(const OrderBookStatisticsByTimestamp& s
             price = stats.microPrice;
             break;
         default:
-            Error::LIB_THROW("[PriceReturnScalingStats::accumulate] Invalid price type.");
+            Utils::Error::LIB_THROW("[PriceReturnScalingStats::accumulate] Invalid price type.");
     }
-    if (!Consts::isFinite(price))
+    if (!Utils::Consts::isFinite(price))
         return;
     prices.push_back(price);
     timestamps.push_back(stats.timestampTo);
@@ -275,7 +274,7 @@ void PriceReturnScalingStats::accumulate(const OrderBookStatisticsByTimestamp& s
 
 void PriceReturnScalingStats::init() {
     if (priceType == PriceType::NONE)
-        Error::LIB_THROW("[PriceReturnScalingStats::init] Price type is NONE.");
+        Utils::Error::LIB_THROW("[PriceReturnScalingStats::init] Price type is NONE.");
     prices.clear();
     timestamps.clear();
     sumReturns.clear();
@@ -362,7 +361,7 @@ void SpreadStats::init() {
     spreadACF.clear();
     autocorrelations.clear();
     if (spreadHistogram.empty()) // check if bins are unset
-        spreadHistogram.setBins(MinSpread, MaxSpread, NumBins, Statistics::Histogram::Binning::UNIFORM);
+        spreadHistogram.setBins(MinSpread, MaxSpread, NumBins, Utils::Statistics::Histogram::Binning::UNIFORM);
     if (lags.empty())
         lags = std::vector<size_t>(DefaultLags.begin(), DefaultLags.end());
 }
@@ -405,7 +404,7 @@ void EventTimeStats::set(const EventTimeStatsConfig& config) {
 }
 
 void EventTimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
-    double price = Consts::NAN_DOUBLE;
+    double price = Utils::Consts::NAN_DOUBLE;
     switch (priceType) {
         case PriceType::MID:
             price = stats.midPrice;
@@ -414,9 +413,9 @@ void EventTimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
             price = stats.microPrice;
             break;
         default:
-            Error::LIB_THROW("[EventTimeStats::accumulate] Invalid price type.");
+            Utils::Error::LIB_THROW("[EventTimeStats::accumulate] Invalid price type.");
     }
-    if (!Consts::isFinite(price))
+    if (!Utils::Consts::isFinite(price))
         return;
     const size_t numEvents = stats.cumNumNewLimitOrders // all order events
                            + stats.cumNumNewMarketOrders
@@ -430,7 +429,7 @@ void EventTimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
 
 void EventTimeStats::init() {
     if (priceType == PriceType::NONE)
-        Error::LIB_THROW("[EventTimeStats::init] Price type is NONE.");
+        Utils::Error::LIB_THROW("[EventTimeStats::init] Price type is NONE.");
     numPriceTicks = 0;
     meanPriceTicks = 0.0;
     varPriceTicks = 0.0;
@@ -439,7 +438,7 @@ void EventTimeStats::init() {
     timestamps.clear();
     eventsBetweenPriceMoves.clear(); // clear existing data but retain bins
     if (eventsBetweenPriceMoves.empty()) // check if bins are unset
-        eventsBetweenPriceMoves.setBins(MinEventTime, MaxEventTime, NumBins, Statistics::Histogram::Binning::UNIFORM);
+        eventsBetweenPriceMoves.setBins(MinEventTime, MaxEventTime, NumBins, Utils::Statistics::Histogram::Binning::UNIFORM);
 }
 
 void EventTimeStats::clear() {
@@ -455,7 +454,7 @@ void EventTimeStats::clear() {
 void EventTimeStats::compute() {
     const size_t numPrices = prices.size();
     if (numPrices == 0)
-        Error::LIB_THROW("[EventTimeStats::compute] No price data accumulated to compute event time stats.");
+        Utils::Error::LIB_THROW("[EventTimeStats::compute] No price data accumulated to compute event time stats.");
     std::vector<size_t> eventTimes;
     size_t cumEventTime = eventCounts[0];
     for (size_t i = 1; i < numPrices; ++i) {
@@ -468,7 +467,7 @@ void EventTimeStats::compute() {
     }
     numPriceTicks = eventTimes.size();
     if (numPriceTicks == 0)
-        Error::LIB_THROW("[EventTimeStats::compute] No price ticks detected to compute event time stats.");
+        Utils::Error::LIB_THROW("[EventTimeStats::compute] No price ticks detected to compute event time stats.");
     double sumEvents = 0.0;
     double sumSqEvents = 0.0;
     for (const auto& et : eventTimes) {
@@ -515,13 +514,13 @@ void OrderLifetimeStats::accumulate(const OrderBookStatisticsByTimestamp& stats,
             currentRefPrice = (side == Market::Side::SELL) ? stats.bestAskPrice : stats.bestBidPrice;
             break;
         default:
-            Error::LIB_THROW("[OrderLifetimeStats::accumulate] Invalid price space definition.");
+            Utils::Error::LIB_THROW("[OrderLifetimeStats::accumulate] Invalid price space definition.");
     }
 }
 
 void OrderLifetimeStats::onOrderPlacement(const uint64_t orderId, const Market::Side side, const uint32_t quantity, const double price) {
     // ref price set in accumulate() must have the same side
-    const long long priceDiffTicks = Maths::countPriceTicks(std::abs(price - currentRefPrice), minPriceTick);
+    const long long priceDiffTicks = Utils::Maths::countPriceTicks(std::abs(price - currentRefPrice), minPriceTick);
     orderBirths.try_emplace(orderId, currentTimestamp, side, quantity, price, currentRefPrice, priceDiffTicks);
 }
 
@@ -580,7 +579,7 @@ void OrderLifetimeStats::onOrderExecute(const uint64_t orderId, const uint32_t e
 
 void OrderLifetimeStats::init() {
     if (priceSpace == PriceSpaceDefinition::NONE)
-        Error::LIB_THROW("[OrderLifetimeStats::init] Price space definition is NONE.");
+        Utils::Error::LIB_THROW("[OrderLifetimeStats::init] Price space definition is NONE.");
     orderBirths.clear();
     meanLifetimeToCancelByBidPriceBucket.resize(maxTicks, 0.0);
     meanLifetimeToCancelByAskPriceBucket.resize(maxTicks, 0.0);
@@ -591,10 +590,10 @@ void OrderLifetimeStats::init() {
     lifetimeToExecuteByBidPriceBucket.resize(maxTicks);
     lifetimeToExecuteByAskPriceBucket.resize(maxTicks);
     for (size_t i = 0; i < maxTicks; ++i) {
-        lifetimeToCancelByBidPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
-        lifetimeToCancelByAskPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
-        lifetimeToExecuteByBidPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
-        lifetimeToExecuteByAskPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
+        lifetimeToCancelByBidPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Utils::Statistics::Histogram::Binning::UNIFORM);
+        lifetimeToCancelByAskPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Utils::Statistics::Histogram::Binning::UNIFORM);
+        lifetimeToExecuteByBidPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Utils::Statistics::Histogram::Binning::UNIFORM);
+        lifetimeToExecuteByAskPriceBucket[i].setBins(minLifetime.value_or(MinLifetime), maxLifetime.value_or(MaxLifetime), numBins.value_or(NumBins), Utils::Statistics::Histogram::Binning::UNIFORM);
     }
 }
 
@@ -642,7 +641,7 @@ void OrderImbalanceStats::set(const OrderImbalanceStatsConfig& config) {
 }
 
 void OrderImbalanceStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
-    double price = Consts::NAN_DOUBLE;
+    double price = Utils::Consts::NAN_DOUBLE;
     switch (priceType) {
         case PriceType::MID:
             price = stats.midPrice;
@@ -651,9 +650,9 @@ void OrderImbalanceStats::accumulate(const OrderBookStatisticsByTimestamp& stats
             price = stats.microPrice;
             break;
         default:
-            Error::LIB_THROW("[OrderImbalanceStats::accumulate] Invalid price type.");
+            Utils::Error::LIB_THROW("[OrderImbalanceStats::accumulate] Invalid price type.");
     }
-    if (!Consts::isFinite(price))
+    if (!Utils::Consts::isFinite(price))
         return;
     prices.push_back(price);
     imbalances.push_back(stats.orderImbalance);
@@ -663,17 +662,17 @@ void OrderImbalanceStats::accumulate(const OrderBookStatisticsByTimestamp& stats
 
 void OrderImbalanceStats::init() {
     if (priceType == PriceType::NONE)
-        Error::LIB_THROW("[OrderImbalanceStats::init] Price type is NONE.");
+        Utils::Error::LIB_THROW("[OrderImbalanceStats::init] Price type is NONE.");
     prices.clear();
     imbalances.clear();
     timestamps.clear();
     orderImbalanceHistogram.clear(); // clear existing data but retain bins
     if (orderImbalanceHistogram.empty()) // check if bins are unset
-        orderImbalanceHistogram.setBins(MinImbalance, MaxImbalance, NumBins, Statistics::Histogram::Binning::UNIFORM);
+        orderImbalanceHistogram.setBins(MinImbalance, MaxImbalance, NumBins, Utils::Statistics::Histogram::Binning::UNIFORM);
     meanNextPriceTickByOrderImbalanceBucket.resize(orderImbalanceHistogram.size(), 0.0);
     nextPriceTickByOrderImbalanceBucket.resize(orderImbalanceHistogram.size());
     for (size_t i = 0; i < orderImbalanceHistogram.size(); ++i) // price buckets have bin width of minPriceTick
-        nextPriceTickByOrderImbalanceBucket[i].setBins(-minPriceTick * maxTicks, minPriceTick * maxTicks, 2 * maxTicks, Statistics::Histogram::Binning::UNIFORM);
+        nextPriceTickByOrderImbalanceBucket[i].setBins(-minPriceTick * maxTicks, minPriceTick * maxTicks, 2 * maxTicks, Utils::Statistics::Histogram::Binning::UNIFORM);
 }
 
 void OrderImbalanceStats::clear() {
@@ -690,7 +689,7 @@ void OrderImbalanceStats::clear() {
 void OrderImbalanceStats::compute() {
     const size_t numImbalances = imbalances.size();
     if (numImbalances == 0)
-        Error::LIB_THROW("[OrderImbalanceStats::compute] No imbalance data accumulated to compute order imbalance stats.");
+        Utils::Error::LIB_THROW("[OrderImbalanceStats::compute] No imbalance data accumulated to compute order imbalance stats.");
     for (size_t i = 0; i < numImbalances - 1; ++i) {
         const double imbalance = imbalances[i];
         const double thisPrice = prices[i];
@@ -723,7 +722,7 @@ void PriceImpactStats::set(const PriceImpactStatsConfig& config) {
 }
 
 void PriceImpactStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
-    double refPrice = Consts::NAN_DOUBLE;
+    double refPrice = Utils::Consts::NAN_DOUBLE;
     switch (priceType) {
         case PriceType::MID:
             refPrice = stats.midPrice;
@@ -732,9 +731,9 @@ void PriceImpactStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
             refPrice = stats.microPrice;
             break;
         default:
-            Error::LIB_THROW("[PriceImpactStats::accumulate] Invalid price type.");
+            Utils::Error::LIB_THROW("[PriceImpactStats::accumulate] Invalid price type.");
     }
-    if (!Consts::isFinite(refPrice))
+    if (!Utils::Consts::isFinite(refPrice))
         return;
     if (stats.cumNumTrades) { // accumulate only if some trades occurred in this timestamp interval
         const auto& lastTrade = stats.topLevelsSnapshot.lastTrade;
@@ -744,9 +743,9 @@ void PriceImpactStats::accumulate(const OrderBookStatisticsByTimestamp& stats) {
 
 void PriceImpactStats::init() {
     if (priceType == PriceType::NONE)
-        Error::LIB_THROW("[PriceImpactStats::init] Price type is NONE.");
+        Utils::Error::LIB_THROW("[PriceImpactStats::init] Price type is NONE.");
     if (tradeConditioning == TradeConditioning::NONE)
-        Error::LIB_THROW("[PriceImpactStats::init] Trade conditioning is NONE.");
+        Utils::Error::LIB_THROW("[PriceImpactStats::init] Trade conditioning is NONE.");
     trades.clear();
     if (horizons.empty())
         horizons = std::vector<uint64_t>(DefaultHorizons.begin(), DefaultHorizons.end());
@@ -763,11 +762,11 @@ void PriceImpactStats::init() {
                 priceImpactByHorizonAndTradeBucket[h].resize(NumTradeBuckets_SizeBucketed + 1);
                 break;
             default:
-                Error::LIB_THROW("[PriceImpactStats::init] Unsupported trade conditioning.");
+                Utils::Error::LIB_THROW("[PriceImpactStats::init] Unsupported trade conditioning.");
         }
         const size_t numBuckets = priceImpactByHorizonAndTradeBucket[h].size();
         for (size_t b = 0; b < numBuckets; ++b)
-            priceImpactByHorizonAndTradeBucket[h][b].setBins(minPriceImpact.value_or(MinPriceImpact), maxPriceImpact.value_or(MaxPriceImpact), numBins.value_or(NumBins), Statistics::Histogram::Binning::UNIFORM);
+            priceImpactByHorizonAndTradeBucket[h][b].setBins(minPriceImpact.value_or(MinPriceImpact), maxPriceImpact.value_or(MaxPriceImpact), numBins.value_or(NumBins), Utils::Statistics::Histogram::Binning::UNIFORM);
     }
 }
 
@@ -781,7 +780,7 @@ void PriceImpactStats::clear() {
 void PriceImpactStats::compute() {
     const size_t numTrades = trades.size();
     if (numTrades == 0)
-        Error::LIB_THROW("[PriceImpactStats::compute] No trade data accumulated to compute price impact stats.");
+        Utils::Error::LIB_THROW("[PriceImpactStats::compute] No trade data accumulated to compute price impact stats.");
     for (size_t i = 0; i < numTrades; ++i) {
         const TradeEvent& trade = trades[i];
         const double thisRefPrice = trade.refPrice;
@@ -791,7 +790,7 @@ void PriceImpactStats::compute() {
                 continue; // not enough trades ahead to cover the horizon
             const double futureRefPrice = trades[i + horizon].refPrice;
             const double priceImpact = (futureRefPrice - thisRefPrice) * static_cast<double>(trade.sign); // sign-corrected to collapse buy/sell symmetry
-            const long long priceImpactTicks = Maths::countPriceTicks(priceImpact, minPriceTick);
+            const long long priceImpactTicks = Utils::Maths::countPriceTicks(priceImpact, minPriceTick);
             size_t bucketIndex = 0;
             switch (tradeConditioning) {
                 case TradeConditioning::SIGN_ONLY:

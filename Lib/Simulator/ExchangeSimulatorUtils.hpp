@@ -5,7 +5,6 @@
 #include "Market/OrderEventManager.hpp"
 
 namespace Simulator {
-using namespace Utils;
 class IExchangeSimulator;
 
 enum class ExchangeSimulatorState { UNINITIALIZED, READY, RUNNING, FINISHED };
@@ -15,7 +14,7 @@ enum class ExchangeSimulatorType { ZERO_INTELLIGENCE, MINIMAL_INTELLIGENCE, NONE
 enum class OrderEventType { LIMIT_SUBMIT, MARKET_SUBMIT, CANCEL, CANCEL_ID, CANCEL_REPLACE, NONE };
 
 struct OrderBookGridDefinition {
-    double anchorPrice = Consts::NAN_DOUBLE; // defines a small- or large-tick stock
+    double anchorPrice = Utils::Consts::NAN_DOUBLE; // defines a small- or large-tick stock
     double minPriceTick = 0.01; // passes down to order event manager
     uint32_t minLotSize = 1;
     uint32_t numGrids = 10000; // total number of price grids on one side of the book for initial book building, spanning $100 around the anchor price by default
@@ -48,7 +47,7 @@ struct OrderEventBase {
     virtual ~OrderEventBase() = default;
     virtual std::string getAsJson() const;
     virtual void submitTo(Market::OrderEventManagerBase& /* orderEventManager */) const {
-        Error::LIB_THROW("No implementation for OrderEventBase::submitTo().");
+        Utils::Error::LIB_THROW("No implementation for OrderEventBase::submitTo().");
     }
     uint64_t eventId;
     uint64_t timestamp;

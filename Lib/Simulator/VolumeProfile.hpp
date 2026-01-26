@@ -3,8 +3,6 @@
 #include "Utils/Utils.hpp"
 
 namespace Simulator {
-using namespace Utils;
-
 enum class VolumeInterpolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, CUSTOM_INPUT, PIECEWISE_CONSTANT, PIECEWISE_LINEAR, NONE };
 enum class VolumeExtrapolationStrategy { FLAT, LINEAR, EXPONENTIAL, POWER_LAW, NONE };
 
@@ -13,7 +11,7 @@ public:
     IVolumeInterpolator(const uint32_t interpDistStart, const uint32_t interpDistEnd) :
         myInterpDistanceStart(interpDistStart), myInterpDistanceEnd(interpDistEnd) {
         if (interpDistEnd < interpDistStart)
-            Error::LIB_THROW("[IVolumeInterpolator] Interpolation end distance must be greater than start distance.");
+            Utils::Error::LIB_THROW("[IVolumeInterpolator] Interpolation end distance must be greater than start distance.");
     }
     virtual ~IVolumeInterpolator() = default;
     uint32_t getInterpDistanceStart() const { return myInterpDistanceStart; }

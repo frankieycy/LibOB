@@ -26,12 +26,12 @@ std::ostream& operator<<(std::ostream& out, const VectorStats& stats) {
 
 size_t drawIndexWithRelativeProbabilities(const std::vector<double>& probabilities, const bool deterministic) {
     if (probabilities.empty())
-        Error::LIB_THROW("[drawIndexWithRelativeProbability] Empty probabilities vector.");
+        Utils::Error::LIB_THROW("[drawIndexWithRelativeProbability] Empty probabilities vector.");
     if (std::any_of(probabilities.begin(), probabilities.end(), [](double p) { return p < 0.0; }))
-        Error::LIB_THROW("[drawIndexWithRelativeProbability] Probabilities must be non-negative.");
+        Utils::Error::LIB_THROW("[drawIndexWithRelativeProbability] Probabilities must be non-negative.");
     const double sum = std::accumulate(probabilities.begin(), probabilities.end(), 0.0);
-    if (Consts::isZero(sum))
-        Error::LIB_THROW("[drawIndexWithRelativeProbability] Sum of probabilities is zero.");
+    if (Utils::Consts::isZero(sum))
+        Utils::Error::LIB_THROW("[drawIndexWithRelativeProbability] Sum of probabilities is zero.");
     std::vector<double> normalizedProbabilities(probabilities.size());
     std::transform(probabilities.begin(), probabilities.end(), normalizedProbabilities.begin(), [sum](double p) { return p / sum; });
     const double uniformRandom = Statistics::getRandomUniform01(deterministic);
@@ -51,22 +51,22 @@ Histogram::Histogram(double min, double max, size_t numBins, Binning binning) :
     myTotalCount(0),
     myBinning(binning) {
     if (numBins == 0)
-        Error::LIB_THROW("[Histogram] Number of bins must be greater than zero.");
+        Utils::Error::LIB_THROW("[Histogram] Number of bins must be greater than zero.");
     if (min >= max)
-        Error::LIB_THROW("[Histogram] Min must be less than max.");
+        Utils::Error::LIB_THROW("[Histogram] Min must be less than max.");
     if (binning == Binning::UNIFORM) {
         const double binWidth = (max - min) / static_cast<double>(numBins);
         for (size_t i = 0; i < numBins; ++i) {
             myBinLowerEdges[i + 1] = min + i * binWidth;
             myBinUpperEdges[i + 1] = min + (i + 1) * binWidth;
         }
-        myBinLowerEdges[0] = Consts::NEG_INF_DOUBLE;
+        myBinLowerEdges[0] = Utils::Consts::NEG_INF_DOUBLE;
         myBinUpperEdges[0] = myBinLowerEdges[1];
         myBinLowerEdges[numBins + 1] = myBinUpperEdges[numBins];
-        myBinUpperEdges[numBins + 1] = Consts::POS_INF_DOUBLE;
+        myBinUpperEdges[numBins + 1] = Utils::Consts::POS_INF_DOUBLE;
     } else if (binning == Binning::LOG) {
         if (min <= 0)
-            Error::LIB_THROW("[Histogram] Min must be positive for log binning.");
+            Utils::Error::LIB_THROW("[Histogram] Min must be positive for log binning.");
         const double logMin = std::log10(min);
         const double logMax = std::log10(max);
         const double logBinWidth = (logMax - logMin) / static_cast<double>(numBins);
@@ -77,9 +77,9 @@ Histogram::Histogram(double min, double max, size_t numBins, Binning binning) :
         myBinLowerEdges[0] = 0.0;
         myBinUpperEdges[0] = myBinLowerEdges[1];
         myBinLowerEdges[numBins + 1] = myBinUpperEdges[numBins];
-        myBinUpperEdges[numBins + 1] = Consts::POS_INF_DOUBLE;
+        myBinUpperEdges[numBins + 1] = Utils::Consts::POS_INF_DOUBLE;
     } else {
-        Error::LIB_THROW("[Histogram] Unsupported binning type.");
+        Utils::Error::LIB_THROW("[Histogram] Unsupported binning type.");
     }
 }
 
@@ -98,13 +98,13 @@ Histogram::Histogram(const std::vector<double>& binEdges) :
     myTotalCount(0),
     myBinning(Binning::CUSTOM) {
     if (binEdges.size() < 2)
-        Error::LIB_THROW("[Histogram] At least two bin edges are required.");
+        Utils::Error::LIB_THROW("[Histogram] At least two bin edges are required.");
     for (size_t i = 1; i < binEdges.size(); ++i) {
         if (binEdges[i] <= binEdges[i - 1])
-            Error::LIB_THROW("[Histogram] Bin edges must be in strictly increasing order.");
+            Utils::Error::LIB_THROW("[Histogram] Bin edges must be in strictly increasing order.");
     }
-    myBinLowerEdges.insert(myBinLowerEdges.begin(), Consts::NEG_INF_DOUBLE);
-    myBinUpperEdges.push_back(Consts::POS_INF_DOUBLE);
+    myBinLowerEdges.insert(myBinLowerEdges.begin(), Utils::Consts::NEG_INF_DOUBLE);
+    myBinUpperEdges.push_back(Utils::Consts::POS_INF_DOUBLE);
 }
 
 void Histogram::setBins(double min, double max, size_t numBins, Binning binning) {
@@ -132,7 +132,7 @@ size_t Histogram::getCount(size_t bin) const {
 
 size_t Histogram::getBinIndex(double value) const {
     if (myBins.size() == 0)
-        Error::LIB_THROW("[Histogram::getBinIndex] Histogram has no bins.");
+        Utils::Error::LIB_THROW("[Histogram::getBinIndex] Histogram has no bins.");
     else if (myBins.size() == 1)
         return 0; // single bin histogram
     if (myBinning == Binning::CUSTOM) {
@@ -161,7 +161,7 @@ size_t Histogram::getBinIndex(double value) const {
                     binIndex = myBins.size() - 2; // clamp to last regular bin
                 return binIndex;
             } else {
-                Error::LIB_THROW("[Histogram::getBinIndex] Unsupported binning type.");
+                Utils::Error::LIB_THROW("[Histogram::getBinIndex] Unsupported binning type.");
             }
         }
     }
@@ -173,27 +173,27 @@ double Histogram::getBinCenter(size_t bin) const {
 }
 
 double Histogram::getBinLower(size_t bin) const {
-    return bin < myBinLowerEdges.size() ? myBinLowerEdges[bin] : Consts::NAN_DOUBLE;
+    return bin < myBinLowerEdges.size() ? myBinLowerEdges[bin] : Utils::Consts::NAN_DOUBLE;
 }
 
 double Histogram::getBinUpper(size_t bin) const {
-    return bin < myBinUpperEdges.size() ? myBinUpperEdges[bin] : Consts::NAN_DOUBLE;
+    return bin < myBinUpperEdges.size() ? myBinUpperEdges[bin] : Utils::Consts::NAN_DOUBLE;
 }
 
 double Histogram::getMean() const {
-    return (myTotalCount == 0) ? Consts::NAN_DOUBLE : mySumValues / static_cast<double>(myTotalCount);
+    return (myTotalCount == 0) ? Utils::Consts::NAN_DOUBLE : mySumValues / static_cast<double>(myTotalCount);
 }
 
 double Histogram::getVariance() const {
     if (myTotalCount == 0)
-        return Consts::NAN_DOUBLE;
+        return Utils::Consts::NAN_DOUBLE;
     const double mean = getMean();
     return (mySumValuesSquared / static_cast<double>(myTotalCount)) - (mean * mean);
 }
 
 double Histogram::getMedian() const {
     if (myTotalCount == 0)
-        return Consts::NAN_DOUBLE;
+        return Utils::Consts::NAN_DOUBLE;
     const size_t midCount = myTotalCount / 2;
     size_t cumulativeCount = 0;
     for (size_t i = 0; i < myBins.size(); ++i) {
@@ -201,7 +201,7 @@ double Histogram::getMedian() const {
         if (cumulativeCount >= midCount)
             return getBinCenter(i); // return center of the bin as a proxy for median
     }
-    return Consts::NAN_DOUBLE; // never reached
+    return Utils::Consts::NAN_DOUBLE; // never reached
 }
 
 std::string Histogram::getAsCsv() const {

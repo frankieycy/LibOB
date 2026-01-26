@@ -7,7 +7,6 @@
 
 /* Structs to store down calculated analytics derived from matching engine monitor outputs. */
 namespace Analytics {
-using namespace Utils;
 struct OrderDepthProfileConfig;
 struct OrderFlowMemoryStatsConfig;
 struct PriceReturnScalingStatsConfig;
@@ -73,7 +72,7 @@ struct OrderFlowMemoryStats : public IOrderBookDerivedStats {
     size_t numTrades = 0;
     double meanTradeSign = 0.0;
     double varTradeSign = 0.0;
-    Statistics::Autocorrelation<int8_t> tradeSignsACF;
+    Utils::Statistics::Autocorrelation<int8_t> tradeSignsACF;
 
 private:
     std::vector<size_t> lags;
@@ -129,8 +128,8 @@ struct SpreadStats : public IOrderBookDerivedStats {
     size_t numSpreads = 0;
     double meanSpread = 0.0;
     double varSpread = 0.0;
-    Statistics::Histogram spreadHistogram;
-    Statistics::Autocorrelation<double> spreadACF;
+    Utils::Statistics::Histogram spreadHistogram;
+    Utils::Statistics::Autocorrelation<double> spreadACF;
 
 private:
     std::vector<size_t> lags;
@@ -155,7 +154,7 @@ struct EventTimeStats : public IOrderBookDerivedStats {
     size_t numPriceTicks = 0;
     double meanPriceTicks = 0.0;
     double varPriceTicks = 0.0;
-    Statistics::Histogram eventsBetweenPriceMoves;
+    Utils::Statistics::Histogram eventsBetweenPriceMoves;
 
 private:
     // accumulated for each snapshot
@@ -205,10 +204,10 @@ struct OrderLifetimeStats : public IOrderBookDerivedStats {
     std::vector<double> meanLifetimeToCancelByAskPriceBucket;
     std::vector<double> meanLifetimeToExecuteByBidPriceBucket;
     std::vector<double> meanLifetimeToExecuteByAskPriceBucket;
-    std::vector<Statistics::Histogram> lifetimeToCancelByBidPriceBucket;
-    std::vector<Statistics::Histogram> lifetimeToCancelByAskPriceBucket;
-    std::vector<Statistics::Histogram> lifetimeToExecuteByBidPriceBucket;
-    std::vector<Statistics::Histogram> lifetimeToExecuteByAskPriceBucket;
+    std::vector<Utils::Statistics::Histogram> lifetimeToCancelByBidPriceBucket;
+    std::vector<Utils::Statistics::Histogram> lifetimeToCancelByAskPriceBucket;
+    std::vector<Utils::Statistics::Histogram> lifetimeToExecuteByBidPriceBucket;
+    std::vector<Utils::Statistics::Histogram> lifetimeToExecuteByAskPriceBucket;
 
 private:
     PriceSpaceDefinition priceSpace = PriceSpaceDefinition::NONE;
@@ -237,9 +236,9 @@ struct OrderImbalanceStats : public IOrderBookDerivedStats {
     virtual void compute() override;
     virtual std::string getAsJson() const override;
 
-    Statistics::Histogram orderImbalanceHistogram;
+    Utils::Statistics::Histogram orderImbalanceHistogram;
     std::vector<double> meanNextPriceTickByOrderImbalanceBucket;
-    std::vector<Statistics::Histogram> nextPriceTickByOrderImbalanceBucket; // immediate next price tick conditional on order imbalance
+    std::vector<Utils::Statistics::Histogram> nextPriceTickByOrderImbalanceBucket; // immediate next price tick conditional on order imbalance
 
 private:
     // accumulated for each snapshot
@@ -285,7 +284,7 @@ struct PriceImpactStats : public IOrderBookDerivedStats {
     std::vector<uint64_t> horizons;
     std::vector<TradeEvent> trades;
     std::vector<std::vector<double>> meanPriceImpactByHorizonAndTradeBucket;
-    std::vector<std::vector<Statistics::Histogram>> priceImpactByHorizonAndTradeBucket; // price impact (in ticks) at each horizon conditional on trade buckets (e.g. sign only, size buckets)
+    std::vector<std::vector<Utils::Statistics::Histogram>> priceImpactByHorizonAndTradeBucket; // price impact (in ticks) at each horizon conditional on trade buckets (e.g. sign only, size buckets)
 
 private:
     PriceType priceType = PriceType::NONE;

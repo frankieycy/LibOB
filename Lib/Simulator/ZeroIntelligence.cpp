@@ -5,8 +5,6 @@
 #include "Simulator/ZeroIntelligence.hpp"
 
 namespace Simulator {
-using namespace Utils;
-
 ZeroIntelligenceSimulator::ZeroIntelligenceSimulator(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) :
     ExchangeSimulatorBase(matchingEngine) {
     // the base class init has been called inside the base constructor
@@ -16,7 +14,7 @@ ZeroIntelligenceSimulator::ZeroIntelligenceSimulator(const std::shared_ptr<Excha
 void ZeroIntelligenceSimulator::init() {
     setEventScheduler(makeEventScheduler());
     if (isDebugMode())
-        *getLogger() << Logger::LogLevel::DEBUG << "[ZeroIntelligenceSimulator] Zero Intelligence simulator initialization complete.";
+        *getLogger() << Utils::Logger::LogLevel::DEBUG << "[ZeroIntelligenceSimulator] Zero Intelligence simulator initialization complete.";
 }
 
 std::shared_ptr<IEventScheduler> ZeroIntelligenceSimulator::makeEventScheduler() const {
@@ -35,11 +33,11 @@ std::shared_ptr<OrderEventBase> ZeroIntelligenceSimulator::generateNextOrderEven
     const double marketOrderRate = myZIConfig.marketOrderRateSampler->sample();
     const double limitOrderRate = myZIConfig.limitOrderRateSampler->sample();
     const double cancelRate = myZIConfig.cancelRateSampler->sample();
-    if (Consts::isZero(marketOrderRate + limitOrderRate + cancelRate))
+    if (Utils::Consts::isZero(marketOrderRate + limitOrderRate + cancelRate))
         return nullptr; // no events to generate
     const std::vector<double> orderEventRates = { marketOrderRate, limitOrderRate, cancelRate };
     // next tick must have one of the events happening, hence conditional sampling
-    const size_t eventIndex = Statistics::drawIndexWithRelativeProbabilities(orderEventRates, true);
+    const size_t eventIndex = Utils::Statistics::drawIndexWithRelativeProbabilities(orderEventRates, true);
     std::shared_ptr<OrderEventBase> event;
     if (eventIndex == 0) { // market order submit event
         const Market::Side side = myZIConfig.marketSideSampler->sample();
@@ -57,7 +55,7 @@ std::shared_ptr<OrderEventBase> ZeroIntelligenceSimulator::generateNextOrderEven
             event = std::make_shared<OrderCancelEvent>(getCurrentTimestamp() /* eventId */, getCurrentTimestamp(), side, cancelSpec->quantity, cancelSpec->price);
     }
     if (isDebugMode() && event)
-        *getLogger() << Logger::LogLevel::DEBUG << "[ZeroIntelligenceSimulator] Generated order event: " << *event;
+        *getLogger() << Utils::Logger::LogLevel::DEBUG << "[ZeroIntelligenceSimulator] Generated order event: " << *event;
     return event;
 }
 }

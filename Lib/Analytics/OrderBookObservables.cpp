@@ -6,7 +6,6 @@
 #include "Analytics/OrderBookObservables.hpp"
 
 namespace Analytics {
-using namespace Utils;
 using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderBookTopLevelsSnapshot& snapshot) { return out << snapshot.getAsJson(); }
@@ -19,7 +18,7 @@ std::ostream& operator<<(std::ostream& out, const OrderEventProcessingLatency& l
 
 void OrderBookTopLevelsSnapshot::constructFrom(const std::shared_ptr<const Exchange::IMatchingEngine>& matchingEngine) {
     if (!matchingEngine)
-        Error::LIB_THROW("[OrderBookTopLevelsSnapshot] Matching engine is null.");
+        Utils::Error::LIB_THROW("[OrderBookTopLevelsSnapshot] Matching engine is null.");
     lastTrade = matchingEngine->getLastTrade();
     bidBookTopPrices = isFullBook ? matchingEngine->getBidBookPriceVector() : matchingEngine->getBidBookPriceVector(numLevels);
     askBookTopPrices = isFullBook ? matchingEngine->getAskBookPriceVector() : matchingEngine->getAskBookPriceVector(numLevels);
@@ -191,7 +190,7 @@ void OrderBookStatisticsByTimestamp::constructFrom(
     const OrderBookAggregateStatistics& orderBookAggregateStatistics,
     const OrderBookAggregateStatistics& orderBookAggregateStatisticsCache) {
     if (!matchingEngine)
-        Error::LIB_THROW("[OrderBookStatisticsByTimestamp] Matching engine is null.");
+        Utils::Error::LIB_THROW("[OrderBookStatisticsByTimestamp] Matching engine is null.");
     timestampFrom = orderBookAggregateStatisticsCache.timestampTo; // from-time exclusive
     timestampTo = orderBookAggregateStatistics.timestampTo; // to-time inclusive
     cumNumNewLimitOrders = orderBookAggregateStatistics.aggNumNewLimitOrders - orderBookAggregateStatisticsCache.aggNumNewLimitOrders;

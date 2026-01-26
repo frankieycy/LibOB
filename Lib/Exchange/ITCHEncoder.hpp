@@ -4,7 +4,6 @@
 #include "Market/OrderEvent.hpp"
 
 namespace Exchange {
-using namespace Utils;
 struct OrderExecutionReport;
 struct LimitOrderSubmitReport;
 struct MarketOrderSubmitReport;

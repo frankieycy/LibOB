@@ -6,7 +6,6 @@
 #include "Exchange/ITCHEncoder.hpp"
 
 namespace Exchange {
-using namespace Utils;
 using Utils::operator<<;
 
 const std::string ITCHEncoder::ITCHSystemMessage::ourDescription                = "[S] Session start, end, or market open/close";
@@ -34,7 +33,7 @@ std::string ITCHEncoder::ITCHSystemMessage::toString() const {
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderAddMessage::makeEvent() const {
     const auto metaInfo = std::make_shared<Market::OrderMetaInfo>(symbol, "", std::to_string(agentId), "");
-    const auto order = std::make_shared<Market::LimitOrder>(orderId, timestamp, isBuy ? Market::Side::BUY : Market::Side::SELL, quantity, Maths::castIntPriceAsDouble(price));
+    const auto order = std::make_shared<Market::LimitOrder>(orderId, timestamp, isBuy ? Market::Side::BUY : Market::Side::SELL, quantity, Utils::Maths::castIntPriceAsDouble(price));
     return std::make_shared<Market::OrderSubmitEvent>(messageId, orderId, timestamp, order);
 }
 
@@ -48,13 +47,13 @@ std::string ITCHEncoder::ITCHOrderAddMessage::toString() const {
         << orderId                << "|"
         << (isBuy ? 'B' : 'S')    << "|"
         << quantity               << "|"
-        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price);
+        << std::fixed << std::setprecision(2) << Utils::Maths::castIntPriceAsDouble(price);
     return oss.str();
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderAddWithMPIDMessage::makeEvent() const {
     const auto metaInfo = std::make_shared<Market::OrderMetaInfo>(symbol, "", std::to_string(agentId), mpid);
-    const auto order = std::make_shared<Market::LimitOrder>(orderId, timestamp, isBuy ? Market::Side::BUY : Market::Side::SELL, quantity, Maths::castIntPriceAsDouble(price));
+    const auto order = std::make_shared<Market::LimitOrder>(orderId, timestamp, isBuy ? Market::Side::BUY : Market::Side::SELL, quantity, Utils::Maths::castIntPriceAsDouble(price));
     return std::make_shared<Market::OrderSubmitEvent>(messageId, orderId, timestamp, order);
 }
 
@@ -68,7 +67,7 @@ std::string ITCHEncoder::ITCHOrderAddWithMPIDMessage::toString() const {
         << orderId                << "|"
         << (isBuy ? 'B' : 'S')    << "|"
         << quantity               << "|"
-        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price) << "|"
+        << std::fixed << std::setprecision(2) << Utils::Maths::castIntPriceAsDouble(price) << "|"
         << std::string(mpid, 4);
     return oss.str();
 }
@@ -106,7 +105,7 @@ std::string ITCHEncoder::ITCHOrderExecuteWithPriceMessage::toString() const {
         << orderId        << "|"
         << matchOrderId   << "|"
         << fillQuantity   << "|"
-        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(fillPrice);
+        << std::fixed << std::setprecision(2) << Utils::Maths::castIntPriceAsDouble(fillPrice);
     return oss.str();
 }
 
@@ -140,7 +139,7 @@ std::string ITCHEncoder::ITCHOrderCancelMessage::toString() const {
 }
 
 std::shared_ptr<Market::OrderEventBase> ITCHEncoder::ITCHOrderReplaceMessage::makeEvent() const {
-    return std::make_shared<Market::OrderCancelAndReplaceEvent>(messageId, oldOrderId, timestamp, newOrderId, quantity, Maths::castIntPriceAsDouble(price));
+    return std::make_shared<Market::OrderCancelAndReplaceEvent>(messageId, oldOrderId, timestamp, newOrderId, quantity, Utils::Maths::castIntPriceAsDouble(price));
 }
 
 std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
@@ -152,7 +151,7 @@ std::string ITCHEncoder::ITCHOrderReplaceMessage::toString() const {
         << oldOrderId     << "|"
         << newOrderId     << "|"
         << quantity       << "|"
-        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(price);
+        << std::fixed << std::setprecision(2) << Utils::Maths::castIntPriceAsDouble(price);
     return oss.str();
 }
 
@@ -172,7 +171,7 @@ std::string ITCHEncoder::ITCHTradeMessage::toString() const {
         << orderId        << "|"
         << matchOrderId   << "|"
         << fillQuantity   << "|"
-        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(fillPrice);
+        << std::fixed << std::setprecision(2) << Utils::Maths::castIntPriceAsDouble(fillPrice);
     return oss.str();
 }
 
@@ -183,7 +182,7 @@ std::string ITCHEncoder::ITCHCrossTradeMessage::toString() const {
         << timestamp           << "|"
         << std::string(symbol) << "|"
         << crossQuantity       << "|"
-        << std::fixed << std::setprecision(2) << Maths::castIntPriceAsDouble(crossPrice) << "|"
+        << std::fixed << std::setprecision(2) << Utils::Maths::castIntPriceAsDouble(crossPrice) << "|"
         << crossCode;
     return oss.str();
 }
@@ -212,7 +211,7 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
             report.orderId,
             report.matchOrderId,
             report.filledQuantity,
-            Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice)
+            Utils::Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice)
         );
     } else if (report.orderType == Market::OrderType::MARKET) {
         return std::make_shared<ITCHTradeMessage>(
@@ -222,7 +221,7 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
             report.orderId,
             report.matchOrderId,
             report.filledQuantity,
-            Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice)
+            Utils::Maths::castDoublePriceAsInt<uint32_t>(report.filledPrice)
         );
     }
     return nullptr;
@@ -233,7 +232,7 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
         return nullptr;
     const auto& order = report.order;
     if (!order)
-        Error::LIB_THROW("ITCHEncoder::encodeReport: LimitOrderSubmitReport order is null");
+        Utils::Error::LIB_THROW("ITCHEncoder::encodeReport: LimitOrderSubmitReport order is null");
     const auto& metaInfo = order->getMetaInfo();
     return std::make_shared<ITCHOrderAddMessage>(
         report.reportId,
@@ -262,7 +261,7 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
         report.orderId,
         report.orderId,
         report.orderQuantity,
-        Maths::castDoublePriceAsInt<uint32_t>(report.modifiedPrice)
+        Utils::Maths::castDoublePriceAsInt<uint32_t>(report.modifiedPrice)
     );
 }
 
@@ -276,7 +275,7 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
         report.orderId,
         report.orderId,
         report.modifiedQuantity,
-        Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice)
+        Utils::Maths::castDoublePriceAsInt<uint32_t>(report.orderPrice)
     );
 }
 
@@ -313,7 +312,7 @@ std::shared_ptr<ITCHEncoder::ITCHMessage> ITCHEncoder::encodeReport(const Exchan
         report.orderId,
         report.newOrderId,
         report.newQuantity,
-        Maths::castDoublePriceAsInt<uint32_t>(report.newPrice)
+        Utils::Maths::castDoublePriceAsInt<uint32_t>(report.newPrice)
     );
 }
 }

@@ -7,12 +7,10 @@
 #include "Parser/LobsterDataParser.hpp"
 
 namespace Analytics {
-using namespace Utils;
-
 MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) :
     myMatchingEngine(matchingEngine), myDebugMode(matchingEngine->isDebugMode()), myMonitoringEnabled(true) {
     if (!matchingEngine)
-        Error::LIB_THROW("[MatchingEngineMonitor] Matching engine is null.");
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor] Matching engine is null.");
     init();
     myMatchingEngine = matchingEngine;
     // add the callback to the matching engine once, and manage its lifetime internally via start/stopMonitoring()
@@ -86,14 +84,14 @@ void MatchingEngineMonitor::updateStatistics(const Exchange::OrderProcessingRepo
     myOrderProcessingReportsCollector.addSample(report.clone());
     myOrderBookAggregateStatisticsCache = myOrderBookAggregateStatistics;
     if (myDebugMode) {
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Added new order book statistics snapshot:\n" << orderBookStats->getAsTable();
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Updated order book aggregate statistics:\n" << myOrderBookAggregateStatistics.getAsTable();
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Added new order book statistics snapshot:\n" << orderBookStats->getAsTable();
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Updated order book aggregate statistics:\n" << myOrderBookAggregateStatistics.getAsTable();
     }
 }
 
 void MatchingEngineMonitor::exportToLobsterDataParser(Parser::LobsterDataParser& parser) const {
     if (myOrderProcessingReportsCollector.size() != myOrderBookStatisticsCollector.size())
-        Error::LIB_THROW("[MatchingEngineMonitor::exportToLobsterDataParser] Mismatched number of order processing reports (" +
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::exportToLobsterDataParser] Mismatched number of order processing reports (" +
             std::to_string(myOrderProcessingReportsCollector.size()) + ") and order book statistics (" +
             std::to_string(myOrderBookStatisticsCollector.size()) + ").");
     const auto& reports = myOrderProcessingReportsCollector.getSamples();
@@ -108,11 +106,11 @@ void MatchingEngineMonitor::exportToLobsterDataParser(Parser::LobsterDataParser&
         std::transform(
             (*statsIt)->topLevelsSnapshot.bidBookTopPrices.begin(),
             (*statsIt)->topLevelsSnapshot.bidBookTopPrices.end(),
-            bidPricesInt.begin(), [](double p){ return Maths::castDoublePriceAsInt<uint32_t>(p); });
+            bidPricesInt.begin(), [](double p){ return Utils::Maths::castDoublePriceAsInt<uint32_t>(p); });
         std::transform(
             (*statsIt)->topLevelsSnapshot.askBookTopPrices.begin(),
             (*statsIt)->topLevelsSnapshot.askBookTopPrices.end(),
-            askPricesInt.begin(), [](double p){ return Maths::castDoublePriceAsInt<uint32_t>(p); });
+            askPricesInt.begin(), [](double p){ return Utils::Maths::castDoublePriceAsInt<uint32_t>(p); });
         auto snapshot = std::make_shared<const Parser::LobsterDataParser::OrderBookSnapshot>(
             bidPricesInt, askPricesInt, topLevelsSnapshot.bidBookTopSizes, topLevelsSnapshot.askBookTopSizes);
         if (message->isValid()) {
@@ -136,7 +134,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecuti
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order execution report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order execution report received: " << report;
     if (myLastTrade && report.tradeId == myLastTrade->getId())
         return; // avoid double-counting execution reports for the same trade (sent twice from both sides)
     myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
@@ -150,7 +148,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderExecuti
         if (!isPriceWithinTopOfBook(report.orderSide, report.filledPrice))
             return;
     } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + toString(myOrderBookStatisticsTimestampStrategy));
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + Utils::toString(myOrderBookStatisticsTimestampStrategy));
     updateStatistics(report);
 }
 
@@ -160,21 +158,21 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderSu
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Limit order submit report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Limit order submit report received: " << report;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::LimitOrderPlacementReport& report) {
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Limit order placement report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Limit order placement report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice, Market::OrderType::LIMIT))
             return;
     } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + toString(myOrderBookStatisticsTimestampStrategy));
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + Utils::toString(myOrderBookStatisticsTimestampStrategy));
     updateStatistics(report);
 }
 
@@ -183,21 +181,21 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::MarketOrderS
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Market order submit report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Market order submit report received: " << report;
 }
 
 void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
-        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Consts::NAN_DOUBLE), report.orderType))
+        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Utils::Consts::NAN_DOUBLE), report.orderType))
             return;
     } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + toString(myOrderBookStatisticsTimestampStrategy));
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + Utils::toString(myOrderBookStatisticsTimestampStrategy));
     updateStatistics(report);
 }
 
@@ -205,14 +203,14 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderPartial
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order partial cancel report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order partial cancel report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyQuantityOrders; // partial cancel represented as a modify quantity order
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
-        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Consts::NAN_DOUBLE), report.orderType))
+        if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice.value_or(Utils::Consts::NAN_DOUBLE), report.orderType))
             return;
     } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + toString(myOrderBookStatisticsTimestampStrategy));
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + Utils::toString(myOrderBookStatisticsTimestampStrategy));
     updateStatistics(report);
 }
 
@@ -220,7 +218,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelA
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel and replace report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order cancel and replace report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumCancelOrders;
     ++myOrderBookAggregateStatistics.aggNumNewLimitOrders;
@@ -228,7 +226,7 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderCancelA
         if (!isPriceWithinTopOfBook(report.orderSide, report.newPrice, report.orderType))
             return;
     } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + toString(myOrderBookStatisticsTimestampStrategy));
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + Utils::toString(myOrderBookStatisticsTimestampStrategy));
     updateStatistics(report);
 }
 
@@ -236,14 +234,14 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyP
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify price report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify price report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyPriceOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.modifiedPrice))
             return;
     } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + toString(myOrderBookStatisticsTimestampStrategy));
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + Utils::toString(myOrderBookStatisticsTimestampStrategy));
     updateStatistics(report);
 }
 
@@ -251,14 +249,14 @@ void MatchingEngineMonitor::onOrderProcessingReport(const Exchange::OrderModifyQ
     if (!myMonitoringEnabled)
         return;
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify quantity report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineMonitor] Order modify quantity report received: " << report;
     myOrderBookAggregateStatistics.timestampTo = myClockOverride ? myClockOverride->getCurrentTimestamp() : report.timestamp;
     ++myOrderBookAggregateStatistics.aggNumModifyQuantityOrders;
     if (myOrderBookStatisticsTimestampStrategy == OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK) {
         if (!isPriceWithinTopOfBook(report.orderSide, report.orderPrice))
             return;
     } else
-        Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + toString(myOrderBookStatisticsTimestampStrategy));
+        Utils::Error::LIB_THROW("[MatchingEngineMonitor::onOrderProcessingReport] Unsupported order book statistics timestamp strategy: " + Utils::toString(myOrderBookStatisticsTimestampStrategy));
     updateStatistics(report);
 }
 }

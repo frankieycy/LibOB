@@ -7,7 +7,6 @@
 #include "Exchange/MatchingEngine.hpp"
 
 namespace Exchange {
-using namespace Utils;
 using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine) {
@@ -50,7 +49,7 @@ MatchingEngineBase::MatchingEngineBase(const MatchingEngineBase& matchingEngine)
     myOrderProcessingReportLog(matchingEngine.myOrderProcessingReportLog),
     myITCHMessageLog(matchingEngine.myITCHMessageLog),
     myRemovedLimitOrderLog(matchingEngine.myRemovedLimitOrderLog) {
-    *getLogger() << Logger::LogLevel::INFO << "[MatchingEngineBase] Copy constructor leaves out the order processing callback - re-establish it if needed.";
+    *getLogger() << Utils::Logger::LogLevel::INFO << "[MatchingEngineBase] Copy constructor leaves out the order processing callback - re-establish it if needed.";
     // construct myLimitOrderLookup by traversing each individual order in the bid and ask books
     for (auto& priceQueuePair : myBidBook) {
         LimitQueue& limitQueue = priceQueuePair.second;
@@ -324,46 +323,46 @@ std::vector<uint64_t> MatchingEngineBase::getAskOrderIdsAt(const PriceLevel pric
 
 std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestBidPriceAndSize() const {
     if (myBidBookSize.empty())
-        return {Consts::NAN_DOUBLE, 0};
+        return {Utils::Consts::NAN_DOUBLE, 0};
     return *myBidBookSize.begin();
 }
 
 std::pair<const PriceLevel, uint32_t> MatchingEngineBase::getBestAskPriceAndSize() const {
     if (myAskBookSize.empty())
-        return {Consts::NAN_DOUBLE, 0};
+        return {Utils::Consts::NAN_DOUBLE, 0};
     return *myAskBookSize.begin();
 }
 
 std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> MatchingEngineBase::getBestBidTopOrder() const {
     if (myBidBook.empty())
-        return {Consts::NAN_DOUBLE, nullptr};
+        return {Utils::Consts::NAN_DOUBLE, nullptr};
     const auto& it = myBidBook.begin();
     return {it->first, it->second.front()};
 }
 
 std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> MatchingEngineBase::getBestAskTopOrder() const {
     if (myAskBook.empty())
-        return {Consts::NAN_DOUBLE, nullptr};
+        return {Utils::Consts::NAN_DOUBLE, nullptr};
     const auto& it = myAskBook.begin();
     return {it->first, it->second.front()};
 }
 
 double MatchingEngineBase::getBestBidPrice() const {
     if (myBidBookSize.empty())
-        return Consts::NAN_DOUBLE;
+        return Utils::Consts::NAN_DOUBLE;
     return myBidBookSize.begin()->first;
 }
 
 double MatchingEngineBase::getBestAskPrice() const {
     if (myAskBookSize.empty())
-        return Consts::NAN_DOUBLE;
+        return Utils::Consts::NAN_DOUBLE;
     return myAskBookSize.begin()->first;
 }
 
 double MatchingEngineBase::getBidPriceAtLevel(const size_t level) const {
     if (myBidBookSize.empty() || level >= myBidBookSize.size()) {
-        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::getBidPriceAtLevel] Invalid level: " << level;
-        return Consts::NAN_DOUBLE;
+        *getLogger() << Utils::Logger::LogLevel::WARNING << "[MatchingEngineBase::getBidPriceAtLevel] Invalid level: " << level;
+        return Utils::Consts::NAN_DOUBLE;
     }
     auto it = myBidBookSize.begin();
     std::advance(it, level);
@@ -372,8 +371,8 @@ double MatchingEngineBase::getBidPriceAtLevel(const size_t level) const {
 
 double MatchingEngineBase::getAskPriceAtLevel(const size_t level) const {
     if (myAskBookSize.empty() || level >= myAskBookSize.size()) {
-        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::getAskPriceAtLevel] Invalid level: " << level;
-        return Consts::NAN_DOUBLE;
+        *getLogger() << Utils::Logger::LogLevel::WARNING << "[MatchingEngineBase::getAskPriceAtLevel] Invalid level: " << level;
+        return Utils::Consts::NAN_DOUBLE;
     }
     auto it = myAskBookSize.begin();
     std::advance(it, level);
@@ -404,7 +403,7 @@ double MatchingEngineBase::getOrderImbalance() const {
 
 double MatchingEngineBase::getLastTradePrice() const {
     const auto& lastTrade = getLastTrade();
-    return lastTrade ? lastTrade->getPrice() : Consts::NAN_DOUBLE;
+    return lastTrade ? lastTrade->getPrice() : Utils::Consts::NAN_DOUBLE;
 }
 
 uint32_t MatchingEngineBase::getBestBidSize() const {
@@ -459,7 +458,7 @@ std::shared_ptr<const Market::TradeBase> MatchingEngineBase::getLastTrade() cons
 
 void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderBase>& order) {
     if (!order) {
-        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order is null.";
+        *getLogger() << Utils::Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order is null.";
         return;
     }
     order->submit(*this); // relegate the order processing to OrderBase since it knows about the order type
@@ -469,7 +468,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
     // the hardcore order processing engine that interacts with external order event streams
     auto start = std::chrono::high_resolution_clock::now();
     if (!event) {
-        *getLogger() << Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order event is null.";
+        *getLogger() << Utils::Logger::LogLevel::WARNING << "[MatchingEngineBase::process] Order event is null.";
         return;
     }
     myOrderEventLog.push_back(event);
@@ -561,7 +560,7 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
 void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {
     for (const auto& event : orderEventLog) {
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing order event: " << *event;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing order event: " << *event;
         if (event)
             process(event);
     }
@@ -570,7 +569,7 @@ void MatchingEngineBase::build(const OrderEventLog& orderEventLog) {
 void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingReportLog) {
     for (const auto& report : orderProcessingReportLog) {
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing order report: " << *report;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing order report: " << *report;
         if (report)
             process(report->makeEvent());
     }
@@ -579,7 +578,7 @@ void MatchingEngineBase::build(const OrderProcessingReportLog& orderProcessingRe
 void MatchingEngineBase::build(const ITCHMessageLog& itchMessageLog) {
     for (const auto& message : itchMessageLog) {
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing ITCH message: " << *message;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Processing ITCH message: " << *message;
         if (message)
             process(message->makeEvent());
     }
@@ -776,9 +775,9 @@ void MatchingEngineBase::stateConsistencyCheck() const {
     const bool isFIFOBook = getOrderMatchingStrategy() == Exchange::OrderMatchingStrategy::FIFO;
     std::set<uint64_t> orderIds;
     if (myBidBook.size() != myBidBookSize.size()) // checks for consistency in the number of price levels
-        Error::LIB_THROW("[MatchingEngineBase::init] Bid book size mismatch: " + std::to_string(myBidBook.size()) + " vs " + std::to_string(myBidBookSize.size()) + ".");
+        Utils::Error::LIB_THROW("[MatchingEngineBase::init] Bid book size mismatch: " + std::to_string(myBidBook.size()) + " vs " + std::to_string(myBidBookSize.size()) + ".");
     if (myAskBook.size() != myAskBookSize.size())
-        Error::LIB_THROW("[MatchingEngineBase::init] Ask book size mismatch: " + std::to_string(myAskBook.size()) + " vs " + std::to_string(myAskBookSize.size()) + ".");
+        Utils::Error::LIB_THROW("[MatchingEngineBase::init] Ask book size mismatch: " + std::to_string(myAskBook.size()) + " vs " + std::to_string(myAskBookSize.size()) + ".");
     for (const auto& priceQueuePair : myBidBook) {
         const PriceLevel priceLevel = priceQueuePair.first;
         const LimitQueue& limitQueue = priceQueuePair.second;
@@ -789,24 +788,24 @@ void MatchingEngineBase::stateConsistencyCheck() const {
         while (it != limitQueue.end()) {
             const auto& order = *it;
             if (!order) // checks for null order
-                Error::LIB_THROW("[MatchingEngineBase::init] Null order found in bid book.");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Null order found in bid book.");
             const auto orderId = order->getId();
             const auto orderTimestamp = order->getTimestamp();
             const auto orderQuantity = order->getQuantity();
             const auto& orderIndex = myLimitOrderLookup.at(orderId);
             if (orderIds.find(orderId) != orderIds.end()) // checks for duplicate order id
-                Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in bid book: " + std::to_string(orderId) + ".");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in bid book: " + std::to_string(orderId) + ".");
             if (isFIFOBook && order->getTimestamp() < priorOrderTimestamp) // checks for order timestamp sorting
-                Error::LIB_THROW("[MatchingEngineBase::init] Orders in bid book are not sorted by timestamp: " + std::to_string(orderId) + ".");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Orders in bid book are not sorted by timestamp: " + std::to_string(orderId) + ".");
             if (orderIndex.first != &limitQueue || orderIndex.second != it) // checks for order index consistency
-                Error::LIB_THROW("[MatchingEngineBase::init] Order lookup index mismatch for order id: " + std::to_string(orderId) + ".");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Order lookup index mismatch for order id: " + std::to_string(orderId) + ".");
             orderIds.insert(orderId);
             priorOrderTimestamp = orderTimestamp;
             cumQueueSize += orderQuantity;
             ++it;
         }
         if (cumQueueSize != queueSize) // checks for order queue size consistency
-            Error::LIB_THROW("[MatchingEngineBase::init] Bid book size mismatch at price level " + std::to_string(priceLevel) + ": expected " + std::to_string(queueSize) + ", got " + std::to_string(cumQueueSize) + ".");
+            Utils::Error::LIB_THROW("[MatchingEngineBase::init] Bid book size mismatch at price level " + std::to_string(priceLevel) + ": expected " + std::to_string(queueSize) + ", got " + std::to_string(cumQueueSize) + ".");
     }
     for (const auto& priceQueuePair : myAskBook) {
         const PriceLevel priceLevel = priceQueuePair.first;
@@ -818,31 +817,31 @@ void MatchingEngineBase::stateConsistencyCheck() const {
         while (it != limitQueue.end()) {
             const auto& order = *it;
             if (!order) // checks for null order
-                Error::LIB_THROW("[MatchingEngineBase::init] Null order found in ask book.");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Null order found in ask book.");
             const auto orderId = order->getId();
             const auto orderTimestamp = order->getTimestamp();
             const auto orderQuantity = order->getQuantity();
             const auto& orderIndex = myLimitOrderLookup.at(orderId);
             if (orderIds.find(orderId) != orderIds.end()) // checks for duplicate order id
-                Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in ask book: " + std::to_string(orderId) + ".");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Duplicate order id found in ask book: " + std::to_string(orderId) + ".");
             if (isFIFOBook && order->getTimestamp() < priorOrderTimestamp) // checks for order timestamp sorting
-                Error::LIB_THROW("[MatchingEngineBase::init] Orders in ask book are not sorted by timestamp: " + std::to_string(orderId) + ".");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Orders in ask book are not sorted by timestamp: " + std::to_string(orderId) + ".");
             if (orderIndex.first != &limitQueue || orderIndex.second != it) // checks for order index consistency
-                Error::LIB_THROW("[MatchingEngineBase::init] Order lookup index mismatch for order id: " + std::to_string(orderId) + ".");
+                Utils::Error::LIB_THROW("[MatchingEngineBase::init] Order lookup index mismatch for order id: " + std::to_string(orderId) + ".");
             orderIds.insert(orderId);
             priorOrderTimestamp = orderTimestamp;
             cumQueueSize += orderQuantity;
             ++it;
         }
         if (cumQueueSize != queueSize) // checks for order queue size consistency
-            Error::LIB_THROW("[MatchingEngineBase::init] Ask book size mismatch at price level " + std::to_string(priceLevel) + ": expected " + std::to_string(queueSize) + ", got " + std::to_string(cumQueueSize) + ".");
+            Utils::Error::LIB_THROW("[MatchingEngineBase::init] Ask book size mismatch at price level " + std::to_string(priceLevel) + ": expected " + std::to_string(queueSize) + ", got " + std::to_string(cumQueueSize) + ".");
     }
     for (const auto& order : myRemovedLimitOrderLog) {
         if (!order) // checks for null order
-            Error::LIB_THROW("[MatchingEngineBase::init] Null order found in removed limit order log.");
+            Utils::Error::LIB_THROW("[MatchingEngineBase::init] Null order found in removed limit order log.");
         const auto orderId = order->getId();
         if (orderIds.find(orderId) != orderIds.end()) // checks for removed limit order id presence in the order book
-            Error::LIB_THROW("[MatchingEngineBase::init] Removed limit order id found in order book: " + std::to_string(orderId) + ".");
+            Utils::Error::LIB_THROW("[MatchingEngineBase::init] Removed limit order id found in order book: " + std::to_string(orderId) + ".");
     }
 }
 
@@ -899,7 +898,7 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
         auto matchOrder = *queueIt; // owns the order
         const uint64_t matchOrderId = matchOrder->getId();
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Matching order: " << *matchOrder;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Matching order: " << *matchOrder;
         const uint32_t matchQuantity = matchOrder->getQuantity();
         uint32_t filledQuantity = 0;
         if (matchQuantity <= unfilledQuantity) {
@@ -935,7 +934,7 @@ void MatchingEngineBase::fillOrderByMatchingTopLimitQueue(
         logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), orderId, order->getOrderType(), order->getSide(), matchOrderId, trade->getId(), trade->getQuantity(), trade->getPrice(), false, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming taker order
         logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), matchOrderId, Market::OrderType::LIMIT, matchOrder->getSide(), orderId, trade->getId(), trade->getQuantity(), trade->getPrice(), true, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting maker order (limit order)
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
     }
 }
 
@@ -954,7 +953,7 @@ void MatchingEngineBase::placeLimitOrderToLimitOrderBook(
         orderSizeTotal += order->getQuantity();
         myLimitOrderLookup[order->getId()] = {&limitQueue, std::prev(limitQueue.end())};
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Placed order in limit order book: " << *order;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Placed order in limit order book: " << *order;
     } else {
         order->setQuantity(0);
         order->setTimestamp(clockTick());
@@ -977,7 +976,7 @@ void MatchingEngineBase::executeAgainstQueuedMarketOrders(
         }
         const uint64_t marketOrderId = marketOrder->getId();
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Matching queued market order: " << *marketOrder;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Matching queued market order: " << *marketOrder;
         const uint32_t matchQuantity = marketOrder->getQuantity();
         uint32_t filledQuantity = 0;
         if (matchQuantity <= unfilledQuantity) {
@@ -1005,7 +1004,7 @@ void MatchingEngineBase::executeAgainstQueuedMarketOrders(
         logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), orderId, Market::OrderType::LIMIT, order->getSide(), marketOrderId, trade->getId(), trade->getQuantity(), trade->getPrice(), true, takerOrderExecType, OrderProcessingStatus::SUCCESS)); // incoming maker order (limit order)
         logOrderProcessingReport(std::make_shared<OrderExecutionReport>(generateReportId(), clockTick(), marketOrderId, Market::OrderType::MARKET, marketOrder->getSide(), orderId, trade->getId(), trade->getQuantity(), trade->getPrice(), false, makerOrderExecType, OrderProcessingStatus::SUCCESS)); // resting taker order
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Trade executed: " << *trade;
     }
 }
 
@@ -1021,7 +1020,7 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
             order->setOrderState(Market::OrderState::PARTIAL_FILLED);
         marketQueue.push_back(order);
         if (isDebugMode())
-            *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineBase] Placed order in market order queue: " << *order;
+            *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineBase] Placed order in market order queue: " << *order;
     } else {
         order->setQuantity(0);
         order->setTimestamp(clockTick());
@@ -1057,7 +1056,7 @@ MatchingEngineFIFO::MatchingEngineFIFO(const MatchingEngineFIFO& matchingEngine)
 
 void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) {
     if (isDebugMode())
-        *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineFIFO] Add to limit order book: " << *order;
+        *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineFIFO] Add to limit order book: " << *order;
     if (!order->isAlive())
         return;
     const uint64_t id = order->getId();
@@ -1094,7 +1093,7 @@ void MatchingEngineFIFO::addToLimitOrderBook(std::shared_ptr<Market::LimitOrder>
 
 void MatchingEngineFIFO::executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) {
     if (isDebugMode())
-        *getLogger() << Logger::LogLevel::DEBUG << "[MatchingEngineFIFO] Execute market order: " << *order;
+        *getLogger() << Utils::Logger::LogLevel::DEBUG << "[MatchingEngineFIFO] Execute market order: " << *order;
     if (!order->isAlive())
         return;
     const Market::Side side = order->getSide();

@@ -7,9 +7,6 @@
 #include "Analytics/OrderBookObservables.hpp"
 
 namespace Analytics {
-using namespace Utils;
-using namespace Parser;
-
 /* This monitor class is hefty as each tick detection logs a deep copy of the order book up to some level cutoff,
     with memory size linear in the number of tick detections */
 class MatchingEngineMonitor {
@@ -35,9 +32,9 @@ public:
     double getMinimumPriceTick() const { return myMinimumPriceTick; }
     OrderBookStatisticsTimestampStrategy getOrderBookStatisticsTimestampStrategy() const { return myOrderBookStatisticsTimestampStrategy; }
     OrderBookAggregateStatistics getOrderBookAggregateStatistics() { return myOrderBookAggregateStatistics; }
-    const Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
-    const Statistics::TimeSeriesCollector<OrderEventProcessingLatency>& getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatenciesCollector; }
-    const Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport>& getOrderProcessingReports() const { return myOrderProcessingReportsCollector; }
+    const Utils::Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const { return myOrderBookStatisticsCollector; }
+    const Utils::Statistics::TimeSeriesCollector<OrderEventProcessingLatency>& getOrderEventProcessingLatencies() const { return myOrderEventProcessingLatenciesCollector; }
+    const Utils::Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport>& getOrderProcessingReports() const { return myOrderProcessingReportsCollector; }
     const OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const;
     bool isPriceWithinTopOfBook(const Market::Side side, const double price, const std::optional<Market::OrderType>& type = std::nullopt) const;
 
@@ -88,9 +85,9 @@ private:
     double myMinimumPriceTick = 0.01; // for informational purpose in sync with order event manager which manages the min price tick
     OrderBookAggregateStatistics myOrderBookAggregateStatistics;
     OrderBookAggregateStatistics myOrderBookAggregateStatisticsCache; // caches the last statistics entry
-    Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
-    Statistics::TimeSeriesCollector<OrderEventProcessingLatency> myOrderEventProcessingLatenciesCollector;
-    Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> myOrderProcessingReportsCollector;
+    Utils::Statistics::TimeSeriesCollector<OrderBookStatisticsByTimestamp> myOrderBookStatisticsCollector;
+    Utils::Statistics::TimeSeriesCollector<OrderEventProcessingLatency> myOrderEventProcessingLatenciesCollector;
+    Utils::Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> myOrderProcessingReportsCollector;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
     Exchange::CallbackSharedPtr<Exchange::OrderEventLatency> myOrderEventLatencyCallback;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()

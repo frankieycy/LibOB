@@ -4,8 +4,6 @@
 #include "Market/MetaInfo.hpp"
 
 namespace Market {
-using namespace Utils;
-
 std::ostream& operator<<(std::ostream& out, const TradeMetaInfo& metaInfo) {
     return out << metaInfo.getAsJson();
 }
@@ -23,8 +21,8 @@ TradeMetaInfo::TradeMetaInfo(const std::string symbol, const std::string exchang
 }
 
 void TradeMetaInfo::init() {
-    String::stringToCharRaw(mySymbol, mySymbolCharRaw, '0');
-    String::stringToCharRaw(myExchangeId, myExchangeIdCharRaw, '0');
+    Utils::String::stringToCharRaw(mySymbol, mySymbolCharRaw, '0');
+    Utils::String::stringToCharRaw(myExchangeId, myExchangeIdCharRaw, '0');
 }
 
 std::string TradeMetaInfo::getAsJson() const {
@@ -51,8 +49,8 @@ OrderMetaInfo::OrderMetaInfo(const std::string symbol, const std::string exchang
 }
 
 void OrderMetaInfo::init() {
-    myAgentIdHash = String::hashStringTo<uint64_t>(myAgentId);
-    String::stringToCharRaw(myMarketParticipantId, myMarketParticipantIdCharRaw, '0');
+    myAgentIdHash = Utils::String::hashStringTo<uint64_t>(myAgentId);
+    Utils::String::stringToCharRaw(myMarketParticipantId, myMarketParticipantIdCharRaw, '0');
 }
 
 std::string OrderMetaInfo::getAsJson() const {

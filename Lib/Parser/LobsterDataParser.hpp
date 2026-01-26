@@ -15,8 +15,6 @@ struct OrderCancelAndReplaceReport;
 }
 
 namespace Parser {
-using namespace Utils;
-
 class LobsterDataParser {
 public:
     enum class MessageType : uint8_t {
@@ -100,8 +98,8 @@ public:
 
 private:
     bool myDebugMode = false;
-    Statistics::TimeSeriesCollector<OrderBookMessage> myOrderBookMessagesCollector;
-    Statistics::TimeSeriesCollector<OrderBookSnapshot> myOrderBookSnapshotsCollector;
+    Utils::Statistics::TimeSeriesCollector<OrderBookMessage> myOrderBookMessagesCollector;
+    Utils::Statistics::TimeSeriesCollector<OrderBookSnapshot> myOrderBookSnapshotsCollector;
 };
 }
 

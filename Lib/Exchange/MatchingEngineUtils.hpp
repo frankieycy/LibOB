@@ -106,7 +106,7 @@ struct OrderProcessingReport {
     virtual void dispatchTo(Analytics::MatchingEngineMonitor& matchingEngineMonitor) const = 0;
     virtual void dispatchTo(Analytics::MonitorOutputsAnalyzerBase& monitorOutputsAnalyzer) const = 0;
     virtual std::vector<std::shared_ptr<const OrderProcessingReport>> decomposeIntoAtomicReports() const {
-        Error::LIB_THROW("No implementation for OrderProcessingReport::decomposeIntoAtomicReports().");
+        Utils::Error::LIB_THROW("No implementation for OrderProcessingReport::decomposeIntoAtomicReports().");
         return {};
     }
     // We shall only provide `makeEvent` for order reports that actually act on an order,

@@ -4,8 +4,6 @@
 #include "Simulator/VolumeProfile.hpp"
 
 namespace Simulator {
-using namespace Utils;
-
 uint32_t LinearVolumeInterpolator::volumeAt(const uint32_t dist) const {
     if (dist < getInterpDistanceStart())
         return 0;

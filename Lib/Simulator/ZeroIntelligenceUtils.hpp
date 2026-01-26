@@ -9,8 +9,6 @@
    classes, or the conditional distributions dependent on the book shape by having the MatchingEngineMonitor
    as a class member - see the EngineAware classes. */
 namespace Simulator {
-using namespace Utils;
-
 /* EngineAware samplers have access to the matching engine in real time via the monitor, which may provide
    order book statistics in addition to the book state. Note that the monitor is chosen over the engine so that
    the sample generation may depend on other derived metrics like order imbalance. */
@@ -23,7 +21,7 @@ public:
     const Analytics::OrderBookTopLevelsSnapshot& getLastOrderBookTopLevelsSnapshot() const {
         return myMonitor->getLastOrderBookTopLevelsSnapshot();
     }
-    const Statistics::TimeSeriesCollector<Analytics::OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const {
+    const Utils::Statistics::TimeSeriesCollector<Analytics::OrderBookStatisticsByTimestamp>& getOrderBookStatistics() const {
         return myMonitor->getOrderBookStatistics();
     }
 protected:
@@ -95,7 +93,7 @@ class UniformOrderSideSampler : public IOrderSideSampler {
 public:
     virtual ~UniformOrderSideSampler() = default;
     virtual Market::Side sample() const override {
-        return Statistics::getRandomUniform01(true) < 0.5 ? Market::Side::BUY : Market::Side::SELL;
+        return Utils::Statistics::getRandomUniform01(true) < 0.5 ? Market::Side::BUY : Market::Side::SELL;
     }
 };
 
@@ -137,7 +135,7 @@ class NullOrderSizeSampler : public IOrderSizeSampler {
 public:
     virtual ~NullOrderSizeSampler() = default;
     virtual uint32_t sample(const Market::Side /* side */) const override {
-        Error::LIB_THROW("[NullOrderSizeSampler] sample() cannot be called.");
+        Utils::Error::LIB_THROW("[NullOrderSizeSampler] sample() cannot be called.");
         return 0;
     }
 };
@@ -157,7 +155,7 @@ public:
         myMinSize(minSize), myMaxSize(maxSize) {}
     virtual ~UniformOrderSizeSampler() = default;
     virtual uint32_t sample(const Market::Side /* side */) const override {
-        return Statistics::getRandomUniformInt(myMinSize, myMaxSize, true);
+        return Utils::Statistics::getRandomUniformInt(myMinSize, myMaxSize, true);
     }
 private:
     uint32_t myMinSize;
@@ -183,7 +181,7 @@ class NullOrderPricePlacementSampler : public IOrderPricePlacementSampler {
 public:
     virtual ~NullOrderPricePlacementSampler() = default;
     virtual double sample(const Market::Side /* side */) const override {
-        Error::LIB_THROW("[NullOrderPricePlacementSampler] sample() cannot be called.");
+        Utils::Error::LIB_THROW("[NullOrderPricePlacementSampler] sample() cannot be called.");
         return Utils::Consts::NAN_DOUBLE;
     }
 };

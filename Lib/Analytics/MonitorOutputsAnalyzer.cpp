@@ -5,7 +5,6 @@
 #include "Analytics/MonitorOutputsAnalyzer.hpp"
 
 namespace Analytics {
-using namespace Utils;
 using Utils::operator<<;
 
 void MonitorOutputsAnalyzerBase::setStatsConfig(const OrderBookDerivedStatsConfig& config) {
@@ -51,8 +50,8 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     // run analytic computations on order book traces
     const auto& traces = getOrderBookTraces();
     const auto& accumulationMode = getConfig().statsAccumulationMode;
-    double bestBidPriceCache = Consts::NAN_DOUBLE;
-    double bestAskPriceCache = Consts::NAN_DOUBLE;
+    double bestBidPriceCache = Utils::Consts::NAN_DOUBLE;
+    double bestAskPriceCache = Utils::Consts::NAN_DOUBLE;
     const auto& reports = traces.orderProcessingReportsCollector.getSamples();
     const auto& stats = traces.orderBookStatisticsCollector.getSamples();
     auto reportsIt = reports.begin();
@@ -173,14 +172,14 @@ MatchingEngineMonitorOutputsAnalyzer::MatchingEngineMonitorOutputsAnalyzer(const
 
 void MatchingEngineMonitorOutputsAnalyzer::init() {
     if (!myMonitor)
-        Error::LIB_THROW("[MatchingEngineMonitorOutputsAnalyzer] Matching engine monitor is null.");
+        Utils::Error::LIB_THROW("[MatchingEngineMonitorOutputsAnalyzer] Matching engine monitor is null.");
 }
 
 void MatchingEngineMonitorOutputsAnalyzer::populateOrderBookTraces() {
     // populate order book traces from monitor outputs
     auto& traces = getOrderBookTraces();
     if (myMonitor->getOrderBookStatistics().size() != myMonitor->getOrderProcessingReports().size())
-        Error::LIB_THROW("[MatchingEngineMonitorOutputsAnalyzer::populateOrderBookTraces] Mismatched sizes between order book statistics and order processing reports in monitor.");
+        Utils::Error::LIB_THROW("[MatchingEngineMonitorOutputsAnalyzer::populateOrderBookTraces] Mismatched sizes between order book statistics and order processing reports in monitor.");
     traces.orderBookStatisticsCollector = myMonitor->getOrderBookStatistics(); // owns a deep copy of the time series
     traces.orderProcessingReportsCollector = myMonitor->getOrderProcessingReports();
 }
@@ -193,7 +192,7 @@ LobsterDataParserOutputsAnalyzer::LobsterDataParserOutputsAnalyzer(const std::sh
 
 void LobsterDataParserOutputsAnalyzer::init() {
     if (!myParser)
-        Error::LIB_THROW("[LobsterDataParserOutputsAnalyzer] Lobster data parser is null.");
+        Utils::Error::LIB_THROW("[LobsterDataParserOutputsAnalyzer] Lobster data parser is null.");
 }
 
 void LobsterDataParserOutputsAnalyzer::populateOrderBookTraces() {

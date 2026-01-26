@@ -7,7 +7,6 @@
 #include "Exchange/MatchingEngine.hpp"
 
 namespace Market {
-using namespace Utils;
 using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderEventManagerBase& manager) {
@@ -16,7 +15,7 @@ std::ostream& operator<<(std::ostream& out, const OrderEventManagerBase& manager
 
 OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMatchingEngine>& matchingEngine) {
     if (!matchingEngine)
-        Error::LIB_THROW("[OrderEventManagerBase] Matching engine is null.");
+        Utils::Error::LIB_THROW("[OrderEventManagerBase] Matching engine is null.");
     mySyncClockWithEngine = true;
     myMatchingEngine = matchingEngine;
     myWorldClock = matchingEngine->getWorldClock();
@@ -30,28 +29,28 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
 
 void OrderEventManagerBase::submitOrderEventToMatchingEngine(const std::shared_ptr<OrderEventBase>& event) {
     if (!event) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::submitOrderEventToMatchingEngine] Order event is null - omitting submission.";
         return;
     }
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event submitted: " << *event;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event submitted: " << *event;
     if (myMillisecondsToPauseBeforeEventSubmit > 0)
         std::this_thread::sleep_for(std::chrono::milliseconds(myMillisecondsToPauseBeforeEventSubmit));
     if (myTimeEngineOrderEventsProcessing) {
-        const auto& duration = Counter::timeOperation<std::chrono::nanoseconds>([this, event]() { myMatchingEngine->process(event); }); // typical timescale of NASDAQ engine is in nanoseconds
-        *myLogger << Logger::LogLevel::INFO << "[OrderEventManagerBase] Matching engine order event processing time: " << duration << " nanoseconds. Note that IO operations are also counted in.";
+        const auto& duration = Utils::Counter::timeOperation<std::chrono::nanoseconds>([this, event]() { myMatchingEngine->process(event); }); // typical timescale of NASDAQ engine is in nanoseconds
+        *myLogger << Utils::Logger::LogLevel::INFO << "[OrderEventManagerBase] Matching engine order event processing time: " << duration << " nanoseconds. Note that IO operations are also counted in.";
     } else {
         myMatchingEngine->process(event);
     }
     if (myDebugMode) {
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event manager state:\n" << *this;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order event manager state:\n" << *this;
         if (myPrintOrderBookPerOrderSubmit)
-            *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order book state:\n" << *myMatchingEngine;
+            *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order book state:\n" << *myMatchingEngine;
     }
 }
 
 std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createLimitOrderSubmitEvent(const Side side, const uint32_t quantity, const double price) {
-    const auto& order = std::make_shared<LimitOrder>(myOrderIdHandler.generateId(), clockTick(), side, quantity, Maths::roundPriceToTick(price, myMinimumPriceTick));
+    const auto& order = std::make_shared<LimitOrder>(myOrderIdHandler.generateId(), clockTick(), side, quantity, Utils::Maths::roundPriceToTick(price, myMinimumPriceTick));
     return std::make_shared<OrderSubmitEvent>(myEventIdHandler.generateId(), order->getId(), order->getTimestamp(), order);
 }
 
@@ -63,7 +62,7 @@ std::shared_ptr<OrderSubmitEvent> OrderEventManagerBase::createMarketOrderSubmit
 std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(const uint64_t orderId) {
     const auto& order = fetchOrder(orderId);
     if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderCancelEvent] Order not found - orderId = " << orderId << ".";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderCancelEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
     return std::make_shared<OrderCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick());
@@ -72,7 +71,7 @@ std::shared_ptr<OrderCancelEvent> OrderEventManagerBase::createOrderCancelEvent(
 std::shared_ptr<OrderPartialCancelEvent> OrderEventManagerBase::createOrderPartialCancelEvent(const uint64_t orderId, const uint32_t cancelQuantity) {
     const auto& order = fetchOrder(orderId);
     if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderPartialCancelEvent] Order not found - orderId = " << orderId << ".";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderPartialCancelEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
     return std::make_shared<OrderPartialCancelEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), cancelQuantity);
@@ -82,26 +81,26 @@ std::shared_ptr<OrderCancelAndReplaceEvent> OrderEventManagerBase::createOrderCa
     const std::optional<uint32_t>& modifiedQuantity, const std::optional<double>& modifiedPrice) {
     const auto& order = fetchOrder(orderId);
     if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderCancelAndReplaceEvent] Order not found - orderId = " << orderId << ".";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderCancelAndReplaceEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
-    const auto& roundedModifiedPrice = modifiedPrice ? std::make_optional(Maths::roundPriceToTick(*modifiedPrice, myMinimumPriceTick)) : std::nullopt;
+    const auto& roundedModifiedPrice = modifiedPrice ? std::make_optional(Utils::Maths::roundPriceToTick(*modifiedPrice, myMinimumPriceTick)) : std::nullopt;
     return std::make_shared<OrderCancelAndReplaceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), myOrderIdHandler.generateId(), modifiedQuantity, roundedModifiedPrice);
 }
 
 std::shared_ptr<OrderModifyPriceEvent> OrderEventManagerBase::createOrderModifyPriceEvent(const uint64_t orderId, const double modifiedPrice) {
     const auto& order = fetchOrder(orderId);
     if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyPriceEvent] Order not found - orderId = " << orderId << ".";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyPriceEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
-    return std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), Maths::roundPriceToTick(modifiedPrice, myMinimumPriceTick));
+    return std::make_shared<OrderModifyPriceEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), Utils::Maths::roundPriceToTick(modifiedPrice, myMinimumPriceTick));
 }
 
 std::shared_ptr<OrderModifyQuantityEvent> OrderEventManagerBase::createOrderModifyQuantityEvent(const uint64_t orderId, const double modifiedQuantity) {
     const auto& order = fetchOrder(orderId);
     if (!order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyQuantityEvent] Order not found - orderId = " << orderId << ".";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::createOrderModifyQuantityEvent] Order not found - orderId = " << orderId << ".";
         return nullptr;
     }
     return std::make_shared<OrderModifyQuantityEvent>(myEventIdHandler.generateId(), order->getId(), clockTick(), modifiedQuantity);
@@ -112,7 +111,7 @@ std::shared_ptr<OrderBase> OrderEventManagerBase::fetchOrder(const uint64_t orde
     if (itL == myActiveLimitOrders.end()) {
         const auto& itM = myQueuedMarketOrders.find(orderId);
         if (itM == myQueuedMarketOrders.end()) {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchOrder] Order not found - orderId = " << orderId << ".";
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchOrder] Order not found - orderId = " << orderId << ".";
             return nullptr;
         }
         return itM->second;
@@ -123,7 +122,7 @@ std::shared_ptr<OrderBase> OrderEventManagerBase::fetchOrder(const uint64_t orde
 LimitOrderIndex::const_iterator OrderEventManagerBase::fetchLimitOrderIterator(const uint64_t orderId) const {
     const auto& it = myActiveLimitOrders.find(orderId);
     if (it == myActiveLimitOrders.end()) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchLimitOrderIterator] Limit order not found - orderId = " << orderId << ".";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchLimitOrderIterator] Limit order not found - orderId = " << orderId << ".";
         return myActiveLimitOrders.cend();
     }
     return it;
@@ -132,7 +131,7 @@ LimitOrderIndex::const_iterator OrderEventManagerBase::fetchLimitOrderIterator(c
 MarketOrderIndex::const_iterator OrderEventManagerBase::fetchMarketOrderIterator(const uint64_t orderId) const {
     const auto& it = myQueuedMarketOrders.find(orderId);
     if (it == myQueuedMarketOrders.end()) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchMarketOrderIterator] Market order not found - orderId = " << orderId << ".";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::fetchMarketOrderIterator] Market order not found - orderId = " << orderId << ".";
         return myQueuedMarketOrders.cend();
     }
     return it;
@@ -140,12 +139,12 @@ MarketOrderIndex::const_iterator OrderEventManagerBase::fetchMarketOrderIterator
 
 void OrderEventManagerBase::setLoggerLogFile(const std::string& logFileName, const bool logToConsole, const bool showLogTimestamp) {
     if (logFileName.empty()) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::setLoggerLogFile] Log file name is empty, logger will not log to file.";
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::setLoggerLogFile] Log file name is empty, logger will not log to file.";
         return;
     }
     myLogger->setLogFile(logFileName, logToConsole, showLogTimestamp);
     myMatchingEngine->setLogger(myLogger);
-    *myLogger << Logger::LogLevel::INFO << "[OrderEventManagerBase::setLoggerLogFile] Logger log file set to: " << logFileName;
+    *myLogger << Utils::Logger::LogLevel::INFO << "[OrderEventManagerBase::setLoggerLogFile] Logger log file set to: " << logFileName;
 }
 
 std::shared_ptr<const OrderSubmitEvent> OrderEventManagerBase::submitLimitOrderEvent(const Side side, const uint32_t quantity, const double price) {
@@ -179,7 +178,7 @@ std::vector<std::shared_ptr<const OrderEventBase>> OrderEventManagerBase::cancel
     for (const uint64_t orderId : orderIdsToCancel) {
         const auto order = fetchOrder(orderId);
         if (!order) {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::cancelOrders] Order not found in active limit orders - orderId = " << orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::cancelOrders] Order not found in active limit orders - orderId = " << orderId;
             continue;
         }
         const uint32_t orderQuantity = order->getQuantity();
@@ -217,15 +216,15 @@ std::shared_ptr<const OrderModifyQuantityEvent> OrderEventManagerBase::modifyOrd
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderExecutionReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order execution report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order execution report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order execution report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order execution report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     if (report.orderExecutionType == Exchange::OrderExecutionType::FILLED || report.orderExecutionType == Exchange::OrderExecutionType::PARTIAL_FILLED) {
         auto order = fetchOrder(report.orderId);
         if (!order) {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
             return;
         }
         const uint32_t updatedQuantity = order->getQuantity() - report.filledQuantity;
@@ -244,13 +243,13 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderExecuti
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::LimitOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     if (!report.order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order is null - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order is null - orderId = " << report.orderId;
         return;
     }
     auto order = report.order->copy(); // keep an internal clone of the order
@@ -261,13 +260,13 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::LimitOrderSu
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::MarketOrderSubmitReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order submit report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order submit report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     if (!report.order) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order is null - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order is null - orderId = " << report.orderId;
         return;
     }
     auto order = report.order->copy(); // keep an internal clone of the order
@@ -278,9 +277,9 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::MarketOrderS
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     if (report.orderType == Market::OrderType::LIMIT) {
@@ -291,7 +290,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
             order->setTimestamp(clockTick());
             myActiveLimitOrders.erase(it);
         } else {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
         }
     } else if (report.orderType == Market::OrderType::MARKET) {
         const auto& it = fetchMarketOrderIterator(report.orderId);
@@ -301,18 +300,18 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelR
             order->setTimestamp(clockTick());
             myQueuedMarketOrders.erase(it);
         } else {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
         }
     } else {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in cancel report - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in cancel report - orderId = " << report.orderId;
     }
 }
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderPartialCancelReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order partial cancel report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order partial cancel report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order partial cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order partial cancel report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     if (report.orderType == Market::OrderType::LIMIT) {
@@ -328,7 +327,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderPartial
                 myActiveLimitOrders.erase(it);
             }
         } else {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
         }
     } else if (report.orderType == Market::OrderType::MARKET) {
         const auto& it = fetchMarketOrderIterator(report.orderId);
@@ -343,18 +342,18 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderPartial
                 myQueuedMarketOrders.erase(it);
             }
         } else {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
         }
     } else {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in partial cancel report - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in partial cancel report - orderId = " << report.orderId;
     }
 }
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelAndReplaceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel and replace report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order cancel and replace report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order cancel and replace report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     if (report.orderType == Market::OrderType::LIMIT) {
@@ -371,7 +370,7 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelA
                 myActiveLimitOrders[order->getId()] = order; // reinsert the updated order
             }
         } else {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Limit order not found in active limit orders - orderId = " << report.orderId;
         }
     } else if (report.orderType == Market::OrderType::MARKET) {
         const auto& it = fetchMarketOrderIterator(report.orderId);
@@ -386,18 +385,18 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderCancelA
                 myQueuedMarketOrders[order->getId()] = order; // reinsert the updated order
             }
         } else {
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Market order not found in queued market orders - orderId = " << report.orderId;
         }
     } else {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in cancel and replace report - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Unknown order type in cancel and replace report - orderId = " << report.orderId;
     }
 }
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyPriceReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify price report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify price report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify price report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify price report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     const auto& it = myActiveLimitOrders.find(report.orderId);
@@ -406,17 +405,17 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyP
         order->setPrice(report.modifiedPrice);
         order->setTimestamp(clockTick());
         if (!order->checkState())
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon price modification: " << *order;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon price modification: " << *order;
     } else {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
     }
 }
 
 void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyQuantityReport& report) {
     if (myDebugMode)
-        *myLogger << Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify quantity report received: " << report;
+        *myLogger << Utils::Logger::LogLevel::DEBUG << "[OrderEventManagerBase] Order modify quantity report received: " << report;
     if (report.status != Exchange::OrderProcessingStatus::SUCCESS) {
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report status is NOT success, skipping active orders update - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order modify quantity report status is NOT success, skipping active orders update - orderId = " << report.orderId;
         return;
     }
     const auto& it = myActiveLimitOrders.find(report.orderId);
@@ -425,9 +424,9 @@ void OrderEventManagerBase::onOrderProcessingReport(const Exchange::OrderModifyQ
         order->setQuantity(report.modifiedQuantity);
         order->setTimestamp(clockTick());
         if (!order->checkState())
-            *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon quantity modification: " << *order;
+            *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order in an invalid state upon quantity modification: " << *order;
     } else
-        *myLogger << Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
+        *myLogger << Utils::Logger::LogLevel::WARNING << "[OrderEventManagerBase::onOrderProcessingReport] Order not found in active orders - orderId = " << report.orderId;
 }
 
 std::ostream& OrderEventManagerBase::stateSnapshot(std::ostream& out) const {

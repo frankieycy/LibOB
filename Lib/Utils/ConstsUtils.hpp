@@ -12,19 +12,19 @@ constexpr double NEG_INF_DOUBLE = -std::numeric_limits<double>::infinity();
 
 template<typename T>
 constexpr T quietNaN() {
-    Error::LIB_ASSERT(std::is_floating_point_v<T>, "quietNaN() is only defined for floating-point types");
+    Utils::Error::LIB_ASSERT(std::is_floating_point_v<T>, "quietNaN() is only defined for floating-point types");
     return std::numeric_limits<T>::quiet_NaN();
 }
 
 template <typename T>
 inline bool isNaN(T x) {
-    Error::LIB_ASSERT(std::is_floating_point_v<T>, "isNaN() is only defined for floating-point types");
+    Utils::Error::LIB_ASSERT(std::is_floating_point_v<T>, "isNaN() is only defined for floating-point types");
     return std::isnan(x);
 }
 
 template <typename T>
 inline bool isFinite(T x) {
-    Error::LIB_ASSERT(std::is_floating_point_v<T>, "isFinite() is only defined for floating-point types");
+    Utils::Error::LIB_ASSERT(std::is_floating_point_v<T>, "isFinite() is only defined for floating-point types");
     return std::isfinite(x);
 }
 

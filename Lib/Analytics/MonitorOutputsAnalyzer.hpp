@@ -8,8 +8,6 @@
 #include "Analytics/OrderBookDerivedAnalyticsUtils.hpp"
 
 namespace Analytics {
-using namespace Utils;
-
 /* Performs analytics on matching engine monitor outputs e.g. top-level order book snapshots.
     Supports construction from matching engine monitor, lobster data parser and outputs file path, */
 class IMonitorOutputsAnalyzer {
