@@ -7,6 +7,7 @@
 #include <set>
 #include <map>
 #include <list>
+#include <array>
 #include <vector>
 #include <unordered_map>
 #include <cmath>
@@ -19,6 +20,7 @@
 #include <functional>
 #include <stdexcept>
 #include <exception>
+#include "Utils/EnumStrings.hpp"
 #include "Utils/Logger.hpp"
 #include "Utils/ErrorUtils.hpp"
 #include "Utils/IOUtils.hpp"
@@ -43,11 +45,6 @@ std::string toString(const std::vector<T>& vec) {
     oss << "]";
     return oss.str();
 }
-}
-
-template<typename T>
-std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
-    out << toString(vec);
 }
 
 #endif

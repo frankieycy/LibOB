@@ -9,7 +9,7 @@
     - ok, avoid `return out` in `operator<<` if unneeded
     - ok, string util functions are to be put at file end after class definitions
     - ok, unify `to_string()` and `toString()`, deprecate the former
-    - use EnumTraits idioms for all enum-to-string conversions
+    - use EnumStrings idioms for all enum-to-string conversions
 * Misc. Utils
     - ok, ability to cast Enum as string, `to_string`
     - ok, write up `Logger` class, use it for debug logging
