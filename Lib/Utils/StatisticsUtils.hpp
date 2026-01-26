@@ -62,7 +62,7 @@ private:
 };
 
 std::string toString(const VectorStats& stats);
-std::ostream& operator<<(std::ostream& out, const VectorStats& orderMatchingStrategy);
+std::ostream& operator<<(std::ostream& out, const VectorStats& stats);
 
 template<class Engine>
 inline double getRandomUniform01(Engine& eng) {
