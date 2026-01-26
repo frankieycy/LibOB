@@ -1,6 +1,7 @@
 #ifndef ENUM_STRINGS_HPP
 #define ENUM_STRINGS_HPP
 #include <string>
+#include <ostream>
 #include <type_traits>
 
 namespace Utils {
@@ -21,6 +22,12 @@ inline std::string toString(E value) {
 template<typename E>
     requires std::is_enum_v<E>
 std::ostream& enumStream(std::ostream& os, E value) {
+    return os << toString(value);
+}
+
+template<typename E>
+    requires std::is_enum_v<E>
+std::ostream& operator<<(std::ostream& os, E value) {
     return os << toString(value);
 }
 }

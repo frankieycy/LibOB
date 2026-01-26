@@ -45,6 +45,11 @@ std::string toString(const std::vector<T>& vec) {
     oss << "]";
     return oss.str();
 }
+
+template<typename T>
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
+    out << toString(vec);
+}
 }
 
 #endif
