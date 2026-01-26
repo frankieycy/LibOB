@@ -781,9 +781,9 @@ void PriceImpactStats::compute() {
     const size_t numTrades = trades.size();
     if (numTrades == 0)
         Utils::Error::LIB_THROW("[PriceImpactStats::compute] No trade data accumulated to compute price impact stats.");
-    for (size_t i = 0; i < numTrades; ++i) {
+    for (size_t i = 1; i < numTrades; ++i) {
         const TradeEvent& trade = trades[i];
-        const double thisRefPrice = trade.refPrice;
+        const double thisRefPrice = trades[i - 1].refPrice; // reference price just before the trade
         for (size_t h = 0; h < horizons.size(); ++h) {
             const uint64_t horizon = horizons[h];
             if (i + horizon >= numTrades)

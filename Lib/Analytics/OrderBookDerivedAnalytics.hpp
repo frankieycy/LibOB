@@ -254,7 +254,7 @@ private:
 /* Price impact stats conditional on the trade sign or size. Formally, we define "price impact" as the expectation of
     the price tick change over some future timeframe (in trade event time unit) given a certain trade sign or size. */
 struct PriceImpactStats : public IOrderBookDerivedStats {
-    static constexpr std::array<uint64_t, 11> DefaultHorizons{ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+    static constexpr std::array<uint64_t, 12> DefaultHorizons{ 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
     static constexpr size_t NumTradeBuckets_SignOnly = 2; // buy vs sell
     static constexpr size_t NumTradeBuckets_SizeBucketed = 20; // size in log2 scale
     static constexpr double MinPriceImpact = -100;
