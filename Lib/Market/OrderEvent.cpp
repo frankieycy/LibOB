@@ -7,6 +7,7 @@
 
 namespace Market {
 using namespace Utils;
+using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event) {
     return out << event.getAsJson();

@@ -153,13 +153,22 @@ private:
 
 class TimeDependentPoissonEventScheduler : public IEventScheduler {}; // TODO
 
-std::string toString(const ExchangeSimulatorState state);
-std::string toString(const ExchangeSimulatorType type);
-std::string toString(const OrderEventType type);
-std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state);
-std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type);
-std::ostream& operator<<(std::ostream& out, const OrderEventType type);
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event);
 }
+
+template<>
+struct Utils::EnumStrings<Simulator::ExchangeSimulatorState> {
+    inline static constexpr std::array<const char*, 4> names = { "Uninitialized", "Ready", "Running", "Finished" };
+};
+
+template<>
+struct Utils::EnumStrings<Simulator::ExchangeSimulatorType> {
+    inline static constexpr std::array<const char*, 3> names = { "ZeroIntelligence", "MinimalIntelligence", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Simulator::OrderEventType> {
+    inline static constexpr std::array<const char*, 6> names = { "LimitSubmit", "MarketSubmit", "Cancel", "CancelById", "CancelReplace", "None" };
+};
 
 #endif

@@ -6,25 +6,7 @@
 
 namespace Analytics {
 using namespace Utils;
-
-std::string toString(const IMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode) {
-    switch (calcMode) {
-        case IMonitorOutputsAnalyzer::OrderBookTracesSource::MONITOR: return "Monitor";
-        case IMonitorOutputsAnalyzer::OrderBookTracesSource::LOBSTER: return "Lobster";
-        case IMonitorOutputsAnalyzer::OrderBookTracesSource::FILE:    return "File";
-        default:                                                      return "None";
-    }
-}
-
-std::string toString(const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) {
-    switch (fileFormat) {
-        case FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat::LOBSTER: return "Lobster";
-        default:                                                            return "None";
-    }
-}
-
-std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode) { return out << toString(calcMode); }
-std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat) { return out << toString(fileFormat); }
+using Utils::operator<<;
 
 void MonitorOutputsAnalyzerBase::setStatsConfig(const OrderBookDerivedStatsConfig& config) {
     myStatsConfig = config;

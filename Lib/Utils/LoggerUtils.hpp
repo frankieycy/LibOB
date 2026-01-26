@@ -1,6 +1,7 @@
 #ifndef LOGGER_UTILS_HPP
 #define LOGGER_UTILS_HPP
 #include <sstream>
+#include "Utils/EnumStrings.hpp"
 
 namespace Utils {
 namespace Logger {
@@ -33,10 +34,12 @@ private:
     OverwriteLastLog myOverwriteLastLog = OverwriteLastLog::NO;
     bool myFlushed = false;
 };
-
-std::string toString(const LogLevel& level);
-std::ostream& operator<<(std::ostream& out, const LogLevel& level);
 }
+
+template<>
+struct EnumStrings<Logger::LogLevel> {
+    inline static constexpr std::array<const char*, 6> names = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE", "NONE" };
+};
 }
 
 #endif

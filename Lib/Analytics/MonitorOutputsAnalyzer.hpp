@@ -114,11 +114,16 @@ private:
     std::string myFilePath;
     MonitorOutputsFileFormat myFileFormat = MonitorOutputsFileFormat::NONE;
 };
-
-std::string toString(const IMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode);
-std::string toString(const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat);
-std::ostream& operator<<(std::ostream& out, const IMonitorOutputsAnalyzer::OrderBookTracesSource& calcMode);
-std::ostream& operator<<(std::ostream& out, const FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat& fileFormat);
 }
+
+template<>
+struct Utils::EnumStrings<Analytics::IMonitorOutputsAnalyzer::OrderBookTracesSource> {
+    inline static constexpr std::array<const char*, 4> names = { "Monitor", "Lobster", "File", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::FileMonitorOutputsAnalyzer::MonitorOutputsFileFormat> {
+    inline static constexpr std::array<const char*, 2> names = { "Lobster", "None" };
+};
 
 #endif

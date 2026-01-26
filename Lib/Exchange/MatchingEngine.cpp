@@ -8,6 +8,7 @@
 
 namespace Exchange {
 using namespace Utils;
+using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine) {
     return matchingEngine.orderBookSnapshot(out);

@@ -9,6 +9,7 @@
 
 namespace Market {
 using namespace Utils;
+using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderBase& order) {
     return out << order.getAsJson();

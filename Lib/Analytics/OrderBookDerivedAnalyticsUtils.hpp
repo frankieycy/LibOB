@@ -107,9 +107,11 @@ struct OrderBookDerivedStatsConfig {
     OrderImbalanceStatsConfig orderImbalanceStatsConfig = OrderImbalanceStatsConfig();
     PriceImpactStatsConfig priceImpactStatsConfig = PriceImpactStatsConfig();
 };
-
-std::string toString(const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);
-std::ostream& operator<<(std::ostream& out, const MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode& accumulationMode);
 }
+
+template<>
+struct Utils::EnumStrings<Analytics::MonitorOutputsAnalyzerConfig::OrderBookStatsAccumulationMode> {
+    inline static constexpr std::array<const char*, 4> names = { "All", "EachTrade", "EachEvent", "LevelOneTick" };
+};
 
 #endif

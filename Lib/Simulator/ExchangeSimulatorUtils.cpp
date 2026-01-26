@@ -5,40 +5,8 @@
 #include "Simulator/ExchangeSimulator.hpp"
 
 namespace Simulator {
-std::string toString(const ExchangeSimulatorState state) {
-    switch (state) {
-        case ExchangeSimulatorState::UNINITIALIZED: return "Uninitialized";
-        case ExchangeSimulatorState::READY:         return "Ready";
-        case ExchangeSimulatorState::RUNNING:       return "Running";
-        case ExchangeSimulatorState::FINISHED:      return "Finished";
-        default:                                    return "None";
-    }
-}
-
-std::string toString(const ExchangeSimulatorType type) {
-    switch (type) {
-        case ExchangeSimulatorType::ZERO_INTELLIGENCE:     return "ZeroIntelligence";
-        case ExchangeSimulatorType::MINIMAL_INTELLIGENCE:  return "MinimalIntelligence";
-        default:                                           return "None";
-    }
-}
-
-std::string toString(const OrderEventType type) {
-    switch (type) {
-        case OrderEventType::LIMIT_SUBMIT:      return "LimitSubmit";
-        case OrderEventType::MARKET_SUBMIT:     return "MarketSubmit";
-        case OrderEventType::CANCEL:            return "Cancel";
-        case OrderEventType::CANCEL_ID:         return "CancelById";
-        case OrderEventType::CANCEL_REPLACE:    return "CancelReplace";
-        default:                                return "None";
-    }
-}
-
-std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorState state) { return out << toString(state); }
-
-std::ostream& operator<<(std::ostream& out, const ExchangeSimulatorType type) { return out << toString(type); }
-
-std::ostream& operator<<(std::ostream& out, const OrderEventType type) { return out << toString(type); }
+using namespace Utils;
+using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderEventBase& event) { return out << event.getAsJson(); }
 

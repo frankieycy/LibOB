@@ -295,25 +295,51 @@ private:
     std::optional<double> maxPriceImpact;
     std::optional<size_t> numBins;
 };
-
-std::string toString(const OrderDepthProfileStats::DepthNormalization& normalization);
-std::string toString(const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
-std::string toString(const PriceReturnScalingStats::PriceType& priceType);
-std::string toString(const EventTimeStats::PriceType& priceType);
-std::string toString(const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
-std::string toString(const OrderLifetimeStats::OrderDeathType& deathType);
-std::string toString(const OrderImbalanceStats::PriceType& priceType);
-std::string toString(const PriceImpactStats::PriceType& priceType);
-std::string toString(const PriceImpactStats::TradeConditioning& tradeConditioning);
-std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::DepthNormalization& normalization);
-std::ostream& operator<<(std::ostream& out, const OrderDepthProfileStats::PriceSpaceDefinition& priceSpace);
-std::ostream& operator<<(std::ostream& out, const PriceReturnScalingStats::PriceType& priceType);
-std::ostream& operator<<(std::ostream& out, const EventTimeStats::PriceType& priceType);
-std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::PriceSpaceDefinition& priceSpace);
-std::ostream& operator<<(std::ostream& out, const OrderLifetimeStats::OrderDeathType& deathType);
-std::ostream& operator<<(std::ostream& out, const OrderImbalanceStats::PriceType& priceType);
-std::ostream& operator<<(std::ostream& out, const PriceImpactStats::PriceType& priceType);
-std::ostream& operator<<(std::ostream& out, const PriceImpactStats::TradeConditioning& tradeConditioning);
 }
+
+template<>
+struct Utils::EnumStrings<Analytics::OrderDepthProfileStats::DepthNormalization> {
+    inline static constexpr std::array<const char*, 4> names = { "ByTotalDepth", "ByBestLevel", "Unnormalized", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::OrderDepthProfileStats::PriceSpaceDefinition> {
+    inline static constexpr std::array<const char*, 4> names = { "DiffToMid", "DiffToOwnBest", "DiffToOppositeBest", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::PriceReturnScalingStats::PriceType> {
+    inline static constexpr std::array<const char*, 4> names = { "LastTrade", "Mid", "Micro", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::EventTimeStats::PriceType> {
+    inline static constexpr std::array<const char*, 4> names = { "Mid", "Micro", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::OrderLifetimeStats::PriceSpaceDefinition> {
+    inline static constexpr std::array<const char*, 4> names = { "DiffToMid", "DiffToOwnBest", "DiffToOppositeBest", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::OrderLifetimeStats::OrderDeathType> {
+    inline static constexpr std::array<const char*, 3> names = { "Cancel", "Execute", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::OrderImbalanceStats::PriceType> {
+    inline static constexpr std::array<const char*, 4> names = { "Mid", "Micro", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::PriceImpactStats::PriceType> {
+    inline static constexpr std::array<const char*, 4> names = { "Mid", "Micro", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Analytics::PriceImpactStats::TradeConditioning> {
+    inline static constexpr std::array<const char*, 5> names = { "SignOnly", "SizeBucketed", "VolumeFraction", "None" };
+};
 
 #endif

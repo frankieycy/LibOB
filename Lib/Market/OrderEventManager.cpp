@@ -8,6 +8,8 @@
 
 namespace Market {
 using namespace Utils;
+using Utils::operator<<;
+
 std::ostream& operator<<(std::ostream& out, const OrderEventManagerBase& manager) {
     return manager.stateSnapshot(out);
 }

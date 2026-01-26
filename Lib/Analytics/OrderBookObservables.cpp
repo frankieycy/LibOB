@@ -7,6 +7,7 @@
 
 namespace Analytics {
 using namespace Utils;
+using Utils::operator<<;
 
 std::ostream& operator<<(std::ostream& out, const OrderBookTopLevelsSnapshot& snapshot) { return out << snapshot.getAsJson(); }
 

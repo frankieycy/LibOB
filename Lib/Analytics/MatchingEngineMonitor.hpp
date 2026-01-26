@@ -96,9 +96,11 @@ private:
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()
     OrderBookStatisticsTimestampStrategy myOrderBookStatisticsTimestampStrategy = OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK;
 };
-
-std::string toString(const MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy& strategy);
-std::ostream& operator<<(std::ostream& out, const MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy& strategy);
 }
+
+template<>
+struct Utils::EnumStrings<Analytics::MatchingEngineMonitor::OrderBookStatisticsTimestampStrategy> {
+    inline static constexpr std::array<const char*, 4> names = { "TopOfBookTick", "EachOrderEvent", "EachMarketOrder", "EachTrade" };
+};
 
 #endif

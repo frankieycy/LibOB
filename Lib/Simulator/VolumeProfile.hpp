@@ -120,11 +120,16 @@ private:
     std::unique_ptr<IVolumeExtrapolator> myExtrapolator;
     uint32_t myInterpEnd;
 };
-
-std::string toString(const VolumeInterpolationStrategy strategy);
-std::string toString(const VolumeExtrapolationStrategy strategy);
-std::ostream& operator<<(std::ostream& out, const VolumeInterpolationStrategy strategy);
-std::ostream& operator<<(std::ostream& out, const VolumeExtrapolationStrategy strategy);
 }
+
+template<>
+struct Utils::EnumStrings<Simulator::VolumeInterpolationStrategy> {
+    inline static constexpr std::array<const char*, 8> names = { "Flat", "Linear", "Exponential", "PowerLaw", "CustomInput", "PiecewiseConstant", "PiecewiseLinear", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Simulator::VolumeExtrapolationStrategy> {
+    inline static constexpr std::array<const char*, 5> names = { "Flat", "Linear", "Exponential", "PowerLaw", "None" };
+};
 
 #endif

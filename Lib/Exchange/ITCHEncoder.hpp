@@ -255,13 +255,22 @@ struct ITCHEncoder {
     static std::shared_ptr<ITCHMessage> encodeReport(const Exchange::OrderCancelAndReplaceReport& report);
 };
 
-std::string toString(const ITCHEncoder::EventCode& eventCode);
-std::string toString(const ITCHEncoder::CrossCode& crossCode);
-std::string toString(const ITCHEncoder::MessageType& messageType);
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode);
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::CrossCode& crossCode);
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType);
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::ITCHMessage& message);
 }
+
+template<>
+struct Utils::EnumStrings<Exchange::ITCHEncoder::EventCode> {
+    inline static constexpr std::array<const char*, 2> names = { "O", "C" };
+};
+
+template<>
+struct Utils::EnumStrings<Exchange::ITCHEncoder::CrossCode> {
+    inline static constexpr std::array<const char*, 4> names = { "O", "C", "H", "I" };
+};
+
+template<>
+struct Utils::EnumStrings<Exchange::ITCHEncoder::MessageType> {
+    inline static constexpr std::array<const char*, 11> names = { "S", "A", "F", "E", "C", "D", "X", "U", "P", "Q", "B" };
+};
 
 #endif

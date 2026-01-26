@@ -7,6 +7,7 @@
 
 namespace Exchange {
 using namespace Utils;
+using Utils::operator<<;
 
 const std::string ITCHEncoder::ITCHSystemMessage::ourDescription                = "[S] Session start, end, or market open/close";
 const std::string ITCHEncoder::ITCHOrderAddMessage::ourDescription              = "[A] New order entered into the book";
@@ -19,47 +20,6 @@ const std::string ITCHEncoder::ITCHOrderReplaceMessage::ourDescription          
 const std::string ITCHEncoder::ITCHTradeMessage::ourDescription                 = "[P] Regular trade execution";
 const std::string ITCHEncoder::ITCHCrossTradeMessage::ourDescription            = "[Q] Used for open/close crosses";
 const std::string ITCHEncoder::ITCHBrokenTradeMessage::ourDescription           = "[B] Trade bust (e.g. error correction)";
-
-std::string toString(const ITCHEncoder::EventCode& eventCode) {
-    switch (eventCode) {
-        case ITCHEncoder::EventCode::MARKET_OPEN:  return "O";
-        case ITCHEncoder::EventCode::MARKET_CLOSE: return "C";
-        default:                                   return "!";
-    }
-}
-
-std::string toString(const ITCHEncoder::CrossCode& crossCode) {
-    switch (crossCode) {
-        case ITCHEncoder::CrossCode::OPENING: return "O";
-        case ITCHEncoder::CrossCode::CLOSING: return "C";
-        case ITCHEncoder::CrossCode::HALT:    return "H";
-        case ITCHEncoder::CrossCode::IPO:     return "I";
-        default:                              return "!";
-    }
-}
-
-std::string toString(const ITCHEncoder::MessageType& messageType) {
-    switch (messageType) {
-        case ITCHEncoder::MessageType::SYSTEM:                  return "S";
-        case ITCHEncoder::MessageType::ORDER_ADD:               return "A";
-        case ITCHEncoder::MessageType::ORDER_ADD_WITH_MPID:     return "F";
-        case ITCHEncoder::MessageType::ORDER_EXECUTE:           return "E";
-        case ITCHEncoder::MessageType::ORDER_EXECUTE_WITH_PRICE:return "C";
-        case ITCHEncoder::MessageType::ORDER_DELETE:            return "D";
-        case ITCHEncoder::MessageType::ORDER_CANCEL:            return "X";
-        case ITCHEncoder::MessageType::ORDER_REPLACE:           return "U";
-        case ITCHEncoder::MessageType::TRADE:                   return "P";
-        case ITCHEncoder::MessageType::CROSS_TRADE:             return "Q";
-        case ITCHEncoder::MessageType::BROKEN_TRADE:            return "B";
-        default:                                                return "!";
-    }
-}
-
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::EventCode& eventCode) { return out << toString(eventCode); }
-
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::CrossCode& crossCode) { return out << toString(crossCode); }
-
-std::ostream& operator<<(std::ostream& out, const ITCHEncoder::MessageType& messageType) { return out << toString(messageType); }
 
 std::ostream& operator<<(std::ostream& out, const ITCHEncoder::ITCHMessage& message) { return out << message.toString(); }
 

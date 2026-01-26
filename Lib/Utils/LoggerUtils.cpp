@@ -5,19 +5,6 @@
 
 namespace Utils {
 namespace Logger {
-std::string toString(const LogLevel& level) {
-    switch (level) {
-        case LogLevel::INFO:    return "INFO";
-        case LogLevel::WARNING: return "WARNING";
-        case LogLevel::ERROR:   return "ERROR";
-        case LogLevel::DEBUG:   return "DEBUG";
-        case LogLevel::TRACE:   return "TRACE";
-        default:                return "NONE";
-    }
-}
-
-std::ostream& operator<<(std::ostream& out, const LogLevel& level) { return out << toString(level); }
-
 void LoggerStream::flush() {
     if (!myFlushed) {
         myLogger.log(myStream.str(), myLevel, myOverwriteLastLog);

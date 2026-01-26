@@ -395,16 +395,27 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     uint32_t modifiedQuantity;
 };
 
-std::string toString(const OrderMatchingStrategy& orderMatchingStrategy);
-std::string toString(const OrderProcessingType& orderProcessingType);
-std::string toString(const OrderProcessingStatus& orderProcessingStatus);
-std::string toString(const OrderExecutionType& orderExecutionType);
-
-std::ostream& operator<<(std::ostream& out, const OrderMatchingStrategy& orderMatchingStrategy);
-std::ostream& operator<<(std::ostream& out, const OrderProcessingType& orderProcessingType);
-std::ostream& operator<<(std::ostream& out, const OrderProcessingStatus& orderProcessingStatus);
-std::ostream& operator<<(std::ostream& out, const OrderExecutionType& orderExecutionType);
 std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& report);
 }
+
+template<>
+struct Utils::EnumStrings<Exchange::OrderMatchingStrategy> {
+    inline static constexpr std::array<const char*, 4> names = { "FIFO", "ProRata", "IcebergSupport", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Exchange::OrderProcessingType> {
+    inline static constexpr std::array<const char*, 9> names = { "Execution", "Submission", "Placement", "Cancel", "PartialCancel", "CancelReplace", "ModifyPrice", "ModifyQuantity", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Exchange::OrderProcessingStatus> {
+    inline static constexpr std::array<const char*, 3> names = { "Success", "Failure", "None" };
+};
+
+template<>
+struct Utils::EnumStrings<Exchange::OrderExecutionType> {
+    inline static constexpr std::array<const char*, 5> names = { "Filled", "PartialFilled", "Cancelled", "Rejected", "None" };
+};
 
 #endif
