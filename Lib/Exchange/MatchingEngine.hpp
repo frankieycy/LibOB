@@ -126,6 +126,15 @@ private:
    log, or the ITCH messages log. */
 class MatchingEngineBase : public IMatchingEngine {
 public:
+    /* A logger struct to store the order report and its associated order book size delta, emitted immediately
+        from the matching engine right after processing the order event. */
+    struct LoggedOrderProcessingReport {
+        std::shared_ptr<const OrderProcessingReport> report;
+        OrderBookSizeDelta bookSizeDelta;
+    };
+    struct LoggedOrderEventLatency {
+        std::shared_ptr<const OrderEventLatency> latency;
+    };
     MatchingEngineBase();
     MatchingEngineBase(const MatchingEngineBase& matchingEngine);
     MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
@@ -272,15 +281,6 @@ public:
     manner to consume the dumped structs. The latter is orders of magnitude slower due to book state copying e.g. OrderBookTopLevelsSnapshot. */
 class MatchingEngineFIFOSpsc : public MatchingEngineFIFO {
 public:
-    struct LoggedOrderProcessingReport {
-        uint64_t id;
-        std::shared_ptr<const OrderProcessingReport> report;
-        OrderBookSizeDelta bookSizeDelta;
-    };
-    struct LoggedOrderEventLatency {
-        uint64_t id;
-        std::shared_ptr<const OrderEventLatency> latency;
-    };
     MatchingEngineFIFOSpsc();
     MatchingEngineFIFOSpsc(const MatchingEngineFIFOSpsc& matchingEngine);
     MatchingEngineFIFOSpsc(const bool debugMode) : MatchingEngineFIFO(debugMode) {}
@@ -292,8 +292,6 @@ public:
     virtual void logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& latency) override;
     virtual void reserve(const size_t numOrdersEstimate) override;
 private:
-    Utils::Counter::IdHandlerBase myOrderProcessingReportQueueIdHandler = Utils::Counter::IdHandlerBase();
-    Utils::Counter::IdHandlerBase myOrderEventLatencyQueueIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderProcessingReport> myOrderProcessingReportQueue;
     Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderEventLatency> myOrderEventLatencyQueue;
 };
