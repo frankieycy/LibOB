@@ -1120,14 +1120,28 @@ void MatchingEngineFIFO::init() {
     setOrderMatchingStrategy(OrderMatchingStrategy::FIFO);
 }
 
-template<size_t BufferSize>
-void MatchingEngineFIFOSpsc<BufferSize>::logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report) {
+MatchingEngineFIFOSpsc::MatchingEngineFIFOSpsc() :
+    MatchingEngineFIFO() {
+    init();
+}
+
+MatchingEngineFIFOSpsc::MatchingEngineFIFOSpsc(const MatchingEngineFIFOSpsc& matchingEngine) :
+    MatchingEngineFIFO(matchingEngine) {
+    init();
+}
+
+void MatchingEngineFIFOSpsc::logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& /* report */) {
     // TODO: dump report to SPSC buffer and return immediately
 }
 
-template<size_t BufferSize>
-void MatchingEngineFIFOSpsc<BufferSize>::logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& latency) {
+void MatchingEngineFIFOSpsc::logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& /* latency */) {
     // TODO: dump latency to SPSC buffer and return immediately
+}
+
+void MatchingEngineFIFOSpsc::reserve(const size_t numOrdersEstimate) {
+    MatchingEngineFIFO::reserve(numOrdersEstimate);
+    myOrderProcessingReportQueue.reserve(numOrdersEstimate);
+    myOrderEventLatencyQueue.reserve(numOrdersEstimate);
 }
 }
 

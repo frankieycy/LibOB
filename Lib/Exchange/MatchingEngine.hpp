@@ -270,19 +270,19 @@ public:
 /* An SPSC concurrency model of the FIFO engine - the "producer" that dumps the order processing report and event latency structs
     into the pre-allocated buffers and return immediately to process ensuing orders, whereas callbacks as the "consumer" operate in a parallel
     manner to consume the dumped structs. The latter is orders of magnitude slower due to book state copying e.g. OrderBookTopLevelsSnapshot. */
-template<size_t BufferSize>
 class MatchingEngineFIFOSpsc : public MatchingEngineFIFO {
 public:
     struct LoggedOrderProcessingReport {
         uint64_t id;
         std::shared_ptr<const OrderProcessingReport> report;
+        OrderBookSizeDelta bookSizeDelta;
     };
     struct LoggedOrderEventLatency {
         uint64_t id;
         std::shared_ptr<const OrderEventLatency> latency;
     };
-    MatchingEngineFIFOSpsc() : MatchingEngineFIFO() { init(); }
-    MatchingEngineFIFOSpsc(const MatchingEngineFIFOSpsc& matchingEngine) : MatchingEngineFIFO(matchingEngine) { init(); }
+    MatchingEngineFIFOSpsc();
+    MatchingEngineFIFOSpsc(const MatchingEngineFIFOSpsc& matchingEngine);
     MatchingEngineFIFOSpsc(const bool debugMode) : MatchingEngineFIFO(debugMode) {}
     MatchingEngineFIFOSpsc(const OrderProcessingReportLog& orderProcessingReportLog) : MatchingEngineFIFO(orderProcessingReportLog) {}
     virtual ~MatchingEngineFIFOSpsc() = default;
@@ -290,11 +290,12 @@ public:
     virtual void init() override { MatchingEngineFIFO::init(); }
     virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report) override;
     virtual void logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& latency) override;
+    virtual void reserve(const size_t numOrdersEstimate) override;
 private:
     Utils::Counter::IdHandlerBase myOrderProcessingReportQueueIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myOrderEventLatencyQueueIdHandler = Utils::Counter::IdHandlerBase();
-    Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderProcessingReport, BufferSize> myOrderProcessingReportQueue;
-    Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderEventLatency, BufferSize> myOrderEventLatencyQueue;
+    Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderProcessingReport> myOrderProcessingReportQueue;
+    Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderEventLatency> myOrderEventLatencyQueue;
 };
 
 std::ostream& operator<<(std::ostream& out, const IMatchingEngine& matchingEngine);

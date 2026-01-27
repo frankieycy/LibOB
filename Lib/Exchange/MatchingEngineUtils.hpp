@@ -395,6 +395,27 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
     uint32_t modifiedQuantity;
 };
 
+/* The net delta change in order book size after a certain report has been processed. */
+struct OrderBookSizeDelta {
+    enum class DeltaType { ADD, REMOVE, NONE }; // either +, - or no change
+    OrderBookSizeDelta() = delete;
+    OrderBookSizeDelta(
+        const uint64_t reportId,
+        const uint64_t orderId,
+        const Market::Side side,
+        const double price = Utils::Consts::NAN_DOUBLE,
+        const DeltaType type = DeltaType::NONE,
+        const uint32_t sizeDelta = 0) :
+        reportId(reportId), orderId(orderId), side(side), price(price), type(type), sizeDelta(sizeDelta) {}
+    virtual ~OrderBookSizeDelta() = default;
+    uint64_t reportId; // must associate with an order report
+    uint64_t orderId;
+    Market::Side side;
+    double price;
+    DeltaType type;
+    uint32_t sizeDelta;
+};
+
 std::ostream& operator<<(std::ostream& out, const OrderProcessingReport& report);
 }
 
