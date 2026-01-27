@@ -6,6 +6,29 @@
 
 namespace Utils {
 namespace Concurrency {
+template<typename T>
+class SpscPreallocatedBuffer {
+public:
+    explicit SpscPreallocatedBuffer(size_t capacity) : buffer_(capacity) {}
+
+    void push(T&& item) {
+        size_t idx = write_.fetch_add(1, std::memory_order_relaxed);
+        buffer_[idx] = std::move(item);
+    }
+
+    bool try_pop(T& out) {
+        if (read_ == write_.load(std::memory_order_acquire))
+            return false;
+        out = std::move(buffer_[read_++]);
+        return true;
+    }
+
+private:
+    std::vector<T> buffer_;
+    std::atomic<size_t> write_{0};
+    size_t read_{0}; // consumer only
+};
+
 template<typename T, size_t N>
 class SpscRingBuffer {
 public:
