@@ -30,6 +30,7 @@
 #include "Utils/MathsUtils.hpp"
 #include "Utils/StatisticsUtils.hpp"
 #include "Utils/VectorUtils.hpp"
+#include "Utils/ConcurrencyUtils.hpp"
 #include "Utils/RegressionTestsUtils.hpp"
 
 namespace Utils {
