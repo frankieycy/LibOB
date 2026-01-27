@@ -9,7 +9,12 @@ namespace Concurrency {
 template<typename T>
 class SpscPreallocatedBuffer {
 public:
+    explicit SpscPreallocatedBuffer() = default;
     explicit SpscPreallocatedBuffer(size_t capacity) : buffer_(capacity) {}
+
+    void reserve(size_t capacity) {
+        buffer_.reserve(capacity);
+    }
 
     void push(T&& item) {
         size_t idx = write_.fetch_add(1, std::memory_order_relaxed);
