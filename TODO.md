@@ -40,6 +40,7 @@
     - when will `OrderProcessingReport` report failure?
     - order book construction from events stream, same for `OrderEventManager`
     - detailed speed profiling for various matching engine operations
+    - lock-free buffer for order processing reports dissemination (isolate them from hot path!)
 * `Exchange::ITCHMessage`
     - ok, inheritance hierachy of ITCH messages, each as a minimal and compact representation of `OrderProcessingReport`
     - ok, implement `encodeReport` for each class of `OrderProcessingReport`
