@@ -1044,7 +1044,7 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
     }
 }
 
-void MatchingEngineBase::logOrderProcessingReport(const LoggedOrderProcessingReport& loggedReport) {
+void MatchingEngineBase::logOrderProcessingReport(LoggedOrderProcessingReport loggedReport) {
     const auto& report = loggedReport.report; // either of the report or the delta might be null
     const auto& delta = loggedReport.delta;
     const auto& message = report ? report->makeITCHMessage() : nullptr;
@@ -1059,7 +1059,7 @@ void MatchingEngineBase::logOrderProcessingReport(const LoggedOrderProcessingRep
         if (callback && *callback) (*callback)(message);
 }
 
-void MatchingEngineBase::logOrderEventLatency(const LoggedOrderEventLatency& loggedLatency) {
+void MatchingEngineBase::logOrderEventLatency(LoggedOrderEventLatency loggedLatency) {
     const auto& latency = loggedLatency.latency;
     myOrderEventLatencyLog.push_back(latency);
     for (const auto& callback : myOrderEventLatencyCallbacks)
@@ -1153,12 +1153,14 @@ MatchingEngineFIFOSpsc::MatchingEngineFIFOSpsc(const MatchingEngineFIFOSpsc& mat
     init();
 }
 
-void MatchingEngineFIFOSpsc::logOrderProcessingReport(const LoggedOrderProcessingReport& /* loggedReport */) {
-    // TODO: dump report to SPSC buffer and return immediately
+void MatchingEngineFIFOSpsc::logOrderProcessingReport(LoggedOrderProcessingReport loggedReport) {
+    // dump report to SPSC buffer and return immediately
+    myOrderProcessingReportQueue.push(std::move(loggedReport));
 }
 
-void MatchingEngineFIFOSpsc::logOrderEventLatency(const LoggedOrderEventLatency& /* loggedLatency */) {
-    // TODO: dump latency to SPSC buffer and return immediately
+void MatchingEngineFIFOSpsc::logOrderEventLatency(LoggedOrderEventLatency loggedLatency) {
+    // dump latency to SPSC buffer and return immediately
+    myOrderEventLatencyQueue.push(std::move(loggedLatency));
 }
 
 void MatchingEngineFIFOSpsc::reserve(const size_t numOrdersEstimate) {

@@ -236,8 +236,8 @@ public:
     virtual void addOrderBookDeltaCallback(const CallbackSharedPtr<OrderBookSizeDelta>& callback) override { myOrderBookSizeDeltaCallbacks.push_back(callback); }
     virtual void addOrderEventLatencyCallback(const CallbackSharedPtr<OrderEventLatency>& callback) override { myOrderEventLatencyCallbacks.push_back(callback); }
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) override { myITCHMessageCallbacks.push_back(callback); }
-    virtual void logOrderProcessingReport(const LoggedOrderProcessingReport& loggedReport);
-    virtual void logOrderEventLatency(const LoggedOrderEventLatency& loggedLatency);
+    virtual void logOrderProcessingReport(LoggedOrderProcessingReport loggedReport);
+    virtual void logOrderEventLatency(LoggedOrderEventLatency loggedLatency);
     virtual void reserve(const size_t numOrdersEstimate) override;
     virtual void stateConsistencyCheck() const override;
     virtual void init() override;
@@ -306,8 +306,8 @@ public:
     virtual ~MatchingEngineFIFOSpsc() = default;
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFOSpsc>(*this); }
     virtual void init() override { MatchingEngineFIFO::init(); }
-    virtual void logOrderProcessingReport(const LoggedOrderProcessingReport& loggedReport) override;
-    virtual void logOrderEventLatency(const LoggedOrderEventLatency& loggedLatency) override;
+    virtual void logOrderProcessingReport(LoggedOrderProcessingReport loggedReport) override;
+    virtual void logOrderEventLatency(LoggedOrderEventLatency loggedLatency) override;
     virtual void reserve(const size_t numOrdersEstimate) override;
 private:
     Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderProcessingReport> myOrderProcessingReportQueue;
