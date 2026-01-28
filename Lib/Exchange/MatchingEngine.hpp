@@ -39,6 +39,7 @@ struct LoggedOrderProcessingReport {
     uint64_t id; // associated with the book delta (independent of the report id)
     std::shared_ptr<const OrderProcessingReport> report;
     std::shared_ptr<const OrderBookSizeDelta> delta;
+    BestBidAsk bestBidAskPostDelta;
 };
 
 struct LoggedOrderEventLatency {
@@ -85,6 +86,7 @@ public:
     virtual std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const = 0;
     virtual std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const = 0;
     virtual std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestAskTopOrder() const = 0;
+    virtual BestBidAsk getBestBidAsk() const = 0;
     virtual double getBestBidPrice() const = 0;
     virtual double getBestAskPrice() const = 0;
     virtual double getBidPriceAtLevel(const size_t level) const = 0;
@@ -199,6 +201,7 @@ public:
     std::pair<const PriceLevel, uint32_t> getBestAskPriceAndSize() const override;
     std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestBidTopOrder() const override;
     std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> getBestAskTopOrder() const override;
+    BestBidAsk getBestBidAsk() const override;
     double getBestBidPrice() const override;
     double getBestAskPrice() const override;
     double getBidPriceAtLevel(const size_t level) const override;

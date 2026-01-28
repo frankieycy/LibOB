@@ -26,6 +26,13 @@ struct OrderLevel {
     uint32_t size;
 };
 
+struct BestBidAsk {
+    double bestBidPrice = Utils::Consts::NAN_DOUBLE;
+    uint32_t bestBidSize = 0;
+    double bestAskPrice = Utils::Consts::NAN_DOUBLE;
+    uint32_t bestAskSize = 0;
+};
+
 std::string generateBar(const uint32_t size, const uint32_t maxSize, const size_t maxWidth, const char symbol = 'o');
 
 std::string getOrderBookASCII(
@@ -397,7 +404,7 @@ struct OrderModifyQuantityReport : public OrderProcessingReport {
 
 /* The net delta change in order book size after a certain report has been processed. */
 struct OrderBookSizeDelta {
-    enum class DeltaType { ADD, REMOVE, NONE }; // either +, - or no change
+    enum class DeltaType { ADD, REMOVE, REMOVE_LEVEL, NONE }; // either +, - or no change
     OrderBookSizeDelta() = delete;
     OrderBookSizeDelta(
         const uint64_t reportId,
