@@ -31,6 +31,17 @@ using OrderProcessingCallback = CallbackFunction<OrderProcessingReport>; // comm
 using OrderEventLatencyCallback = CallbackFunction<OrderEventLatency>; // communicates with MatchingEngineMonitor
 using ITCHMessageCallback = CallbackFunction<ITCHEncoder::ITCHMessage>;
 
+/* A logger struct to store the order report and its associated order book size delta, emitted immediately
+   from the matching engine right after processing the order event. */
+struct LoggedOrderProcessingReport {
+    std::shared_ptr<const OrderProcessingReport> report;
+    std::shared_ptr<const OrderBookSizeDelta> delta;
+};
+
+struct LoggedOrderEventLatency {
+    std::shared_ptr<const OrderEventLatency> latency;
+};
+
 class IMatchingEngine {
 public:
     IMatchingEngine() = default;
@@ -126,15 +137,6 @@ private:
    log, or the ITCH messages log. */
 class MatchingEngineBase : public IMatchingEngine {
 public:
-    /* A logger struct to store the order report and its associated order book size delta, emitted immediately
-        from the matching engine right after processing the order event. */
-    struct LoggedOrderProcessingReport {
-        std::shared_ptr<const OrderProcessingReport> report;
-        OrderBookSizeDelta bookSizeDelta;
-    };
-    struct LoggedOrderEventLatency {
-        std::shared_ptr<const OrderEventLatency> latency;
-    };
     MatchingEngineBase();
     MatchingEngineBase(const MatchingEngineBase& matchingEngine);
     MatchingEngineBase(const bool debugMode) : IMatchingEngine(debugMode) {}
@@ -221,8 +223,8 @@ public:
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) override { myOrderProcessingCallbacks.push_back(callback); }
     virtual void addOrderEventLatencyCallback(const CallbackSharedPtr<OrderEventLatency>& callback) override { myOrderEventLatencyCallbacks.push_back(callback); }
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) override { myITCHMessageCallbacks.push_back(callback); }
-    virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report);
-    virtual void logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& latency);
+    virtual void logOrderProcessingReport(const LoggedOrderProcessingReport& loggedReport);
+    virtual void logOrderEventLatency(const LoggedOrderEventLatency& loggedLatency);
     virtual void reserve(const size_t numOrdersEstimate) override;
     virtual void stateConsistencyCheck() const override;
     virtual void init() override;
@@ -277,8 +279,8 @@ public:
 };
 
 /* An SPSC concurrency model of the FIFO engine - the "producer" that dumps the order processing report and event latency structs
-    into the pre-allocated buffers and return immediately to process ensuing orders, whereas callbacks as the "consumer" operate in a parallel
-    manner to consume the dumped structs. The latter is orders of magnitude slower due to book state copying e.g. OrderBookTopLevelsSnapshot. */
+   into the pre-allocated buffers and return immediately to process ensuing orders, whereas callbacks as the "consumer" operate in a parallel
+   manner to consume the dumped structs. The latter is orders of magnitude slower due to book state copying e.g. OrderBookTopLevelsSnapshot. */
 class MatchingEngineFIFOSpsc : public MatchingEngineFIFO {
 public:
     MatchingEngineFIFOSpsc();
@@ -288,8 +290,8 @@ public:
     virtual ~MatchingEngineFIFOSpsc() = default;
     virtual std::shared_ptr<IMatchingEngine> clone() const override { return std::make_shared<MatchingEngineFIFOSpsc>(*this); }
     virtual void init() override { MatchingEngineFIFO::init(); }
-    virtual void logOrderProcessingReport(const std::shared_ptr<const OrderProcessingReport>& report) override;
-    virtual void logOrderEventLatency(const std::shared_ptr<const OrderEventLatency>& latency) override;
+    virtual void logOrderProcessingReport(const LoggedOrderProcessingReport& loggedReport) override;
+    virtual void logOrderEventLatency(const LoggedOrderEventLatency& loggedLatency) override;
     virtual void reserve(const size_t numOrdersEstimate) override;
 private:
     Utils::Concurrency::SpscPreallocatedBuffer<LoggedOrderProcessingReport> myOrderProcessingReportQueue;
