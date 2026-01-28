@@ -1045,9 +1045,9 @@ void MatchingEngineBase::placeMarketOrderToMarketOrderQueue(
 }
 
 void MatchingEngineBase::logOrderProcessingReport(const LoggedOrderProcessingReport& loggedReport) {
-    const auto& report = loggedReport.report;
+    const auto& report = loggedReport.report; // either of the report or the delta might be null
     const auto& delta = loggedReport.delta;
-    const auto& message = report->makeITCHMessage();
+    const auto& message = report ? report->makeITCHMessage() : nullptr;
     myOrderProcessingReportLog.push_back(report);
     myOrderBookSizeDeltaLog.push_back(delta);
     myITCHMessageLog.push_back(message);

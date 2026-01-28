@@ -42,11 +42,13 @@ void MatchingEngineMonitor::init() {
     myOrderProcessingReportsCollector.setMaxHistory(myTimeSeriesCollectorMaxSize);
     myOrderProcessingCallback = mySharedOrderProcessingCallback = std::make_shared<Exchange::OrderProcessingCallback>(
         [this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) {
-            report->dispatchTo(*this);
+            if (report)
+                report->dispatchTo(*this);
         });
     myOrderEventLatencyCallback = std::make_shared<Exchange::OrderEventLatencyCallback>(
         [this](const std::shared_ptr<const Exchange::OrderEventLatency>& latency) {
-            myOrderEventProcessingLatenciesCollector.addSample(std::make_shared<OrderEventProcessingLatency>(latency));
+            if (latency)
+                myOrderEventProcessingLatenciesCollector.addSample(std::make_shared<OrderEventProcessingLatency>(latency));
         });
 }
 
@@ -99,6 +101,8 @@ void MatchingEngineMonitor::exportToLobsterDataParser(Parser::LobsterDataParser&
     auto reportsIt = reports.begin();
     auto statsIt = stats.begin();
     for (; reportsIt != reports.end() && statsIt != stats.end(); ++reportsIt, ++statsIt) {
+        if (!*reportsIt || !*statsIt)
+            continue; // report and stat must be present at the same time
         const auto& topLevelsSnapshot = (*statsIt)->topLevelsSnapshot;
         const auto message = (*reportsIt)->makeLobsterMessage();
         std::vector<uint32_t> bidPricesInt((*statsIt)->topLevelsSnapshot.bidBookTopPrices.size());

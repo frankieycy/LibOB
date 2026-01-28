@@ -22,7 +22,8 @@ OrderEventManagerBase::OrderEventManagerBase(const std::shared_ptr<Exchange::IMa
     myDebugMode = matchingEngine->isDebugMode();
     myOrderProcessingCallback = std::make_shared<Exchange::OrderProcessingCallback>(
         [this](const std::shared_ptr<const Exchange::OrderProcessingReport>& report) {
-            report->dispatchTo(*this);
+            if (report)
+                report->dispatchTo(*this);
         });
     matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
 }

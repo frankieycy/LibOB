@@ -87,12 +87,16 @@ public:
     std::pair<std::string, std::string> getOrderBookMessagesAndSnapshotsAsCsv(size_t snapshotLevels, bool aligned = false) const {
         std::ostringstream messagesOss;
         messagesOss << OrderBookMessage::getHeaderCsv(aligned) << "\n";
-        for (const auto& message : myOrderBookMessagesCollector.getSamples())
-            messagesOss << message->getAsCsv(aligned) << "\n";
+        for (const auto& message : myOrderBookMessagesCollector.getSamples()) {
+            if (message)
+                messagesOss << message->getAsCsv(aligned) << "\n";
+        }
         std::ostringstream snapshotsOss;
         snapshotsOss << OrderBookSnapshot::getHeaderCsv(snapshotLevels, aligned) << "\n";
-        for (const auto& snapshot : myOrderBookSnapshotsCollector.getSamples())
-            snapshotsOss << snapshot->getAsCsv(snapshotLevels, aligned) << "\n";
+        for (const auto& snapshot : myOrderBookSnapshotsCollector.getSamples()) {
+            if (snapshot)
+                snapshotsOss << snapshot->getAsCsv(snapshotLevels, aligned) << "\n";
+        }
         return {messagesOss.str(), snapshotsOss.str()};
     }
 

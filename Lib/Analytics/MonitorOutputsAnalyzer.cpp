@@ -59,6 +59,8 @@ void MonitorOutputsAnalyzerBase::runAnalytics() {
     for (; reportsIt != reports.end() && statsIt != stats.end(); ++reportsIt, ++statsIt) {
         const auto& report = *reportsIt;
         const auto& stat = *statsIt;
+        if (!report || !stat)
+            continue; // report and stat must be present at the same time
         // stats that need to be accumulated for every snapshot
         myOrderLifetimeStats.accumulate(*stat, report->orderSide);
         report->dispatchTo(*this); // report-specific accumulation (e.g. order births in lifetime stats)
