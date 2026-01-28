@@ -14,6 +14,7 @@ using MarketQueue = std::list<std::shared_ptr<Market::MarketOrder>>;
 using TradeLog = std::vector<std::shared_ptr<const Market::TradeBase>>;
 using OrderEventLog = std::vector<std::shared_ptr<const Market::OrderEventBase>>;
 using OrderProcessingReportLog = std::vector<std::shared_ptr<const OrderProcessingReport>>;
+using OrderBookSizeDeltaLog = std::vector<std::shared_ptr<const OrderBookSizeDelta>>;
 using ITCHMessageLog = std::vector<std::shared_ptr<const ITCHEncoder::ITCHMessage>>;
 using RemovedLimitOrderLog = std::vector<std::shared_ptr<const Market::LimitOrder>>;
 using DescOrderBook = std::map<PriceLevel, LimitQueue, std::greater<double>>;
@@ -28,12 +29,14 @@ using CallbackFunction = std::function<void(const std::shared_ptr<const T>&)>;
 template<typename T> // use shared_ptr for callback function so that clients can manage its lifetime
 using CallbackSharedPtr = std::shared_ptr<CallbackFunction<T>>;
 using OrderProcessingCallback = CallbackFunction<OrderProcessingReport>; // communicates with OrderEventManager
+using OrderBookDeltaCallback = CallbackFunction<OrderBookSizeDelta>; // communicates with MatchingEngineMonitor
 using OrderEventLatencyCallback = CallbackFunction<OrderEventLatency>; // communicates with MatchingEngineMonitor
 using ITCHMessageCallback = CallbackFunction<ITCHEncoder::ITCHMessage>;
 
 /* A logger struct to store the order report and its associated order book size delta, emitted immediately
    from the matching engine right after processing the order event. */
 struct LoggedOrderProcessingReport {
+    uint64_t id; // associated with the book delta (independent of the report id)
     std::shared_ptr<const OrderProcessingReport> report;
     std::shared_ptr<const OrderBookSizeDelta> delta;
 };
@@ -65,6 +68,7 @@ public:
     void setLogger(const std::shared_ptr<Utils::Logger::LoggerBase>& logger) { myLogger = logger; }
     uint64_t generateTradeId() { return myTradeIdHandler.generateId(); }
     uint64_t generateReportId() { return myReportIdHandler.generateId(); }
+    uint64_t generateOrderBookDeltaId() { return myOrderBookDeltaIdHandler.generateId(); }
     uint64_t getCurrentTimestamp() const { return myWorldClock->getCurrentTimestamp(); }
     uint64_t clockTick(const uint64_t elapsedTimeUnit = 1) { return myWorldClock->tick(elapsedTimeUnit); }
     virtual std::vector<PriceLevel> getBidBookPriceVector() const = 0;
@@ -107,6 +111,7 @@ public:
     virtual void addToLimitOrderBook(std::shared_ptr<Market::LimitOrder> order) = 0; // left pure virtual unless the order matching strategy is defined
     virtual void executeMarketOrder(std::shared_ptr<Market::MarketOrder> order) = 0;
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) = 0;
+    virtual void addOrderBookDeltaCallback(const CallbackSharedPtr<OrderBookSizeDelta>& callback) = 0;
     virtual void addOrderEventLatencyCallback(const CallbackSharedPtr<OrderEventLatency>& callback) = 0;
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) = 0;
     virtual void reserve(const size_t numOrdersEstimate) = 0; // reserves memory for various data structures (e.g. vector, unordered_map)
@@ -118,6 +123,7 @@ public:
 protected:
     Utils::Counter::IdHandlerBase& getTradeIdHandler() { return myTradeIdHandler; }
     Utils::Counter::IdHandlerBase& getReportIdHandler() { return myReportIdHandler; }
+    Utils::Counter::IdHandlerBase& getOrderBookDeltaIdHandler() { return myOrderBookDeltaIdHandler; }
 private:
     std::string mySymbol;
     std::string myExchangeId;
@@ -125,6 +131,7 @@ private:
     OrderBookDisplayConfig myOrderBookDisplayConfig = OrderBookDisplayConfig();
     Utils::Counter::IdHandlerBase myTradeIdHandler = Utils::Counter::IdHandlerBase();
     Utils::Counter::IdHandlerBase myReportIdHandler = Utils::Counter::IdHandlerBase();
+    Utils::Counter::IdHandlerBase myOrderBookDeltaIdHandler = Utils::Counter::IdHandlerBase();
     // maintains an internal clock that restamps orders upon order events (submit, cancel, etc.)
     std::shared_ptr<Utils::Counter::TimestampHandlerBase> myWorldClock = std::make_shared<Utils::Counter::TimestampHandlerBase>();
     std::shared_ptr<Utils::Logger::LoggerBase> myLogger = std::make_shared<Utils::Logger::LoggerBase>();
@@ -151,6 +158,7 @@ public:
     const TradeLog& getTradeLog() const { return myTradeLog; }
     const OrderEventLog& getOrderEventLog() const { return myOrderEventLog; }
     const OrderProcessingReportLog& getOrderProcessingReportLog() const { return myOrderProcessingReportLog; }
+    const OrderBookSizeDeltaLog& getOrderBookSizeDeltaLog() const { return myOrderBookSizeDeltaLog; }
     const OrderEventLatencyLog& getOrderEventLatencyLog() const { return myOrderEventLatencyLog; }
     const ITCHMessageLog& getITCHMessageLog() const { return myITCHMessageLog; }
     const RemovedLimitOrderLog& getRemovedLimitOrderLog() const { return myRemovedLimitOrderLog; }
@@ -164,6 +172,7 @@ public:
     void setTradeLog(const TradeLog& tradeLog) { myTradeLog = tradeLog; }
     void setOrderEventLog(const OrderEventLog& orderEventLog) { myOrderEventLog = orderEventLog; }
     void setOrderProcessingReportLog(const OrderProcessingReportLog& orderProcessingReportLog) { myOrderProcessingReportLog = orderProcessingReportLog; }
+    void setOrderBookSizeDeltaLog(const OrderBookSizeDeltaLog& orderBookSizeDeltaLog) { myOrderBookSizeDeltaLog = orderBookSizeDeltaLog; }
     void setOrderEventLatencyLog(const OrderEventLatencyLog& orderEventLatencyLog) { myOrderEventLatencyLog = orderEventLatencyLog; }
     void setITCHMessageLog(const ITCHMessageLog& itchMessageLog) { myITCHMessageLog = itchMessageLog; }
     void setRemovedLimitOrderLog(const RemovedLimitOrderLog& removedLimitOrderLog) { myRemovedLimitOrderLog = removedLimitOrderLog; }
@@ -221,6 +230,7 @@ public:
     virtual void placeLimitOrderToLimitOrderBook(std::shared_ptr<Market::LimitOrder>& order, const uint32_t unfilledQuantity, uint32_t& orderSizeTotal, LimitQueue& limitQueue);
     virtual void placeMarketOrderToMarketOrderQueue(std::shared_ptr<Market::MarketOrder>& order, const uint32_t unfilledQuantity, MarketQueue& marketQueue);
     virtual void addOrderProcessingCallback(const CallbackSharedPtr<OrderProcessingReport>& callback) override { myOrderProcessingCallbacks.push_back(callback); }
+    virtual void addOrderBookDeltaCallback(const CallbackSharedPtr<OrderBookSizeDelta>& callback) override { myOrderBookSizeDeltaCallbacks.push_back(callback); }
     virtual void addOrderEventLatencyCallback(const CallbackSharedPtr<OrderEventLatency>& callback) override { myOrderEventLatencyCallbacks.push_back(callback); }
     virtual void addITCHMessageCallback(const CallbackSharedPtr<ITCHEncoder::ITCHMessage>& callback) override { myITCHMessageCallbacks.push_back(callback); }
     virtual void logOrderProcessingReport(const LoggedOrderProcessingReport& loggedReport);
@@ -240,6 +250,7 @@ protected:
     TradeLog& accessTradeLog() { return myTradeLog; }
     OrderEventLog& accessOrderEventLog() { return myOrderEventLog; }
     OrderProcessingReportLog& accessOrderProcessingReportLog() { return myOrderProcessingReportLog; }
+    OrderBookSizeDeltaLog& accessOrderBookSizeDeltaLog() { return myOrderBookSizeDeltaLog; }
     OrderEventLatencyLog& accessOrderEventLatencyLog() { return myOrderEventLatencyLog; }
     ITCHMessageLog& accessITCHMessageLog() { return myITCHMessageLog; }
     RemovedLimitOrderLog& accessRemovedLimitOrderLog() { return myRemovedLimitOrderLog; }
@@ -254,6 +265,7 @@ private:
     TradeLog myTradeLog;
     OrderEventLog myOrderEventLog;
     OrderProcessingReportLog myOrderProcessingReportLog;
+    OrderBookSizeDeltaLog myOrderBookSizeDeltaLog;
     OrderEventLatencyLog myOrderEventLatencyLog;
     ITCHMessageLog myITCHMessageLog; // another equivalent representation of the order processing report, trimmed and standardized
     RemovedLimitOrderLog myRemovedLimitOrderLog;
@@ -261,6 +273,7 @@ private:
     // the order processing callback can be as complicated as it gets (e.g. the report routed to various handlers)
     // but the exposed interface must be simple
     std::vector<CallbackSharedPtr<OrderProcessingReport>> myOrderProcessingCallbacks;
+    std::vector<CallbackSharedPtr<OrderBookSizeDelta>> myOrderBookSizeDeltaCallbacks;
     std::vector<CallbackSharedPtr<OrderEventLatency>> myOrderEventLatencyCallbacks;
     std::vector<CallbackSharedPtr<ITCHEncoder::ITCHMessage>> myITCHMessageCallbacks;
 };
