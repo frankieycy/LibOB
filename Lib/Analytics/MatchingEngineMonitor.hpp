@@ -89,8 +89,11 @@ private:
     Utils::Statistics::TimeSeriesCollector<OrderEventProcessingLatency> myOrderEventProcessingLatenciesCollector;
     Utils::Statistics::TimeSeriesCollector<Exchange::OrderProcessingReport> myOrderProcessingReportsCollector;
     Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> myOrderProcessingCallback;
+    Exchange::CallbackSharedPtr<Exchange::OrderBookSizeDelta> myOrderBookDeltaCallback;
     Exchange::CallbackSharedPtr<Exchange::OrderEventLatency> myOrderEventLatencyCallback;
-    Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback; // constructed once in init()
+    // shared callbacks constructed once in init()
+    Exchange::CallbackSharedPtr<Exchange::OrderProcessingReport> mySharedOrderProcessingCallback;
+    Exchange::CallbackSharedPtr<Exchange::OrderBookSizeDelta> mySharedOrderBookDeltaCallback;
     OrderBookStatisticsTimestampStrategy myOrderBookStatisticsTimestampStrategy = OrderBookStatisticsTimestampStrategy::TOP_OF_BOOK_TICK;
 };
 }

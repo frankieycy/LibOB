@@ -15,6 +15,7 @@ MatchingEngineMonitor::MatchingEngineMonitor(const std::shared_ptr<Exchange::IMa
     myMatchingEngine = matchingEngine;
     // add the callback to the matching engine once, and manage its lifetime internally via start/stopMonitoring()
     matchingEngine->addOrderProcessingCallback(myOrderProcessingCallback);
+    matchingEngine->addOrderBookDeltaCallback(myOrderBookDeltaCallback);
     matchingEngine->addOrderEventLatencyCallback(myOrderEventLatencyCallback);
 }
 
@@ -45,6 +46,10 @@ void MatchingEngineMonitor::init() {
             if (report)
                 report->dispatchTo(*this);
         });
+    myOrderBookDeltaCallback = mySharedOrderBookDeltaCallback = std::make_shared<Exchange::OrderBookDeltaCallback>(
+        [/* this */](const std::shared_ptr<const Exchange::OrderBookSizeDelta>& /* delta */) {
+            // TODO: let OrderBookStatisticsByTimestamp take in the engine-emitted delta and the last state to compute the next state
+        });
     myOrderEventLatencyCallback = std::make_shared<Exchange::OrderEventLatencyCallback>(
         [this](const std::shared_ptr<const Exchange::OrderEventLatency>& latency) {
             if (latency)
@@ -71,11 +76,13 @@ void MatchingEngineMonitor::reset(const bool keepLastSnapshot) {
 
 void MatchingEngineMonitor::startMonitoring() {
     myOrderProcessingCallback = mySharedOrderProcessingCallback;
+    myOrderBookDeltaCallback = mySharedOrderBookDeltaCallback;
     myMonitoringEnabled = true;
 }
 
 void MatchingEngineMonitor::stopMonitoring() {
     myOrderProcessingCallback = nullptr;
+    myOrderBookDeltaCallback = nullptr;
     myMonitoringEnabled = false;
 }
 
