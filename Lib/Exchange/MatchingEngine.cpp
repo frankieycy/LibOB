@@ -351,12 +351,14 @@ std::pair<const PriceLevel, const std::shared_ptr<const Market::LimitOrder>> Mat
 BestBidAsk MatchingEngineBase::getBestBidAsk() const {
     BestBidAsk bestBidAsk{ true };
     if (!myBidBookSize.empty()) {
-        bestBidAsk.bestBidPrice = myBidBookSize.begin()->first;
-        bestBidAsk.bestBidSize = myBidBookSize.begin()->second;
+        const auto& it = myBidBookSize.begin();
+        bestBidAsk.bestBidPrice = it->first;
+        bestBidAsk.bestBidSize = it->second;
     }
     if (!myAskBookSize.empty()) {
-        bestBidAsk.bestAskPrice = myAskBookSize.begin()->first;
-        bestBidAsk.bestAskSize = myAskBookSize.begin()->second;
+        const auto& it = myAskBookSize.begin();
+        bestBidAsk.bestAskPrice = it->first;
+        bestBidAsk.bestAskSize = it->second;
     }
     return bestBidAsk;
 }
@@ -534,15 +536,51 @@ void MatchingEngineBase::process(const std::shared_ptr<const Market::OrderEventB
             if (newId != oldId) { // order gets replaced
                 myLimitOrderLookup.erase(it);
                 myLimitOrderLookup[newId] = {&newQueue, std::prev(newQueue.end())};
-                logOrderProcessingReport({ generateOrderBookDeltaId(), std::make_shared<OrderCancelAndReplaceReport>(generateReportId(), clockTick(), oldId, side, Market::OrderType::LIMIT, newId, newQuantity, newPrice, OrderProcessingStatus::SUCCESS), nullptr /* TODO: delta */, getBestBidAsk() });
-            } else { // order price/quantity gets modified
+                const uint64_t reportId = generateReportId();
+                logOrderProcessingReport({
+                    generateOrderBookDeltaId(),
+                    std::make_shared<OrderCancelAndReplaceReport>(reportId, clockTick(), oldId, side, Market::OrderType::LIMIT, newId, newQuantity, newPrice, OrderProcessingStatus::SUCCESS),
+                    std::make_shared<OrderBookSizeDelta>(reportId, oldId, side, oldPrice, OrderBookSizeDelta::DeltaType::REMOVE, oldQuantity), // cancel
+                    BestBidAsk({ false })
+                });
+                logOrderProcessingReport({
+                    generateOrderBookDeltaId(),
+                    nullptr /* report */,
+                    std::make_shared<OrderBookSizeDelta>(reportId, newId, side, newPrice, OrderBookSizeDelta::DeltaType::ADD, newQuantity), // replace
+                    getBestBidAsk()
+                });
+            } else { // order price/quantity (only one of them!) gets modified
                 it->second = {&newQueue, std::prev(newQueue.end())};
+                if (newPrice == oldPrice && newQuantity == oldQuantity)
+                    return; // the order event does nothing
+                const uint64_t reportId = generateReportId();
                 if (newPrice != oldPrice)
-                    logOrderProcessingReport({ generateOrderBookDeltaId(), std::make_shared<OrderModifyPriceReport>(generateReportId(), clockTick(), oldId, side, oldQuantity, newPrice, OrderProcessingStatus::SUCCESS), nullptr /* TODO: delta */, getBestBidAsk() });
-                if (newQuantity < oldQuantity)
-                    logOrderProcessingReport({ generateOrderBookDeltaId(), std::make_shared<OrderPartialCancelReport>(generateReportId(), clockTick(), oldId, side, Market::OrderType::LIMIT, oldQuantity, oldPrice, oldQuantity - newQuantity, OrderProcessingStatus::SUCCESS), nullptr /* TODO: delta */, getBestBidAsk() });
+                    logOrderProcessingReport({
+                        generateOrderBookDeltaId(),
+                        std::make_shared<OrderModifyPriceReport>(reportId, clockTick(), oldId, side, oldQuantity, newPrice, OrderProcessingStatus::SUCCESS),
+                        std::make_shared<OrderBookSizeDelta>(reportId, oldId, side, oldPrice, OrderBookSizeDelta::DeltaType::REMOVE, oldQuantity), // cancel
+                        BestBidAsk({ false })
+                    });
+                else if (newQuantity < oldQuantity)
+                    logOrderProcessingReport({
+                        generateOrderBookDeltaId(),
+                        std::make_shared<OrderPartialCancelReport>(reportId, clockTick(), oldId, side, Market::OrderType::LIMIT, oldQuantity, oldPrice, oldQuantity - newQuantity, OrderProcessingStatus::SUCCESS),
+                        std::make_shared<OrderBookSizeDelta>(reportId, oldId, side, oldPrice, OrderBookSizeDelta::DeltaType::REMOVE, oldQuantity), // cancel
+                        BestBidAsk({ false })
+                    });
                 else if (newQuantity > oldQuantity)
-                    logOrderProcessingReport({ generateOrderBookDeltaId(), std::make_shared<OrderModifyQuantityReport>(generateReportId(), clockTick(), oldId, side, oldPrice, newQuantity, OrderProcessingStatus::SUCCESS), nullptr /* TODO: delta */, getBestBidAsk() });
+                    logOrderProcessingReport({
+                        generateOrderBookDeltaId(),
+                        std::make_shared<OrderModifyQuantityReport>(reportId, clockTick(), oldId, side, oldPrice, newQuantity, OrderProcessingStatus::SUCCESS),
+                        std::make_shared<OrderBookSizeDelta>(reportId, oldId, side, oldPrice, OrderBookSizeDelta::DeltaType::REMOVE, oldQuantity), // cancel
+                        BestBidAsk({ false })
+                    });
+                logOrderProcessingReport({
+                    generateOrderBookDeltaId(),
+                    nullptr /* report */,
+                    std::make_shared<OrderBookSizeDelta>(reportId, oldId, side, newPrice, OrderBookSizeDelta::DeltaType::ADD, newQuantity), // replace
+                    getBestBidAsk()
+                });
             }
         } else { // order gets cancelled
             myRemovedLimitOrderLog.push_back(order);
