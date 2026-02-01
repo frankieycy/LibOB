@@ -36,10 +36,8 @@ using ITCHMessageCallback = CallbackFunction<ITCHEncoder::ITCHMessage>;
 /* A logger struct to store the order report and its associated order book size delta, emitted immediately
    from the matching engine right after processing the order event. */
 struct LoggedOrderProcessingReport {
-    uint64_t id; // associated with the book delta (independent of the report id)
     std::shared_ptr<const OrderProcessingReport> report;
     std::shared_ptr<const OrderBookSizeDelta> delta;
-    BestBidAsk bestBidAskPostDelta;
 };
 
 struct LoggedOrderEventLatency {
