@@ -823,9 +823,10 @@ std::ostream& MatchingEngineBase::orderBookSnapshot(std::ostream& out) const {
 void MatchingEngineBase::reserve(const size_t numOrdersEstimate) {
     myTradeLog.reserve(numOrdersEstimate);
     myOrderEventLog.reserve(numOrdersEstimate);
-    myOrderProcessingReportLog.reserve(numOrdersEstimate);
-    myOrderBookSizeDeltaLog.reserve(numOrdersEstimate);
-    myITCHMessageLog.reserve(numOrdersEstimate);
+    myOrderEventLatencyLog.reserve(numOrdersEstimate);
+    myOrderProcessingReportLog.reserve(2 * numOrdersEstimate);
+    myOrderBookSizeDeltaLog.reserve(2 * numOrdersEstimate);
+    myITCHMessageLog.reserve(2 * numOrdersEstimate);
     myRemovedLimitOrderLog.reserve(numOrdersEstimate);
     myLimitOrderLookup.reserve(numOrdersEstimate);
 }
@@ -916,6 +917,7 @@ void MatchingEngineBase::reset() {
     myMarketQueue.clear();
     myTradeLog.clear();
     myOrderEventLog.clear();
+    myOrderEventLatencyLog.clear();
     myOrderProcessingReportLog.clear();
     myOrderBookSizeDeltaLog.clear();
     myITCHMessageLog.clear();
@@ -1230,8 +1232,8 @@ void MatchingEngineFIFOSpsc::logOrderEventLatency(LoggedOrderEventLatency logged
 
 void MatchingEngineFIFOSpsc::reserve(const size_t numOrdersEstimate) {
     MatchingEngineFIFO::reserve(numOrdersEstimate);
-    myOrderProcessingReportQueue.reserve(numOrdersEstimate);
-    myOrderEventLatencyQueue.reserve(numOrdersEstimate);
+    myOrderProcessingReportQueue.reserve(2 * numOrdersEstimate);
+    myOrderEventLatencyQueue.reserve(2 * numOrdersEstimate);
 }
 }
 
